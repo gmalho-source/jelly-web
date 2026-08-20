@@ -1,4 +1,4 @@
-import type { Client, Service } from "./types";
+import type { Client, Service, TeamMember } from "./types";
 
 export const services: Service[] = [
   {
@@ -9,24 +9,76 @@ export const services: Service[] = [
       en: "Identity, positioning and narrative for brands that need to be recognisable before they can be remembered.",
     },
     link: { pt: "Brand", en: "Brand" },
+    promise: {
+      pt: "Uma marca não é um logo. É a decisão de o que dizer, a quem, e o que deixar de dizer.",
+      en: "A brand is not a logo. It is deciding what to say, to whom, and what to stop saying.",
+    },
+    includes: [
+      { pt: "Posicionamento e arquitetura de marca", en: "Positioning and brand architecture" },
+      { pt: "Identidade visual e design system", en: "Visual identity and design system" },
+      { pt: "Narrativa, tom de voz e naming", en: "Narrative, tone of voice and naming" },
+      { pt: "Manuais, templates e ativação interna", en: "Guidelines, templates and internal rollout" },
+    ],
+    phases: [
+      { name: { pt: "Diagnóstico", en: "Diagnosis" }, body: { pt: "Entrevistas, análise de concorrência e leitura do que a marca já significa hoje para quem compra.", en: "Interviews, competitive analysis and a read on what the brand already means to buyers today." } },
+      { name: { pt: "Território", en: "Territory" }, body: { pt: "Uma decisão de posicionamento, escrita numa frase, com o que fica de fora explicitado.", en: "One positioning decision, written in a single sentence, with what stays out made explicit." } },
+      { name: { pt: "Sistema", en: "System" }, body: { pt: "Identidade, tipografia, cor, imagem e componentes — tudo em tokens, pronto a entrar em produto.", en: "Identity, type, colour, imagery and components — all as tokens, ready to ship in product." } },
+      { name: { pt: "Ativação", en: "Rollout" }, body: { pt: "Formação das equipas e primeiros materiais em circulação. Uma marca só existe quando é usada.", en: "Team training and the first materials in circulation. A brand only exists once it is used." } },
+    ],
+    caseSlugs: ["unicambio", "agriloja"],
   },
   {
     slug: "marketing",
     name: { pt: "Marketing", en: "Marketing" },
     claim: {
-      pt: "Dados, criatividade e cadência. Tráfego, leads e vendas com o número ao lado.",
-      en: "Data, creativity and cadence. Traffic, leads and sales with the number next to them.",
+      pt: "Dados, criatividade e cadência. Tráfego, leads e vendas com o número sempre ao lado da ideia.",
+      en: "Data, creativity and cadence. Traffic, leads and sales with the number next to the idea.",
     },
     link: { pt: "Performance", en: "Performance" },
+    promise: {
+      pt: "Não otimizamos cliques. Otimizamos o que acontece depois do clique.",
+      en: "We don't optimise clicks. We optimise what happens after the click.",
+    },
+    includes: [
+      { pt: "Estratégia full-funnel e media plan", en: "Full-funnel strategy and media planning" },
+      { pt: "Paid media (Google, Meta, LinkedIn, TikTok)", en: "Paid media (Google, Meta, LinkedIn, TikTok)" },
+      { pt: "SEO e GEO — otimização para busca e para agentes", en: "SEO and GEO — search and generative engine optimisation" },
+      { pt: "Conteúdos, social e produção audiovisual", en: "Content, social and video production" },
+    ],
+    phases: [
+      { name: { pt: "Linha de base", en: "Baseline" }, body: { pt: "Medição limpa antes de gastar um euro: eventos, atribuição e o número de partida.", en: "Clean measurement before spending a euro: events, attribution and the starting number." } },
+      { name: { pt: "Hipóteses", en: "Hypotheses" }, body: { pt: "Cinco a dez apostas ordenadas por retorno esperado, não por gosto.", en: "Five to ten bets ranked by expected return, not by taste." } },
+      { name: { pt: "Cadência", en: "Cadence" }, body: { pt: "Ciclos curtos: testar, ler, decidir. Relatório semanal com o que muda na semana seguinte.", en: "Short cycles: test, read, decide. A weekly report with what changes next week." } },
+      { name: { pt: "Escala", en: "Scale" }, body: { pt: "O que funciona ganha orçamento; o que não funciona morre depressa e sem drama.", en: "What works gets budget; what doesn't dies quickly and without drama." } },
+    ],
+    caseSlugs: ["321-credito", "slide-splash"],
   },
   {
     slug: "inteligencia-artificial",
     name: { pt: "Inteligência artificial", en: "Artificial intelligence" },
     claim: {
-      pt: "Da consultoria à implementação de agentes e automação com impacto real na operação.",
-      en: "From consulting to shipping agents and automation with real operational impact.",
+      pt: "Da consultoria à implementação de agentes e automação que ficam a correr sozinhos na tua operação.",
+      en: "From consulting to shipping agents and automation that keep running inside your operation.",
     },
     link: { pt: "IA", en: "AI" },
+    promise: {
+      pt: "IA que sai da apresentação e entra na operação. Não vendemos pilotos: vendemos processos que passam a correr sozinhos.",
+      en: "AI that leaves the deck and enters the operation. We don't sell pilots: we ship processes that keep running.",
+    },
+    includes: [
+      { pt: "Diagnóstico de casos de uso por retorno", en: "Use-case diagnosis ranked by return" },
+      { pt: "Agentes de atendimento, qualificação e apoio interno", en: "Agents for support, qualification and internal help" },
+      { pt: "Automação entre CRM, catálogo e operações", en: "Automation across CRM, catalogue and operations" },
+      { pt: "Governo, custo por tarefa e formação das equipas", en: "Governance, cost per task and team training" },
+    ],
+    phases: [
+      { name: { pt: "Diagnóstico", en: "Diagnosis" }, body: { pt: "Duas semanas a mapear processos, dados e fricção. Sai uma lista ordenada por retorno.", en: "Two weeks mapping processes, data and friction. Out comes a list ranked by return." } },
+      { name: { pt: "Piloto", en: "Pilot" }, body: { pt: "Um caso de uso em produção, com métrica definida à cabeça. Sem comité, sem PowerPoint.", en: "One use case in production, with the metric agreed up front. No committee, no slides." } },
+      { name: { pt: "Escala", en: "Scale" }, body: { pt: "Agentes ligados ao CRM, ao catálogo e ao suporte, com custo por tarefa à vista.", en: "Agents connected to CRM, catalogue and support, with cost per task in plain sight." } },
+      { name: { pt: "Autonomia", en: "Autonomy" }, body: { pt: "Formação da tua equipa. O objetivo é deixarmos de ser necessários para operar.", en: "Training your team. The goal is for us to stop being needed to operate it." } },
+    ],
+    caseSlugs: ["defined-ai", "evidensia"],
+    accent: "lavender",
   },
   {
     slug: "tecnologia",
@@ -36,17 +88,96 @@ export const services: Service[] = [
       en: "Websites, e-commerce, CRM and CDP connecting marketing, sales and operations.",
     },
     link: { pt: "Tech", en: "Tech" },
+    promise: {
+      pt: "Um site não é um folheto. É a peça de software que carrega a marca e a receita.",
+      en: "A website is not a brochure. It is the software that carries the brand and the revenue.",
+    },
+    includes: [
+      { pt: "Websites e plataformas de e-commerce", en: "Websites and e-commerce platforms" },
+      { pt: "Aplicações web e mobile", en: "Web and mobile applications" },
+      { pt: "CRM, CDP e integrações de dados", en: "CRM, CDP and data integrations" },
+      { pt: "Performance, acessibilidade e migrações sem perder tráfego", en: "Performance, accessibility and migrations without losing traffic" },
+    ],
+    phases: [
+      { name: { pt: "Arquitetura", en: "Architecture" }, body: { pt: "Estrutura de conteúdo, URLs e modelo de dados antes de qualquer ecrã.", en: "Content structure, URLs and data model before any screen." } },
+      { name: { pt: "Sistema", en: "System" }, body: { pt: "Design system em código, componentes reutilizáveis e orçamento de performance fixado.", en: "Design system in code, reusable components and a fixed performance budget." } },
+      { name: { pt: "Construção", en: "Build" }, body: { pt: "Entregas semanais visíveis em pré-visualização, com o cliente a ver crescer.", en: "Weekly deliveries visible in preview, with the client watching it grow." } },
+      { name: { pt: "Migração", en: "Migration" }, body: { pt: "Mapa de redirecionamentos, medição antes e depois, e vigilância nas primeiras semanas.", en: "Redirect map, before-and-after measurement, and close watch in the first weeks." } },
+    ],
+    caseSlugs: ["agriloja", "unicambio"],
   },
 ];
 
+/** Clientes reais do portfolio público, agrupados por setor. */
 export const clients: Client[] = [
-  { name: "BNP Paribas" },
-  { name: "Montblanc" },
-  { name: "Cetelem" },
-  { name: "Adegamãe" },
-  { name: "321 Crédito" },
-  { name: "Slide & Splash" },
-  { name: "Defined.ai" },
-  { name: "Evidensia" },
-  { name: "uPlayback" },
+  { name: "BNP Paribas", sector: "financeiro" },
+  { name: "Cetelem", sector: "financeiro" },
+  { name: "321 Crédito", sector: "financeiro" },
+  { name: "Unicâmbio", sector: "financeiro" },
+  { name: "Informa D&B", sector: "servicos" },
+  { name: "Montblanc", sector: "retalho" },
+  { name: "Decathlon", sector: "retalho" },
+  { name: "Auchan · Jumbo Moda", sector: "retalho" },
+  { name: "Agriloja", sector: "retalho" },
+  { name: "More than Beauty", sector: "retalho" },
+  { name: "Top Brands Online", sector: "retalho" },
+  { name: "Central de Cervejas e Bebidas", sector: "industria" },
+  { name: "Vorwerk", sector: "industria" },
+  { name: "Coldkit", sector: "industria" },
+  { name: "Systerra", sector: "industria" },
+  { name: "Foambox", sector: "industria" },
+  { name: "NUK", sector: "retalho" },
+  { name: "Evidensia", sector: "servicos" },
+  { name: "Normática", sector: "servicos" },
+  { name: "Maintarget", sector: "servicos" },
+  { name: "Oncorporate", sector: "servicos" },
+  { name: "Observatório de Enfermeiros dos Açores", sector: "servicos" },
+  { name: "Slide & Splash", sector: "lazer" },
+  { name: "Smartholidays", sector: "lazer" },
+  { name: "Lifecooler", sector: "lazer" },
+  { name: "Playplanet", sector: "lazer" },
+  { name: "Fly Horus", sector: "lazer" },
+  { name: "Defined.ai", sector: "tecnologia" },
+  { name: "Take1", sector: "tecnologia" },
+  { name: "uPlayback", sector: "tecnologia" },
+  { name: "MyChange", sector: "tecnologia" },
+  { name: "Faccia", sector: "tecnologia" },
+];
+
+/**
+ * Equipa a partir da página pública /equipa-jelly/. Os cargos entram pelo CMS —
+ * só o do CEO está afirmado aqui.
+ */
+export const team: TeamMember[] = [
+  { name: "Gonçalo Malho Rodrigues", role: { pt: "CEO", en: "CEO" } },
+  { name: "Alícia Coquim" },
+  { name: "Ana Ventura" },
+  { name: "Anderson Carlos" },
+  { name: "Caroline Lima" },
+  { name: "Cristina Craveiro" },
+  { name: "Daniela Costa" },
+  { name: "Fausto Pinto" },
+  { name: "Filipa Barata" },
+  { name: "Filipa Santos" },
+  { name: "Frederico Pereira" },
+  { name: "Frederico Teopisto" },
+  { name: "Hugo Costa" },
+  { name: "Joana Bon de Sousa" },
+  { name: "Letícia Lemos" },
+  { name: "Maria Felix da Costa" },
+  { name: "Nuno Baptista Marques" },
+  { name: "Paulo Cleto Duarte" },
+  { name: "Paulo Pereira" },
+  { name: "Rafaela Barros" },
+  { name: "Raquel Reis" },
+];
+
+/** Linha de tempo da casa. Marcos a confirmar com a Jelly antes de publicar. */
+export const milestones = [
+  { year: "2010", pt: "Nasce a Jelly em Lisboa, com três pessoas e um portátil cada.", en: "Jelly is born in Lisbon, with three people and one laptop each." },
+  { year: "2014", pt: "Primeira equipa de performance dedicada e as primeiras contas internacionais.", en: "First dedicated performance team and the first international accounts." },
+  { year: "2018", pt: "A tecnologia passa a ser disciplina própria: websites, e-commerce e integrações.", en: "Technology becomes its own discipline: websites, e-commerce and integrations." },
+  { year: "2022", pt: "Reporting próprio em analytics.jelly.pt, com cinco níveis de leitura.", en: "In-house reporting at analytics.jelly.pt, with five levels of reading." },
+  { year: "2024", pt: "Unidade de dados e IA, e os primeiros agentes em produção em clientes.", en: "Data and AI unit, and the first agents running in production for clients." },
+  { year: "2026", pt: "Parceria com a Informa D&B e nova equipa de gestão com plano a cinco anos.", en: "Partnership with Informa D&B and a new management team with a five-year plan." },
 ];

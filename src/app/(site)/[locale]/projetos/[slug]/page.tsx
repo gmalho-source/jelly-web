@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getNextProject, getProject, getProjects } from "@/lib/cms";
+import { alternates } from "@/lib/seo";
 
 type Params = { locale: Locale; slug: string };
 
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: `${project.client} — ${project.title[locale]}`,
     description: project.summary[locale],
+    alternates: alternates({ pathname: "/projetos/[slug]", params: { slug } }, locale),
   };
 }
 

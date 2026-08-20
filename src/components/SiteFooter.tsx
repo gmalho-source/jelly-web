@@ -8,9 +8,31 @@ export async function SiteFooter() {
   const [nav, footer] = await Promise.all([getTranslations("nav"), getTranslations("footer")]);
 
   const columns = [
-    { title: footer("agency"), items: [nav("about"), footer("team"), footer("careers"), nav("newsroom")] },
-    { title: nav("services"), items: [footer("branding"), footer("marketing"), footer("ai"), footer("tech")] },
-    { title: footer("workCol"), items: [nav("work"), nav("clients"), nav("blog")] },
+    {
+      title: footer("agency"),
+      items: [
+        { label: nav("about"), href: "/sobre" as const },
+        { label: footer("careers"), href: "/sobre" as const },
+        { label: nav("newsroom"), href: "/newsroom" as const },
+      ],
+    },
+    {
+      title: nav("services"),
+      items: [
+        { label: footer("branding"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "branding" } } },
+        { label: footer("marketing"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "marketing" } } },
+        { label: footer("ai"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "inteligencia-artificial" } } },
+        { label: footer("tech"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "tecnologia" } } },
+      ],
+    },
+    {
+      title: footer("workCol"),
+      items: [
+        { label: nav("work"), href: "/projetos" as const },
+        { label: nav("clients"), href: "/clientes" as const },
+        { label: nav("blog"), href: "/blog" as const },
+      ],
+    },
   ];
 
   return (
@@ -25,8 +47,10 @@ export async function SiteFooter() {
             <h4 className="eyebrow mb-4 text-mute">{column.title}</h4>
             <ul className="flex flex-col gap-1.5">
               {column.items.map((item) => (
-                <li key={item}>
-                  <span className="text-sm text-paper/80">{item}</span>
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-paper/80 transition-colors duration-200 hover:text-red">
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -36,7 +60,11 @@ export async function SiteFooter() {
           <h4 className="eyebrow mb-4 text-mute">{footer("contactCol")}</h4>
           <ul className="flex flex-col gap-1.5 text-sm text-paper/80">
             <li>geral@jelly.pt</li>
-            <li>{footer("book")}</li>
+            <li>
+              <Link href="/contactos" className="text-paper/80 transition-colors duration-200 hover:text-red">
+                {footer("book")}
+              </Link>
+            </li>
             <li>
               <a className="text-paper/80 transition-colors duration-200 hover:text-red" href={`https://${BILLING_HOST}`}>
                 {BILLING_HOST} · {footer("providers")}

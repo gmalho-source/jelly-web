@@ -14,18 +14,32 @@ const OUT = path.join(process.cwd(), "docs", "preview");
 
 const pages = [
   { key: "home", path: "/", label: "Homepage" },
+  { key: "sobre", path: "/sobre", label: "Sobre" },
+  { key: "servicos", path: "/servicos", label: "Serviços" },
+  { key: "servico", path: "/servicos/inteligencia-artificial", label: "Serviço · IA" },
   { key: "projetos", path: "/projetos", label: "Projetos" },
-  { key: "caso", path: "/projetos/adegamae", label: "Caso · Adegamãe" },
-  { key: "caso2", path: "/projetos/321-credito", label: "Caso · 321 Crédito" },
+  { key: "caso", path: "/projetos/adegamae", label: "Caso" },
+  { key: "clientes", path: "/clientes", label: "Clientes" },
+  { key: "blog", path: "/blog", label: "Blog" },
+  { key: "artigo", path: "/blog/ia-no-marketing-digital", label: "Artigo" },
+  { key: "newsroom", path: "/newsroom", label: "Newsroom" },
+  { key: "contactos", path: "/contactos", label: "Contactos" },
   { key: "en", path: "/en", label: "Homepage EN" },
   { key: "billing", path: "/billing", label: "billing.jelly.pt" },
 ];
 
 const routes = {
   "/": "#home",
+  "/sobre": "#sobre",
+  "/servicos": "#servicos",
+  "/servicos/inteligencia-artificial": "#servico",
   "/projetos": "#projetos",
   "/projetos/adegamae": "#caso",
-  "/projetos/321-credito": "#caso2",
+  "/clientes": "#clientes",
+  "/blog": "#blog",
+  "/blog/ia-no-marketing-digital": "#artigo",
+  "/newsroom": "#newsroom",
+  "/contactos": "#contactos",
   "/en": "#en",
   "/billing": "#billing",
 };

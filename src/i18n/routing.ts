@@ -8,8 +8,16 @@ export const routing = defineRouting({
   // Slugs traduzidos: duas árvores completas, não tradução por cima.
   pathnames: {
     "/": "/",
+    "/sobre": { pt: "/sobre", en: "/about" },
+    "/servicos": { pt: "/servicos", en: "/services" },
+    "/servicos/[slug]": { pt: "/servicos/[slug]", en: "/services/[slug]" },
     "/projetos": { pt: "/projetos", en: "/work" },
     "/projetos/[slug]": { pt: "/projetos/[slug]", en: "/work/[slug]" },
+    "/clientes": { pt: "/clientes", en: "/clients" },
+    "/blog": { pt: "/blog", en: "/blog" },
+    "/blog/[slug]": { pt: "/blog/[slug]", en: "/blog/[slug]" },
+    "/newsroom": { pt: "/newsroom", en: "/newsroom" },
+    "/contactos": { pt: "/contactos", en: "/contact" },
   },
 });
 

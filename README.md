@@ -39,20 +39,30 @@ servidor, o que basta para desenvolver.
 src/
 ├── app/
 │   ├── (site)/[locale]/        # site público, PT na raiz e EN em /en
-│   │   ├── page.tsx            # homepage (direção Manifesto)
-│   │   └── projetos/           # índice + caso
+│   │   ├── page.tsx            # homepage (direção Manifesto, com reel no herói)
+│   │   ├── sobre/              # manifesto, linha do tempo, equipa, método
+│   │   ├── servicos/           # índice + página por pilar (4)
+│   │   ├── projetos/           # índice + caso
+│   │   ├── clientes/           # parede por setor
+│   │   ├── blog/               # índice + artigo
+│   │   ├── newsroom/           # notícias, eventos e press
+│   │   └── contactos/          # briefing curto + agenda
 │   ├── (billing)/billing/      # billing.jelly.pt (root layout próprio, noindex)
 │   │   ├── page.tsx            # login por magic link
 │   │   ├── faturacao/          # área autenticada com o formulário Monday
 │   │   ├── entrar/route.ts     # valida o token e abre sessão
 │   │   ├── sair/route.ts       # termina a sessão
 │   │   └── api/request-link/   # pede o link de acesso
+│   ├── api/contacto/           # briefing da página de contactos (Resend)
+│   ├── sitemap.ts              # só conteúdo; taxonomias ficam fora
+│   ├── robots.ts
 │   └── globals.css             # tokens de cor, tipografia e escala
 ├── components/                 # marca, fontes, header, footer
 ├── content/                    # conteúdo local versionado (seed do Sanity)
 ├── i18n/                       # routing, request, navigation
 ├── lib/billing/                # auth, sessão, allowlist, email, rate limit
 ├── lib/cms.ts                  # camada de conteúdo (local hoje, Sanity depois)
+├── lib/seo.ts                  # canónicos, hreflang e JSON-LD
 ├── lib/hosts.ts                # que host é billing
 └── middleware.ts               # host routing + i18n
 ```
@@ -138,12 +148,29 @@ componente se ver a funcionar. Para entrar a filmagem real:
 4. A versão com som (a que abre em "Ver com som") pode ser mais longa — até 45 s — e deve
    ter legendas abertas, porque a maioria vê sem som.
 
+## SEO e conteúdo bilingue
+
+- Duas árvores completas com slugs traduzidos: `/sobre` ↔ `/en/about`,
+  `/servicos/{slug}` ↔ `/en/services/{slug}`, `/projetos` ↔ `/en/work`,
+  `/contactos` ↔ `/en/contact`.
+- `alternates()` em `src/lib/seo.ts` emite canónico e hreflang (incluindo
+  `x-default`) em todas as páginas — foi um dos defeitos do site antigo.
+- `sitemap.xml` gerado só a partir de conteúdo, com alternates por URL.
+  Taxonomias (as 467 páginas de tag do site atual) ficam fora por decisão.
+- JSON-LD: `Organization` na homepage e `Article` em cada artigo.
+
+## Conteúdo
+
+Nomes da equipa, títulos, datas e categorias dos artigos e as notícias vêm do
+jelly.pt público. Os **corpos dos artigos estão marcados `draft: true`** e a
+página mostra um selo "Rascunho — conteúdo a migrar": é texto de estrutura, não
+texto final da Jelly. Cargos da equipa (exceto CEO), fotografias e os números
+dos casos entram por validação com a Jelly e com cada cliente.
+
 ## Falta fazer
 
-Páginas ainda não implementadas (desenhadas em `docs/manifesto/`): Sobre,
-Serviços, Clientes, Blog, Artigo, Newsroom, Contactos. Mais: ligação ao Sanity,
-sitemap e hreflang, mapa de 301 da migração e consolidação do portfolio de
-`jellycode.pt`.
+Ligação ao Sanity, páginas de carreiras e legais, mapa de 301 da migração,
+consolidação do portfolio de `jellycode.pt`, e a filmagem real do reel.
 
 > Os números e nomes de projeto no conteúdo local são exemplificativos.
 > Validar com os clientes antes de publicar.

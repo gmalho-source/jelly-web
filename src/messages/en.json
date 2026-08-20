@@ -79,5 +79,100 @@
     "formUnavailable": "The submission form is not configured in this environment yet.",
     "signOut": "sign out",
     "phase2": "Past submissions and payment status land here in phase 2, read from Monday."
+  },
+  "about": {
+    "eyebrow": "About Jelly",
+    "title": "We are Jelly. Driven by purpose and change.",
+    "lead": "Behind every click there are real people, concrete challenges and dreams waiting to happen. For 15 years we have connected branding, marketing, communications and technology — with teams that work together, not in silos.",
+    "manifestoEyebrow": "Manifesto",
+    "manifestoTitle": "When the vision is clear, strategy is easy.",
+    "manifestoBody": "We don't follow trends: we generate change. We work with data because it forces us to be honest, and with creativity because data alone moves nobody. Every project starts with a number to hit — and that number is what we answer for.",
+    "timeline": "Timeline",
+    "team": "Who does it",
+    "teamNote": "Roles and portraits come from the CMS.",
+    "method": "How we work",
+    "methodBody": "Diagnose, decide, deliver, measure. Short cycles, one person accountable per front, and a report that says what changes next week.",
+    "careers": "Working at Jelly",
+    "careersBody": "We look for people who would rather decide than wait. Open applications and roles at iwork@jelly.pt.",
+    "stats": {
+      "years": "years in business",
+      "people": "people",
+      "projects": "projects",
+      "clients": "brands"
+    }
+  },
+  "services": {
+    "eyebrow": "Services",
+    "promise": "The promise",
+    "includes": "What it includes",
+    "phases": "How we work",
+    "cases": "Cases in this discipline",
+    "cta": "Get in touch",
+    "ctaLead": "Tell us where you want to get to. We reply within one business day.",
+    "others": "Other disciplines"
+  },
+  "clients": {
+    "eyebrow": "Clients",
+    "title": "Good company since 2010.",
+    "lead": "We work with brands that want results, not visibility. Some for more than ten years.",
+    "sectors": {
+      "financeiro": "Finance and insurance",
+      "retalho": "Retail and consumer",
+      "industria": "Industry",
+      "servicos": "Services and health",
+      "lazer": "Travel and leisure",
+      "tecnologia": "Technology"
+    },
+    "count": "brands",
+    "longTerm": "Long-term relationships",
+    "longTermBody": "Half of our active accounts have been with Jelly for more than five years. It is the metric we talk about least and are proudest of."
+  },
+  "blog": {
+    "eyebrow": "Blog",
+    "title": "What we are thinking about.",
+    "lead": "Opinion and know-how on branding, marketing, AI and technology. Written by the people doing the work.",
+    "featured": "Featured",
+    "latest": "Latest",
+    "minutes": "min",
+    "draft": "Draft — content to migrate",
+    "related": "Related",
+    "back": "All articles",
+    "by": "By"
+  },
+  "newsroom": {
+    "eyebrow": "Newsroom",
+    "title": "What is happening at Jelly.",
+    "lead": "News, events and press coverage. For press enquiries, write to geral@jelly.pt.",
+    "kinds": {
+      "noticia": "News",
+      "evento": "Event",
+      "press": "Press"
+    },
+    "all": "All",
+    "press": "Press kit",
+    "pressBody": "Logos, team portraits, boilerplate in PT and EN, and a direct press contact.",
+    "pressCta": "Download press kit"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Tell us what needs to change.",
+    "lead": "Four fields. If you would rather talk, the CEO's calendar is open.",
+    "name": "Name",
+    "company": "Company",
+    "email": "Email",
+    "message": "What you need",
+    "messageHint": "In two lines: where the problem is and what you have already tried.",
+    "submit": "Send briefing",
+    "sending": "Sending…",
+    "sent": "Got it. We reply within one business day.",
+    "error": "We could not send it. Try again or write to geral@jelly.pt.",
+    "invalid": "Fill in your name, a valid email and what you need.",
+    "book": "Or book 30 minutes",
+    "bookBody": "Open calendar of Gonçalo Malho Rodrigues, CEO. No gatekeepers.",
+    "office": "Office",
+    "careers": "Working at Jelly",
+    "providers": "Providers",
+    "providersBody": "Already working with Jelly? Invoice submission lives at",
+    "reply": "Reply within one business day"
   }
 }

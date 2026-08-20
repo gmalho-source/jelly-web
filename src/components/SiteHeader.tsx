@@ -7,12 +7,12 @@ export async function SiteHeader() {
   const t = await getTranslations("nav");
 
   const links = [
-    { href: "/" as const, label: t("about"), always: true },
-    { href: "/" as const, label: t("services"), always: true },
+    { href: "/sobre" as const, label: t("about"), always: true },
+    { href: "/servicos" as const, label: t("services"), always: true },
     { href: "/projetos" as const, label: t("work"), always: true },
-    { href: "/" as const, label: t("clients"), always: false },
-    { href: "/" as const, label: t("blog"), always: false },
-    { href: "/" as const, label: t("newsroom"), always: false },
+    { href: "/clientes" as const, label: t("clients"), always: false },
+    { href: "/blog" as const, label: t("blog"), always: false },
+    { href: "/newsroom" as const, label: t("newsroom"), always: false },
   ];
 
   return (
@@ -31,7 +31,7 @@ export async function SiteHeader() {
               {link.label}
             </Link>
           ))}
-          <Link href="/" className="btn">
+          <Link href="/contactos" className="btn">
             {t("contact")} <span aria-hidden="true">→</span>
           </Link>
         </nav>

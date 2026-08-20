@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { HeroReel } from "@/components/HeroReel";
 import { getClients, getProjects, getServices } from "@/lib/cms";
+import { alternates, organizationJsonLd } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+  return { description: t("lead"), alternates: alternates("/", locale) };
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -14,6 +22,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }} />
       {/* Herói 60/40: a tese à esquerda, o reel na coluna da direita.
           O vídeo nunca fica atrás do texto — o título tem de continuar legível. */}
       <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">

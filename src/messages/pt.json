@@ -79,5 +79,100 @@
     "formUnavailable": "O formulário de submissão ainda não está configurado neste ambiente.",
     "signOut": "sair",
     "phase2": "Submissões anteriores e estado de pagamento aparecem aqui na fase 2, lidos do Monday em modo leitura."
+  },
+  "about": {
+    "eyebrow": "Sobre a Jelly",
+    "title": "Somos Jelly. Movidos por propósito e mudança.",
+    "lead": "Por trás de cada clique existem pessoas reais, desafios concretos e sonhos por realizar. Há 15 anos que ligamos os pontos entre branding, marketing, comunicação e tecnologia — com equipas que trabalham juntas, não em silos.",
+    "manifestoEyebrow": "Manifesto",
+    "manifestoTitle": "Quando a visão é clara, a estratégia é fácil.",
+    "manifestoBody": "Não seguimos tendências: geramos mudança. Trabalhamos com dados porque nos obrigam a ser honestos, e com criatividade porque os dados sozinhos não movem ninguém. Cada projeto entra com um número a atingir — e é por esse número que respondemos.",
+    "timeline": "Linha do tempo",
+    "team": "Quem faz",
+    "teamNote": "Cargos e retratos entram pelo CMS.",
+    "method": "Como trabalhamos",
+    "methodBody": "Diagnóstico, decisão, entrega, medição. Ciclos curtos, uma pessoa responsável por cada frente e relatório que diz o que muda na semana seguinte.",
+    "careers": "Trabalhar na Jelly",
+    "careersBody": "Procuramos pessoas que preferem decidir a esperar. Candidaturas espontâneas e vagas abertas em iwork@jelly.pt.",
+    "stats": {
+      "years": "anos de casa",
+      "people": "pessoas",
+      "projects": "projetos",
+      "clients": "marcas"
+    }
+  },
+  "services": {
+    "eyebrow": "Serviços",
+    "promise": "A promessa",
+    "includes": "O que inclui",
+    "phases": "Como trabalhamos",
+    "cases": "Casos com este serviço",
+    "cta": "Falar connosco",
+    "ctaLead": "Diz-nos onde queres chegar. Respondemos em 24 horas úteis.",
+    "others": "Outras disciplinas"
+  },
+  "clients": {
+    "eyebrow": "Clientes",
+    "title": "Boa companhia desde 2010.",
+    "lead": "Trabalhamos com marcas que querem resultados, não visibilidade. Algumas há mais de dez anos.",
+    "sectors": {
+      "financeiro": "Financeiro e seguros",
+      "retalho": "Retalho e consumo",
+      "industria": "Indústria",
+      "servicos": "Serviços e saúde",
+      "lazer": "Turismo e lazer",
+      "tecnologia": "Tecnologia"
+    },
+    "count": "marcas",
+    "longTerm": "Relações de longa duração",
+    "longTermBody": "Metade das contas ativas está com a Jelly há mais de cinco anos. É o indicador de que menos gostamos de falar e de que mais nos orgulhamos."
+  },
+  "blog": {
+    "eyebrow": "Blog",
+    "title": "O que andamos a pensar.",
+    "lead": "Opinião e know-how sobre branding, marketing, IA e tecnologia. Escrito por quem faz o trabalho.",
+    "featured": "Em destaque",
+    "latest": "Mais recentes",
+    "minutes": "min",
+    "draft": "Rascunho — conteúdo a migrar",
+    "related": "Relacionado",
+    "back": "Todos os artigos",
+    "by": "Por"
+  },
+  "newsroom": {
+    "eyebrow": "Newsroom",
+    "title": "O que se passa na Jelly.",
+    "lead": "Notícias, eventos e presença na imprensa. Para assessoria, fala com geral@jelly.pt.",
+    "kinds": {
+      "noticia": "Notícia",
+      "evento": "Evento",
+      "press": "Press"
+    },
+    "all": "Tudo",
+    "press": "Press kit",
+    "pressBody": "Logos, retratos da equipa, boilerplate em PT e EN e contacto direto de assessoria.",
+    "pressCta": "Descarregar press kit"
+  },
+  "contact": {
+    "eyebrow": "Contactos",
+    "title": "Diz-nos o que precisa de mudar.",
+    "lead": "Quatro campos. Se preferires falar, a agenda do CEO está aberta.",
+    "name": "Nome",
+    "company": "Empresa",
+    "email": "Email",
+    "message": "O que precisas",
+    "messageHint": "Em duas linhas: onde está o problema e o que já tentaste.",
+    "submit": "Enviar briefing",
+    "sending": "A enviar…",
+    "sent": "Recebido. Respondemos em 24 horas úteis.",
+    "error": "Não foi possível enviar. Tenta outra vez ou escreve para geral@jelly.pt.",
+    "invalid": "Preenche o nome, um email válido e o que precisas.",
+    "book": "Ou marca 30 minutos",
+    "bookBody": "Agenda aberta do Gonçalo Malho Rodrigues, CEO. Sem intermediários.",
+    "office": "Escritório",
+    "careers": "Trabalhar na Jelly",
+    "providers": "Prestadores",
+    "providersBody": "Já trabalhas com a Jelly? A submissão de faturas está em",
+    "reply": "Resposta em 24 horas úteis"
   }
 }
