@@ -33,7 +33,7 @@ async function sitemapUrls(page) {
       .catch(() => null);
     if (!response || !response.ok()) continue;
 
-    const xml = await page.content();
+    const xml = await page.content().catch(() => "");
     const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
     const nested = locs.filter((loc) => loc.endsWith(".xml"));
 
@@ -44,7 +44,7 @@ async function sitemapUrls(page) {
         .goto(child, { waitUntil: "domcontentloaded", timeout: 15000 })
         .catch(() => null);
       if (!childResponse?.ok()) continue;
-      const childXml = await page.content();
+      const childXml = await page.content().catch(() => "");
       for (const m of childXml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
         const loc = m[1].trim();
         if (!loc.endsWith(".xml")) found.add(loc);
@@ -144,15 +144,33 @@ if (withShots) await mkdir(path.join(outDir, "shots"), { recursive: true });
 let urls = await sitemapUrls(page);
 if (!urls.length) {
   console.warn("Sem sitemap legível — a recolher ligações da homepage.");
-  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 30000 }).catch(() => {});
-  urls = await page.evaluate((origin) => {
-    const hrefs = [...document.querySelectorAll("a[href]")].map((a) => a.href);
-    return [...new Set(hrefs.filter((href) => href.startsWith(origin)))];
-  }, origin);
+  const home = await page
+    .goto(base, { waitUntil: "domcontentloaded", timeout: 30000 })
+    .catch((error) => ({ error }));
+
+  if (!home || "error" in home) {
+    await browser.close();
+    console.error(`Não foi possível abrir ${base}: ${String(home?.error ?? "sem resposta").split("\n")[0]}`);
+    console.error("Verifica o endereço e se esta máquina tem acesso de rede ao site.");
+    process.exit(1);
+  }
+
+  // Uma navegação do lado do cliente pode destruir o contexto a meio do evaluate.
+  urls = await page
+    .evaluate((origin) => {
+      const hrefs = [...document.querySelectorAll("a[href]")].map((a) => a.href);
+      return [...new Set(hrefs.filter((href) => href.startsWith(origin)))];
+    }, origin)
+    .catch(() => []);
   urls.unshift(base);
 }
 
 const selected = [...new Set(urls)].slice(0, max);
+if (!selected.length) {
+  await browser.close();
+  console.error(`Nenhum URL para auditar em ${base}.`);
+  process.exit(1);
+}
 console.log(`${selected.length} URLs a auditar (de ${urls.length} encontrados).`);
 
 const pages = [];
