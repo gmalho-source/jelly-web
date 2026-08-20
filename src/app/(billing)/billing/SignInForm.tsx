@@ -44,7 +44,7 @@ export function SignInForm({ copy }: { copy: Copy }) {
 
   if (state === "sent") {
     return (
-      <p className="border-l-2 border-lime bg-white p-4 text-[14px] text-navy" role="status">
+      <p className="rounded-[12px] border-l-2 border-chartreuse bg-white p-4 text-sm text-slate" role="status">
         {copy.sent}
       </p>
     );
@@ -53,7 +53,7 @@ export function SignInForm({ copy }: { copy: Copy }) {
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>
       <div className="grid gap-1.5">
-        <label htmlFor="email" className="label">
+        <label htmlFor="email" className="eyebrow text-mute">
           {copy.email}
         </label>
         <input
@@ -69,14 +69,14 @@ export function SignInForm({ copy }: { copy: Copy }) {
           }}
           aria-invalid={state === "invalid"}
           aria-describedby={state === "idle" || state === "sending" ? undefined : "sign-in-message"}
-          className="border border-[#cfd6de] bg-white px-3.5 py-2.5 text-[14px] outline-none focus:border-red focus:ring-3 focus:ring-red/15"
+          className="rounded-[4px] border border-paper-3 bg-white px-3.5 py-2.5 text-sm shadow-xs outline-none transition-colors duration-200 focus:border-red"
           placeholder="nome@empresa.pt"
         />
       </div>
       <button
         type="submit"
         disabled={state === "sending"}
-        className="w-fit bg-red px-6 py-3 text-[14px] font-medium text-white disabled:opacity-60"
+        className="btn w-fit disabled:opacity-40"
       >
         {state === "sending" ? copy.sending : copy.submit}
       </button>

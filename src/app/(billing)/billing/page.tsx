@@ -17,18 +17,18 @@ export default async function BillingSignInPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-line px-5 py-5 sm:px-8">
+      <header className="flex items-center justify-between gap-4 border-b border-paper-3 px-5 py-5 sm:px-8">
         <JellyWordmark className="w-[72px] text-red" />
-        <span className="label">{t("area")}</span>
+        <span className="eyebrow text-mute">{t("area")}</span>
       </header>
 
       <main className="flex flex-1 items-center justify-center px-5 py-12 sm:px-8">
         <div className="w-full max-w-[520px]">
           <h1 className="text-chapter">{t("signIn")}</h1>
-          <p className="mt-3 text-[14px] text-navy">{t("intro")}</p>
+          <p className="mt-3 text-[14px] text-slate">{t("intro")}</p>
 
           {erro === "link" ? (
-            <p className="mt-5 border-l-2 border-red bg-white p-4 text-[13px] text-navy" role="alert">
+            <p className="mt-5 border-l-2 border-red bg-white p-4 text-[13px] text-slate" role="alert">
               {t("invalidLink")}
             </p>
           ) : null}

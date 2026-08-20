@@ -18,12 +18,12 @@ export default async function InvoicePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-line px-5 py-5 sm:px-8">
+      <header className="flex items-center justify-between gap-4 border-b border-paper-3 px-5 py-5 sm:px-8">
         <JellyWordmark className="w-[72px] text-red" />
-        <div className="label flex items-center gap-3">
+        <div className="flex items-center gap-3 text-sm text-slate">
           <span>{provider}</span>
           <form action="/billing/sair" method="post">
-            <button type="submit" className="label text-red hover:underline">
+            <button type="submit" className="text-sm font-semibold text-red hover:underline">
               {t("signOut")}
             </button>
           </form>
@@ -32,9 +32,9 @@ export default async function InvoicePage() {
 
       <main className="px-5 py-10 sm:px-8">
         <h1 className="text-chapter">{t("submitInvoice")}</h1>
-        <p className="mt-3 max-w-[52ch] text-[14px] text-navy">{t("invoiceIntro")}</p>
+        <p className="mt-3 max-w-[52ch] text-[14px] text-slate">{t("invoiceIntro")}</p>
 
-        <div className="mt-7 max-w-[860px] border border-line bg-white">
+        <div className="mt-7 max-w-[860px] border border-paper-3 bg-white">
           {embedUrl ? (
             <iframe
               src={embedUrl}
@@ -48,7 +48,7 @@ export default async function InvoicePage() {
           )}
         </div>
 
-        <p className="mt-5 max-w-[52ch] border-l-2 border-lime bg-white p-4 text-[13px] text-navy">
+        <p className="mt-5 max-w-[52ch] border-l-2 border-lime bg-white p-4 text-[13px] text-slate">
           {t("phase2")}
         </p>
       </main>

@@ -9,87 +9,141 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   const t = await getTranslations("home");
   const [projects, services, clients] = await Promise.all([getProjects(), getServices(), getClients()]);
+  const featured = projects.slice(0, 3);
 
   return (
     <>
-      {/* Herói: a tese antes de qualquer imagem. */}
-      <section className="grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-20">
-        <div className="label flex flex-col gap-2.5">
-          <span>{t("eyebrow")}</span>
-          <span className="text-red">{t("signature")}</span>
-          <span className="mt-2 leading-relaxed">
-            {services.map((service) => (
-              <span key={service.slug} className="block">
-                {service.name[locale]}
-              </span>
-            ))}
-          </span>
-        </div>
-        <div>
-          <h1 className="text-display">
-            {t("headlineLead")}{" "}
-            <span className="relative inline-block">
-              {t("headlineStrike")}
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 top-[56%] h-[4px] -rotate-1 bg-red lg:h-[6px]"
-              />
-            </span>
-            <br />
-            <em className="text-red">{t("headlineEm")}</em> {t("headlineRest")}
-          </h1>
-          <div className="mt-8 flex flex-wrap items-end justify-between gap-6 border-t border-line-strong pt-5">
-            <p className="max-w-[44ch] text-lede text-navy">{t("lead")}</p>
-            <Link href="/projetos" className="label flex items-center gap-2 text-ink">
-              <span aria-hidden="true" className="block h-px w-8 bg-red" />
-              {t("workCta")}
-            </Link>
+      {/* Herói 60/40: a tese à esquerda, a explicação calma à direita. */}
+      <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
+        <div className="grid items-end justify-between gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:gap-14">
+          <div>
+            <span className="eyebrow">{t("eyebrow")}</span>
+            <h1 className="mt-5 text-display">
+              A ação é a<br />
+              nossa <span className="text-red">estratégia</span>.
+            </h1>
+          </div>
+          <div>
+            <p className="max-w-[42ch] text-md text-slate">{t("lead")}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/" className="btn btn-hero">
+                {t("contactCta")} <span aria-hidden="true">→</span>
+              </Link>
+              <Link href="/projetos" className="btn btn-ghost">
+                {t("workCta")}
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Índice de trabalho: linhas, não cartões. */}
-      <section className="px-5 sm:px-8 lg:px-14">
-        <h2 className="label border-b border-line pb-3">{t("workIndex")}</h2>
-        {projects.map((project) => (
-          <Link
-            key={project.slug}
-            href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-            className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-line py-4 transition-[padding,background] duration-300 hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
-          >
-            <span className="font-display text-2xl tracking-tight transition-colors group-hover:text-red lg:text-[34px]">
-              {project.client}
-            </span>
-            <span className="hidden text-[13px] text-mute sm:block">{project.disciplines[locale]}</span>
-            <span className="text-right font-display text-lg tabular-nums text-red lg:text-xl">
-              {project.headline.value}
-            </span>
-          </Link>
-        ))}
-      </section>
-
-      {/* Quatro serviços, quatro quadrantes. */}
-      <section className="mt-12 grid grid-cols-1 gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
-        {services.map((service) => (
-          <div key={service.slug} className="flex min-h-[190px] flex-col gap-2 bg-bone p-6 lg:p-7">
-            <h3 className="text-chapter">{service.name[locale]}</h3>
-            <p className="text-[13px] text-navy">{service.claim[locale]}</p>
-            <span className="label mt-auto text-red">{service.link[locale]} →</span>
-          </div>
-        ))}
-      </section>
-
-      {/* Parede de clientes em texto corrido: 15 anos de companhia. */}
-      <section className="px-5 pt-12 sm:px-8 lg:px-14">
-        <h2 className="label">{t("clientsLabel")}</h2>
-        <p className="mt-3 font-display text-xl leading-snug tracking-tight lg:text-3xl">
+      {/* Parede de clientes: a prova de 15 anos, em texto legível sem imagens. */}
+      <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
+        <h2 className="eyebrow text-mute">{t("clientsLabel")}</h2>
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-6 gap-y-3 border-t border-paper-3 pt-5">
           {clients.map((client) => (
-            <span key={client.name}>
-              {client.name} <span className="text-line">·</span>{" "}
+            <span key={client.name} className="font-display text-lg lg:text-xl">
+              {client.name}
             </span>
           ))}
-          <span className="text-mute">{t("clientsTail")}</span>
-        </p>
+          <span className="text-sm text-mute">{t("clientsTail")}</span>
+        </div>
+      </section>
+
+      {/* Índice de trabalho: linhas densas com o número à direita. */}
+      <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="eyebrow">{t("workEyebrow")}</span>
+            <h2 className="mt-2 text-chapter">{t("workIndex")}</h2>
+          </div>
+          <span className="text-sm text-mute">{projects.length} · 2010—2026</span>
+        </div>
+        <div className="border-t border-ink">
+          {projects.map((project) => (
+            <Link
+              key={project.slug}
+              href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+              className="group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-paper-2 py-4 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
+            >
+              <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
+                {project.client}
+              </span>
+              <span className="hidden text-sm text-mute sm:block">{project.disciplines[locale]}</span>
+              <span className="text-right font-display tabular-nums text-red lg:text-lg">
+                {project.headline.value}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Três casos em cartão: raio 20, sombra sm, cor plana no lugar da fotografia. */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((project, index) => (
+            <Link
+              key={project.slug}
+              href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+              className="card flex flex-col overflow-hidden"
+            >
+              <div
+                className={`flex h-[150px] items-end p-4 text-xs font-semibold uppercase tracking-[0.08em] ${
+                  [
+                    "bg-slate text-white",
+                    "bg-red text-white",
+                    "bg-lavender text-ink",
+                  ][index]
+                }`}
+              >
+                {project.client}
+              </div>
+              <div className="flex flex-1 flex-col gap-2 p-6">
+                <h3 className="text-xl">{project.title[locale]}</h3>
+                <span className="font-display text-3xl leading-none tabular-nums text-red">
+                  {project.headline.value}
+                </span>
+                <span className="text-sm text-mute">{project.headline.label[locale]}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Faixa de cor plana: uma mensagem, um acento. */}
+      <section className="bg-chartreuse py-16 lg:py-24">
+        <div className="mx-auto grid max-w-[1200px] items-end justify-between gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,58%)_minmax(0,34%)]">
+          <div>
+            <span className="eyebrow text-red-deep">{t("bandEyebrow")}</span>
+            <h2 className="mt-4 text-chapter">{t("bandTitle")}</h2>
+          </div>
+          <p className="text-md text-ink/80">{t("bandBody")}</p>
+        </div>
+      </section>
+
+      {/* Bloco ink: os quatro pilares, com um único acento na IA. */}
+      <section className="bg-ink py-16 text-paper lg:py-24">
+        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <span className="eyebrow text-chartreuse">{t("servicesLabel")}</span>
+          <h2 className="mt-4 max-w-[24ch] text-chapter text-paper">{t("servicesTitle")}</h2>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {services.map((service) => {
+              const accent = service.slug === "inteligencia-artificial";
+              return (
+                <div
+                  key={service.slug}
+                  className={`flex min-h-[200px] flex-col gap-3 rounded-[20px] p-6 ${
+                    accent ? "bg-lavender text-ink" : "bg-slate text-paper"
+                  }`}
+                >
+                  <h3 className={`text-xl ${accent ? "text-ink" : "text-paper"}`}>{service.name[locale]}</h3>
+                  <p className={`text-sm ${accent ? "text-ink/80" : "text-paper/70"}`}>{service.claim[locale]}</p>
+                  <span className={`mt-auto text-sm font-semibold ${accent ? "text-red-deep" : "text-chartreuse"}`}>
+                    {service.link[locale]} →
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </section>
     </>
   );

@@ -19,20 +19,20 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
 
   return (
     <section className="grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
-      <p className="label">
+      <p className="eyebrow text-mute">
         {t("title")}
         <br />
         <span className="text-red">{projects.length} / 68</span>
       </p>
       <div>
         <h1 className="text-chapter">{t("title")}</h1>
-        <p className="mt-4 max-w-[52ch] text-lede text-navy">{t("lead")}</p>
-        <div className="mt-10 border-t border-line-strong">
+        <p className="mt-4 max-w-[52ch] text-md text-slate">{t("lead")}</p>
+        <div className="mt-10 border-t border-paper-3-strong">
           {projects.map((project) => (
             <Link
               key={project.slug}
               href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-              className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-line py-4 transition-[padding,background] duration-300 hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
+              className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-paper-3 py-4 transition-[padding,background] duration-300 hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
             >
               <span className="font-display text-xl tracking-tight transition-colors group-hover:text-red lg:text-[28px]">
                 {project.client}

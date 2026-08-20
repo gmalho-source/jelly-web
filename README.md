@@ -92,18 +92,29 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
 |---|---|
 | `docs/direcoes/index.html` | Leitura do site atual, arquitetura de informação, as três direções visuais com mockups, comparação de stack e plano por fases. |
 | `docs/manifesto/index.html` | Direção 01 aplicada às sete páginas: caso, serviço, blog, artigo, newsroom, contactos e billing. |
+| `docs/estado-arte/index.html` | Auditoria medida do site atual (52 páginas, 10 sitemaps), leitura do look & feel contra o design system 2026 e a homepage proposta. |
+| `scripts/audit-site.mjs` | Crawler de auditoria: estado HTTP, metadados, headings, peso e tempos por página. |
 
 Abrir localmente: `npx http-server docs -p 8080`.
 
 ## Design system
 
-Cor principal `#dd364a`. Secundárias `#151719`, `#2a384a`, `#c3abff`, `#ff9aa5`,
-`#9d141c`, `#f4f6f8`, `#dce277`. Títulos em Jubilat, texto em Poppins.
-Assinatura: **be the change**.
+Fonte de verdade em `docs/design-system/` (cópia do `Jelly_Design_System.zip`), traduzida
+para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
 
-Jubilat é licenciada (Hoefler): enquanto a licença web não estiver ativa, o
-`--font-display` cai em Lora. Quando estiver, self-hostar as duas famílias e
-remover `src/components/Fonts.tsx`.
+- **Cor** — vermelho `#dd364a` a ancorar todas as páginas; acentos coral `#ff9aa5`,
+  lilás `#c3abff`, chartreuse `#dce277` (um por superfície, nunca dois); ink `#151719`
+  e slate `#2a384a` para texto e superfícies escuras; paper `#f4f6f8` como fundo.
+  Cor plana — **sem gradientes, sem grão**.
+- **Tipografia** — display Jubilat (hoje servida por Bree Serif, SIL OFL, até a licença
+  Darden Studio estar ativa) em peso 400; corpo Poppins 300–500; eyebrows Poppins 600,
+  12 px, caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2 (345 KB no total).
+- **Forma** — botões 8 px (nunca pílula), cartões 20 px sem borda com sombra `sm`,
+  painéis de herói 32 px, pílulas só para tags e filtros.
+- **Movimento** — uma curva (`cubic-bezier(.22,.61,.36,1)`), três durações (120/200/360 ms),
+  elevações de 2 px, sem molas. Desligado em `prefers-reduced-motion`.
+- **Voz** — português europeu, tratamento por **tu**, voz ativa, sentence case.
+  Assinatura: **be the change**.
 
 ## Falta fazer
 

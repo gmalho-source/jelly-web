@@ -9,18 +9,24 @@
     "contact": "Get in touch"
   },
   "home": {
-    "eyebrow": "Lisbon · since 2010",
+    "eyebrow": "Branding · marketing · AI · technology",
     "signature": "be the change",
     "headlineStrike": "strategy",
     "headlineEm": "Action",
     "headlineRest": "is our strategy.",
     "headlineLead": "",
-    "lead": "We help companies communicate and perform better, connecting the dots between branding, marketing, communications and technology.",
+    "lead": "For 15 years we have helped companies communicate and perform better. Tell us where you want to get to; we connect brand, data and technology — and show you the numbers.",
     "workCta": "See the work",
-    "workIndex": "Work index",
-    "servicesLabel": "What we do",
-    "clientsLabel": "Company · a selection",
-    "clientsTail": "and 40 more brands since 2010"
+    "workIndex": "What we have been up to",
+    "servicesLabel": "Where we can help",
+    "clientsLabel": "Good company since 2010",
+    "clientsTail": "and 40 more brands",
+    "workEyebrow": "Proof, not portfolio",
+    "servicesTitle": "Four disciplines, one team.",
+    "bandEyebrow": "be the change",
+    "bandTitle": "We don't follow trends. We generate change.",
+    "bandBody": "It is the signature of the house, and it becomes a measurable commitment: every project starts with a number to hit and ends with the number hit. If nothing changed, we didn't do our job.",
+    "contactCta": "Get in touch"
   },
   "work": {
     "title": "Work index",
@@ -37,7 +43,17 @@
   "footer": {
     "providers": "Providers area",
     "providersNote": "Already working with Jelly? Invoice submission lives at",
-    "rights": "Jelly — be the change"
+    "rights": "Jelly — be the change",
+    "agency": "Agency",
+    "team": "Team",
+    "careers": "Careers",
+    "branding": "Branding",
+    "marketing": "Marketing",
+    "ai": "Artificial intelligence",
+    "tech": "Technology",
+    "workCol": "Work",
+    "contactCol": "Contact",
+    "book": "Book 30 minutes"
   },
   "billing": {
     "area": "Providers area",
