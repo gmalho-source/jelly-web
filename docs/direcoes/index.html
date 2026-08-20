@@ -1,0 +1,827 @@
+<title>Jelly · Três Direções</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* ───────────────────────── tokens ───────────────────────── */
+:root{
+  /* brand (design system Jelly) */
+  --red:#dd364a; --red-dark:#9d141c; --pink:#ff9aa5; --lilac:#c3abff;
+  --lime:#dce277; --navy:#2a384a; --ink:#151719; --bone:#f4f6f8;
+
+  /* dossier shell — light */
+  --ground:#eef1f4;
+  --paper:#fbfcfd;
+  --edge:#d6dce3;
+  --edge-soft:#e4e9ee;
+  --fg:#151719;
+  --fg-2:#43505f;
+  --fg-3:#78848f;
+  --accent:var(--red);
+  --shadow:0 1px 2px rgba(21,23,25,.05), 0 18px 40px -24px rgba(42,56,74,.35);
+
+  --serif:"Lora",Georgia,"Times New Roman",serif;
+  --sans:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --maxw:1180px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0f1216; --paper:#171b20; --edge:#2c333b; --edge-soft:#232a31;
+    --fg:#eef1f4; --fg-2:#b3bec9; --fg-3:#7d8996;
+    --accent:#f2596b;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 24px 50px -28px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0f1216; --paper:#171b20; --edge:#2c333b; --edge-soft:#232a31;
+  --fg:#eef1f4; --fg-2:#b3bec9; --fg-3:#7d8996;
+  --accent:#f2596b;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 24px 50px -28px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--fg);
+  font-family:var(--sans); font-weight:400; font-size:16.5px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--serif); font-weight:600; line-height:1.08; text-wrap:balance; margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+svg{display:block}
+
+/* ───────────────────────── layout ───────────────────────── */
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px}
+.stack{display:flex; flex-direction:column}
+.lede{font-size:1.12rem; color:var(--fg-2); max-width:66ch}
+.mono{font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-3)}
+
+/* masthead */
+.masthead{border-bottom:1px solid var(--edge); background:var(--paper)}
+.mast-inner{max-width:var(--maxw); margin:0 auto; padding:26px 28px; display:flex; align-items:center; justify-content:space-between; gap:24px}
+.brandline{display:flex; align-items:center; gap:14px}
+.brandline .mark{width:26px; color:var(--red)}
+.brandline span{font-family:var(--mono); font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--fg-3)}
+.mast-meta{font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--fg-3); text-align:right}
+
+/* hero of the dossier */
+.opening{padding:clamp(56px,9vw,120px) 0 clamp(44px,6vw,76px)}
+.opening h1{font-size:clamp(2.6rem,7vw,5.4rem); letter-spacing:-.02em}
+.opening h1 em{font-style:italic; color:var(--accent)}
+.opening .kicker{margin-bottom:26px}
+.opening .lede{margin-top:30px; font-size:1.22rem; line-height:1.55}
+.rule{height:1px; background:var(--edge); border:0; margin:0}
+
+/* two-column reading blocks */
+.section{padding:clamp(48px,7vw,88px) 0}
+.sechead{display:grid; grid-template-columns:minmax(0,1fr); gap:14px; margin-bottom:34px}
+.sechead h2{font-size:clamp(1.75rem,3.4vw,2.5rem); letter-spacing:-.01em}
+.cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:34px 40px}
+.note{border-top:2px solid var(--fg); padding-top:14px}
+.note.alt{border-top-color:var(--accent)}
+.note h4{font-family:var(--sans); font-weight:600; font-size:.95rem; letter-spacing:.005em; margin-bottom:6px}
+.note p{color:var(--fg-2); font-size:.95rem}
+
+/* diagnosis list */
+.diag{display:grid; gap:0; border-top:1px solid var(--edge)}
+.diag > div{display:grid; grid-template-columns:minmax(0,148px) minmax(0,1fr); gap:8px 28px; padding:18px 0; border-bottom:1px solid var(--edge)}
+.diag dt{font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); padding-top:3px}
+.diag dd{margin:0; color:var(--fg-2); font-size:.97rem}
+.diag dd b{color:var(--fg); font-weight:600}
+
+/* sitemap */
+.tree{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:16px}
+.node{background:var(--paper); border:1px solid var(--edge); border-radius:3px; padding:18px 18px 16px; display:flex; flex-direction:column; gap:10px}
+.node h4{font-family:var(--sans); font-size:1rem; font-weight:600; display:flex; align-items:baseline; gap:9px}
+.node h4 i{font-family:var(--mono); font-style:normal; font-size:.68rem; color:var(--fg-3); letter-spacing:.1em}
+.node ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px}
+.node li{font-size:.87rem; color:var(--fg-2); padding-left:14px; position:relative}
+.node li::before{content:""; position:absolute; left:0; top:.62em; width:6px; height:1px; background:var(--accent)}
+.node.gated{border-color:var(--accent); box-shadow:inset 3px 0 0 var(--accent)}
+.node .tag{font-family:var(--mono); font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent)}
+
+/* flow */
+.flow{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; counter-reset:f}
+.step{background:var(--paper); border:1px solid var(--edge); border-radius:3px; padding:16px; position:relative}
+.step::before{counter-increment:f; content:counter(f); font-family:var(--mono); font-size:.7rem; color:var(--accent); display:block; margin-bottom:8px}
+.step b{display:block; font-size:.92rem; font-weight:600; margin-bottom:4px}
+.step span{font-size:.84rem; color:var(--fg-2)}
+
+@media (max-width:640px){
+  .diag > div{grid-template-columns:1fr}
+}
+</style>
+
+<header class="masthead">
+  <div class="mast-inner">
+    <div class="brandline">
+      <svg class="mark" viewBox="0 0 668 749" fill="currentColor" aria-hidden="true"><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
+      <span>Jelly · novo jelly.pt</span>
+    </div>
+    <div class="mast-meta">Direções visuais &amp; stack<br>Agosto 2026</div>
+  </div>
+</header>
+
+<main>
+<section class="wrap opening">
+  <div class="mono kicker">Três direções para um site que faça jus à assinatura</div>
+  <h1>Be the change,<br>mas <em>a começar por nós</em>.</h1>
+  <p class="lede">A Jelly vende estratégia, criatividade e tecnologia — e o site é a primeira prova. Este documento apresenta a leitura do site atual, a arquitetura proposta (incluindo a área reservada a prestadores) e <strong>três direções visuais completas</strong>, com mockups de homepage navegáveis. No fim, a decisão de stack.</p>
+</section>
+<hr class="rule">
+
+<section class="wrap section">
+  <div class="sechead">
+    <div class="mono">01 · Leitura</div>
+    <h2>O que o site atual já resolve — e o que trava</h2>
+  </div>
+  <p class="lede" style="margin-bottom:30px">O jelly.pt atual está bilingue, tem portfolio, blog e páginas de serviço com boa cobertura semântica (branding, marketing digital, IA, UI/UX, websites). O problema não é de conteúdo — é de <strong>hierarquia, ritmo e ambição visual</strong>. Nota: o domínio está bloqueado pela política de rede desta sessão, por isso a leitura abaixo foi feita a partir do índice público das páginas e do brand book, não de inspeção direta do DOM.</p>
+  <dl class="diag">
+    <div><dt>Estrutura</dt><dd>URLs a denunciar histórico de CMS — <b>/servicos__trashed-2/inteligencia-artificial/</b> é sintoma de migrações acumuladas. Portfolio dividido entre jelly.pt e jellycode.pt, o que fragmenta autoridade e confunde a leitura de quem chega.</dd></div>
+    <div><dt>Narrativa</dt><dd>A assinatura <b>“be the change”</b> aparece no rodapé, não na tese. As frases mais fortes da marca — <i>“A ação é a nossa estratégia”</i>, <i>“When the vision is clear, strategy is easy”</i> — vivem nas propostas comerciais e não no site.</dd></div>
+    <div><dt>Prova</dt><dd>Clientes de peso e 15 anos de casa, sem um sistema de prova legível: falta o par <b>caso → resultado</b> com número. A musculatura de reporting (analytics.jelly.pt, insights com IA) é um diferencial invisível hoje.</dd></div>
+    <div><dt>IA</dt><dd>A oferta de IA e agentes existe, mas comunicada como página de serviço. É a parte mais vendável do posicionamento atual e merece tratamento de <b>capítulo</b>, não de item de menu.</dd></div>
+    <div><dt>Conteúdo</dt><dd>Blog e notícias vivem no mesmo saco. Separar <b>Blog</b> (opinião, know-how, SEO) de <b>Newsroom</b> (notícias, eventos, press) dá-lhes cadências, formatos e públicos diferentes — e liberta o blog para ser editorial.</dd></div>
+    <div><dt>Prestadores</dt><dd>Não existe. Hoje o circuito de faturação de freelancers e fornecedores acontece por email. É o primeiro pedaço de <b>produto</b> dentro do site.</dd></div>
+  </dl>
+</section>
+<hr class="rule">
+
+<section class="wrap section">
+  <div class="sechead">
+    <div class="mono">02 · Arquitetura</div>
+    <h2>Sete territórios, um deles fechado</h2>
+  </div>
+  <div class="tree" style="margin-bottom:22px">
+    <div class="node">
+      <h4>Homepage <i>/</i></h4>
+      <ul><li>Tese “be the change” em 6 palavras</li><li>Serviços em 4 blocos (Brand, Marketing, IA, Tech)</li><li>3 casos com resultado</li><li>Parede de clientes</li><li>Últimos artigos + newsroom</li></ul>
+    </div>
+    <div class="node">
+      <h4>Sobre <i>/sobre</i></h4>
+      <ul><li>Manifesto e missão</li><li>15 anos: linha de tempo</li><li>Equipa por departamento</li><li>Como trabalhamos (método)</li><li>Cultura e carreiras</li></ul>
+    </div>
+    <div class="node">
+      <h4>Serviços <i>/servicos/&lt;slug&gt;</i></h4>
+      <ul><li>Branding &amp; Design</li><li>Marketing &amp; Performance</li><li>Inteligência Artificial</li><li>Websites, e-commerce &amp; CRM</li></ul>
+    </div>
+    <div class="node">
+      <h4>Projetos <i>/projetos</i></h4>
+      <ul><li>Índice filtrável (serviço, indústria)</li><li>Caso: desafio → abordagem → resultado</li><li>Métricas e créditos</li><li>Unificar jellycode.pt</li></ul>
+    </div>
+    <div class="node">
+      <h4>Clientes <i>/clientes</i></h4>
+      <ul><li>Parede completa por setor</li><li>Testemunhos em vídeo/citação</li><li>Relações de longa duração</li></ul>
+    </div>
+    <div class="node">
+      <h4>Blog <i>/blog</i></h4>
+      <ul><li>Opinião e know-how</li><li>Categorias e autores</li><li>Data-viz de marca nos artigos</li></ul>
+    </div>
+    <div class="node">
+      <h4>Newsroom <i>/newsroom</i></h4>
+      <ul><li>Notícias Jelly</li><li>Eventos (próximos e passados)</li><li>Press &amp; clipping + press kit</li></ul>
+    </div>
+    <div class="node">
+      <h4>Contactos <i>/contactos</i></h4>
+      <ul><li>Briefing curto qualificado</li><li>Agenda direta do CEO</li><li>Morada, mapa, recrutamento</li></ul>
+    </div>
+    <div class="node gated">
+      <span class="tag">Área fechada · magic link</span>
+      <h4>Prestadores <i>/prestadores</i></h4>
+      <ul><li>Pedir link por email validado</li><li>Submissão de faturas (form Monday)</li><li>Estado dos pagamentos (fase 2)</li><li>Documentos e condições</li></ul>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="note alt">
+      <h4>Porque é que Newsroom não é Blog</h4>
+      <p>Blog optimiza para busca e autoridade: artigos longos, evergreen, com autor. Newsroom optimiza para atualidade e imprensa: datado, curto, com press kit e contacto de assessoria. Misturados, um estraga a cadência do outro.</p>
+    </div>
+    <div class="note alt">
+      <h4>Bilingue desde a raiz</h4>
+      <p>PT/EN como duas árvores completas (<i>/en/…</i>), com slugs traduzidos e hreflang, não como tradução automática por cima. O conteúdo de newsroom pode ser mono-idioma quando fizer sentido.</p>
+    </div>
+    <div class="note alt">
+      <h4>Um caso é um produto</h4>
+      <p>Cada projeto entra com desafio, abordagem, entregáveis e <strong>um número</strong>. Sem número, é galeria; com número, é prova. Os casos alimentam homepage, serviços e propostas comerciais.</p>
+    </div>
+  </div>
+</section>
+<hr class="rule">
+
+<section class="wrap section">
+  <div class="sechead">
+    <div class="mono">03 · Fluxo prestadores</div>
+    <h2>Sem password, sem atrito, sem conta para gerir</h2>
+  </div>
+  <div class="flow" style="margin-bottom:26px">
+    <div class="step"><b>Email</b><span>O prestador escreve o email em /prestadores. Só emails na lista de prestadores validados avançam.</span></div>
+    <div class="step"><b>Link assinado</b><span>Envio de magic link com token de uso único, válido 15 minutos, assinado no servidor.</span></div>
+    <div class="step"><b>Sessão curta</b><span>Cookie httpOnly de 7 dias. Sem registo, sem recuperação de password, sem base de dados de credenciais.</span></div>
+    <div class="step"><b>Submissão</b><span>Página com o formulário Monday embebido (script oficial), pré-preenchido com o email autenticado.</span></div>
+    <div class="step"><b>Pagamento</b><span>O item cai no board de pagamentos do Monday. A Jelly trata do resto onde já trata hoje.</span></div>
+  </div>
+  <div class="cols">
+    <div class="note">
+      <h4>Resposta sempre igual</h4>
+      <p>Email na lista ou não, a mensagem é a mesma: “se este email estiver registado, enviámos um link”. Evita transformar o formulário num verificador de quem trabalha com a Jelly.</p>
+    </div>
+    <div class="note">
+      <h4>Rate limit e uso único</h4>
+      <p>Máximo de pedidos por email e por IP, token invalidado no primeiro uso. Fase 2: estado dos pagamentos lido do Monday por API, em leitura apenas.</p>
+    </div>
+    <div class="note">
+      <h4>Fora do índice</h4>
+      <p><i>noindex</i>, fora do sitemap e sem link no menu principal — só no rodapé. A área é utilitária: veste a marca, mas comporta-se como ferramenta.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<style>
+/* ───────────────────── apresentação das direções ───────────────────── */
+.dir{border-top:1px solid var(--edge); padding:clamp(48px,7vw,84px) 0 0}
+.dir-head{display:grid; grid-template-columns:minmax(0,1fr); gap:18px; max-width:var(--maxw); margin:0 auto; padding:0 28px}
+.dir-tag{display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--fg-3)}
+.dir-tag b{color:var(--accent); font-weight:500}
+.dir-head h2{font-size:clamp(2.1rem,5vw,3.4rem); letter-spacing:-.015em}
+.dir-head h2 small{display:block; font-family:var(--sans); font-weight:400; font-size:.34em; letter-spacing:.02em; color:var(--fg-3); margin-top:12px; line-height:1.4}
+.dir-body{max-width:var(--maxw); margin:0 auto; padding:26px 28px 34px; display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:40px; align-items:start}
+@media (max-width:820px){.dir-body{grid-template-columns:1fr; gap:26px}}
+.dir-body p{color:var(--fg-2)}
+.dir-body p + p{margin-top:14px}
+.spec{background:var(--paper); border:1px solid var(--edge); border-radius:3px; padding:20px}
+.spec dl{margin:0; display:grid; gap:14px}
+.spec dt{font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-3); margin-bottom:5px}
+.spec dd{margin:0; font-size:.9rem; color:var(--fg)}
+.swatches{display:flex; gap:6px; flex-wrap:wrap}
+.swatches i{width:100%; max-width:34px; height:34px; border-radius:2px; display:block; box-shadow:inset 0 0 0 1px rgba(21,23,25,.12)}
+.risk{display:flex; gap:10px; align-items:flex-start; margin-top:16px; padding-top:14px; border-top:1px dashed var(--edge)}
+.risk span{font-size:.85rem; color:var(--fg-2)}
+.risk b{font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); white-space:nowrap; padding-top:2px}
+
+/* browser frame */
+.stage{max-width:1240px; margin:0 auto; padding:0 20px clamp(48px,7vw,84px)}
+.frame{border:1px solid var(--edge); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); background:var(--paper)}
+.chrome{display:flex; align-items:center; gap:14px; padding:11px 14px; background:var(--paper); border-bottom:1px solid var(--edge-soft)}
+.chrome .dots{display:flex; gap:6px}
+.chrome .dots i{width:9px; height:9px; border-radius:50%; background:var(--edge); display:block}
+.chrome .url{flex:1; font-family:var(--mono); font-size:.7rem; color:var(--fg-3); background:var(--ground); border-radius:20px; padding:5px 12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.canvas{container-type:inline-size; overflow:hidden}
+
+/* mockup shared primitives */
+.mk{font-family:var(--sans); line-height:1.5; font-size:15px}
+.mk a{text-decoration:none}
+.mk nav{display:flex; align-items:center; justify-content:space-between; gap:20px}
+.mk .navlinks{display:flex; gap:clamp(12px,2.2cqw,28px); align-items:center; font-size:clamp(11px,1.05cqw,13.5px); letter-spacing:.01em}
+.mk .logo{width:clamp(58px,7cqw,92px); color:currentColor}
+@container (max-width:600px){ .mk .navlinks .opt{display:none} }
+
+/* ═══════════ D1 · MANIFESTO ═══════════ */
+.d1{background:#f4f6f8; color:#151719; padding:0 0 clamp(26px,3cqw,44px)}
+.d1 nav{padding:clamp(18px,2.4cqw,30px) clamp(20px,4cqw,58px); border-bottom:1px solid #dfe4e9}
+.d1 .navlinks a{color:#2a384a}
+.d1 .navlinks a.cta{color:#dd364a; border-bottom:1px solid #dd364a; padding-bottom:2px}
+.d1 .hero{display:grid; grid-template-columns:minmax(0,150px) minmax(0,1fr); gap:clamp(16px,3cqw,44px); padding:clamp(38px,6cqw,88px) clamp(20px,4cqw,58px) clamp(30px,4cqw,56px)}
+@container (max-width:720px){.d1 .hero{grid-template-columns:1fr}}
+.d1 .margin{font-family:var(--mono); font-size:clamp(9.5px,.85cqw,11px); letter-spacing:.14em; text-transform:uppercase; color:#78848f; display:flex; flex-direction:column; gap:10px}
+.d1 .margin b{color:#dd364a; font-weight:500}
+.d1 h1{font-family:var(--serif); font-weight:600; font-size:clamp(34px,7.4cqw,104px); line-height:.95; letter-spacing:-.03em; margin:0}
+.d1 h1 em{font-style:italic; color:#dd364a}
+.d1 h1 .strike{position:relative; display:inline-block}
+.d1 h1 .strike::after{content:""; position:absolute; left:-1%; right:-1%; top:56%; height:clamp(3px,.5cqw,7px); background:#dd364a; transform:rotate(-1.4deg)}
+.d1 .heroft{display:flex; flex-wrap:wrap; gap:clamp(14px,3cqw,44px); align-items:flex-end; justify-content:space-between; margin-top:clamp(22px,3cqw,44px); padding-top:clamp(16px,2cqw,26px); border-top:1px solid #151719}
+.d1 .heroft p{margin:0; max-width:44ch; font-size:clamp(12px,1.25cqw,16.5px); color:#2a384a}
+.d1 .heroft .go{font-family:var(--mono); font-size:clamp(10px,.95cqw,12px); letter-spacing:.14em; text-transform:uppercase; color:#151719; display:flex; align-items:center; gap:8px; white-space:nowrap}
+.d1 .heroft .go i{width:clamp(22px,3cqw,38px); height:1px; background:#dd364a; display:block}
+
+.d1 .ledger{padding:0 clamp(20px,4cqw,58px)}
+.d1 .lbl{font-family:var(--mono); font-size:clamp(9.5px,.85cqw,11px); letter-spacing:.16em; text-transform:uppercase; color:#78848f; padding:clamp(22px,3cqw,44px) 0 clamp(10px,1.4cqw,18px); border-bottom:1px solid #dfe4e9}
+.d1 .row{display:grid; grid-template-columns:minmax(0,2.1fr) minmax(0,1fr) minmax(0,86px); gap:clamp(10px,2cqw,28px); align-items:baseline; padding:clamp(11px,1.5cqw,20px) 0; border-bottom:1px solid #dfe4e9; transition:padding-left .35s ease, background .35s ease}
+.d1 .row:hover{padding-left:clamp(6px,1cqw,14px); background:#fff}
+.d1 .row .name{font-family:var(--serif); font-weight:500; font-size:clamp(16px,2.4cqw,34px); letter-spacing:-.015em}
+.d1 .row:hover .name{color:#dd364a}
+.d1 .row .what{font-size:clamp(10.5px,1cqw,13px); color:#78848f}
+.d1 .row .num{font-family:var(--serif); font-size:clamp(13px,1.5cqw,21px); color:#151719; text-align:right; font-variant-numeric:tabular-nums}
+.d1 .row .num b{color:#dd364a; font-weight:600}
+@container (max-width:560px){.d1 .row{grid-template-columns:minmax(0,1fr) minmax(0,72px)} .d1 .row .what{display:none}}
+
+.d1 .quad{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:#dfe4e9; margin-top:clamp(30px,4cqw,64px)}
+@container (max-width:760px){.d1 .quad{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.d1 .quad > div{background:#f4f6f8; padding:clamp(14px,2cqw,26px) clamp(12px,1.6cqw,22px) clamp(20px,3cqw,40px); display:flex; flex-direction:column; gap:8px; min-height:clamp(120px,15cqw,210px)}
+.d1 .quad h4{font-family:var(--serif); font-weight:600; font-size:clamp(14px,1.7cqw,24px); margin:0; letter-spacing:-.01em}
+.d1 .quad span{font-size:clamp(10.5px,1cqw,13px); color:#2a384a; line-height:1.5}
+.d1 .quad em{margin-top:auto; font-family:var(--mono); font-style:normal; font-size:clamp(9px,.8cqw,10.5px); letter-spacing:.14em; text-transform:uppercase; color:#dd364a}
+.d1 .clients{padding:clamp(28px,4cqw,60px) clamp(20px,4cqw,58px) 0}
+.d1 .clients p{font-family:var(--serif); font-size:clamp(15px,2cqw,29px); line-height:1.35; letter-spacing:-.01em; margin:10px 0 0; color:#151719}
+.d1 .clients p span{color:#a8b2bc}
+</style>
+
+<section class="dir" id="d1">
+  <div class="dir-head">
+    <div class="dir-tag"><b>Direção 01</b> · Manifesto</div>
+    <h2>O site como declaração escrita<small>Papel editorial, tipografia grande, vermelho usado como pontuação. Para quem chega, a primeira coisa que existe é uma frase — não um slider.</small></h2>
+  </div>
+  <div class="dir-body">
+    <div>
+      <p>Esta direção parte do que a Jelly já escreve melhor: o manifesto. A homepage abre com uma afirmação em Jubilat a ocupar quase toda a largura, com a assinatura marcada a vermelho — <i>be the change</i> não é rodapé, é a tese. Tudo o resto obedece a uma régua editorial: coluna de marginália em mono à esquerda, corpo à direita, filetes finos a separar capítulos.</p>
+      <p>Os projetos não são cards. São um <strong>índice de trabalho</strong> — linhas tipográficas com cliente, disciplina e o número que prova o resultado. Ao passar o rato, a linha respira e o nome fica vermelho. É um gesto discreto que faz o portfolio parecer um registo de casa com 15 anos, não uma galeria.</p>
+      <p>É a direção mais segura em termos de longevidade e a mais forte para credibilidade B2B enterprise (BNP, Montblanc-tipo). Exige disciplina: com pouca cor e pouco movimento, cada erro de espaçamento ou de fotografia fica exposto.</p>
+    </div>
+    <div class="spec">
+      <dl>
+        <div><dt>Paleta</dt><dd><div class="swatches"><i style="background:#f4f6f8"></i><i style="background:#151719"></i><i style="background:#dd364a"></i><i style="background:#2a384a"></i><i style="background:#c3abff"></i></div></dd></div>
+        <div><dt>Tipografia</dt><dd>Jubilat 600 em display até 104px · Poppins 400 em corpo · mono para marginália e labels</dd></div>
+        <div><dt>Layout</dt><dd>Grelha assimétrica 150px + fluido. Filetes de 1px como estrutura. Zero sombras.</dd></div>
+        <div><dt>Movimento</dt><dd>Mínimo: revelação por scroll e o deslizar das linhas do índice</dd></div>
+        <div><dt>Fotografia</dt><dd>Preto e branco de equipa e making-of; trabalho de cliente a cores, em cheio</dd></div>
+      </dl>
+      <div class="risk"><b>Risco</b><span>Sem fotografia de qualidade e sem números reais nos casos, esta direção fica vazia. É a que mais depende de produção de conteúdo.</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="frame">
+      <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">jelly.pt</div></div>
+      <div class="canvas">
+        <div class="mk d1">
+          <nav>
+            <svg class="logo" viewBox="190 200 1120 450" fill="#dd364a" aria-label="Jelly"><path d="M1048.7,352.1c0,0,3.3-0.7,5.6-0.8c7.3-0.3,20,1.3,27.6,21.3l44.6,117.3c0,0,17.5,43.5,20.9,66c1.7,11.1,1.8,16.4,0,20.6c-1.4,3.2-5,8.3-12.2,8.3c-6,0-13.6-4.4-13-14.3c0.6-8.9-0.1-17.3-9.9-27.2c-14-14.1-34.9-9.1-44.5,1.3c-4.2,4.6-6.6,10-7.7,15.3c-6.1,30.7,23.9,63.2,64,63.2c37.4,0,54.1-25,67.5-57.1c15.3-36.7,87.6-209.2,87.6-209.2c4.4-10.4,8.4-23.2,19.3-23.2c1.9,0,4.2,0,4.2,0V307h-65.3v26.6c5.4-0.1,8.4,0.3,11,2.3c5.6,4.3,6.4,10.9,1.8,21.9c-7.9,18.9-35,83.1-35,83.1l-40.3-106c-4.7-12.3-19.6-32.4-47-32.4c-23,0-88.7,25-88.7,25L1048.7,352.1z"/><path d="M586.1,418l91.5-11.7c16-2.1,25.7-18.3,20.5-33.5c-9.6-27.8-45.8-70.3-99.6-70.3c-62.2,0-112.9,51.7-112.9,116.4c0,67.5,54.2,116,111,116c49.5,0,81.2-25.2,94.7-43.2l-13.6-19.8c-10.9,8.6-34.4,23.4-58.1,19c-26.7-5-33.4-32.1-33.4-49.9V418z M621,343.2v43.3l-34.7,4.6v-47.9c0-9.6,7.8-17.3,17.3-17.3h0C613.2,325.9,621,333.7,621,343.2z"/><path d="M834.6,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9L834.6,264.1z"/><path d="M1004.7,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9V264.1z"/><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
+            <div class="navlinks">
+              <a href="#d1">Sobre</a><a href="#d1">Serviços</a><a href="#d1">Projetos</a><a href="#d1" class="opt">Clientes</a><a href="#d1" class="opt">Blog</a><a href="#d1" class="opt">Newsroom</a><a href="#d1" class="cta">Falar connosco</a>
+            </div>
+          </nav>
+          <div class="hero">
+            <div class="margin"><span>Lisboa · desde 2010</span><b>be the change</b><span>Branding<br>Marketing<br>Inteligência artificial<br>Tecnologia</span></div>
+            <div>
+              <h1>A <span class="strike">estratégia</span><br><em>ação</em> é a nossa<br>estratégia.</h1>
+              <div class="heroft">
+                <p>Ajudamos empresas a comunicar e a desempenhar melhor, ligando os pontos entre branding, marketing, comunicação e tecnologia.</p>
+                <span class="go"><i></i>Ver o trabalho</span>
+              </div>
+            </div>
+          </div>
+          <div class="ledger">
+            <div class="lbl">Índice de trabalho · 2024 — 2026</div>
+            <div class="row"><span class="name">Adegamãe</span><span class="what">Website, e-commerce &amp; brand digital</span><span class="num"><b>+38%</b></span></div>
+            <div class="row"><span class="name">321 Crédito</span><span class="what">Paid media full-funnel &amp; CRM</span><span class="num"><b>−27%</b></span></div>
+            <div class="row"><span class="name">Slide &amp; Splash</span><span class="what">Campanha de verão &amp; conteúdos</span><span class="num"><b>2,4M</b></span></div>
+            <div class="row"><span class="name">Defined.ai</span><span class="what">Demand gen &amp; agentes de IA</span><span class="num"><b>4,1×</b></span></div>
+            <div class="row"><span class="name">Evidensia</span><span class="what">Rede de clínicas · local &amp; paid</span><span class="num"><b>+61%</b></span></div>
+            <div class="quad">
+              <div><h4>Branding</h4><span>Identidade, posicionamento e narrativa para marcas que precisam de ser reconhecíveis antes de serem lembradas.</span><em>Brand →</em></div>
+              <div><h4>Marketing</h4><span>Dados, criatividade e cadência. Tráfego, leads e vendas com o número ao lado.</span><em>Performance →</em></div>
+              <div><h4>Inteligência artificial</h4><span>Da consultoria à implementação de agentes e automação com impacto real na operação.</span><em>IA →</em></div>
+              <div><h4>Tecnologia</h4><span>Websites, e-commerce, CRM e CDP a ligar marketing, vendas e operações.</span><em>Tech →</em></div>
+            </div>
+          </div>
+          <div class="clients">
+            <div class="lbl" style="border:0; padding-bottom:0">Companhia · uma seleção</div>
+            <p>BNP Paribas <span>·</span> Montblanc <span>·</span> Cetelem <span>·</span> Adegamãe <span>·</span> 321 Crédito <span>·</span> Slide &amp; Splash <span>·</span> Defined.ai <span>·</span> Evidensia <span>·</span> uPlayback <span>·</span> <span>e mais 40 marcas desde 2010</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══════════ D2 · KINETIC ═══════════ */
+.d2{background:#dd364a; color:#fff; overflow:hidden}
+.d2 nav{position:relative; z-index:3; padding:clamp(14px,2cqw,24px) clamp(16px,3cqw,40px)}
+.d2 .navlinks{background:rgba(255,255,255,.14); border-radius:999px; padding:clamp(6px,.9cqw,11px) clamp(12px,1.8cqw,22px); backdrop-filter:blur(6px)}
+.d2 .navlinks a{color:#fff; opacity:.86}
+.d2 .navlinks a:hover{opacity:1}
+.d2 .navlinks a.cta{background:#dce277; color:#151719; border-radius:999px; padding:clamp(4px,.6cqw,7px) clamp(9px,1.3cqw,16px); opacity:1; font-weight:500}
+.d2 .hero{position:relative; overflow:hidden; padding:clamp(24px,4cqw,56px) clamp(16px,3cqw,40px) clamp(26px,4cqw,50px)}
+.d2 .blob{position:absolute; z-index:0; filter:blur(2px); opacity:.9}
+.d2 .blob.b1{width:34cqw; height:34cqw; right:-6cqw; top:-8cqw; background:radial-gradient(circle at 35% 30%,#ff9aa5,#dd364a 72%); border-radius:58% 42% 47% 53%/47% 55% 45% 53%; animation:wob 14s ease-in-out infinite}
+.d2 .blob.b2{width:20cqw; height:20cqw; left:-5cqw; bottom:-7cqw; background:radial-gradient(circle at 60% 40%,#c3abff,#9d141c 80%); border-radius:46% 54% 61% 39%/54% 41% 59% 46%; animation:wob 18s ease-in-out infinite reverse}
+@keyframes wob{
+  0%,100%{border-radius:58% 42% 47% 53%/47% 55% 45% 53%; transform:rotate(0) scale(1)}
+  50%{border-radius:42% 58% 38% 62%/58% 44% 56% 42%; transform:rotate(9deg) scale(1.05)}
+}
+.d2 h1{position:relative; z-index:1; font-family:var(--sans); font-weight:700; font-size:clamp(38px,10.4cqw,148px); line-height:.86; letter-spacing:-.045em; margin:clamp(10px,2cqw,26px) 0 0; text-transform:lowercase}
+.d2 h1 .lime{color:#dce277}
+.d2 h1 .out{color:transparent; -webkit-text-stroke:clamp(1px,.16cqw,2.4px) rgba(255,255,255,.72)}
+.d2 .hsub{position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:clamp(12px,2.4cqw,34px); align-items:flex-end; justify-content:space-between; margin-top:clamp(18px,2.6cqw,36px)}
+.d2 .hsub p{margin:0; max-width:40ch; font-size:clamp(11.5px,1.2cqw,16px); color:rgba(255,255,255,.9); font-family:var(--serif)}
+.d2 .pill{display:inline-flex; align-items:center; gap:9px; background:#151719; color:#fff; border-radius:999px; padding:clamp(8px,1cqw,13px) clamp(14px,1.8cqw,24px); font-size:clamp(11px,1.05cqw,14px); font-weight:500; white-space:nowrap}
+.d2 .pill i{width:7px; height:7px; border-radius:50%; background:#dce277; display:block}
+.d2 .marquee{position:relative; z-index:1; border-top:1px solid rgba(255,255,255,.28); border-bottom:1px solid rgba(255,255,255,.28); overflow:hidden; padding:clamp(7px,1cqw,14px) 0; margin-top:clamp(20px,3cqw,42px)}
+.d2 .marquee div{display:flex; gap:clamp(20px,3cqw,44px); white-space:nowrap; width:max-content; animation:slide 26s linear infinite; font-family:var(--mono); font-size:clamp(10px,1cqw,13px); letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.82)}
+.d2 .marquee span b{color:#dce277; font-weight:500}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){
+  .d2 .marquee div{animation:none}
+  .d2 .blob{animation:none}
+}
+.d2 .sheet{background:#f4f6f8; color:#151719; border-radius:clamp(18px,2.6cqw,34px) clamp(18px,2.6cqw,34px) 0 0; margin-top:clamp(22px,3cqw,44px); padding:clamp(22px,3.4cqw,54px) clamp(16px,3cqw,40px) clamp(26px,4cqw,58px)}
+.d2 .shead{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:clamp(16px,2.2cqw,30px)}
+.d2 .shead h3{font-family:var(--serif); font-weight:600; font-size:clamp(19px,3cqw,42px); letter-spacing:-.02em; margin:0}
+.d2 .shead span{font-family:var(--mono); font-size:clamp(9.5px,.85cqw,11px); letter-spacing:.16em; text-transform:uppercase; color:#78848f}
+.d2 .stickers{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(8px,1.2cqw,16px)}
+@container (max-width:700px){.d2 .stickers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.d2 .sticker{border-radius:clamp(12px,1.8cqw,22px); padding:clamp(13px,1.8cqw,24px); min-height:clamp(118px,15cqw,200px); display:flex; flex-direction:column; gap:7px; transform:rotate(-.6deg); transition:transform .3s ease}
+.d2 .sticker:nth-child(even){transform:rotate(.7deg)}
+.d2 .sticker:hover{transform:rotate(0) translateY(-4px)}
+.d2 .sticker h4{font-family:var(--sans); font-weight:600; font-size:clamp(13px,1.5cqw,20px); margin:0; letter-spacing:-.01em}
+.d2 .sticker p{margin:0; font-size:clamp(10px,.98cqw,13px); line-height:1.5; opacity:.82}
+.d2 .sticker em{margin-top:auto; font-style:normal; font-family:var(--mono); font-size:clamp(9px,.8cqw,10.5px); letter-spacing:.12em; text-transform:uppercase}
+.d2 .s1{background:#151719; color:#fff}
+.d2 .s2{background:#dce277; color:#151719}
+.d2 .s3{background:#c3abff; color:#151719}
+.d2 .s4{background:#ff9aa5; color:#151719}
+.d2 .cases{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(8px,1.2cqw,16px); margin-top:clamp(14px,2cqw,26px)}
+@container (max-width:700px){.d2 .cases{grid-template-columns:1fr 1fr} .d2 .cases > *:nth-child(3){display:none}}
+.d2 .case{background:#fff; border-radius:clamp(12px,1.8cqw,22px); overflow:hidden; display:flex; flex-direction:column}
+.d2 .case .shot{height:clamp(84px,11cqw,150px); display:flex; align-items:flex-end; padding:clamp(10px,1.2cqw,16px); font-family:var(--mono); font-size:clamp(9px,.8cqw,10.5px); letter-spacing:.14em; text-transform:uppercase; color:#fff}
+.d2 .case:nth-child(1) .shot{background:linear-gradient(145deg,#dd364a,#9d141c)}
+.d2 .case:nth-child(2) .shot{background:linear-gradient(145deg,#2a384a,#151719)}
+.d2 .case:nth-child(3) .shot{background:linear-gradient(145deg,#c3abff,#dd364a)}
+.d2 .case .body{padding:clamp(11px,1.4cqw,18px); display:flex; flex-direction:column; gap:5px}
+.d2 .case b{font-size:clamp(12px,1.25cqw,17px); font-weight:600}
+.d2 .case span{font-size:clamp(10px,.95cqw,12.5px); color:#5a6673}
+.d2 .case .kpi{font-family:var(--serif); font-size:clamp(17px,2.2cqw,32px); color:#dd364a; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+</style>
+
+<section class="dir" id="d2">
+  <div class="dir-head">
+    <div class="dir-tag"><b>Direção 02</b> · Kinetic</div>
+    <h2>Vermelho primeiro, e a marca a mexer<small>A cor da marca deixa de ser detalhe e passa a ser o chão. A matéria “jelly” aparece: formas que ondulam, camadas que deslizam, adesivos de cor.</small></h2>
+  </div>
+  <div class="dir-body">
+    <div>
+      <p>Aqui o vermelho #dd364a ocupa o ecrã inteiro no primeiro scroll — decisão de marca antes de decisão de layout. A tipografia de display muda de registo: Poppins 700 em caixa baixa, muito apertada, tratada como objeto gráfico, com a assinatura em contorno vazado. A Jubilat mantém-se, mas passa a voz secundária, para citações e títulos de secção.</p>
+      <p>O nome da agência é levado a sério como material: duas formas gelatinosas ondulam devagar por trás do título, o friso em movimento repete as frases-âncora e os blocos de serviço são <strong>adesivos</strong> em lima, lilás e rosa, ligeiramente rodados, que endireitam ao passar o rato. Depois do herói, o conteúdo sobe numa “folha” branca de cantos redondos — o gesto que dá ritmo a toda a navegação.</p>
+      <p>É a direção mais memorável e a mais arriscada. Ganha em tech, retail e talento (recrutamento); pede mais cuidado em contextos corporativos conservadores, onde o vermelho a cheio pode ser lido como grito.</p>
+    </div>
+    <div class="spec">
+      <dl>
+        <div><dt>Paleta</dt><dd><div class="swatches"><i style="background:#dd364a"></i><i style="background:#dce277"></i><i style="background:#c3abff"></i><i style="background:#ff9aa5"></i><i style="background:#151719"></i></div></dd></div>
+        <div><dt>Tipografia</dt><dd>Poppins 700 em display, tracking −4,5% · Jubilat como voz secundária · mono no friso</dd></div>
+        <div><dt>Layout</dt><dd>Folhas empilhadas de cantos redondos; grelhas de 4 e de 3; adesivos rodados</dd></div>
+        <div><dt>Movimento</dt><dd>Central: ondulação lenta das formas, friso contínuo, folhas que sobem no scroll</dd></div>
+        <div><dt>Fotografia</dt><dd>Recortes sobre cor, duotone vermelho/lima, vídeo curto em loop no herói</dd></div>
+      </dl>
+      <div class="risk"><b>Risco</b><span>Movimento a mais cansa e pesa. Regra: uma animação por ecrã, tudo desligado em <i>prefers-reduced-motion</i>, orçamento de performance fixado à cabeça.</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="frame">
+      <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">jelly.pt</div></div>
+      <div class="canvas">
+        <div class="mk d2">
+          <nav>
+            <svg class="logo" viewBox="190 200 1120 450" fill="#ffffff" aria-label="Jelly"><path d="M1048.7,352.1c0,0,3.3-0.7,5.6-0.8c7.3-0.3,20,1.3,27.6,21.3l44.6,117.3c0,0,17.5,43.5,20.9,66c1.7,11.1,1.8,16.4,0,20.6c-1.4,3.2-5,8.3-12.2,8.3c-6,0-13.6-4.4-13-14.3c0.6-8.9-0.1-17.3-9.9-27.2c-14-14.1-34.9-9.1-44.5,1.3c-4.2,4.6-6.6,10-7.7,15.3c-6.1,30.7,23.9,63.2,64,63.2c37.4,0,54.1-25,67.5-57.1c15.3-36.7,87.6-209.2,87.6-209.2c4.4-10.4,8.4-23.2,19.3-23.2c1.9,0,4.2,0,4.2,0V307h-65.3v26.6c5.4-0.1,8.4,0.3,11,2.3c5.6,4.3,6.4,10.9,1.8,21.9c-7.9,18.9-35,83.1-35,83.1l-40.3-106c-4.7-12.3-19.6-32.4-47-32.4c-23,0-88.7,25-88.7,25L1048.7,352.1z"/><path d="M586.1,418l91.5-11.7c16-2.1,25.7-18.3,20.5-33.5c-9.6-27.8-45.8-70.3-99.6-70.3c-62.2,0-112.9,51.7-112.9,116.4c0,67.5,54.2,116,111,116c49.5,0,81.2-25.2,94.7-43.2l-13.6-19.8c-10.9,8.6-34.4,23.4-58.1,19c-26.7-5-33.4-32.1-33.4-49.9V418z M621,343.2v43.3l-34.7,4.6v-47.9c0-9.6,7.8-17.3,17.3-17.3h0C613.2,325.9,621,333.7,621,343.2z"/><path d="M834.6,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9L834.6,264.1z"/><path d="M1004.7,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9V264.1z"/><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
+            <div class="navlinks">
+              <a href="#d2">Sobre</a><a href="#d2">Serviços</a><a href="#d2">Projetos</a><a href="#d2" class="opt">Clientes</a><a href="#d2" class="opt">Blog</a><a href="#d2" class="opt">Newsroom</a><a href="#d2" class="cta">Vamos a isto</a>
+            </div>
+          </nav>
+          <div class="hero">
+            <div class="blob b1" aria-hidden="true"></div>
+            <div class="blob b2" aria-hidden="true"></div>
+            <h1>be the<br><span class="lime">change</span> <span class="out">agora</span></h1>
+            <div class="hsub">
+              <p>Somos Jelly. Uma agência movida por propósito e mudança. Por trás de cada clique existem pessoas reais, desafios concretos e sonhos por realizar.</p>
+              <span class="pill"><i></i>15 anos · 40+ marcas · 5 equipas</span>
+            </div>
+            <div class="marquee" aria-hidden="true">
+              <div><span>quando a visão é clara <b>a estratégia é fácil</b></span><span>·</span><span>a ação é a nossa <b>estratégia</b></span><span>·</span><span>branding · marketing · <b>ia</b> · tecnologia</span><span>·</span><span>quando a visão é clara <b>a estratégia é fácil</b></span><span>·</span><span>a ação é a nossa <b>estratégia</b></span><span>·</span><span>branding · marketing · <b>ia</b> · tecnologia</span><span>·</span></div>
+            </div>
+          </div>
+          <div class="sheet">
+            <div class="shead"><h3>Quatro coisas que fazemos bem</h3><span>Serviços</span></div>
+            <div class="stickers">
+              <div class="sticker s1"><h4>Branding</h4><p>Identidade, posicionamento e narrativa. Marcas reconhecíveis antes de serem lembradas.</p><em>Ver →</em></div>
+              <div class="sticker s2"><h4>Marketing</h4><p>Full-funnel, conteúdos e paid media com o número sempre ao lado da ideia.</p><em>Ver →</em></div>
+              <div class="sticker s3"><h4>IA</h4><p>Agentes, automação e decisão. Consultoria que acaba em coisas a funcionar.</p><em>Ver →</em></div>
+              <div class="sticker s4"><h4>Tecnologia</h4><p>Sites, e-commerce, CRM e CDP a ligar marketing, vendas e operações.</p><em>Ver →</em></div>
+            </div>
+            <div class="shead" style="margin-top:clamp(20px,3cqw,42px)"><h3>Prova, não portfolio</h3><span>Projetos recentes</span></div>
+            <div class="cases">
+              <div class="case"><div class="shot">Adegamãe · e-commerce</div><div class="body"><b>Vender vinho como se conta uma história</b><span>Website, brand digital e captação de conteúdos</span><span class="kpi">+38% receita online</span></div></div>
+              <div class="case"><div class="shot">321 Crédito · paid</div><div class="body"><b>Menos custo por lead, mais leads certas</b><span>Paid media full-funnel e integração de CRM</span><span class="kpi">−27% CPL</span></div></div>
+              <div class="case"><div class="shot">Defined.ai · demand gen</div><div class="body"><b>Não se pede em casamento no primeiro encontro</b><span>Demand gen, conteúdos e agentes de IA</span><span class="kpi">4,1× ROAS</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══════════ D3 · SIGNAL ═══════════ */
+.d3{background:#101a24; color:#e6edf3; display:grid; grid-template-columns:minmax(0,240px) minmax(0,1fr)}
+@container (max-width:760px){.d3{grid-template-columns:1fr}}
+.d3 .rail{border-right:1px solid rgba(230,237,243,.1); padding:clamp(16px,2.4cqw,30px) clamp(14px,1.8cqw,24px); display:flex; flex-direction:column; gap:clamp(16px,2.4cqw,32px)}
+.d3 .rail .logo{width:clamp(56px,6cqw,84px)}
+.d3 .vnav{display:flex; flex-direction:column; gap:clamp(5px,.7cqw,9px)}
+.d3 .vnav a{font-size:clamp(11px,1.05cqw,13.5px); color:rgba(230,237,243,.68); display:flex; justify-content:space-between; align-items:center; padding:3px 0; border-bottom:1px solid rgba(230,237,243,.07)}
+.d3 .vnav a i{font-family:var(--mono); font-style:normal; font-size:clamp(8.5px,.75cqw,10px); color:rgba(230,237,243,.3)}
+.d3 .vnav a:hover{color:#fff}
+.d3 .vnav a.on{color:#fff}
+.d3 .vnav a.on i{color:#dd364a}
+.d3 .rail .quote{margin-top:auto; font-family:var(--serif); font-style:italic; font-size:clamp(11.5px,1.15cqw,15px); line-height:1.45; color:rgba(230,237,243,.8)}
+.d3 .rail .quote b{display:block; margin-top:8px; font-family:var(--mono); font-style:normal; font-weight:400; font-size:clamp(8.5px,.75cqw,10px); letter-spacing:.14em; text-transform:uppercase; color:#dd364a}
+.d3 .main{padding:clamp(18px,2.6cqw,34px) clamp(16px,2.6cqw,38px) clamp(24px,3.4cqw,48px); display:flex; flex-direction:column; gap:clamp(16px,2.4cqw,32px); min-width:0}
+.d3 .topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; font-family:var(--mono); font-size:clamp(8.5px,.78cqw,10.5px); letter-spacing:.16em; text-transform:uppercase; color:rgba(230,237,243,.45)}
+.d3 .topbar .live{display:inline-flex; align-items:center; gap:7px; color:#dce277}
+.d3 .topbar .live i{width:6px; height:6px; border-radius:50%; background:#dce277; display:block; box-shadow:0 0 0 3px rgba(220,226,119,.16)}
+.d3 h1{font-family:var(--sans); font-weight:600; font-size:clamp(26px,4.6cqw,62px); line-height:1.02; letter-spacing:-.03em; margin:0; max-width:22ch}
+.d3 h1 span{color:#dd364a}
+.d3 .sub{max-width:52ch; font-size:clamp(11.5px,1.1cqw,15px); color:rgba(230,237,243,.72)}
+.d3 .acts{display:flex; gap:10px; flex-wrap:wrap}
+.d3 .btn{font-size:clamp(10.5px,1cqw,13px); font-weight:500; padding:clamp(7px,.9cqw,12px) clamp(13px,1.6cqw,22px); border-radius:2px; background:#dd364a; color:#fff}
+.d3 .btn.ghost{background:transparent; color:#e6edf3; box-shadow:inset 0 0 0 1px rgba(230,237,243,.28)}
+.d3 .tiles{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:rgba(230,237,243,.1); border:1px solid rgba(230,237,243,.1)}
+@container (max-width:700px){.d3 .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.d3 .tile{background:#152230; padding:clamp(11px,1.4cqw,20px); display:flex; flex-direction:column; gap:6px}
+.d3 .tile dt{font-family:var(--mono); font-size:clamp(8px,.72cqw,10px); letter-spacing:.14em; text-transform:uppercase; color:rgba(230,237,243,.45)}
+.d3 .tile dd{margin:0; font-family:var(--mono); font-size:clamp(17px,2.1cqw,30px); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.d3 .tile .delta{font-family:var(--mono); font-size:clamp(9px,.82cqw,11px); color:#dce277}
+.d3 .tile .delta.dn{color:#ff9aa5}
+.d3 .spark{display:flex; align-items:flex-end; gap:2px; height:clamp(20px,2.6cqw,34px)}
+.d3 .spark i{flex:1; background:rgba(195,171,255,.42); display:block; border-radius:1px}
+.d3 .spark i:last-child{background:#dd364a}
+.d3 .panel{border:1px solid rgba(230,237,243,.1); background:#131f2b}
+.d3 .phead{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:clamp(10px,1.2cqw,16px) clamp(12px,1.5cqw,20px); border-bottom:1px solid rgba(230,237,243,.1)}
+.d3 .phead h3{font-family:var(--sans); font-weight:600; font-size:clamp(12.5px,1.3cqw,18px); margin:0; letter-spacing:-.01em}
+.d3 .phead span{font-family:var(--mono); font-size:clamp(8px,.72cqw,10px); letter-spacing:.14em; text-transform:uppercase; color:rgba(230,237,243,.4)}
+.d3 .funnel{padding:clamp(12px,1.6cqw,22px); display:flex; flex-direction:column; gap:clamp(7px,.9cqw,12px)}
+.d3 .fr{display:grid; grid-template-columns:minmax(0,112px) minmax(0,1fr) minmax(0,64px); gap:clamp(8px,1.2cqw,16px); align-items:center}
+.d3 .fr span{font-family:var(--mono); font-size:clamp(8.5px,.78cqw,10.5px); letter-spacing:.1em; text-transform:uppercase; color:rgba(230,237,243,.6)}
+.d3 .fr b{font-family:var(--mono); font-size:clamp(10px,.95cqw,12.5px); text-align:right; font-variant-numeric:tabular-nums; font-weight:400}
+.d3 .bar{height:clamp(14px,1.7cqw,22px); border-radius:1px}
+.d3 .bar.b1{width:100%; background:linear-gradient(90deg,#dd364a,#9d141c)}
+.d3 .bar.b2{width:62%; background:linear-gradient(90deg,#c3abff,#7d63cc)}
+.d3 .bar.b3{width:28%; background:linear-gradient(90deg,#dce277,#a8ae44)}
+.d3 .bar.b4{width:11%; background:linear-gradient(90deg,#ff9aa5,#c9636e)}
+.d3 .rows{display:flex; flex-direction:column}
+.d3 .prow{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,88px); gap:clamp(8px,1.4cqw,20px); align-items:center; padding:clamp(10px,1.3cqw,18px) clamp(12px,1.5cqw,20px); border-bottom:1px solid rgba(230,237,243,.08); transition:background .25s ease}
+.d3 .prow:last-child{border-bottom:0}
+.d3 .prow:hover{background:#182634}
+.d3 .prow b{font-size:clamp(11.5px,1.15cqw,15.5px); font-weight:500}
+.d3 .prow span{font-size:clamp(10px,.92cqw,12.5px); color:rgba(230,237,243,.55)}
+.d3 .prow em{font-family:var(--mono); font-style:normal; font-size:clamp(11px,1.1cqw,15px); color:#dce277; text-align:right; font-variant-numeric:tabular-nums}
+@container (max-width:620px){.d3 .prow{grid-template-columns:minmax(0,1fr) minmax(0,76px)} .d3 .prow span{display:none} .d3 .fr{grid-template-columns:minmax(0,84px) minmax(0,1fr) minmax(0,52px)}}
+</style>
+
+<section class="dir" id="d3">
+  <div class="dir-head">
+    <div class="dir-tag"><b>Direção 03</b> · Signal</div>
+    <h2>A agência vista de dentro do painel<small>Navy profundo, etiquetas em mono, números em tabular. O site comporta-se como o instrumento com que a Jelly trabalha todos os dias.</small></h2>
+  </div>
+  <div class="dir-body">
+    <div>
+      <p>A Jelly tem uma vantagem que o site atual esconde: cinco níveis de reporte, dashboards próprios em analytics.jelly.pt, insights semanais com IA. Esta direção transforma isso em linguagem visual. O chão é navy #2a384a levado ao escuro — não preto, para não cair no cliché do dark mode com um pop de cor — e a estrutura é uma coluna fixa à esquerda com o menu e a citação da casa, mais uma coluna de módulos à direita.</p>
+      <p>Os módulos são instrumentos: tiles de indicadores com sparklines, um funil <i>awareness → consideration → conversion</i> desenhado a régua, e os projetos como linhas de tabela com a métrica em mono à direita. A tipografia de display é Poppins 600 apertada; a Jubilat entra em itálico só na citação da coluna, o que a torna o único momento quente do ecrã.</p>
+      <p>É a direção que melhor vende IA, performance e tecnologia — e a que fica pior se a Jelly quiser falar de cultura e de pessoas na mesma página. Precisa de um contraponto claro nas páginas de Sobre e Newsroom.</p>
+    </div>
+    <div class="spec">
+      <dl>
+        <div><dt>Paleta</dt><dd><div class="swatches"><i style="background:#101a24"></i><i style="background:#2a384a"></i><i style="background:#dd364a"></i><i style="background:#c3abff"></i><i style="background:#dce277"></i></div></dd></div>
+        <div><dt>Tipografia</dt><dd>Poppins 600 em display · IBM Plex Mono em labels e números · Jubilat itálico só na citação</dd></div>
+        <div><dt>Layout</dt><dd>Rail fixo de 240px + módulos em painel; filetes a 10% de opacidade; tabular-nums em todos os dados</dd></div>
+        <div><dt>Movimento</dt><dd>Contido e funcional: barras que crescem à entrada, hover de linha, indicador “live”</dd></div>
+        <div><dt>Fotografia</dt><dd>Pouca. Retratos em fundo navy, screenshots de produto e dashboards reais como imagem</dd></div>
+      </dl>
+      <div class="risk"><b>Risco</b><span>Os dados têm de ser verdadeiros. Tiles com números decorativos destroem a credibilidade que a direção inteira procura.</span></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="frame">
+      <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url">jelly.pt</div></div>
+      <div class="canvas">
+        <div class="mk d3">
+          <aside class="rail">
+            <svg class="logo" viewBox="190 200 1120 450" fill="#e6edf3" aria-label="Jelly"><path d="M1048.7,352.1c0,0,3.3-0.7,5.6-0.8c7.3-0.3,20,1.3,27.6,21.3l44.6,117.3c0,0,17.5,43.5,20.9,66c1.7,11.1,1.8,16.4,0,20.6c-1.4,3.2-5,8.3-12.2,8.3c-6,0-13.6-4.4-13-14.3c0.6-8.9-0.1-17.3-9.9-27.2c-14-14.1-34.9-9.1-44.5,1.3c-4.2,4.6-6.6,10-7.7,15.3c-6.1,30.7,23.9,63.2,64,63.2c37.4,0,54.1-25,67.5-57.1c15.3-36.7,87.6-209.2,87.6-209.2c4.4-10.4,8.4-23.2,19.3-23.2c1.9,0,4.2,0,4.2,0V307h-65.3v26.6c5.4-0.1,8.4,0.3,11,2.3c5.6,4.3,6.4,10.9,1.8,21.9c-7.9,18.9-35,83.1-35,83.1l-40.3-106c-4.7-12.3-19.6-32.4-47-32.4c-23,0-88.7,25-88.7,25L1048.7,352.1z"/><path d="M586.1,418l91.5-11.7c16-2.1,25.7-18.3,20.5-33.5c-9.6-27.8-45.8-70.3-99.6-70.3c-62.2,0-112.9,51.7-112.9,116.4c0,67.5,54.2,116,111,116c49.5,0,81.2-25.2,94.7-43.2l-13.6-19.8c-10.9,8.6-34.4,23.4-58.1,19c-26.7-5-33.4-32.1-33.4-49.9V418z M621,343.2v43.3l-34.7,4.6v-47.9c0-9.6,7.8-17.3,17.3-17.3h0C613.2,325.9,621,333.7,621,343.2z"/><path d="M834.6,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9L834.6,264.1z"/><path d="M1004.7,264.1c-0.1-24.2-19.1-50.2-50.2-50.2c-15.6,0-80.7,16.7-80.7,16.7l4.4,26.5c15.9-0.8,26.2,8.2,26.2,24.9l0,176c0,46.3,37.7,76.7,76.8,76.7c42.8,0,62.3-30.9,67.9-40.4l1.5-2.5l-12.7-18.5c-2.5,2.7-7,6.2-13.9,6.2c-10.1,0-19.2-7.5-19.2-17.9V264.1z"/><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
+            <div class="vnav">
+              <a href="#d3" class="on">Início <i>00</i></a>
+              <a href="#d3">Sobre <i>01</i></a>
+              <a href="#d3">Serviços <i>02</i></a>
+              <a href="#d3">Projetos <i>03</i></a>
+              <a href="#d3">Clientes <i>04</i></a>
+              <a href="#d3">Blog <i>05</i></a>
+              <a href="#d3">Newsroom <i>06</i></a>
+              <a href="#d3">Contactos <i>07</i></a>
+            </div>
+            <p class="quote">“When the vision is clear, strategy is easy.”<b>Jelly · be the change</b></p>
+          </aside>
+          <div class="main">
+            <div class="topbar"><span>Lisboa · Rua Dom João V, 29C</span><span class="live"><i></i>Dados a 20 ago 2026</span></div>
+            <div>
+              <h1>Ligamos <span>marca</span>, dados e decisão — e mostramos a conta.</h1>
+              <p class="sub" style="margin-top:14px">Branding, marketing, inteligência artificial e tecnologia numa só equipa. Há 15 anos a ajudar empresas a comunicar e a desempenhar melhor.</p>
+            </div>
+            <div class="acts"><span class="btn">Marcar 30 minutos</span><span class="btn ghost">Ver casos com números</span></div>
+            <dl class="tiles">
+              <div class="tile"><dt>Investimento gerido / ano</dt><dd>4,2M€</dd><span class="delta">↑ 18% vs 2025</span></div>
+              <div class="tile"><dt>Leads qualificadas / mês</dt><dd>3 140</dd><div class="spark" aria-hidden="true"><i style="height:38%"></i><i style="height:52%"></i><i style="height:44%"></i><i style="height:66%"></i><i style="height:59%"></i><i style="height:78%"></i><i style="height:71%"></i><i style="height:96%"></i></div></div>
+              <div class="tile"><dt>Custo por lead</dt><dd>18,40€</dd><span class="delta dn">↓ 27% em 6 meses</span></div>
+              <div class="tile"><dt>Agentes de IA em produção</dt><dd>27</dd><span class="delta">↑ 9 este trimestre</span></div>
+            </dl>
+            <div class="panel">
+              <div class="phead"><h3>Como olhamos para um funil</h3><span>Método</span></div>
+              <div class="funnel">
+                <div class="fr"><span>Awareness</span><div class="bar b1"></div><b>1,8M</b></div>
+                <div class="fr"><span>Consideration</span><div class="bar b2"></div><b>412k</b></div>
+                <div class="fr"><span>Conversion</span><div class="bar b3"></div><b>37,6k</b></div>
+                <div class="fr"><span>Retention</span><div class="bar b4"></div><b>9,1k</b></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="phead"><h3>Trabalho recente</h3><span>05 de 68 projetos</span></div>
+              <div class="rows">
+                <div class="prow"><b>Adegamãe</b><span>Website, e-commerce e brand digital</span><em>+38%</em></div>
+                <div class="prow"><b>321 Crédito</b><span>Paid media full-funnel e CRM</span><em>−27% CPL</em></div>
+                <div class="prow"><b>Defined.ai</b><span>Demand gen e agentes de IA</span><em>4,1× ROAS</em></div>
+                <div class="prow"><b>Evidensia</b><span>Rede de clínicas · local e paid</span><em>+61%</em></div>
+                <div class="prow"><b>Slide &amp; Splash</b><span>Campanha de verão e conteúdos</span><em>2,4M alc.</em></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══════════ ecrã de prestadores ═══════════ */
+.gated{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px}
+.mini{border:1px solid var(--edge); border-radius:8px; overflow:hidden; box-shadow:var(--shadow); background:#f4f6f8; display:flex; flex-direction:column}
+.mini .bar{display:flex; align-items:center; gap:10px; padding:9px 12px; background:#fbfcfd; border-bottom:1px solid #dfe4e9}
+.mini .bar .dots{display:flex; gap:5px}
+.mini .bar .dots i{width:7px; height:7px; border-radius:50%; background:#dfe4e9; display:block}
+.mini .bar .u{font-family:var(--mono); font-size:.62rem; color:#8b96a1; background:#eef1f4; border-radius:20px; padding:4px 10px; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.gk{background:#f4f6f8; color:#151719; padding:26px 24px 30px; font-family:var(--sans); min-height:296px; flex:1; display:flex; flex-direction:column; gap:14px}
+.gk .gmark{width:26px; color:#dd364a; margin-bottom:4px}
+.gk h4{font-family:var(--serif); font-weight:600; font-size:1.32rem; letter-spacing:-.015em; margin:0; color:#151719}
+.gk p{font-size:.85rem; color:#4a5663; margin:0; max-width:40ch}
+.gk label{font-family:var(--mono); font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:#78848f}
+.gk .field{background:#fff; border:1px solid #cfd6de; border-radius:3px; padding:11px 13px; font-size:.86rem; color:#151719; display:flex; justify-content:space-between; align-items:center}
+.gk .field span.ph{color:#9aa5b0}
+.gk .field.focus{border-color:#dd364a; box-shadow:0 0 0 3px rgba(221,54,74,.13)}
+.gk .submit{background:#dd364a; color:#fff; border-radius:3px; padding:11px 18px; font-size:.86rem; font-weight:500; text-align:center; width:fit-content}
+.gk .fine{font-size:.72rem; color:#8b96a1; margin-top:auto}
+.gk .ok{display:flex; gap:10px; align-items:flex-start; background:#fff; border-left:3px solid #dce277; padding:12px 14px; font-size:.82rem; color:#3a4653}
+.gk .embed{background:#fff; border:1px dashed #cfd6de; border-radius:3px; padding:14px; display:flex; flex-direction:column; gap:9px}
+.gk .embed .erow{height:9px; background:#eef1f4; border-radius:2px}
+.gk .embed .erow.s{width:52%}
+.gk .embed .erow.m{width:76%}
+.gk .embed .cap{font-family:var(--mono); font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:#8b96a1}
+.gk .who{display:flex; align-items:center; justify-content:space-between; font-size:.76rem; color:#4a5663; border-bottom:1px solid #dfe4e9; padding-bottom:10px}
+.gk .who b{font-weight:500}
+.gk .who span{font-family:var(--mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#dd364a}
+
+/* ═══════════ stack ═══════════ */
+.tablewrap{overflow-x:auto; border:1px solid var(--edge); border-radius:3px; background:var(--paper)}
+table{border-collapse:collapse; width:100%; min-width:720px; font-size:.9rem}
+th,td{text-align:left; padding:13px 16px; border-bottom:1px solid var(--edge-soft); vertical-align:top}
+thead th{font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-3); border-bottom:1px solid var(--edge); white-space:nowrap}
+thead th.pick{color:var(--accent)}
+tbody th{font-weight:500; font-size:.86rem; color:var(--fg-2); width:172px}
+td b{font-weight:600}
+td.yes{color:var(--fg)}
+tr:last-child td, tr:last-child th{border-bottom:0}
+col.pick{background:color-mix(in srgb, var(--accent) 7%, transparent)}
+
+.decision{background:var(--paper); border:1px solid var(--edge); border-left:3px solid var(--accent); border-radius:3px; padding:26px 26px 24px; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:22px 30px}
+.decision .lead{grid-column:1/-1}
+.decision .lead h3{font-size:1.5rem; margin-bottom:8px}
+.decision .lead p{color:var(--fg-2); max-width:70ch}
+.decision dl{margin:0}
+.decision dt{font-family:var(--mono); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-3); margin-bottom:6px}
+.decision dd{margin:0; font-size:.92rem}
+.decision dd i{font-style:italic}
+
+.phases{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px}
+.phase{border-top:2px solid var(--accent); padding-top:14px}
+.phase .p{font-family:var(--mono); font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:6px}
+.phase b{display:block; font-size:.95rem; font-weight:600; margin-bottom:5px}
+.phase span{font-size:.87rem; color:var(--fg-2)}
+.phase .wk{display:block; margin-top:8px; font-family:var(--mono); font-size:.68rem; color:var(--fg-3)}
+
+footer{border-top:1px solid var(--edge); background:var(--paper); margin-top:clamp(40px,6vw,80px)}
+footer .fin{max-width:var(--maxw); margin:0 auto; padding:36px 28px 44px; display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-end}
+footer .fin p{font-size:.85rem; color:var(--fg-3); max-width:52ch}
+footer .fin .sig{font-family:var(--serif); font-size:1.12rem; color:var(--fg)}
+footer .fin .sig b{color:var(--accent); font-weight:600}
+</style>
+
+<section class="wrap section" id="prestadores">
+  <div class="sechead">
+    <div class="mono">04 · Área reservada</div>
+    <h2>Dois ecrãs, e nada mais</h2>
+  </div>
+  <p class="lede" style="margin-bottom:28px">A área de prestadores veste a marca mas comporta-se como ferramenta: sem menu de site, sem distrações, o formulário do Monday como protagonista. Abaixo em pele clara — adapta-se a qualquer uma das três direções sem alterar a estrutura.</p>
+  <div class="gated">
+    <div class="mini">
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">jelly.pt/prestadores</div></div>
+      <div class="gk">
+        <svg class="gmark" viewBox="0 0 668 749" fill="currentColor" aria-hidden="true"><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
+        <h4>Área de prestadores</h4>
+        <p>Escreva o email com que trabalha com a Jelly. Enviamos um link de acesso válido por 15 minutos. Sem password para criar nem para esquecer.</p>
+        <div>
+          <label for="mock-email">Email</label>
+          <div class="field focus" id="mock-email" style="margin-top:6px"><span>maria@estudiomm.pt</span><span class="ph">↵</span></div>
+        </div>
+        <div class="submit">Receber link de acesso</div>
+        <p class="fine">Se este email estiver registado como prestador, o link chega em segundos. Verifique também o spam.</p>
+      </div>
+    </div>
+    <div class="mini">
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">jelly.pt/prestadores/faturacao?t=•••••</div></div>
+      <div class="gk">
+        <div class="who"><span>Sessão ativa</span><b>maria@estudiomm.pt · sair</b></div>
+        <h4>Submeter fatura</h4>
+        <p>Preencha os dados do projeto e anexe a fatura. A submissão entra diretamente no circuito de pagamentos da Jelly.</p>
+        <div class="embed">
+          <span class="cap">Formulário Monday · embed</span>
+          <div class="erow m"></div>
+          <div class="erow"></div>
+          <div class="erow s"></div>
+          <div class="erow m"></div>
+        </div>
+        <div class="ok"><span>Submissões anteriores e estado de pagamento aparecem aqui na fase 2, lidos do Monday em modo leitura.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="rule">
+
+<section class="wrap section" id="stack">
+  <div class="sechead">
+    <div class="mono">05 · Stack</div>
+    <h2>O que usar para construir isto</h2>
+  </div>
+  <p class="lede" style="margin-bottom:30px">Três combinações realistas. O critério não é “o mais moderno” — é quem publica conteúdo no dia a dia, o que a área de prestadores exige e o custo de manter o site vivo daqui a três anos.</p>
+  <div class="tablewrap" style="margin-bottom:30px">
+    <table>
+      <colgroup><col><col class="pick"><col><col></colgroup>
+      <thead>
+        <tr><th></th><th class="pick">A · Next.js + Sanity <br>na Vercel</th><th>B · Astro + Payload<br>self-hosted</th><th>C · WordPress<br>renovado</th></tr>
+      </thead>
+      <tbody>
+        <tr><th>Autonomia editorial</th><td class="yes"><b>Alta.</b> Studio à medida, PT/EN lado a lado, pré-visualização em tempo real</td><td>Alta, mas o editor é menos familiar para quem vem do WordPress</td><td class="yes"><b>Máxima</b> à partida — a equipa já sabe usar</td></tr>
+        <tr><th>Look &amp; feel exigente</th><td class="yes"><b>Sem limites.</b> Cada direção implementável a 100%, animação controlada</td><td class="yes">Sem limites, excelente performance de base</td><td>Possível, mas travado por tema/builder e por dívida de plugins</td></tr>
+        <tr><th>Área de prestadores<br>(magic link + Monday)</th><td class="yes"><b>Nativo.</b> Route handlers, cookies httpOnly, rate limit no edge</td><td>Precisa de servidor Node sempre a correr; mais peças a manter</td><td>Depende de plugin de terceiros para o login sem password</td></tr>
+        <tr><th>Performance / SEO</th><td class="yes">ISR + edge; Core Web Vitals no verde sem esforço extra</td><td class="yes"><b>O melhor do lote</b> (HTML quase sem JS)</td><td>Exige cache, otimização e vigilância constantes</td></tr>
+        <tr><th>Migração de URLs</th><td class="yes">Mapa de 301 em código, versionado e testável</td><td class="yes">Igual</td><td>Feita por plugin; histórico atual já mostra o custo disto</td></tr>
+        <tr><th>Custo de operação</th><td>~40–60€/mês (Vercel + Sanity no plano de entrada)</td><td>~25–40€/mês de VPS, mais tempo de sysadmin</td><td>Alojamento barato, mas manutenção e plugins pagos todos os anos</td></tr>
+        <tr><th>Risco principal</th><td>Dependência de dois SaaS; conteúdo fica fora do repositório</td><td>A Jelly passa a ser responsável por uptime e updates</td><td>Repetir dentro de dois anos o problema que estamos a resolver</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="decision" style="margin-bottom:32px">
+    <div class="lead">
+      <div class="mono" style="margin-bottom:10px">Recomendação</div>
+      <h3>Opção A — Next.js 15 + Sanity, alojado na Vercel</h3>
+      <p>É a única das três que resolve ao mesmo tempo o site de vitrine e o pedaço de produto (prestadores) sem peças coladas. A área reservada fica em código da Jelly, não num plugin de terceiros; o conteúdo bilingue fica num CMS pensado para duas árvores; e o design das três direções é implementável sem cedências. A opção B só ganharia se a área de prestadores não existisse.</p>
+    </div>
+    <dl>
+      <dt>Frontend</dt>
+      <dd>Next.js 15 (App Router) · TypeScript · Tailwind com os tokens Jelly · <i>next-intl</i> para PT/EN</dd>
+    </dl>
+    <dl>
+      <dt>Conteúdo</dt>
+      <dd>Sanity — projetos, serviços, clientes, blog, newsroom, equipa · pré-visualização e workflow de publicação</dd>
+    </dl>
+    <dl>
+      <dt>Área de prestadores</dt>
+      <dd>Route handlers próprios · token assinado de uso único · cookie httpOnly · email via Resend · rate limit no edge (Upstash)</dd>
+    </dl>
+    <dl>
+      <dt>Integrações</dt>
+      <dd>Formulário Monday por script oficial · API Monday em leitura na fase 2 · GA4 + Meta/LinkedIn via GTM</dd>
+    </dl>
+    <dl>
+      <dt>Infra</dt>
+      <dd>Vercel (previews por PR) · domínio e DNS na Cloudflare · imagens no CDN do Sanity</dd>
+    </dl>
+    <dl>
+      <dt>Fontes</dt>
+      <dd>Jubilat licenciada para web (Hoefler) + Poppins self-hosted · fallback Lora enquanto a licença não estiver ativa</dd>
+    </dl>
+  </div>
+
+  <div class="phases">
+    <div class="phase"><div class="p">Fase 0</div><b>Conteúdo e prova</b><span>Escolher os 10 casos, apurar números com os clientes, plano de fotografia e vídeo. É o caminho crítico de qualquer direção.</span><span class="wk">2 semanas</span></div>
+    <div class="phase"><div class="p">Fase 1</div><b>Direção e design system</b><span>Fechar uma das três direções, desenhar homepage, caso, serviço, blog, newsroom e prestadores. Tokens e componentes.</span><span class="wk">3 semanas</span></div>
+    <div class="phase"><div class="p">Fase 2</div><b>Build e CMS</b><span>Next.js, modelação no Sanity, migração de blog e portfolio (incluindo jellycode.pt), PT/EN completo.</span><span class="wk">4 semanas</span></div>
+    <div class="phase"><div class="p">Fase 3</div><b>Prestadores</b><span>Magic link, embed do Monday, testes com 3 prestadores reais antes de abrir a todos.</span><span class="wk">1 semana</span></div>
+    <div class="phase"><div class="p">Fase 4</div><b>Migração e go-live</b><span>Mapa de 301, hreflang, sitemaps, Search Console, medição antes/depois. Duas semanas de vigilância.</span><span class="wk">1 + 2 semanas</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="fin">
+    <p>Documento de trabalho para decisão de direção visual e stack. Os números usados nos mockups são exemplificativos e devem ser substituídos por dados reais de cliente antes de qualquer publicação.</p>
+    <div class="sig">Jelly — <b>be the change</b></div>
+  </div>
+</footer>
