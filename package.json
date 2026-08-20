@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "audit": "node scripts/audit-site.mjs"
+    "audit": "node scripts/audit-site.mjs",
+    "preview": "node scripts/build-preview.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.13.0",

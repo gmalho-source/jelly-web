@@ -20,6 +20,7 @@ servidor, o que basta para desenvolver.
 | `npm run build` / `npm start` | Build de produção e servidor |
 | `npm run typecheck` | TypeScript sem emitir |
 | `npm run lint` | ESLint (config Next) |
+| `npm run preview` | Regenera `docs/preview/index.html` a partir do servidor local |
 
 ## Stack
 
@@ -94,7 +95,7 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
 | `docs/manifesto/index.html` | Direção 01 aplicada às sete páginas: caso, serviço, blog, artigo, newsroom, contactos e billing. |
 | `docs/estado-arte/index.html` | Auditoria medida do site atual (52 páginas, 10 sitemaps), leitura do look & feel contra o design system 2026 e a homepage proposta. |
 | `scripts/audit-site.mjs` | Crawler de auditoria: estado HTTP, metadados, headings, peso e tempos por página. |
-| `docs/preview/index.html` | Instantâneo estático do site em código (homepage PT/EN, projetos, casos, login de billing), gerado a partir do servidor local com CSS e fontes embutidos. |
+| `docs/preview/index.html` | Instantâneo estático do site em código (homepage PT/EN, projetos, casos, login de billing), gerado por `npm run preview` com CSS, fontes e vídeo embutidos. |
 
 Abrir localmente: `npx http-server docs -p 8080`.
 
@@ -116,6 +117,26 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
   elevações de 2 px, sem molas. Desligado em `prefers-reduced-motion`.
 - **Voz** — português europeu, tratamento por **tu**, voz ativa, sentence case.
   Assinatura: **be the change**.
+
+## Reel do herói
+
+O herói tem um reel 9:16 na coluna da direita — sem som, em ciclo, dentro de um cartão de
+20 px. Nunca é fundo do título: o texto tem de continuar legível, e o vídeo não pode ser o
+LCP da página. Quem tiver "reduzir movimento" ativo vê o poster com um botão de play.
+
+`public/media/reel-placeholder.webm` é **um exemplo gerado por código**
+(`node scripts/make-placeholder-reel.mjs`, precisa de `FFMPEG` no ambiente), para o
+componente se ver a funcionar. Para entrar a filmagem real:
+
+1. Exportar **9:16** (1080×1920), 8 a 12 s, **sem áudio na versão do loop**, corte a cada
+   1,5–2,5 s. Cada plano com uma ideia: trabalho no ecrã, equipa a decidir, produto do
+   cliente. Nada de planos de aperto de mão nem de stock.
+2. Gerar dois ficheiros — `reel.mp4` (H.264, para Safari) e `reel.webm` (VP9) — com **menos
+   de 2,5 MB cada**, mais `reel-poster.jpg` (o primeiro fotograma, ~40 KB).
+3. Pôr os três em `public/media/` e passar as duas fontes ao `HeroReel`. Acima de ~3 MB,
+   servir por Mux ou Cloudflare Stream em vez de `public/`.
+4. A versão com som (a que abre em "Ver com som") pode ser mais longa — até 45 s — e deve
+   ter legendas abertas, porque a maioria vê sem som.
 
 ## Falta fazer
 

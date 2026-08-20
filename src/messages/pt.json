@@ -26,7 +26,13 @@
     "bandEyebrow": "be the change",
     "bandTitle": "Não seguimos tendências. Geramos mudança.",
     "bandBody": "É a assinatura da casa e passa a ser o compromisso mensurável: cada projeto entra com um número a atingir e sai com o número atingido. Se não mudou nada, não fizemos o nosso trabalho.",
-    "contactCta": "Falar connosco"
+    "contactCta": "Falar connosco",
+    "reelLabel": "Reel do trabalho da Jelly, sem som, em ciclo",
+    "reelCaption": "Reel de exemplo — a substituir por filmagem real",
+    "reelPlay": "Reproduzir o reel",
+    "reelPause": "Pausar o reel",
+    "reelOpen": "Ver com som",
+    "reelClose": "Fechar"
   },
   "work": {
     "title": "Índice de trabalho",

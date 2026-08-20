@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { HeroReel } from "@/components/HeroReel";
 import { getClients, getProjects, getServices } from "@/lib/cms";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -13,18 +14,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
-      {/* Herói 60/40: a tese à esquerda, a explicação calma à direita. */}
+      {/* Herói 60/40: a tese à esquerda, o reel na coluna da direita.
+          O vídeo nunca fica atrás do texto — o título tem de continuar legível. */}
       <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-        <div className="grid items-end justify-between gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
           <div>
             <span className="eyebrow">{t("eyebrow")}</span>
             <h1 className="mt-5 text-display">
               A ação é a<br />
               nossa <span className="text-red">estratégia</span>.
             </h1>
-          </div>
-          <div>
-            <p className="max-w-[42ch] text-md text-slate">{t("lead")}</p>
+            <p className="mt-8 max-w-[46ch] text-md text-slate">{t("lead")}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/" className="btn btn-hero">
                 {t("contactCta")} <span aria-hidden="true">→</span>
@@ -34,6 +34,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               </Link>
             </div>
           </div>
+          <HeroReel
+            sources={[{ src: "/media/reel-placeholder.webm", type: "video/webm" }]}
+            poster="/media/reel-poster.jpg"
+            label={t("reelLabel")}
+            caption={t("reelCaption")}
+            playLabel={t("reelPlay")}
+            pauseLabel={t("reelPause")}
+            openLabel={t("reelOpen")}
+            closeLabel={t("reelClose")}
+          />
         </div>
       </section>
 

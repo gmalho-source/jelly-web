@@ -1,3 +1,5 @@
 import next from "eslint-config-next";
 
-export default [{ ignores: [".next/**", "node_modules/**", "docs/**"] }, ...next];
+const config = [{ ignores: [".next/**", "node_modules/**", "docs/**"] }, ...next];
+
+export default config;

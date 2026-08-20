@@ -26,7 +26,13 @@
     "bandEyebrow": "be the change",
     "bandTitle": "We don't follow trends. We generate change.",
     "bandBody": "It is the signature of the house, and it becomes a measurable commitment: every project starts with a number to hit and ends with the number hit. If nothing changed, we didn't do our job.",
-    "contactCta": "Get in touch"
+    "contactCta": "Get in touch",
+    "reelLabel": "Reel of Jelly's work, muted, looping",
+    "reelCaption": "Sample reel — to be replaced with real footage",
+    "reelPlay": "Play the reel",
+    "reelPause": "Pause the reel",
+    "reelOpen": "Watch with sound",
+    "reelClose": "Close"
   },
   "work": {
     "title": "Work index",
