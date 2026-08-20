@@ -94,6 +94,7 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
 | `docs/manifesto/index.html` | Direção 01 aplicada às sete páginas: caso, serviço, blog, artigo, newsroom, contactos e billing. |
 | `docs/estado-arte/index.html` | Auditoria medida do site atual (52 páginas, 10 sitemaps), leitura do look & feel contra o design system 2026 e a homepage proposta. |
 | `scripts/audit-site.mjs` | Crawler de auditoria: estado HTTP, metadados, headings, peso e tempos por página. |
+| `docs/preview/index.html` | Instantâneo estático do site em código (homepage PT/EN, projetos, casos, login de billing), gerado a partir do servidor local com CSS e fontes embutidos. |
 
 Abrir localmente: `npx http-server docs -p 8080`.
 
