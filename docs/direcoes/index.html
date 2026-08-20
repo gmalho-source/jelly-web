@@ -146,7 +146,7 @@ svg{display:block}
     <div><dt>Prova</dt><dd>Clientes de peso e 15 anos de casa, sem um sistema de prova legível: falta o par <b>caso → resultado</b> com número. A musculatura de reporting (analytics.jelly.pt, insights com IA) é um diferencial invisível hoje.</dd></div>
     <div><dt>IA</dt><dd>A oferta de IA e agentes existe, mas comunicada como página de serviço. É a parte mais vendável do posicionamento atual e merece tratamento de <b>capítulo</b>, não de item de menu.</dd></div>
     <div><dt>Conteúdo</dt><dd>Blog e notícias vivem no mesmo saco. Separar <b>Blog</b> (opinião, know-how, SEO) de <b>Newsroom</b> (notícias, eventos, press) dá-lhes cadências, formatos e públicos diferentes — e liberta o blog para ser editorial.</dd></div>
-    <div><dt>Prestadores</dt><dd>Não existe. Hoje o circuito de faturação de freelancers e fornecedores acontece por email. É o primeiro pedaço de <b>produto</b> dentro do site.</dd></div>
+    <div><dt>Prestadores</dt><dd>Não existe. Hoje o circuito de faturação de freelancers e fornecedores acontece por email. É o primeiro pedaço de <b>produto</b> da Jelly — e vai viver em subdomínio próprio, <b>billing.jelly.pt</b>.</dd></div>
   </dl>
 </section>
 <hr class="rule">
@@ -191,8 +191,8 @@ svg{display:block}
     </div>
     <div class="node gated">
       <span class="tag">Área fechada · magic link</span>
-      <h4>Prestadores <i>/prestadores</i></h4>
-      <ul><li>Pedir link por email validado</li><li>Submissão de faturas (form Monday)</li><li>Estado dos pagamentos (fase 2)</li><li>Documentos e condições</li></ul>
+      <h4>Prestadores <i>billing.jelly.pt</i></h4>
+      <ul><li>Subdomínio próprio, só para prestadores registados</li><li>Login: email no campo → link de acesso no email</li><li>Submissão de faturas (form Monday)</li><li>Estado dos pagamentos (fase 2)</li></ul>
     </div>
   </div>
   <div class="cols">
@@ -218,10 +218,10 @@ svg{display:block}
     <h2>Sem password, sem atrito, sem conta para gerir</h2>
   </div>
   <div class="flow" style="margin-bottom:26px">
-    <div class="step"><b>Email</b><span>O prestador escreve o email em /prestadores. Só emails na lista de prestadores validados avançam.</span></div>
+    <div class="step"><b>Email</b><span>O prestador abre billing.jelly.pt e escreve o email no campo de login. Só prestadores registados avançam.</span></div>
     <div class="step"><b>Link assinado</b><span>Envio de magic link com token de uso único, válido 15 minutos, assinado no servidor.</span></div>
-    <div class="step"><b>Sessão curta</b><span>Cookie httpOnly de 7 dias. Sem registo, sem recuperação de password, sem base de dados de credenciais.</span></div>
-    <div class="step"><b>Submissão</b><span>Página com o formulário Monday embebido (script oficial), pré-preenchido com o email autenticado.</span></div>
+    <div class="step"><b>Sessão curta</b><span>Cookie httpOnly de 7 dias, válido só no host billing. Sem password para criar nem para recuperar.</span></div>
+    <div class="step"><b>Submissão</b><span>Já dentro de billing.jelly.pt: formulário Monday embebido (script oficial), pré-preenchido com o email autenticado.</span></div>
     <div class="step"><b>Pagamento</b><span>O item cai no board de pagamentos do Monday. A Jelly trata do resto onde já trata hoje.</span></div>
   </div>
   <div class="cols">
@@ -235,7 +235,7 @@ svg{display:block}
     </div>
     <div class="note">
       <h4>Fora do índice</h4>
-      <p><i>noindex</i>, fora do sitemap e sem link no menu principal — só no rodapé. A área é utilitária: veste a marca, mas comporta-se como ferramenta.</p>
+      <p>Subdomínio à parte, <i>noindex</i>, fora do sitemap e sem link no menu principal — só no rodapé de jelly.pt e na página de contactos. Veste a marca, mas comporta-se como ferramenta.</p>
     </div>
   </div>
 </section>
@@ -716,26 +716,26 @@ footer .fin .sig b{color:var(--accent); font-weight:600}
 <section class="wrap section" id="prestadores">
   <div class="sechead">
     <div class="mono">04 · Área reservada</div>
-    <h2>Dois ecrãs, e nada mais</h2>
+    <h2>billing.jelly.pt — dois ecrãs, e nada mais</h2>
   </div>
-  <p class="lede" style="margin-bottom:28px">A área de prestadores veste a marca mas comporta-se como ferramenta: sem menu de site, sem distrações, o formulário do Monday como protagonista. Abaixo em pele clara — adapta-se a qualquer uma das três direções sem alterar a estrutura.</p>
+  <p class="lede" style="margin-bottom:28px">A área reservada vive em <strong>billing.jelly.pt</strong>: host separado, só para prestadores registados, sem menu de site e com o formulário do Monday como protagonista. O utilizador escreve o email, carrega no botão e recebe o link que o autoriza a entrar. Abaixo em pele clara — adapta-se a qualquer uma das três direções sem alterar a estrutura.</p>
   <div class="gated">
     <div class="mini">
-      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">jelly.pt/prestadores</div></div>
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">billing.jelly.pt</div></div>
       <div class="gk">
         <svg class="gmark" viewBox="0 0 668 749" fill="currentColor" aria-hidden="true"><path d="M353.7,282.1c0-16.8-10.3-25.8-26.2-24.9l-4.4-26.5c0,0,65.1-16.7,80.7-16.7c31.1,0,50,26,50,50.2v153.8c0,70.1-56.7,116.9-121.1,116.9c-102.7,0-132.1-87.9-111.6-137.8c10-24.4,30.5-33.5,47.2-33.5c31,0,50.2,25.1,50.2,50.2c0,17-7.8,27-11.9,32.2c-15.5,19.4-1.4,44,21.1,44c13.5,0,25.6-11.6,25.6-26.3L353.7,282.1z"/></svg>
         <h4>Área de prestadores</h4>
-        <p>Escreva o email com que trabalha com a Jelly. Enviamos um link de acesso válido por 15 minutos. Sem password para criar nem para esquecer.</p>
+        <p>Escreva o email com que está registado como prestador da Jelly. Enviamos um link de acesso válido por 15 minutos. Sem password para criar nem para esquecer.</p>
         <div>
           <label for="mock-email">Email</label>
           <div class="field focus" id="mock-email" style="margin-top:6px"><span>maria@estudiomm.pt</span><span class="ph">↵</span></div>
         </div>
         <div class="submit">Receber link de acesso</div>
-        <p class="fine">Se este email estiver registado como prestador, o link chega em segundos. Verifique também o spam.</p>
+        <p class="fine">Se este email estiver registado como prestador, o link chega em segundos. Verifique também o spam. Problemas de acesso: pagamentos@jelly.pt</p>
       </div>
     </div>
     <div class="mini">
-      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">jelly.pt/prestadores/faturacao?t=•••••</div></div>
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><div class="u">billing.jelly.pt/entrar?t=•••••</div></div>
       <div class="gk">
         <div class="who"><span>Sessão ativa</span><b>maria@estudiomm.pt · sair</b></div>
         <h4>Submeter fatura</h4>
@@ -764,12 +764,12 @@ footer .fin .sig b{color:var(--accent); font-weight:600}
     <table>
       <colgroup><col><col class="pick"><col><col></colgroup>
       <thead>
-        <tr><th></th><th class="pick">A · Next.js + Sanity <br>na Vercel</th><th>B · Astro + Payload<br>self-hosted</th><th>C · WordPress<br>renovado</th></tr>
+        <tr><th></th><th class="pick">A · Next.js 16 + Sanity <br>na Vercel</th><th>B · Astro + Payload<br>self-hosted</th><th>C · WordPress<br>renovado</th></tr>
       </thead>
       <tbody>
         <tr><th>Autonomia editorial</th><td class="yes"><b>Alta.</b> Studio à medida, PT/EN lado a lado, pré-visualização em tempo real</td><td>Alta, mas o editor é menos familiar para quem vem do WordPress</td><td class="yes"><b>Máxima</b> à partida — a equipa já sabe usar</td></tr>
         <tr><th>Look &amp; feel exigente</th><td class="yes"><b>Sem limites.</b> Cada direção implementável a 100%, animação controlada</td><td class="yes">Sem limites, excelente performance de base</td><td>Possível, mas travado por tema/builder e por dívida de plugins</td></tr>
-        <tr><th>Área de prestadores<br>(magic link + Monday)</th><td class="yes"><b>Nativo.</b> Route handlers, cookies httpOnly, rate limit no edge</td><td>Precisa de servidor Node sempre a correr; mais peças a manter</td><td>Depende de plugin de terceiros para o login sem password</td></tr>
+        <tr><th>billing.jelly.pt<br>(magic link + Monday)</th><td class="yes"><b>Nativo.</b> Subdomínio servido pelo mesmo projeto via middleware, route handlers, cookie httpOnly só nesse host, rate limit no edge</td><td>Precisa de servidor Node sempre a correr; mais peças a manter</td><td>Depende de plugin de terceiros para o login sem password</td></tr>
         <tr><th>Performance / SEO</th><td class="yes">ISR + edge; Core Web Vitals no verde sem esforço extra</td><td class="yes"><b>O melhor do lote</b> (HTML quase sem JS)</td><td>Exige cache, otimização e vigilância constantes</td></tr>
         <tr><th>Migração de URLs</th><td class="yes">Mapa de 301 em código, versionado e testável</td><td class="yes">Igual</td><td>Feita por plugin; histórico atual já mostra o custo disto</td></tr>
         <tr><th>Custo de operação</th><td>~40–60€/mês (Vercel + Sanity no plano de entrada)</td><td>~25–40€/mês de VPS, mais tempo de sysadmin</td><td>Alojamento barato, mas manutenção e plugins pagos todos os anos</td></tr>
@@ -781,12 +781,12 @@ footer .fin .sig b{color:var(--accent); font-weight:600}
   <div class="decision" style="margin-bottom:32px">
     <div class="lead">
       <div class="mono" style="margin-bottom:10px">Recomendação</div>
-      <h3>Opção A — Next.js 15 + Sanity, alojado na Vercel</h3>
+      <h3>Opção A — Next.js + Sanity, alojado na Vercel</h3>
       <p>É a única das três que resolve ao mesmo tempo o site de vitrine e o pedaço de produto (prestadores) sem peças coladas. A área reservada fica em código da Jelly, não num plugin de terceiros; o conteúdo bilingue fica num CMS pensado para duas árvores; e o design das três direções é implementável sem cedências. A opção B só ganharia se a área de prestadores não existisse.</p>
     </div>
     <dl>
       <dt>Frontend</dt>
-      <dd>Next.js 15 (App Router) · TypeScript · Tailwind com os tokens Jelly · <i>next-intl</i> para PT/EN</dd>
+      <dd>Next.js 16 (App Router, versão estável atual) · TypeScript · Tailwind 4 com os tokens Jelly · <i>next-intl</i> para PT/EN</dd>
     </dl>
     <dl>
       <dt>Conteúdo</dt>
@@ -794,7 +794,7 @@ footer .fin .sig b{color:var(--accent); font-weight:600}
     </dl>
     <dl>
       <dt>Área de prestadores</dt>
-      <dd>Route handlers próprios · token assinado de uso único · cookie httpOnly · email via Resend · rate limit no edge (Upstash)</dd>
+      <dd><b>billing.jelly.pt</b> no mesmo projeto (middleware por host) · token assinado de uso único · cookie httpOnly só no host billing · email via Resend · rate limit no edge</dd>
     </dl>
     <dl>
       <dt>Integrações</dt>
@@ -814,7 +814,7 @@ footer .fin .sig b{color:var(--accent); font-weight:600}
     <div class="phase"><div class="p">Fase 0</div><b>Conteúdo e prova</b><span>Escolher os 10 casos, apurar números com os clientes, plano de fotografia e vídeo. É o caminho crítico de qualquer direção.</span><span class="wk">2 semanas</span></div>
     <div class="phase"><div class="p">Fase 1</div><b>Direção e design system</b><span>Fechar uma das três direções, desenhar homepage, caso, serviço, blog, newsroom e prestadores. Tokens e componentes.</span><span class="wk">3 semanas</span></div>
     <div class="phase"><div class="p">Fase 2</div><b>Build e CMS</b><span>Next.js, modelação no Sanity, migração de blog e portfolio (incluindo jellycode.pt), PT/EN completo.</span><span class="wk">4 semanas</span></div>
-    <div class="phase"><div class="p">Fase 3</div><b>Prestadores</b><span>Magic link, embed do Monday, testes com 3 prestadores reais antes de abrir a todos.</span><span class="wk">1 semana</span></div>
+    <div class="phase"><div class="p">Fase 3</div><b>billing.jelly.pt</b><span>DNS do subdomínio, magic link, embed do Monday, testes com 3 prestadores reais antes de abrir a todos.</span><span class="wk">1 semana</span></div>
     <div class="phase"><div class="p">Fase 4</div><b>Migração e go-live</b><span>Mapa de 301, hreflang, sitemaps, Search Console, medição antes/depois. Duas semanas de vigilância.</span><span class="wk">1 + 2 semanas</span></div>
   </div>
 </section>

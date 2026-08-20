@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* ───────── Design system Jelly ─────────
+   Cor principal, secundárias e tipografia do brand book.
+   Jubilat é licenciada (Hoefler): quando a licença web estiver ativa,
+   substituir o @font-face abaixo e remover Lora da stack. */
+@theme {
+  --color-red: #dd364a;
+  --color-red-dark: #9d141c;
+  --color-pink: #ff9aa5;
+  --color-lilac: #c3abff;
+  --color-lime: #dce277;
+  --color-navy: #2a384a;
+  --color-ink: #151719;
+  --color-bone: #f4f6f8;
+  --color-line: #dfe4e9;
+  --color-line-strong: #151719;
+  --color-mute: #78848f;
+
+  --font-display: "Jubilat", "Lora", Georgia, serif;
+  --font-sans: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Escala tipográfica da direção Manifesto */
+  --text-display: clamp(2.25rem, 6.4vw, 6.5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.028em;
+  --text-chapter: clamp(1.35rem, 3vw, 2.5rem);
+  --text-chapter--line-height: 1.06;
+  --text-chapter--letter-spacing: -0.02em;
+  --text-lede: clamp(1rem, 1.1vw, 1.125rem);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-red);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+  }
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-mute);
+}

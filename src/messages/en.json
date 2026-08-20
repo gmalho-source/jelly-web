@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "about": "About",
+    "services": "Services",
+    "work": "Work",
+    "clients": "Clients",
+    "blog": "Blog",
+    "newsroom": "Newsroom",
+    "contact": "Get in touch"
+  },
+  "home": {
+    "eyebrow": "Lisbon · since 2010",
+    "signature": "be the change",
+    "headlineStrike": "strategy",
+    "headlineEm": "Action",
+    "headlineRest": "is our strategy.",
+    "headlineLead": "",
+    "lead": "We help companies communicate and perform better, connecting the dots between branding, marketing, communications and technology.",
+    "workCta": "See the work",
+    "workIndex": "Work index",
+    "servicesLabel": "What we do",
+    "clientsLabel": "Company · a selection",
+    "clientsTail": "and 40 more brands since 2010"
+  },
+  "work": {
+    "title": "Work index",
+    "lead": "Cases with a challenge, an approach and a result. Without a number it is a gallery; with one it is proof.",
+    "briefing": "Project facts",
+    "client": "Client",
+    "year": "Year",
+    "disciplines": "Disciplines",
+    "team": "Team",
+    "clientWord": "In the client's words",
+    "next": "Next case",
+    "back": "All projects"
+  },
+  "footer": {
+    "providers": "Providers area",
+    "providersNote": "Already working with Jelly? Invoice submission lives at",
+    "rights": "Jelly — be the change"
+  },
+  "billing": {
+    "area": "Providers area",
+    "signIn": "Sign in",
+    "intro": "Enter the email registered as a Jelly provider. We send an access link valid for 15 minutes.",
+    "email": "Email",
+    "submit": "Send access link",
+    "sending": "Sending…",
+    "sent": "If this email is registered as a provider, the link arrives in seconds. Check your spam folder too.",
+    "help": "Access problems: pagamentos@jelly.pt",
+    "invalidEmail": "Enter a valid email address.",
+    "tooMany": "Too many requests. Try again in a few minutes.",
+    "error": "We could not send the link. Please try again.",
+    "invalidLink": "This link was already used or has expired. Request a new one.",
+    "submitInvoice": "Submit invoice",
+    "invoiceIntro": "Fill in the project details and attach the invoice. It goes straight into Jelly's payment flow.",
+    "formUnavailable": "The submission form is not configured in this environment yet.",
+    "signOut": "sign out",
+    "phase2": "Past submissions and payment status land here in phase 2, read from Monday."
+  }
+}

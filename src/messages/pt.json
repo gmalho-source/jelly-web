@@ -1,0 +1,61 @@
+{
+  "nav": {
+    "about": "Sobre",
+    "services": "Serviços",
+    "work": "Projetos",
+    "clients": "Clientes",
+    "blog": "Blog",
+    "newsroom": "Newsroom",
+    "contact": "Falar connosco"
+  },
+  "home": {
+    "eyebrow": "Lisboa · desde 2010",
+    "signature": "be the change",
+    "headlineStrike": "estratégia",
+    "headlineEm": "ação",
+    "headlineRest": "é a nossa estratégia.",
+    "headlineLead": "A",
+    "lead": "Ajudamos empresas a comunicar e a desempenhar melhor, ligando os pontos entre branding, marketing, comunicação e tecnologia.",
+    "workCta": "Ver o trabalho",
+    "workIndex": "Índice de trabalho",
+    "servicesLabel": "O que fazemos",
+    "clientsLabel": "Companhia · uma seleção",
+    "clientsTail": "e mais 40 marcas desde 2010"
+  },
+  "work": {
+    "title": "Índice de trabalho",
+    "lead": "Casos com desafio, abordagem e resultado. Sem número, é galeria; com número, é prova.",
+    "briefing": "Ficha técnica",
+    "client": "Cliente",
+    "year": "Ano",
+    "disciplines": "Disciplinas",
+    "team": "Equipa",
+    "clientWord": "Palavra do cliente",
+    "next": "Próximo caso",
+    "back": "Todos os projetos"
+  },
+  "footer": {
+    "providers": "Área de prestadores",
+    "providersNote": "Já trabalha com a Jelly? A submissão de faturas está em",
+    "rights": "Jelly — be the change"
+  },
+  "billing": {
+    "area": "Área de prestadores",
+    "signIn": "Entrar",
+    "intro": "Escreva o email com que está registado como prestador da Jelly. Enviamos um link de acesso válido por 15 minutos.",
+    "email": "Email",
+    "submit": "Enviar link de acesso",
+    "sending": "A enviar…",
+    "sent": "Se este email estiver registado como prestador, o link chega em segundos. Verifique também o spam.",
+    "help": "Problemas de acesso: pagamentos@jelly.pt",
+    "invalidEmail": "Escreva um email válido.",
+    "tooMany": "Demasiados pedidos. Tente outra vez dentro de alguns minutos.",
+    "error": "Não foi possível enviar o link. Tente outra vez.",
+    "invalidLink": "Este link já foi usado ou expirou. Peça um novo.",
+    "submitInvoice": "Submeter fatura",
+    "invoiceIntro": "Preencha os dados do projeto e anexe a fatura. A submissão entra diretamente no circuito de pagamentos da Jelly.",
+    "formUnavailable": "O formulário de submissão ainda não está configurado neste ambiente.",
+    "signOut": "sair",
+    "phase2": "Submissões anteriores e estado de pagamento aparecem aqui na fase 2, lidos do Monday em modo leitura."
+  }
+}
