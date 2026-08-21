@@ -20,7 +20,10 @@ servidor, o que basta para desenvolver.
 | `npm run build` / `npm start` | Build de produção e servidor |
 | `npm run typecheck` | TypeScript sem emitir |
 | `npm run lint` | ESLint (config Next) |
+| `npm run preflight` | `typecheck` + `lint` + `build`, o que a CI faria. Correr antes de cada push |
 | `npm run preview` | Regenera `docs/preview/index.html` a partir do servidor local |
+| `npm run studio` | Studio do Sanity em local (pede `npm i -D sanity @sanity/vision`) |
+| `npm run sanity:seed` | Carrega o conteúdo do repositório para o Sanity (`--dry-run` para ensaiar) |
 
 ## Stack
 
@@ -28,6 +31,8 @@ servidor, o que basta para desenvolver.
   arrancámos na versão estável atual
 - **Tailwind 4** com os tokens do design system em `src/app/globals.css`
 - **next-intl** para PT/EN, com slugs traduzidos (`/projetos` ↔ `/en/work`)
+- **Sanity** como CMS, atrás de `src/lib/cms.ts`, com o conteúdo local do
+  repositório como rede de segurança
 - **jose** para assinar magic links e sessões; **Resend** para o email
 - **Sanity** entra na fase 2 pela camada `src/lib/cms.ts` (hoje serve conteúdo local)
 - Alojamento previsto: Vercel, com os dois domínios (`www.jelly.pt` e `billing.jelly.pt`)
@@ -227,10 +232,22 @@ O que a migração **não** trouxe, e é trabalho de conteúdo, não de código:
 Imagens: os URLs apontam para `www.jelly.pt` (autorizado em `next.config.ts`) até
 subirem para o CDN do CMS na fase do Sanity.
 
+## CMS e deploy
+
+- **Sanity** — modelo, seed e o que falta: [`docs/SANITY.md`](docs/SANITY.md).
+  O `src/lib/cms.ts` lê do Sanity quando `NEXT_PUBLIC_SANITY_PROJECT_ID` existe
+  e cai no conteúdo local em `src/content` sempre que não existe, a coleção está
+  vazia ou a consulta falha — coleção a coleção, sem o site ficar em branco.
+- **Vercel** — o que está fixado no `vercel.json`, as causas prováveis de um
+  deploy vermelho e a tabela de variáveis: [`docs/DEPLOY.md`](docs/DEPLOY.md).
+  O build passa sem nenhuma variável definida, confirmado a partir de um
+  checkout limpo.
+
 ## Falta fazer
 
-Ligação ao Sanity, páginas de carreiras e legais, mapa de 301 da migração,
-consolidação do portfolio de `jellycode.pt`, e a filmagem real do reel.
+Webhook de revalidação do Sanity, páginas de carreiras e legais, paginação do
+blog, tradução EN dos artigos migrados, consolidação do portfolio de
+`jellycode.pt`, e a filmagem real do reel.
 
 > Os números e nomes de projeto no conteúdo local são exemplificativos.
 > Validar com os clientes antes de publicar.

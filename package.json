@@ -12,7 +12,11 @@
     "preview": "node scripts/build-preview.mjs",
     "migrate": "node scripts/migrate-wordpress.mjs",
     "redirects": "node scripts/build-redirects.mjs",
-    "import": "node scripts/import-wordpress-xml.mjs"
+    "import": "node scripts/import-wordpress-xml.mjs",
+    "preflight": "npm run typecheck && npm run lint && npm run build",
+    "sanity:seed": "node scripts/sanity-seed.mjs",
+    "studio": "sanity dev",
+    "studio:deploy": "sanity deploy"
   },
   "dependencies": {
     "@sanity/client": "^7.13.0",
@@ -35,5 +39,8 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "wawoff2": "^2.0.1"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }

@@ -14,3 +14,6 @@ public/fonts/trials/*.otf
 
 # Exports do WordPress: despejo do site antigo, não fonte de verdade
 content-import/*.xml
+
+# Compilação temporária do conteúdo para o seed do Sanity
+.cache/

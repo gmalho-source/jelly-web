@@ -1,0 +1,71 @@
+# Deploy na Vercel
+
+O build de produção passa **sem uma única variável de ambiente definida** —
+verificado a partir de um checkout limpo do branch (`npm ci && npx next build`,
+510 páginas geradas, 46 rotas). Quer dizer que um deploy que falha na Vercel
+falha na *configuração do projeto*, não no código, e há um sítio certo para
+olhar: **Deployments → o deploy vermelho → Build Logs**, e copiar as últimas
+~30 linhas. É isso que diz qual das causas abaixo é.
+
+## O que já está fixado no repositório
+
+| Ficheiro | O que garante |
+|---|---|
+| `vercel.json` | Preset `nextjs`, `npm ci` na instalação, `npm run build` no build, e `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` para o `postinstall` do Playwright não tentar descarregar 150 MB de browsers durante a instalação |
+| `package.json` → `engines.node: 22.x` | A Vercel respeita o campo. O Next 16 exige Node ≥ 20.9: um projeto configurado em Node 18 falha na primeira linha do build |
+| `.vercelignore` | `docs/`, `content-import/` e `scripts/` ficam fora do upload — nada disso entra no build |
+| `npm run preflight` | `typecheck` + `lint` + `build`, o que a CI faria. Correr antes de cada push |
+
+## Causas prováveis, por ordem
+
+1. **Versão do Node** nas Project Settings em 18.x → o build morre antes de
+   compilar. Passar a 22.x (já pedido pelo `engines`).
+2. **Framework Preset em "Other"** → a Vercel procura uma pasta de output
+   estático e devolve *No Output Directory named "public" found*. O
+   `vercel.json` força `nextjs`.
+3. **Root Directory** apontada para uma subpasta. O projeto está na raiz do
+   repositório.
+4. **Instalação a falhar** no `postinstall` do Playwright (devDependency que só
+   serve para gerar o instantâneo em `docs/preview`). Resolvido pela variável no
+   `vercel.json`.
+5. **Variável de ambiente a apontar para um secret que não existe** (sintaxe
+   `@nome`) → o deploy nem arranca. Definir as variáveis com valor direto.
+6. **Branch de produção.** O branch por omissão do repositório é
+   `claude/jelly-website-redesign-etah3z` — é esse que a Vercel promove a
+   produção. Se o Production Branch estiver noutro nome, o deploy fica sempre
+   em preview.
+
+## Variáveis de ambiente
+
+Nenhuma é necessária para o **build**. As de runtime são-no para as funções
+correspondentes funcionarem.
+
+| Variável | Quando | Sem ela |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | build | Canónicos e sitemap assumem `https://www.jelly.pt` |
+| `NEXT_PUBLIC_BILLING_HOST` | build | Assume `billing.jelly.pt` |
+| `BILLING_AUTH_SECRET` (32+ caracteres) | runtime | O magic link devolve erro ao ser pedido. `openssl rand -base64 48` |
+| `BILLING_ALLOWED_EMAILS` | runtime | Nenhum prestador reconhecido (a resposta é a mesma, por desenho) |
+| `RESEND_API_KEY` | runtime | O link não é enviado: fica no log do servidor |
+| `BILLING_FROM_EMAIL` | runtime | `pagamentos@jelly.pt` |
+| `NEXT_PUBLIC_MONDAY_FORM_URL` | build | A área de faturação mostra o aviso em vez do formulário |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | build | O site serve o conteúdo local de `src/content` |
+| `NEXT_PUBLIC_SANITY_DATASET` | build | `production` |
+| `SANITY_API_READ_TOKEN` | build | Só necessário para ler rascunhos |
+
+## Domínios
+
+`jelly-web.vercel.app` **já pertence a outro projeto** na Vercel (um "Jelly AI",
+sem relação com a Jelly) — os subdomínios `.vercel.app` são globais. O URL
+gerado para este projeto é outro: confirmar em Project → Domains e testar por
+esse. Para o subdomínio de faturação funcionar em preview é preciso apontar
+`NEXT_PUBLIC_BILLING_HOST` para o host de preview, senão o middleware
+redireciona `/billing` para `billing.jelly.pt`.
+
+## Depois de o deploy ficar verde
+
+1. Apontar `NEXT_PUBLIC_SITE_URL` ao domínio de staging para os canónicos não
+   mentirem enquanto o site não está em jelly.pt.
+2. Verificar o domínio de envio na Resend (`pagamentos@jelly.pt`).
+3. Trocar `src/lib/billing/store.ts` (em memória) por Upstash/KV — sem isso, os
+   tokens usados e os limites de pedido não sobrevivem a um restart da função.

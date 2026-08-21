@@ -67,9 +67,12 @@ export type NewsItem = {
   outlet?: string;
 };
 
-/** Bloco de corpo de artigo, como sai da migração do WordPress. */
+/** Trecho de texto com marcação inline. Vem do Portable Text do CMS. */
+export type Span = { text: string; bold?: boolean; italic?: boolean; href?: string };
+
+/** Bloco de corpo de artigo, como sai da migração do WordPress ou do CMS. */
 export type Block =
-  | { type: "p"; text: string }
+  | { type: "p"; text: string; spans?: Span[] }
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
   | { type: "quote"; text: string }

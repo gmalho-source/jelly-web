@@ -1,5 +1,24 @@
 import Image from "next/image";
-import type { Block } from "@/content/types";
+import type { Block, Span } from "@/content/types";
+
+/** Negrito, itálico e links escritos no CMS. O texto migrado não tem marcação. */
+function Inline({ spans }: { spans: Span[] }) {
+  return (
+    <>
+      {spans.map((span, index) => {
+        const content = span.bold ? <strong className="font-semibold">{span.text}</strong> : span.italic ? <em>{span.text}</em> : span.text;
+        if (span.href) {
+          return (
+            <a key={index} href={span.href} className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
+              {content}
+            </a>
+          );
+        }
+        return <span key={index}>{content}</span>;
+      })}
+    </>
+  );
+}
 
 /**
  * Corpo de artigo migrado do WordPress. Lora, medida de 66 caracteres,
@@ -19,7 +38,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
               key={index}
               className={`reading ${isFirst ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
             >
-              {block.text}
+              {block.spans ? <Inline spans={block.spans} /> : block.text}
             </p>
           );
         }
