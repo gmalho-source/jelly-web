@@ -1,18 +1,22 @@
 import { createClient, type SanityClient } from "@sanity/client";
+import { env } from "@/lib/env";
 import { apiVersion, configured, dataset, projectId } from "../../../sanity/env";
 
 /**
  * Cliente de leitura. Só existe quando o projeto está configurado — o site
  * continua a funcionar com o conteúdo local enquanto não estiver.
  */
+/** Token só para ler rascunhos; vazio vale como ausente. */
+const readToken = env(process.env.SANITY_API_READ_TOKEN);
+
 export const sanity: SanityClient | null = configured
   ? createClient({
       projectId,
       dataset,
       apiVersion,
       // CDN para leituras publicadas; o token só entra em pré-visualização.
-      useCdn: !process.env.SANITY_API_READ_TOKEN,
-      token: process.env.SANITY_API_READ_TOKEN,
+      useCdn: !readToken,
+      token: readToken,
       perspective: "published",
     })
   : null;

@@ -16,6 +16,28 @@ olhar: **Deployments → o deploy vermelho → Build Logs**, e copiar as última
 | `.vercelignore` | `docs/`, `content-import/` e `scripts/` ficam fora do upload — nada disso entra no build |
 | `npm run preflight` | `typecheck` + `lint` + `build`, o que a CI faria. Correr antes de cada push |
 
+## O que falhou na primeira vez
+
+As nove variáveis do `.env.example` tinham sido criadas no projeto **com valor
+vazio**. `new URL("")` atira `ERR_INVALID_URL`, e o build morria a recolher a
+configuração de `/[locale]/contactos`:
+
+```
+TypeError: Invalid URL
+  at src/app/(site)/[locale]/layout.tsx:11
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jelly.pt")
+  { code: 'ERR_INVALID_URL', input: '' }
+```
+
+O `??` só apanha `null` e `undefined` — uma string vazia passa. Corrigido em
+`src/lib/env.ts`: todas as leituras de configuração passam por lá e **vazio ou
+espaços valem como ausência**, pelo que o valor por omissão entra. Os
+ajudantes recebem o valor (`process.env.X`) e não o nome, para não perderem a
+substituição que o Next faz das `NEXT_PUBLIC_*` durante o build.
+
+Regra que fica: **não criar variáveis vazias**. Uma variável que não tem valor
+não deve existir — o código já sabe o que fazer sem ela.
+
 ## Causas prováveis, por ordem
 
 1. **Versão do Node** nas Project Settings em 18.x → o build morre antes de

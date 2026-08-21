@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { JellyWordmark } from "@/components/JellyLogo";
 import { currentProvider } from "@/lib/billing/session";
+import { env } from "@/lib/env";
 
 export default async function InvoicePage() {
   const provider = await currentProvider();
   if (!provider) redirect("/billing?erro=link");
 
   const t = await getTranslations("billing");
-  const formUrl = process.env.NEXT_PUBLIC_MONDAY_FORM_URL;
+  const formUrl = env(process.env.NEXT_PUBLIC_MONDAY_FORM_URL);
 
   // O formulário do Monday recebe o email autenticado por query string, para o
   // prestador não ter de o escrever outra vez (e para não poder trocá-lo).

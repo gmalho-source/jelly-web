@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
 import { CMS_TAG } from "@/lib/sanity/client";
+import { env } from "@/lib/env";
 
 /**
  * Webhook do Sanity. Publicar no Studio invalida a etiqueta do conteúdo e o
@@ -14,7 +15,7 @@ import { CMS_TAG } from "@/lib/sanity/client";
 export const dynamic = "force-dynamic";
 
 function authorized(request: Request): boolean {
-  const secret = process.env.SANITY_REVALIDATE_SECRET;
+  const secret = env(process.env.SANITY_REVALIDATE_SECRET);
   if (!secret) return false;
 
   const header = request.headers.get("authorization") ?? "";
@@ -26,7 +27,7 @@ function authorized(request: Request): boolean {
 }
 
 export async function POST(request: Request) {
-  if (!process.env.SANITY_REVALIDATE_SECRET) {
+  if (!env(process.env.SANITY_REVALIDATE_SECRET)) {
     return Response.json({ ok: false, error: "SANITY_REVALIDATE_SECRET não está definido." }, { status: 503 });
   }
   if (!authorized(request)) {

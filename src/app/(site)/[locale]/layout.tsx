@@ -5,10 +5,12 @@ import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/seo";
 import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jelly.pt"),
+  // Uma só leitura do host público, em src/lib/seo.ts.
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Jelly — Agência de marketing digital e inteligência artificial",
     template: "%s · Jelly",

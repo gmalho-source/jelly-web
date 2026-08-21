@@ -1,5 +1,7 @@
+import { envOr } from "@/lib/env";
+
 /** Host do subdomínio de faturação. Configurável para dev e para ambientes de preview. */
-export const BILLING_HOST = process.env.NEXT_PUBLIC_BILLING_HOST ?? "billing.jelly.pt";
+export const BILLING_HOST = envOr(process.env.NEXT_PUBLIC_BILLING_HOST, "billing.jelly.pt");
 
 /** Em desenvolvimento aceitamos billing.localhost e o prefixo /billing direto. */
 export function isBillingHost(host: string): boolean {

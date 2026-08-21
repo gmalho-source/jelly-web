@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { Resend } from "resend";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
+import { env, envOr } from "@/lib/env";
 
 export const runtime = "nodejs";
 
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
   }
 
   const text = [`Nome: ${name}`, `Empresa: ${company || "—"}`, `Email: ${email}`, "", message].join("\n");
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = env(process.env.RESEND_API_KEY);
 
   if (!apiKey) {
     console.info(`[contacto] briefing de ${email}\n${text}`);
@@ -38,8 +39,8 @@ export async function POST(request: NextRequest) {
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
-    from: process.env.BILLING_FROM_EMAIL ?? "Jelly <geral@jelly.pt>",
-    to: process.env.CONTACT_TO_EMAIL ?? "geral@jelly.pt",
+    from: envOr(process.env.BILLING_FROM_EMAIL, "Jelly <geral@jelly.pt>"),
+    to: envOr(process.env.CONTACT_TO_EMAIL, "geral@jelly.pt"),
     replyTo: email,
     subject: `Briefing de ${name}${company ? ` (${company})` : ""}`,
     text,

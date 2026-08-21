@@ -6,6 +6,7 @@ import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { clients, milestones, services, team } from "@/content/site";
 import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
+import { env } from "@/lib/env";
 import {
   fetchArchivedProjects,
   fetchClients,
@@ -26,7 +27,7 @@ import {
  * versionado em src/content. A troca é coleção a coleção, para a migração ir
  * entrando por partes sem nunca deixar o site sem conteúdo.
  */
-export const sanityConfigured = Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
+export const sanityConfigured = Boolean(env(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID));
 
 const localProjects = [...projects].sort((a, b) => a.order - b.order);
 

@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
+import { env } from "@/lib/env";
 
 const ISSUER = "jelly-billing";
 const MAGIC_AUDIENCE = "magic-link";
@@ -9,7 +10,7 @@ export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
 export const SESSION_COOKIE = "jelly_billing_session";
 
 function secret(): Uint8Array {
-  const value = process.env.BILLING_AUTH_SECRET;
+  const value = env(process.env.BILLING_AUTH_SECRET);
   if (!value || value.length < 32) {
     throw new Error("BILLING_AUTH_SECRET em falta ou com menos de 32 caracteres.");
   }

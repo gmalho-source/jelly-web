@@ -1,7 +1,8 @@
+import { envOr } from "@/lib/env";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jelly.pt").replace(/\/$/, "");
+export const SITE_URL = envOr(process.env.NEXT_PUBLIC_SITE_URL, "https://www.jelly.pt").replace(/\/$/, "");
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 

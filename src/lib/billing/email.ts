@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { MAGIC_LINK_TTL_SECONDS } from "./auth";
+import { env, envOr } from "@/lib/env";
 
 const minutes = Math.round(MAGIC_LINK_TTL_SECONDS / 60);
 
@@ -19,7 +20,7 @@ function template(link: string) {
 }
 
 export async function sendMagicLinkEmail(to: string, link: string): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = env(process.env.RESEND_API_KEY);
 
   if (!apiKey) {
     // Em desenvolvimento nao ha envio: o link fica no log do servidor.
@@ -29,7 +30,7 @@ export async function sendMagicLinkEmail(to: string, link: string): Promise<void
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
-    from: process.env.BILLING_FROM_EMAIL ?? "Jelly <pagamentos@jelly.pt>",
+    from: envOr(process.env.BILLING_FROM_EMAIL, "Jelly <pagamentos@jelly.pt>"),
     to,
     subject: "O seu link de acesso a area de prestadores",
     html: template(link),
