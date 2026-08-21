@@ -1,0 +1,25 @@
+# O mesmo que se corre em local antes de um push: typecheck, lint e build de
+# produção. Serve de rede para o deploy — se isto passa, a Vercel não falha por
+# causa do código.
+name: preflight
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build
