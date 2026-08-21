@@ -44,15 +44,16 @@ export default buildConfig({
   // Sem token, ficam no disco local, o que serve para desenvolver.
   plugins: blobToken
     ? [
+        // Sem `clientUploads`: mandar o ficheiro do browser direito ao Blob
+        // parece melhor, mas aí o servidor nunca vê os bytes — o sharp não
+        // corre, a conversão para WebP não acontece, e o ficheiro principal
+        // ficava a faltar na store enquanto o documento apontava para ele. O
+        // preço é o limite de 4,5 MB por upload que a Vercel impõe às funções.
         vercelBlobStorage({
           // Sem o controlo de acesso do Payload à frente, os endereços apontam
           // direitos ao CDN do Blob: as imagens deixam de passar por uma função
           // a cada pedido. São capas de projetos, públicas de qualquer maneira.
           collections: { media: { disablePayloadAccessControl: true } },
-          // O upload vai do browser para o Blob sem passar pela função, que na
-          // Vercel não aceita corpos acima de 4,5 MB — uma fotografia grande
-          // falhava no painel.
-          clientUploads: true,
           token: blobToken,
         }),
       ]

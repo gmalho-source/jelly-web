@@ -118,6 +118,24 @@ Pela ordem, porque cada passo depende do anterior:
    que a leitura já vem do Payload. Em local, sem Blob, o endereço é
    `/api/media/file/…`.
 
+## Uma leitura por deploy, não uma por página
+
+O site tem 513 páginas e todas leem da mesma camada. O `cache` do React só junta
+as chamadas dentro do mesmo desenho, por isso cada página voltava a pedir os 179
+artigos com o corpo inteiro: **19 milhões de linhas** lidas da base numa única
+build, medido no `pg_stat_database`. Foi assim que a quota de transferência da
+Neon se esgotou num dia de trabalho.
+
+As leituras passaram a ficar guardadas no cache do Next por etiqueta (`cms`),
+com uma leitura por coleção e por deploy: a mesma build passou a **108 mil
+linhas**, 178 vezes menos. Publicar no painel limpa a etiqueta — é o que os
+ganchos fazem, a par da revalidação dos caminhos — e o `POST /api/revalidate`
+limpa-a também.
+
+Quando este projeto passar a `cacheComponents`, isto troca-se pela diretiva
+`use cache` com `cacheTag`, que é o caminho recomendado no Next 16; o
+`unstable_cache` de hoje faz o mesmo trabalho sem mexer no resto da aplicação.
+
 ## Peso das imagens
 
 Tudo o que entra pelo painel é convertido para **WebP** a 82 e travado nos 2400

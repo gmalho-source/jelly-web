@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import logoGalleries from "@/content/generated/client-logos.json";
 import generated from "@/content/generated/posts.json";
@@ -30,9 +31,27 @@ import { payloadConfigured } from "@/lib/payload/client";
  */
 export const cmsConfigured = payloadConfigured;
 
+/**
+ * Uma leitura por coleção e por deploy, não uma por página.
+ *
+ * O `cache` do React só junta as chamadas dentro do mesmo desenho, e este site
+ * desenha 513 páginas: cada uma voltava a pedir os 179 artigos com o corpo
+ * inteiro. Medido numa build: 19 milhões de linhas lidas da base. Com o cache
+ * do Next por cima, a leitura acontece uma vez e as páginas seguintes leem o
+ * resultado guardado — o que também é o que mantém a fatura da base pequena.
+ *
+ * A etiqueta é o que os ganchos das coleções limpam ao publicar.
+ */
+function fromStore<T>(name: string, load: () => Promise<T>) {
+  return cache(unstable_cache(load, ["cms", name], { revalidate: false, tags: [CMS_TAG] }));
+}
+
+/** Etiqueta única: publicar qualquer coisa manda buscar tudo outra vez. */
+export const CMS_TAG = "cms";
+
 const localProjects = [...projects].sort((a, b) => a.order - b.order);
 
-export const getProjects = cache(async (): Promise<Project[]> => {
+export const getProjects = fromStore("projects", async (): Promise<Project[]> => {
   const all = await fetchProjects(localProjects);
   return [...all].sort((a, b) => a.order - b.order);
 });
@@ -48,9 +67,9 @@ export async function getNextProject(slug: string): Promise<Project> {
   return all[(index + 1) % all.length];
 }
 
-export const getServices = cache(async () => fetchServices(services));
+export const getServices = fromStore("services", async () => fetchServices(services));
 
-export const getClients = cache(async () => fetchClients(clients));
+export const getClients = fromStore("clients", async () => fetchClients(clients));
 
 export async function getService(slug: string) {
   const all = await getServices();
@@ -67,14 +86,17 @@ export async function getProjectsBySlugs(slugs: string[] = []) {
  * usa — as fotografias do topo, em fundido quando há mais do que uma — e sem
  * elas o topo cai na capa de um projeto.
  */
+/** Copy e imagens das páginas. Usada pelo merge de mensagens e pelo herói. */
+export const getPages = fromStore("pages", async () => fetchPageCopy());
+
 export const getPageImages = cache(async (key: string) => {
-  const pages = await fetchPageCopy();
+  const pages = await getPages();
   return pages.find((page) => page.slug === key)?.images ?? [];
 });
 
-export const getTeam = cache(async () => fetchTeam(team));
+export const getTeam = fromStore("team", async () => fetchTeam(team));
 
-export const getMilestones = cache(async () => fetchMilestones(milestones));
+export const getMilestones = fromStore("milestones", async () => fetchMilestones(milestones));
 
 /**
  * Artigos migrados do WordPress (`npm run migrate`). Enquanto a migração não
@@ -102,7 +124,7 @@ export const postsAreMigrated = migrated.length > 0;
 
 const localPosts = (postsAreMigrated ? migrated.map(fromMigrated) : posts).sort((a, b) => b.date.localeCompare(a.date));
 
-export const getPosts = cache(async (): Promise<Post[]> => {
+export const getPosts = fromStore("posts", async (): Promise<Post[]> => {
   const all = await fetchPosts(localPosts);
   return [...all].sort((a, b) => b.date.localeCompare(a.date));
 });
@@ -122,7 +144,7 @@ export async function getRelatedPosts(slug: string, limit = 3): Promise<Post[]> 
 
 const localNews = [...news].sort((a, b) => b.date.localeCompare(a.date));
 
-export const getNews = cache(async (): Promise<NewsItem[]> => {
+export const getNews = fromStore("news", async (): Promise<NewsItem[]> => {
   const all = await fetchNews(localNews);
   return [...all].sort((a, b) => b.date.localeCompare(a.date));
 });
@@ -134,7 +156,7 @@ export const getNews = cache(async (): Promise<NewsItem[]> => {
  */
 const localArchive = archived as ArchivedProject[];
 
-const getArchive = cache(async () => fetchArchivedProjects(localArchive));
+const getArchive = fromStore("archive", async () => fetchArchivedProjects(localArchive));
 
 export async function getArchivedProjects(): Promise<ArchivedProject[]> {
   const [archive, featured] = await Promise.all([getArchive(), getProjects()]);
@@ -147,7 +169,7 @@ export async function getArchivedProject(slug: string): Promise<ArchivedProject 
   return archive.find((project) => project.slug === slug);
 }
 
-const getLogoGalleries = cache(async () => fetchLogoGalleries(logoGalleries as LogoGallery[]));
+const getLogoGalleries = fromStore("logos", async () => fetchLogoGalleries(logoGalleries as LogoGallery[]));
 
 /** Logos de clientes, das galerias Smart Logo do site antigo. */
 export async function getClientLogos(gallery = "Clientes") {

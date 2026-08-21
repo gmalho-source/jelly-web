@@ -1,5 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { CMS_TAG } from "@/lib/cms";
 import { env } from "@/lib/env";
 
 /**
@@ -35,7 +36,9 @@ export async function POST(request: Request) {
     return Response.json({ ok: false }, { status: 401 });
   }
 
-  // "layout" apanha tudo o que vive debaixo da raiz de cada língua.
+  // A etiqueta larga as leituras guardadas; o caminho com "layout" apanha
+  // tudo o que vive debaixo da raiz de cada língua.
+  revalidateTag(CMS_TAG, { expire: 0 });
   revalidatePath("/", "layout");
   revalidatePath("/en", "layout");
   return Response.json({ ok: true, revalidated: "site" });

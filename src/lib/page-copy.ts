@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { fetchPageCopy } from "@/lib/payload/content";
+import { getPages } from "@/lib/cms";
 
 import type { Locale } from "@/i18n/routing";
 
@@ -37,7 +37,7 @@ function set(target: Messages, path: string[], value: string) {
  * secção).
  */
 export const withPageCopy = cache(async (locale: Locale, messages: Messages): Promise<Messages> => {
-  const pages = await fetchPageCopy();
+  const pages = await getPages();
   if (!pages.length) return messages;
 
   const merged = structuredClone(messages);
