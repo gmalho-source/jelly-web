@@ -83,18 +83,33 @@ function saveAssetCache() {
   fs.writeFileSync(assetCachePath, `${JSON.stringify(assetCache, null, 2)}\n`);
 }
 
+const skippedImages = [];
+
 async function uploadImage(url, { alt, caption } = {}) {
   if (!url || skipImages || !client) return undefined;
   let assetId = assetCache[url];
   if (!assetId) {
     const response = await fetch(url);
     if (!response.ok) {
-      console.warn(`  imagem em falta (${response.status}): ${url}`);
+      skippedImages.push(`${response.status} ${url}`);
       return undefined;
     }
+    // O site antigo devolve páginas de erro com estado 200. Uma delas chegou ao
+    // Sanity como imagem e derrubou a migração inteira a meio: agora confirma-se
+    // o tipo antes de enviar, e uma imagem má custa uma imagem, não a corrida.
+    const contentType = response.headers.get("content-type") ?? "";
     const buffer = Buffer.from(await response.arrayBuffer());
-    const asset = await client.assets.upload("image", buffer, { filename: path.basename(new URL(url).pathname) });
-    assetId = asset._id;
+    if (!contentType.startsWith("image/") || buffer.byteLength < 1024) {
+      skippedImages.push(`${contentType || "sem tipo"} (${buffer.byteLength} bytes) ${url}`);
+      return undefined;
+    }
+    try {
+      const asset = await client.assets.upload("image", buffer, { filename: path.basename(new URL(url).pathname) });
+      assetId = asset._id;
+    } catch (error) {
+      skippedImages.push(`recusada pelo Sanity: ${url} — ${error.message?.split("\n")[0] ?? error}`);
+      return undefined;
+    }
     assetCache[url] = assetId;
     uploaded += 1;
     if (uploaded % 10 === 0) saveAssetCache();
@@ -397,6 +412,10 @@ async function main() {
 
   if (!skipImages) saveAssetCache();
   console.log(`\n${docs.length} documentos, ${uploaded} imagens novas`);
+  if (skippedImages.length) {
+    console.log(`${skippedImages.length} imagens ignoradas:`);
+    for (const line of skippedImages) console.log(`  ${line}`);
+  }
 
   if (dryRun || !client) {
     const sample = docs[0];
