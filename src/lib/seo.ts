@@ -4,6 +4,16 @@ import { routing, type Locale } from "@/i18n/routing";
 
 export const SITE_URL = envOr(process.env.NEXT_PUBLIC_SITE_URL, "https://www.jelly.pt").replace(/\/$/, "");
 
+/** O domínio público do site. Tudo o que não é isto é staging ou preview. */
+export const PRODUCTION_URL = "https://www.jelly.pt";
+
+/**
+ * Staging e previews ficam fora do Google. Sem isto, jelly-web-pi.vercel.app
+ * competia com o jelly.pt pelas mesmas páginas — conteúdo duplicado contra o
+ * próprio cliente.
+ */
+export const isIndexable = SITE_URL === PRODUCTION_URL;
+
 type Href = Parameters<typeof getPathname>[0]["href"];
 
 /**

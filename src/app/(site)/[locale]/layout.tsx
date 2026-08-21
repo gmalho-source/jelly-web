@@ -4,20 +4,36 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { routing } from "@/i18n/routing";
-import { SITE_URL } from "@/lib/seo";
+import { routing, type Locale } from "@/i18n/routing";
+import { SITE_URL, isIndexable } from "@/lib/seo";
 import "@/app/globals.css";
 
-export const metadata: Metadata = {
-  // Uma só leitura do host público, em src/lib/seo.ts.
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Jelly — Agência de marketing digital e inteligência artificial",
-    template: "%s · Jelly",
+const site: Record<Locale, { title: string; description: string }> = {
+  pt: {
+    title: "Jelly — Agência de marketing digital e inteligência artificial",
+    description:
+      "Ajudamos empresas a comunicar e a desempenhar melhor, ligando os pontos entre branding, marketing, comunicação e tecnologia.",
   },
-  description:
-    "Ajudamos empresas a comunicar e a desempenhar melhor, ligando os pontos entre branding, marketing, comunicação e tecnologia.",
+  en: {
+    title: "Jelly — Digital marketing and artificial intelligence agency",
+    description:
+      "We help companies communicate and perform better, connecting branding, marketing, communication and technology.",
+  },
 };
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const copy = site[hasLocale(routing.locales, locale) ? locale : routing.defaultLocale];
+
+  return {
+    // Uma só leitura do host público, em src/lib/seo.ts.
+    metadataBase: new URL(SITE_URL),
+    title: { default: copy.title, template: "%s · Jelly" },
+    description: copy.description,
+    // Em staging o noindex vai também na página, não só no robots.txt.
+    ...(isIndexable ? {} : { robots: { index: false, follow: false } }),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

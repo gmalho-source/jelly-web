@@ -75,6 +75,17 @@ correspondentes funcionarem.
 | `NEXT_PUBLIC_SANITY_DATASET` | build | `production` |
 | `SANITY_API_READ_TOKEN` | build | Só necessário para ler rascunhos |
 
+## Staging não é indexável
+
+`src/lib/seo.ts` compara o `NEXT_PUBLIC_SITE_URL` com o domínio público
+(`https://www.jelly.pt`). Fora dele — staging, previews — o `robots.txt` passa a
+`Disallow: /` e as páginas levam `noindex, nofollow`. Sem isto o
+`jelly-web-pi.vercel.app` competia com o jelly.pt pelas mesmas páginas.
+
+No go-live, `NEXT_PUBLIC_SITE_URL=https://www.jelly.pt` liga a indexação. É a
+mesma variável que alimenta canónicos, hreflang e sitemap: não há segundo sítio
+para mudar.
+
 ## Domínios
 
 `jelly-web.vercel.app` **já pertence a outro projeto** na Vercel (um "Jelly AI",
