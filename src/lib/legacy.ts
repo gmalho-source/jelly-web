@@ -29,5 +29,8 @@ export function legacyDestination(pathname: string): string | undefined {
   const feed = /^(.*)\/feed$/.exec(clean);
   if (feed) return exact.get(trim(feed[1])) ?? "/blog";
 
+  // Arquivos por autor: o site novo não os tem, e o índice do blog serve.
+  if (clean === "/author" || clean.startsWith("/author/")) return "/blog";
+
   return undefined;
 }

@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.jelly.pt" },
     ],
   },
+  // O middleware trata dos endereços antigos, mas o seu matcher não vê caminhos
+  // com extensão: os sitemaps do WordPress ficam aqui.
+  async redirects() {
+    return [
+      { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
+      { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
+      { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

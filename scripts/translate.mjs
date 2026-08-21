@@ -66,9 +66,11 @@ async function translateStrings(strings, hint) {
   if (!strings.length) return [];
 
   const ask = async (attempt) => {
-    const response = await claude.messages.create({
+    // Em streaming e com tecto alto: um artigo longo passava dos 16 mil tokens
+    // de saída e o JSON vinha cortado a meio de uma frase.
+    const stream = claude.messages.stream({
       model,
-      max_tokens: 16000,
+      max_tokens: 64000,
       system: SYSTEM,
       thinking: { type: "adaptive" },
       messages: [
@@ -86,6 +88,7 @@ async function translateStrings(strings, hint) {
         },
       ],
     });
+    const response = await stream.finalMessage();
 
     const text = response.content
       .filter((block) => block.type === "text")
