@@ -7,6 +7,11 @@ export const Media: CollectionConfig = {
   access: { read: () => true },
   upload: {
     mimeTypes: ["image/*"],
+    // Tudo o que entra sai em WebP e com o lado maior travado: uma fotografia
+    // de máquina traz 6 MB e 6000 px que nenhum ecrã usa. O site serve estas
+    // imagens pelo otimizador do Next, que corta o resto por tamanho de ecrã.
+    formatOptions: { format: "webp", options: { quality: 82 } },
+    resizeOptions: { width: 2400, height: 2400, fit: "inside", withoutEnlargement: true },
     imageSizes: [
       { name: "thumb", width: 400 },
       { name: "card", width: 1200 },

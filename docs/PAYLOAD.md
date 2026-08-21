@@ -113,6 +113,19 @@ Pela ordem, porque cada passo depende do anterior:
    que a leitura já vem do Payload. Em local, sem Blob, o endereço é
    `/api/media/file/…`.
 
+## Peso das imagens
+
+Tudo o que entra pelo painel é convertido para **WebP** a 82 e travado nos 2400
+px do lado maior: uma fotografia de máquina traz 6 MB e 6000 px que nenhum ecrã
+usa. O site serve depois pelo otimizador do Next, que entrega **AVIF** a quem o
+suporta e corta por tamanho de ecrã — uma capa de projeto a 640 px fica em 17 KB.
+
+O que veio do WordPress não passou por essa porta: 35 ficheiros acima de 500 KB,
+o pior com 2,8 MB, fotografias guardadas em PNG. `npm run media:optimize`
+recodifica-os (aceita `--dry-run`, `--min-kb=`, `--limit=`, `--quality=` e
+`--max-side=`). Não é o visitante que ganha — ele já recebia a versão
+otimizada — é o armazenamento e o tempo do primeiro recorte de cada imagem.
+
 ## Mudar a estrutura
 
 O Payload acerta as tabelas sozinho quando corre fora de produção — é o que faz
