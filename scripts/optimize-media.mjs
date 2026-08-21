@@ -15,6 +15,7 @@
 import { getPayload } from "payload";
 import sharp from "sharp";
 import config from "../payload.config.ts";
+import { purgeSite } from "./purge-site.mjs";
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -77,4 +78,8 @@ for (const doc of heavy) {
 }
 
 console.log(`${done} imagens recodificadas, ${(saved / 1048576).toFixed(1)} MB poupados${dryRun ? " (ensaio)" : ""}`);
+
+// Recodificar muda o nome do ficheiro: sem purgar, as páginas já geradas
+// continuam a apontar para o endereço que deixou de existir.
+if (done && !dryRun) await purgeSite();
 process.exit(0);

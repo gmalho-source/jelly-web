@@ -17,7 +17,11 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   const pt = locale === "pt";
 
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
-  const withCover = archive.filter((project) => project.cover?.src);
+  // Os projetos entram do mais recente para o mais antigo. O arquivo vem
+  // ordenado como se mostra na página de trabalho, que não é por data.
+  const withCover = archive
+    .filter((project) => project.cover?.src)
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   const tiles: SheetTile[] = [
     { label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },
@@ -27,7 +31,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
       tone: tones[index % tones.length],
     })),
-    ...withCover.slice(0, 24).map((project) => ({
+    ...withCover.slice(0, 12).map((project) => ({
       label: project.client,
       kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
       href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),

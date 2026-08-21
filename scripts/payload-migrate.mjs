@@ -20,6 +20,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import { purgeSite } from "./purge-site.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
@@ -465,6 +466,7 @@ async function main() {
     console.log(`${skipped.length} imagens ignoradas:`);
     for (const line of skipped.slice(0, 12)) console.log(`  ${line}`);
   }
+  if (!dryRun) await purgeSite();
   process.exit(0);
 }
 

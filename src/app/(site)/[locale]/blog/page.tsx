@@ -1,17 +1,30 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { getPosts } from "@/lib/cms";
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "blog" });
-  return { title: t("eyebrow"), description: t("lead"), alternates: alternates("/blog", locale) };
+  return {
+    title: t("eyebrow"),
+    description: t("lead"),
+    alternates: alternates("/blog", locale),
+  };
 }
 
-export default async function BlogIndexPage({ params }: { params: Promise<{ locale: Locale }> }) {
+export default async function BlogIndexPage({
+  params,
+}: {
+  params: Promise<{ locale: Locale }>;
+}) {
   const { locale } = await params;
   setRequestLocale(locale);
 
@@ -19,7 +32,10 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
   const posts = await getPosts();
   const [featured, ...rest] = posts;
   const latest = rest.slice(0, 23);
-  const formatter = new Intl.DateTimeFormat(locale === "pt" ? "pt-PT" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const formatter = new Intl.DateTimeFormat(
+    locale === "pt" ? "pt-PT" : "en-GB",
+    { day: "numeric", month: "short", year: "numeric" },
+  );
 
   return (
     <section className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
@@ -37,15 +53,31 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
       >
         <div>
           <span className="eyebrow">{featured.category[locale]}</span>
-          <h2 className="editorial mt-3 max-w-[24ch] text-chapter">{featured.title[locale]}</h2>
-          <p className="mt-4 max-w-[56ch] text-md text-fg-soft">{featured.excerpt[locale]}</p>
+          <h2 className="editorial mt-3 max-w-[24ch] text-chapter">
+            {featured.title[locale]}
+          </h2>
+          <p className="mt-4 max-w-[56ch] text-md text-fg-soft">
+            {featured.excerpt[locale]}
+          </p>
         </div>
-        <div className="flex flex-col justify-end gap-1 text-sm text-fg-soft lg:items-end">
-          <span>{featured.author}</span>
-          <span>{formatter.format(new Date(featured.date))}</span>
-          <span>
-            {featured.readingMinutes} {t("minutes")}
-          </span>
+        <div className="flex flex-col justify-end gap-4 text-sm text-fg-soft lg:items-end">
+          {featured.cover?.src ? (
+            <Image
+              src={featured.cover.src}
+              alt={featured.cover.alt ?? ""}
+              width={800}
+              height={600}
+              sizes="(max-width: 1024px) 100vw, 34vw"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          ) : null}
+          <div className="flex flex-col gap-1 lg:items-end">
+            <span>{featured.author}</span>
+            <span>{formatter.format(new Date(featured.date))}</span>
+            <span>
+              {featured.readingMinutes} {t("minutes")}
+            </span>
+          </div>
         </div>
       </Link>
 
@@ -59,8 +91,25 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
         <Link
           key={post.slug}
           href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
-          className="group grid grid-cols-[minmax(0,1fr)_84px] items-baseline gap-4 border-b border-line py-5 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3"
+          className="group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px]"
         >
+          {/* A miniatura é a mesma imagem do artigo: o índice deixa de ser uma
+              lista de títulos e passa a mostrar do que fala cada texto. */}
+          {post.cover?.src ? (
+            <Image
+              src={post.cover.src}
+              alt=""
+              width={208}
+              height={156}
+              sizes="104px"
+              className="aspect-[4/3] w-full object-cover"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="block aspect-[4/3] w-full bg-slate/15"
+            />
+          )}
           <div>
             <h3 className="editorial text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
               {post.title[locale]}
@@ -69,7 +118,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
               {post.category[locale]} · {t("by")} {post.author}
             </p>
           </div>
-          <span className="text-right text-sm tabular-nums text-fg-soft">
+          <span className="self-baseline text-right text-sm tabular-nums text-fg-soft">
             {formatter.format(new Date(post.date))}
             <br />
             {post.readingMinutes} {t("minutes")}

@@ -2,10 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JellyWordmark } from "./JellyLogo";
 
-export type SheetTile = { label: string; kind: string; href: string; image?: string; tone?: string };
+export type SheetTile = {
+  label: string;
+  kind: string;
+  href: string;
+  image?: string;
+  tone?: string;
+};
 
 export type SheetCopy = {
   /** Rótulo do gatilho e título do diálogo. */
@@ -21,7 +28,10 @@ export type SheetCopy = {
 };
 
 function normalize(value: string) {
-  return value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
 }
 
 /**
@@ -48,26 +58,51 @@ export function IndexSheet({
   contactHref: string;
   languageHref?: string;
 }) {
-  const [open, setOpen] = useState(false);
+  // A folha está aberta para o caminho onde foi aberta. Navegar muda o caminho
+  // e fecha-a sozinha — sem isto ficava aberta em cima da página escolhida, e a
+  // navegação aqui é toda do lado do cliente.
+  const [openedOn, setOpenedOn] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+  const open = openedOn === pathname;
+
+  const openSheet = useCallback(() => {
+    setOpenedOn(pathname);
+    requestAnimationFrame(() => input.current?.focus());
+  }, [pathname]);
 
   const results = useMemo(() => {
     const term = normalize(query.trim());
     if (!term) return tiles;
-    return tiles.filter((tile) => normalize(`${tile.label} ${tile.kind}`).includes(term));
+    return tiles.filter((tile) =>
+      normalize(`${tile.label} ${tile.kind}`).includes(term),
+    );
   }, [query, tiles]);
 
-  const active = results.length ? ((cursor % results.length) + results.length) % results.length : 0;
+  const active = results.length
+    ? ((cursor % results.length) + results.length) % results.length
+    : 0;
 
   function close() {
-    setOpen(false);
+    setOpenedOn(null);
     setQuery("");
     setCursor(0);
     trigger.current?.focus({ preventScroll: true });
   }
+
+  // Com a folha aberta, o fundo não deve rolar por trás dela.
+  useEffect(() => {
+    if (!open) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [open]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -77,29 +112,36 @@ export function IndexSheet({
 
       if (!open) {
         // Uma letra em qualquer sítio da página abre a folha e começa a filtrar.
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        if (
+          (event.metaKey || event.ctrlKey) &&
+          event.key.toLowerCase() === "k"
+        ) {
           event.preventDefault();
-          setOpen(true);
-          requestAnimationFrame(() => input.current?.focus());
+          openSheet();
         }
         return;
       }
 
       if (!typing) return;
       const columns = window.innerWidth >= 1024 ? 4 : 2;
-      const moves: Record<string, number> = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: columns, ArrowUp: -columns };
+      const moves: Record<string, number> = {
+        ArrowRight: 1,
+        ArrowLeft: -1,
+        ArrowDown: columns,
+        ArrowUp: -columns,
+      };
       if (event.key in moves) {
         event.preventDefault();
         setCursor((value) => value + moves[event.key]);
       }
       if (event.key === "Enter" && results.length) {
         event.preventDefault();
-        window.location.assign(results[active].href);
+        router.push(results[active].href);
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, results, active]);
+  }, [open, results, active, router, openSheet]);
 
   return (
     <>
@@ -126,22 +168,28 @@ export function IndexSheet({
         type="button"
         aria-expanded={open}
         aria-controls="folha"
-        onClick={() => {
-          setOpen(true);
-          requestAnimationFrame(() => input.current?.focus());
-        }}
+        onClick={openSheet}
         className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-paper/10 px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8"
       >
         <span className="eyebrow text-current">{copy.index}</span>
         <span aria-hidden="true" className="grid grid-cols-3 gap-[3px]">
           {Array.from({ length: 9 }).map((_, index) => (
-            <span key={index} className="block h-[3px] w-[3px] rounded-full bg-current" />
+            <span
+              key={index}
+              className="block h-[3px] w-[3px] rounded-full bg-current"
+            />
           ))}
         </span>
       </button>
 
       {open ? (
-        <div id="folha" role="dialog" aria-modal="true" aria-label={copy.index} className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl">
+        <div
+          id="folha"
+          role="dialog"
+          aria-modal="true"
+          aria-label={copy.index}
+          className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl"
+        >
           <div className="flex items-center gap-4 border-b border-paper/15 px-5 py-4 sm:px-8">
             <span aria-hidden="true" className="text-red">
               /
@@ -158,11 +206,20 @@ export function IndexSheet({
               {results.length} {copy.of} {tiles.length}
             </span>
             {languageHref && copy.language ? (
-              <Link href={languageHref} onClick={() => setOpen(false)} className="text-xs text-paper/50 hover:text-paper">
+              <Link
+                href={languageHref}
+                onClick={() => setOpenedOn(null)}
+                className="text-xs text-paper/50 hover:text-paper"
+              >
                 {copy.language}
               </Link>
             ) : null}
-            <button type="button" onClick={close} aria-label={copy.close} className="text-sm text-paper/60 hover:text-paper">
+            <button
+              type="button"
+              onClick={close}
+              aria-label={copy.close}
+              className="text-sm text-paper/60 hover:text-paper"
+            >
               esc
             </button>
           </div>
@@ -172,6 +229,7 @@ export function IndexSheet({
               <Link
                 key={tile.href + tile.label}
                 href={tile.href}
+                onClick={() => setOpenedOn(null)}
                 onMouseEnter={() => setCursor(index)}
                 className="group relative block bg-ink"
               >
@@ -186,16 +244,24 @@ export function IndexSheet({
                       className="h-full w-full object-cover opacity-75 transition-[opacity,transform] duration-360 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
                     />
                   ) : (
-                    <span className={`block h-full w-full ${tile.tone ?? "bg-slate"}`} />
+                    <span
+                      className={`block h-full w-full ${tile.tone ?? "bg-slate"}`}
+                    />
                   )}
                 </span>
                 <span
                   className={`flex items-baseline justify-between gap-3 border-t-2 px-4 py-3 transition-colors duration-120 ${
-                    index === active ? "border-red bg-red/10" : "border-transparent"
+                    index === active
+                      ? "border-red bg-red/10"
+                      : "border-transparent"
                   }`}
                 >
-                  <span className="font-display text-lg leading-tight">{tile.label}</span>
-                  <span className="shrink-0 text-[11px] uppercase tracking-[0.08em] text-paper/40">{tile.kind}</span>
+                  <span className="font-display text-lg leading-tight">
+                    {tile.label}
+                  </span>
+                  <span className="shrink-0 text-[11px] uppercase tracking-[0.08em] text-paper/40">
+                    {tile.kind}
+                  </span>
                 </span>
               </Link>
             ))}
