@@ -16,6 +16,8 @@ export type Project = {
   team: Localized;
   headline: Kpi;
   kpis: Kpi[];
+  /** Os números só vão para o ecrã depois de validados com o cliente. */
+  numbersValidated?: boolean;
   quote?: { text: Localized; author: string; role: Localized };
 };
 
@@ -77,7 +79,12 @@ export type Block =
   | { type: "h3"; text: string }
   | { type: "quote"; text: string }
   | { type: "list"; ordered?: boolean; items: string[] }
-  | { type: "image"; src: string; alt?: string; caption?: string };
+  | { type: "image"; src: string; alt?: string; caption?: string }
+  /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
+  | { type: "gallery"; images: { src: string; alt?: string }[] }
+  | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean }
+  | { type: "embed"; url: string }
+  | { type: "link"; label: string; href: string };
 
 /** Artigo migrado do jelly.pt. Uma língua por registo (hoje só PT). */
 export type MigratedPost = {
@@ -104,8 +111,12 @@ export type ArchivedProject = {
   date: string;
   year: string;
   disciplines: string[];
+  /** Linha curta que o site antigo punha debaixo do nome do cliente. */
+  subtitle?: string;
   summary: string;
   body: string[];
+  /** Narrativa do caso, como estava no construtor de páginas do site antigo. */
+  story: Block[];
   cover?: { src: string; alt?: string; title?: string } | null;
   images: string[];
 };

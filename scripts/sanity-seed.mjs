@@ -170,6 +170,27 @@ async function toPortableText(blocks = []) {
     else if (block.type === "image") {
       const image = await uploadImage(block.src, { alt: block.alt, caption: block.caption });
       if (image) out.push({ ...image, _key: key });
+    } else if (block.type === "gallery") {
+      const images = [];
+      for (const [imageIndex, item] of block.images.entries()) {
+        const image = await uploadImage(item.src, { alt: item.alt });
+        if (image) images.push({ ...image, _key: `${key}g${imageIndex}` });
+      }
+      if (images.length) out.push({ _type: "galleryBlock", _key: key, images });
+    } else if (block.type === "video") {
+      const poster = await uploadImage(block.poster);
+      out.push({
+        _type: "videoBlock",
+        _key: key,
+        ...(block.mp4 ? { mp4: block.mp4 } : {}),
+        ...(block.webm ? { webm: block.webm } : {}),
+        ...(poster ? { poster } : {}),
+        portrait: Boolean(block.portrait),
+      });
+    } else if (block.type === "embed") {
+      out.push({ _type: "embedBlock", _key: key, url: block.url });
+    } else if (block.type === "link") {
+      out.push({ _type: "linkBlock", _key: key, label: block.label, href: block.href });
     }
   }
   return out;
@@ -234,7 +255,9 @@ async function buildArchive() {
       date: project.date || undefined,
       year: project.year,
       disciplines: project.disciplines ?? [],
+      ...(project.subtitle ? { subtitle: project.subtitle } : {}),
       summary: project.summary || undefined,
+      story: await toPortableText(project.story ?? []),
       legacyPath: project.legacyPath ?? undefined,
       ...(cover ? { cover } : {}),
       ...(images.length ? { images } : {}),

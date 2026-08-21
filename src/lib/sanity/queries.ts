@@ -42,6 +42,15 @@ export const PROJECTS = `*[_type == "project"] | order(order asc) {
   cover ${IMAGE}
 }`;
 
+// A história leva projeções por tipo de bloco: o Portable Text vem cru, e as
+// imagens de dentro precisam de endereço e dimensões como as outras.
+const STORY = `story[] {
+    ...,
+    _type == "coverImage" => ${IMAGE},
+    _type == "galleryBlock" => { "images": images[] ${IMAGE} },
+    _type == "videoBlock" => { mp4, webm, portrait, "poster": poster ${IMAGE} }
+  }`;
+
 export const ARCHIVED_PROJECTS = `*[_type == "archivedProject"] | order(date desc) {
   "slug": slug.current,
   legacyPath,
@@ -49,9 +58,11 @@ export const ARCHIVED_PROJECTS = `*[_type == "archivedProject"] | order(date des
   date,
   year,
   disciplines,
+  subtitle,
   summary,
   cover ${IMAGE},
-  "images": images[] ${IMAGE}
+  "images": images[] ${IMAGE},
+  ${STORY}
 }`;
 
 export const SERVICES = `*[_type == "service"] | order(order asc) {

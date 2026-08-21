@@ -220,12 +220,19 @@ componente se ver a funcionar. Para entrar a filmagem real:
 
 O que a migração **não** trouxe, e é trabalho de conteúdo, não de código:
 
-- **Narrativa dos projetos.** O export do portfolio vem sem texto — as histórias
-  viviam no construtor de páginas, não no conteúdo. Os 59 projetos entram como
-  **arquivo visual** (cliente, ano, disciplinas, capa) em `/projetos`, e os casos
-  escolhidos passam para `src/content/projects.ts` com narrativa e número.
-- **Números dos casos.** Os valores em `projects.ts` continuam exemplificativos até
-  serem validados com cada cliente.
+- **Narrativa dos projetos.** Estava no export, mas noutro sítio: no meta
+  `_nectar_portfolio_extra_content`, em shortcodes do construtor de páginas, e
+  não no `content:encoded` que se lê primeiro. **44 dos 59 projetos** têm
+  história escrita — claim, secções, galerias, vídeos e link para o site do
+  cliente — e é isso que a página de caso desenha. Os outros 15 mostram o que
+  existe e convidam a falar.
+- **Números dos casos.** Os valores em `projects.ts` são exemplificativos e por
+  isso **não vão para o ecrã**: a faixa de KPI só aparece quando o caso tem
+  `numbersValidated: true`. Validar com o cliente é o que falta para os ligar.
+- **Vídeos.** As páginas de caso referem 34 ficheiros no `jelly.pt`, 546 MB em
+  bruto (três com mais de 75 MB). Servem por agora, mas antes do lançamento têm
+  de ser re-codificados e mudados de casa — o site novo não pode depender do
+  servidor antigo.
 - **Tradução.** Os artigos migrados são PT (o site atual traduz por camada). O
   índice EN mostra-os como estão até haver orçamento de tradução.
 

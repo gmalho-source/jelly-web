@@ -117,9 +117,11 @@ type RawArchived = {
   date?: string | null;
   year?: string | null;
   disciplines?: string[] | null;
+  subtitle?: string | null;
   summary?: string | null;
   cover: RawImage;
   images?: RawImage[] | null;
+  story?: PortableTextBlock[] | null;
 };
 
 export function fetchArchivedProjects(fallback: ArchivedProject[]) {
@@ -132,8 +134,10 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
       date: raw.date ?? "",
       year: raw.year ?? (raw.date ? raw.date.slice(0, 4) : ""),
       disciplines: raw.disciplines ?? [],
+      subtitle: raw.subtitle ?? undefined,
       summary: raw.summary ?? "",
       body: [],
+      story: toBlocks(raw.story),
       cover: image(raw.cover) ?? null,
       images: (raw.images ?? []).map((item) => image(item)?.src).filter((src): src is string => Boolean(src)),
     }),

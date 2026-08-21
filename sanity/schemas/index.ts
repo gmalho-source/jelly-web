@@ -1,3 +1,4 @@
+import { caseStory, embedBlock, galleryBlock, linkBlock, videoBlock } from "./case";
 import { localeString, localeText } from "./locale";
 import { page } from "./page";
 import { articleBody, category, coverImage, post } from "./post";
@@ -21,5 +22,10 @@ export const schemaTypes = [
   localeText,
   coverImage,
   articleBody,
+  caseStory,
+  galleryBlock,
+  videoBlock,
+  embedBlock,
+  linkBlock,
   kpi,
 ];

@@ -92,7 +92,7 @@ const normalizeDisciplines = (list) => [...new Set(list.map((item) => DISCIPLINE
 
 /** De duas fichas do mesmo projeto fica a mais completa. */
 function dedupeBySlug(entries) {
-  const score = (entry) => [entry.disciplines.length, entry.summary.length, entry.body.length];
+  const score = (entry) => [entry.story.length, entry.disciplines.length, entry.summary.length, entry.body.length];
   const bySlug = new Map();
   for (const entry of entries) {
     const current = bySlug.get(entry.slug);
@@ -133,6 +133,136 @@ function paragraphs(html, max = 6) {
     if (whole.length > 60) out.push(whole.slice(0, 600));
   }
   return out;
+}
+
+/**
+ * Texto de um bloco do construtor. Ao contrário do corpo dos artigos, aqui os
+ * títulos curtos contam ("3D motion" é uma secção, não ruído) e há texto solto
+ * sem <p>, separado por linhas em branco — era o WordPress a fechá-lo depois.
+ */
+function richBlocks(html) {
+  const root = parse(html ?? "");
+  const out = [];
+
+  const pushText = (raw) => {
+    for (const chunk of String(raw ?? "").split(/\n\s*\n/)) {
+      const text = clean(chunk);
+      if (text.length > 2) out.push({ type: "p", text });
+    }
+  };
+
+  for (const node of root.childNodes) {
+    const name = node.rawTagName?.toLowerCase();
+    if (!name) {
+      pushText(node.rawText);
+      continue;
+    }
+    if (/^h[1-6]$/.test(name)) {
+      const text = clean(node.innerHTML);
+      if (text) out.push({ type: name === "h1" || name === "h2" ? "h2" : "h3", text });
+      continue;
+    }
+    if (name === "ul" || name === "ol") {
+      const items = node.querySelectorAll("li").map((li) => clean(li.innerHTML)).filter(Boolean);
+      if (items.length) out.push({ type: "list", ordered: name === "ol" || undefined, items });
+      continue;
+    }
+    pushText(node.innerHTML);
+  }
+
+  return out;
+}
+
+/**
+ * Narrativa do caso, tirada do construtor de páginas.
+ *
+ * O texto dos projetos não vive no `content:encoded` — vive no meta
+ * `_nectar_portfolio_extra_content`, em shortcodes do WPBakery. É por isso que
+ * a primeira leitura do export pareceu não ter histórias: estavam a um meta de
+ * distância. Traduz-se para os blocos que a página de caso desenha, e o que é
+ * andaime do construtor (linhas, ícones, colunas) fica de fora.
+ */
+function story(extra, attachments) {
+  const blocks = [];
+  if (!extra) return blocks;
+
+  const image = (reference) => {
+    if (!reference) return undefined;
+    if (/^https?:/.test(reference)) return { src: reference };
+    const asset = attachments.get(reference.trim());
+    return asset?.src ? { src: asset.src, alt: asset.alt || undefined } : undefined;
+  };
+  const attribute = (raw, name) => raw.match(new RegExp(`${name}="([^"]*)"`))?.[1];
+  const heading = (text, level = "h2") => {
+    const value = clean(text);
+    if (value) blocks.push({ type: level, text: value });
+  };
+  const media = (src) => (src?.startsWith("/") ? `https://www.jelly.pt${encodeURI(src)}` : src || undefined);
+
+  // Um passo por shortcode que interessa, na ordem em que aparecem na página.
+  const pattern =
+    /\[(vc_column_text|vc_custom_heading|split_line_heading|nectar_responsive_text|image_with_animation|vc_gallery|nectar_video_player_self_hosted|nectar_video_lightbox|vc_video|nectar_cta|nectar_btn)([^\]]*)\](?:([\s\S]*?)\[\/\1\])?/g;
+
+  for (const match of extra.matchAll(pattern)) {
+    const [, name, raw, inner] = match;
+    if (name === "vc_column_text") {
+      blocks.push(...richBlocks(inner));
+    } else if (name === "vc_custom_heading") {
+      heading(attribute(raw, "text") ?? "", (attribute(raw, "font_container") ?? "").includes("h3") ? "h3" : "h2");
+    } else if (name === "split_line_heading") {
+      heading(attribute(raw, "text_content") ?? "");
+    } else if (name === "nectar_responsive_text") {
+      heading(clean(inner ?? ""), "h3");
+    } else if (name === "image_with_animation") {
+      const picture = image(attribute(raw, "image_url"));
+      if (picture) blocks.push({ type: "image", ...picture });
+    } else if (name === "vc_gallery") {
+      const images = (attribute(raw, "images") ?? "")
+        .split(",")
+        .map((id) => image(id))
+        .filter(Boolean);
+      if (images.length) blocks.push({ type: "gallery", images });
+    } else if (name === "nectar_video_player_self_hosted") {
+      const mp4 = media(attribute(raw, "video_mp4"));
+      const webm = media(attribute(raw, "video_webm"));
+      if (mp4 || webm) {
+        blocks.push({
+          type: "video",
+          mp4,
+          webm,
+          poster: image(attribute(raw, "video_image"))?.src,
+          // el_aspect="916" é o 9:16 do construtor: vídeo vertical.
+          portrait: attribute(raw, "el_aspect") === "916",
+        });
+      }
+    } else if (name === "nectar_video_lightbox" || name === "vc_video") {
+      const reference = attribute(raw, "url") ?? attribute(raw, "link") ?? "";
+      if (/^https?:/.test(reference)) {
+        blocks.push({ type: "embed", url: reference });
+      } else {
+        // A lightbox do construtor guardava o id do anexo, não o endereço.
+        const asset = attachments.get(reference.trim());
+        if (asset?.src && /\.(mp4|webm|mov)$/i.test(asset.src)) {
+          blocks.push({ type: "video", mp4: asset.src });
+        }
+      }
+    } else if (name === "nectar_cta" || name === "nectar_btn") {
+      const href = attribute(raw, "url");
+      const label = clean(attribute(raw, "link_text") ?? attribute(raw, "text") ?? "");
+      if (href && label && !blocks.some((block) => block.type === "link" && block.href === href)) {
+        blocks.push({ type: "link", label, href });
+      }
+    }
+  }
+
+  // Parágrafos repetidos: o construtor duplicava blocos entre versões da página.
+  const seen = new Set();
+  return blocks.filter((block) => {
+    if (block.type !== "p" && block.type !== "h2" && block.type !== "h3") return true;
+    if (seen.has(block.text)) return false;
+    seen.add(block.text);
+    return true;
+  });
 }
 
 await mkdir(OUT, { recursive: true });
@@ -176,6 +306,8 @@ for (const file of files) {
       const cover = attachments.get(meta.get("_thumbnail_id") ?? "");
       const gallery = [...(content.match(/https:\/\/www\.jelly\.pt\/wp-content\/uploads\/[^\s"')]+\.(?:jpg|jpeg|png|webp)/gi) ?? [])];
 
+      const narrative = story(meta.get("_nectar_portfolio_extra_content") ?? "", attachments);
+
       projects.push({
         slug: tag(item, "wp:post_name"),
         legacyPath: link ? new URL(link).pathname : null,
@@ -183,8 +315,10 @@ for (const file of files) {
         date: tag(item, "wp:post_date").slice(0, 10),
         year: tag(item, "wp:post_date").slice(0, 4),
         disciplines: normalizeDisciplines(disciplines),
-        summary: clean(cdata(excerpt)) || paragraphs(cdata(content), 1)[0] || "",
+        subtitle: clean(meta.get("_nectar_header_subtitle") ?? ""),
+        summary: clean(meta.get("_nectar_project_excerpt") ?? "") || clean(cdata(excerpt)) || paragraphs(cdata(content), 1)[0] || "",
         body: paragraphs(cdata(content)),
+        story: narrative,
         cover: cover ?? null,
         images: [...new Set(gallery)].slice(0, 8),
       });
@@ -215,7 +349,8 @@ if (projects.length) {
   if (collapsed) console.log(`${collapsed} fichas duplicadas (PT/EN) fundidas`);
   await writeFile(path.join(OUT, "projects.json"), JSON.stringify(projects, null, 1));
   const withCover = projects.filter((project) => project.cover).length;
-  console.log(`${projects.length} projetos (${withCover} com capa, ${projects.filter((p) => p.body.length).length} com texto) → projects.json`);
+  const withStory = projects.filter((project) => project.story.some((block) => block.type === "p")).length;
+  console.log(`${projects.length} projetos (${withCover} com capa, ${withStory} com narrativa) → projects.json`);
 }
 
 if (logoGalleries.length) {
