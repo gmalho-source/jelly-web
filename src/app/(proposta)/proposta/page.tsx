@@ -2,12 +2,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { IndexSheet, type SheetTile } from "@/components/IndexSheet";
 import { Marquee } from "@/components/Marquee";
-import { getArchivedProjects, getClientLogos, getMilestones, getPosts, getServices, getTeam } from "@/lib/cms";
+import {
+  getArchivedProjects,
+  getClientLogos,
+  getMilestones,
+  getPosts,
+  getServices,
+  getTeam,
+} from "@/lib/cms";
 
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
 
 /** Etiqueta numerada: dá espinha à página e diz sempre onde vais. */
-function Chapter({ label, number, dark }: { label: string; number: string; dark?: boolean }) {
+function Chapter({
+  label,
+  number,
+  dark,
+}: {
+  label: string;
+  number: string;
+  dark?: boolean;
+}) {
   return (
     <p className={`eyebrow ${dark ? "text-paper/60" : "text-ink/60"}`}>
       {label} <span className="text-red">/ {number}</span>
@@ -16,14 +31,16 @@ function Chapter({ label, number, dark }: { label: string; number: string; dark?
 }
 
 export default async function Proposta() {
-  const [archive, services, posts, logos, team, milestones] = await Promise.all([
-    getArchivedProjects(),
-    getServices(),
-    getPosts(),
-    getClientLogos(),
-    getTeam(),
-    getMilestones(),
-  ]);
+  const [archive, services, posts, logos, team, milestones] = await Promise.all(
+    [
+      getArchivedProjects(),
+      getServices(),
+      getPosts(),
+      getClientLogos(),
+      getTeam(),
+      getMilestones(),
+    ],
+  );
 
   const withCover = archive.filter((project) => project.cover?.src);
   const featured = withCover.slice(0, 9);
@@ -54,7 +71,12 @@ export default async function Proposta() {
     })),
     { label: "Clientes", kind: "página", href: "/clientes", tone: "bg-coral" },
     { label: "Newsroom", kind: "página", href: "/newsroom", tone: "bg-slate" },
-    { label: "Falar connosco", kind: "página", href: "/contactos", tone: "bg-red" },
+    {
+      label: "Falar connosco",
+      kind: "página",
+      href: "/contactos",
+      tone: "bg-red",
+    },
   ];
 
   return (
@@ -81,7 +103,10 @@ export default async function Proposta() {
           <h1 className="font-display text-[clamp(50px,8.6vw,132px)] leading-[0.9] tracking-[-0.035em]">
             <span className="relative inline-block">
               Estratégia
-              <span aria-hidden="true" className="absolute inset-x-[-3%] top-[50%] h-[5px] -rotate-[1.4deg] bg-red lg:h-[10px]" />
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-[-3%] top-[50%] h-[5px] -rotate-[1.4deg] bg-red lg:h-[10px]"
+              />
             </span>
             <br />
             <span className="type-outline">Ação</span> é a
@@ -89,38 +114,47 @@ export default async function Proposta() {
             nossa estratégia.
           </h1>
 
-          <div className="relative">
-            <Image
-              src={featured[0].cover!.src}
-              alt={featured[0].client}
-              width={1200}
-              height={1200}
-              priority
-              sizes="(max-width: 1024px) 100vw, 44vw"
-              className="aspect-square w-full object-cover"
-            />
-            <p className="absolute right-3 top-3 text-right text-[11px] uppercase tracking-[0.1em] text-paper/70">
-              Independentes desde {milestones[0]?.year ?? 2010}
-              <br />
-              Sintra · Lisboa
-            </p>
-            <Link
-              href="/projetos"
-              aria-label="Ver os projetos"
-              className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
-            >
-              ↗
-            </Link>
-          </div>
+          {featured[0] ? (
+            <div className="relative">
+              <Image
+                src={featured[0].cover!.src}
+                alt={featured[0].client}
+                width={1200}
+                height={1200}
+                priority
+                sizes="(max-width: 1024px) 100vw, 44vw"
+                className="aspect-square w-full object-cover"
+              />
+              <p className="absolute right-3 top-3 text-right text-[11px] uppercase tracking-[0.1em] text-paper/70">
+                Independentes desde {milestones[0]?.year ?? 2010}
+                <br />
+                Sintra · Lisboa
+              </p>
+              <Link
+                href="/projetos"
+                aria-label="Ver os projetos"
+                className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
+              >
+                ↗
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-6 border-t border-paper/15 px-5 py-6 sm:px-8">
           <p className="subtitle max-w-[46ch] text-paper/70">
-            Ligamos marca, dados e tecnologia para empresas que precisam de resultados, não de apresentações.
+            Ligamos marca, dados e tecnologia para empresas que precisam de
+            resultados, não de apresentações.
           </p>
-          <a href="#trabalho" className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-paper/70 hover:text-paper">
+          <a
+            href="#trabalho"
+            className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-paper/70 hover:text-paper"
+          >
             Ver a mudança em ação
-            <span aria-hidden="true" className="grid h-9 w-9 place-items-center rounded-full border border-paper/30">
+            <span
+              aria-hidden="true"
+              className="grid h-9 w-9 place-items-center rounded-full border border-paper/30"
+            >
               ↓
             </span>
           </a>
@@ -132,14 +166,16 @@ export default async function Proposta() {
         <div className="mx-auto flex min-h-[86svh] max-w-[1600px] flex-col justify-center px-5 py-24 sm:px-8">
           <Chapter label="A nossa posição" number="01" />
           <p className="mt-12 max-w-[26ch] font-display text-[clamp(38px,7.5vw,124px)] leading-[0.92] tracking-[-0.03em]">
-            Estratégia sem execução é uma apresentação bonita. <span className="text-red">Nós ficamos até funcionar.</span>
+            Estratégia sem execução é uma apresentação bonita.{" "}
+            <span className="text-red">Nós ficamos até funcionar.</span>
           </p>
           <div className="mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-ink/15 pt-6">
             <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink/60">
               Por isso juntamos o que outras agências separam
             </p>
             <p className="text-xs font-semibold uppercase tracking-[0.1em]">
-              Marca <span className="text-red">→</span> Dados <span className="text-red">→</span> Tecnologia
+              Marca <span className="text-red">→</span> Dados{" "}
+              <span className="text-red">→</span> Tecnologia
             </p>
           </div>
         </div>
@@ -155,7 +191,10 @@ export default async function Proposta() {
               <br />
               <span className="type-outline">Nenhum</span> igual ao anterior.
             </h2>
-            <Link href="/projetos" className="shrink-0 border-b border-red pb-1 text-sm font-semibold hover:text-red">
+            <Link
+              href="/projetos"
+              className="shrink-0 border-b border-red pb-1 text-sm font-semibold hover:text-red"
+            >
               Ver o arquivo completo
             </Link>
           </div>
@@ -163,7 +202,11 @@ export default async function Proposta() {
 
         <div className="mt-14 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:px-8 [scrollbar-width:thin]">
           {featured.map((project) => (
-            <Link key={project.slug} href={`/projetos/${project.slug}`} className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] lg:w-[32vw]">
+            <Link
+              key={project.slug}
+              href={`/projetos/${project.slug}`}
+              className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] lg:w-[32vw]"
+            >
               <span className="block overflow-hidden">
                 <Image
                   src={project.cover!.src}
@@ -176,9 +219,13 @@ export default async function Proposta() {
               </span>
               <span className="mt-4 flex items-baseline justify-between gap-4 border-t border-paper/15 pt-3">
                 <span className="font-display text-2xl">{project.client}</span>
-                <span className="text-xs tabular-nums text-paper/45">{project.year}</span>
+                <span className="text-xs tabular-nums text-paper/45">
+                  {project.year}
+                </span>
               </span>
-              <span className="mt-1 block text-sm text-paper/55">{project.subtitle || project.disciplines.join(" · ")}</span>
+              <span className="mt-1 block text-sm text-paper/55">
+                {project.subtitle || project.disciplines.join(" · ")}
+              </span>
             </Link>
           ))}
         </div>
@@ -195,17 +242,27 @@ export default async function Proposta() {
         </div>
         <div className="mt-10 border-t border-ink/15">
           {services.map((service, index) => (
-            <Link key={service.slug} href={`/servicos/${service.slug}`} className="group relative block overflow-hidden border-b border-ink/15">
+            <Link
+              key={service.slug}
+              href={`/servicos/${service.slug}`}
+              className="group relative block overflow-hidden border-b border-ink/15"
+            >
               <span
                 aria-hidden="true"
                 className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 ${tones[index % tones.length]}`}
               />
               <span className="relative mx-auto flex max-w-[1600px] flex-col gap-3 px-5 py-9 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:py-12">
                 <span className="flex items-baseline gap-5">
-                  <span className="text-xs tabular-nums text-ink/40">0{index + 1}</span>
-                  <span className="font-display text-[clamp(30px,4.6vw,64px)] leading-none tracking-[-0.025em]">{service.name.pt}</span>
+                  <span className="text-xs tabular-nums text-ink/40">
+                    0{index + 1}
+                  </span>
+                  <span className="font-display text-[clamp(30px,4.6vw,64px)] leading-none tracking-[-0.025em]">
+                    {service.name.pt}
+                  </span>
                 </span>
-                <span className="subtitle max-w-[52ch] text-ink/70">{service.claim.pt}</span>
+                <span className="subtitle max-w-[52ch] text-ink/70">
+                  {service.claim.pt}
+                </span>
               </span>
             </Link>
           ))}
@@ -239,7 +296,8 @@ export default async function Proposta() {
         <div className="relative mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
           <Chapter label="A diferença Jelly" number="04" />
           <p className="mt-12 max-w-[30ch] font-display text-[clamp(34px,5.6vw,88px)] leading-[0.94] tracking-[-0.03em]">
-            Não vendemos transformação à distância. Entramos na equipa e ficamos.
+            Não vendemos transformação à distância. Entramos na equipa e
+            ficamos.
           </p>
           <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-ink/20 pt-8 lg:grid-cols-4">
             {[
@@ -249,8 +307,12 @@ export default async function Proposta() {
               { value: `${team.length}`, label: "pessoas na equipa" },
             ].map((stat) => (
               <div key={stat.label}>
-                <dt className="font-display text-[clamp(40px,5vw,76px)] leading-none tabular-nums">{stat.value}</dt>
-                <dd className="mt-2 text-xs font-semibold uppercase tracking-[0.08em] text-ink/70">{stat.label}</dd>
+                <dt className="font-display text-[clamp(40px,5vw,76px)] leading-none tabular-nums">
+                  {stat.value}
+                </dt>
+                <dd className="mt-2 text-xs font-semibold uppercase tracking-[0.08em] text-ink/70">
+                  {stat.label}
+                </dd>
               </div>
             ))}
           </dl>
@@ -264,10 +326,14 @@ export default async function Proposta() {
             <div>
               <Chapter label="Field notes" number="05" />
               <h2 className="mt-6 font-display text-[clamp(34px,5.6vw,84px)] leading-[0.92] tracking-[-0.03em]">
-                Escrevemos o<br />que aprendemos.
+                Escrevemos o<br />
+                que aprendemos.
               </h2>
             </div>
-            <Link href="/blog" className="shrink-0 border-b border-ink pb-1 text-sm font-semibold hover:text-red">
+            <Link
+              href="/blog"
+              className="shrink-0 border-b border-ink pb-1 text-sm font-semibold hover:text-red"
+            >
               {posts.length} artigos ↗
             </Link>
           </div>
@@ -275,17 +341,25 @@ export default async function Proposta() {
           <ul className="mt-14 border-t border-ink/15">
             {editorial.map((post) => (
               <li key={post.slug} className="border-b border-ink/15">
-                <Link href={`/blog/${post.slug}`} className="group grid items-baseline gap-2 py-6 lg:grid-cols-[240px_minmax(0,1fr)_40px]">
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="group grid items-baseline gap-2 py-6 lg:grid-cols-[240px_minmax(0,1fr)_40px]"
+                >
                   <span className="text-[11px] font-semibold uppercase leading-[1.5] tracking-[0.08em] text-ink/50">
                     {post.category.pt}
-                    <span className="hidden lg:inline"><br /></span>
+                    <span className="hidden lg:inline">
+                      <br />
+                    </span>
                     <span className="lg:hidden"> · </span>
                     {post.date.split("-").reverse().join(".")}
                   </span>
                   <span className="font-display text-[clamp(22px,2.6vw,36px)] leading-tight transition-colors duration-200 group-hover:text-red">
                     {post.title.pt}
                   </span>
-                  <span aria-hidden="true" className="hidden text-right text-xl lg:block">
+                  <span
+                    aria-hidden="true"
+                    className="hidden text-right text-xl lg:block"
+                  >
                     ↗
                   </span>
                 </Link>
@@ -310,7 +384,15 @@ export default async function Proposta() {
         </a>
 
         <nav className="mt-12 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/50">
-          {["/sobre", "/servicos", "/projetos", "/clientes", "/blog", "/newsroom", "/contactos"].map((href) => (
+          {[
+            "/sobre",
+            "/servicos",
+            "/projetos",
+            "/clientes",
+            "/blog",
+            "/newsroom",
+            "/contactos",
+          ].map((href) => (
             <Link key={href} href={href} className="hover:text-paper">
               {href}
             </Link>
