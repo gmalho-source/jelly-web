@@ -8,6 +8,7 @@ import { clients, milestones, services, team } from "@/content/site";
 import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
 import {
   fetchArchivedProjects,
+  fetchPageCopy,
   fetchClients,
   fetchLogoGalleries,
   fetchMilestones,
@@ -60,6 +61,15 @@ export async function getProjectsBySlugs(slugs: string[] = []) {
   const all = await getProjects();
   return slugs.map((slug) => all.find((project) => project.slug === slug)).filter((project): project is Project => Boolean(project));
 }
+
+/**
+ * Imagem principal de uma página, carregada no painel. Hoje só a homepage a usa
+ * — a fotografia larga do topo — e sem ela o topo cai na capa de um projeto.
+ */
+export const getPageImage = cache(async (key: string) => {
+  const pages = await fetchPageCopy();
+  return pages.find((page) => page.slug === key)?.image;
+});
 
 export const getTeam = cache(async () => fetchTeam(team));
 

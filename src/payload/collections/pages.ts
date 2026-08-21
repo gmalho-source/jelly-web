@@ -39,6 +39,13 @@ export const Pages: CollectionConfig = {
     { name: "title", label: "Página", type: "text", required: true },
     { name: "key", label: "Chave", type: "text", required: true, unique: true, index: true, admin: { readOnly: true } },
     {
+      name: "image",
+      label: "Imagem principal",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Hoje só a homepage a usa: é a fotografia larga do topo. Sem imagem, o topo mostra a capa do primeiro projeto." },
+    },
+    {
       name: "entries",
       label: "Textos",
       type: "array",

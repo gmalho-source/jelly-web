@@ -264,13 +264,18 @@ export function fetchLogoGalleries(fallback: LogoGallery[]) {
   }, fallback);
 }
 
-export type PageCopy = { slug: string; entries: { key: string; pt?: string; en?: string }[] };
+export type PageCopy = {
+  slug: string;
+  image?: { src: string; alt?: string; width?: number; height?: number };
+  entries: { key: string; pt?: string; en?: string }[];
+};
 
 export function fetchPageCopy(): Promise<PageCopy[]> {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "pages", limit: 0, depth: 0 });
+    const { docs } = await payload.find({ collection: "pages", limit: 0, depth: 1 });
     return (docs as unknown as Doc[]).map((raw): PageCopy => ({
       slug: text(raw.key),
+      image: image(raw.image as MediaDoc),
       entries: ((raw.entries ?? []) as Doc[]).map((entry) => ({
         key: text(entry.key),
         pt: text(entry.pt) || undefined,

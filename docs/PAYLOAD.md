@@ -8,7 +8,7 @@ o conteúdo pela **API local** do Payload: sem rede pelo meio, sem chaves de API
 
 | Coleção | O que é |
 |---|---|
-| `pages` | Caderno de copy de uma página: os textos que ela usa, chave a chave, nas duas línguas. Lista fixa: editam-se, não se criam |
+| `pages` | Caderno de copy de uma página: os textos que ela usa, chave a chave, nas duas línguas, mais a imagem principal. Lista fixa: editam-se, não se criam |
 | `posts` | Artigos. Corpo em Lexical, categoria por referência, rascunhos e versões |
 | `categories` | Categorias do blog |
 | `projects` | Projetos. O campo **Caso escrito** separa os casos com narrativa própria do arquivo — é uma coleção só, porque a diferença é editorial e não estrutural |
@@ -17,6 +17,12 @@ o conteúdo pela **API local** do Payload: sem rede pelo meio, sem chaves de API
 | `clients`, `logos`, `team`, `milestones` | A casa: setores, parede de logos, equipa, cronologia |
 | `media` | Imagens, com texto alternativo obrigatório e três tamanhos derivados |
 | `users` | Quem entra no painel |
+
+A **imagem principal** de uma página é hoje usada só pela homepage: é a
+fotografia larga do topo, ao lado do título. Sem imagem, o topo cai na capa do
+primeiro projeto — trocar a fotografia é carregar outra no painel, não mexer no
+código. A legenda vive fora da imagem de propósito: assim quem a troca não tem
+de pensar se o texto ainda se lê por cima.
 
 Tradução ao nível do campo (`{ pt, en }`), como antes. O EN em falta cai no PT
 em vez de mostrar um espaço vazio.
