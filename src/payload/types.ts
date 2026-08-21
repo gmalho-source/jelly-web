@@ -248,6 +248,24 @@ export interface Post {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Tradução do corpo. Vazio, o site em inglês mostra o texto português.
+   */
+  bodyEn?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   lang?: ('pt' | 'en') | null;
   /**
    * Serve o redirecionamento 301.
@@ -716,6 +734,7 @@ export interface PostsSelect<T extends boolean = true> {
       };
   cover?: T;
   body?: T;
+  bodyEn?: T;
   lang?: T;
   legacyPath?: T;
   updatedAt?: T;
