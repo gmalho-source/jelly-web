@@ -24,6 +24,7 @@ servidor, o que basta para desenvolver.
 | `npm run preview` | Regenera `docs/preview/index.html` a partir do servidor local |
 | `npm run payload:migrate` | Carrega o conteúdo do repositório para o Payload (`--dry-run` para ensaiar) |
 | `npm run media:optimize` | Recodifica em WebP as imagens pesadas que já estão no CMS |
+| `npm run translate` | Traduz os artigos para inglês com o Claude (`--dry-run` para ensaiar) |
 | `npm run payload:types` | Regenera `src/payload/types.ts` a partir das coleções |
 | `npm run payload:importmap` | Regenera o import map do painel depois de mexer nos campos |
 

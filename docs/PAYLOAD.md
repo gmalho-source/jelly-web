@@ -171,6 +171,32 @@ repositório e corrê-las no build.
 | `REVALIDATE_SECRET` | Purga manual do site |
 | `RESEND_API_KEY` | Recuperação de senha do painel. Sem ela, o email vai para o log |
 
+## Tradução automática dos artigos
+
+Os 179 artigos vieram do WordPress em português e o site em inglês servia o
+texto português. `npm run translate` traduz com o Claude para os campos ingleses
+que o painel já mostra ao lado dos portugueses — título, resumo e **Corpo (EN)**,
+um campo novo. Enquanto estiver vazio, o site em inglês continua a servir o
+português: mais vale um artigo em português do que uma página vazia.
+
+O corpo é uma árvore Lexical e não se pede ao modelo para a devolver. Extraem-se
+as cadeias de texto pela ordem do documento, traduzem-se em bloco, e voltam ao
+mesmo lugar — a estrutura, os links e as marcas nunca saem do script, por isso
+não há nada que o modelo possa quebrar.
+
+```bash
+export ANTHROPIC_API_KEY=…        # console.anthropic.com → API keys
+npm run translate -- --dry-run    # conta cadeias e caracteres, não chama a API
+npm run translate -- --limit=3    # três artigos, para ler o resultado primeiro
+npm run translate                 # o resto
+```
+
+Aceita `--slug=`, `--force` (retraduz o que já tem inglês), `--model=` e
+`--concurrency=`. Por omissão usa o `claude-opus-5`; ao fim imprime os tokens
+gastos e a conta em dólares. A tradução é uma **primeira versão para revisão**,
+não uma publicação: fica nos campos ingleses, visível no painel, e quem revê
+corrige por cima.
+
 ## Falta
 
 - **Vídeos**: 34 ficheiros, 546 MB, continuam a servir do jelly.pt. Precisam de

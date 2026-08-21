@@ -18,7 +18,8 @@
     "payload:migrate": "tsx scripts/payload-migrate.mjs",
     "payload:types": "payload generate:types",
     "payload:importmap": "payload generate:importmap",
-    "media:optimize": "tsx scripts/optimize-media.mjs"
+    "media:optimize": "tsx scripts/optimize-media.mjs",
+    "translate": "tsx scripts/translate.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -38,6 +39,7 @@
     "sharp": "^0.35.3"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.0",

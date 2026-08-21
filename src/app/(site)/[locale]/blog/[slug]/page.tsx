@@ -38,6 +38,10 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   const related = await getRelatedPosts(slug);
   const formatter = new Intl.DateTimeFormat(locale === "pt" ? "pt-PT" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
 
+  // O corpo segue a língua da página; sem tradução, serve o português — mais
+  // vale um artigo em português do que uma página vazia.
+  const body = locale === "en" && post.blocksEn?.length ? post.blocksEn : post.blocks;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -87,8 +91,8 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           {/* Corpo em Lora: leitura longa, itálico verdadeiro, capitular na
               mesma família para a coluna ler como um só bloco. */}
           <div className="mt-8">
-            {post.blocks?.length ? (
-              <ArticleBody blocks={post.blocks} />
+            {body?.length ? (
+              <ArticleBody blocks={body} />
             ) : post.body?.length ? (
               <div className="max-w-[66ch]">
                 {post.body.map((paragraph, index) => (

@@ -132,6 +132,7 @@ export function fetchPosts(fallback: Post[]) {
             : { pt: "Jelly", en: "Jelly" },
         cover: image(raw.cover as MediaDoc),
         blocks: fromLexical(raw.body),
+        blocksEn: fromLexical(raw.bodyEn),
       };
     });
   }, fallback);

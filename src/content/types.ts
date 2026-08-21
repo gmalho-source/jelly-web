@@ -52,6 +52,8 @@ export type Post = {
   body?: Localized[];
   /** Corpo migrado do WordPress, em blocos. */
   blocks?: Block[];
+  /** Corpo traduzido. Vazio, o site em inglês serve o português. */
+  blocksEn?: Block[];
   cover?: { src: string; alt?: string; width?: number; height?: number };
   legacyPath?: string;
   lang?: "pt" | "en";
