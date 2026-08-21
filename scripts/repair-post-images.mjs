@@ -2,35 +2,96 @@
 /**
  * Repõe as imagens que aparecem no meio dos artigos.
  *
- * O export do WordPress trouxe-as — 155 imagens em 56 artigos — mas o conversor
- * para Lexical não tinha ramo para elas e cada uma virou um parágrafo vazio.
- * Este script carrega a imagem, troca o parágrafo vazio por um nó de upload, e
- * faz o mesmo no corpo em inglês, na mesma posição: as duas árvores nasceram da
- * mesma lista de blocos, por isso o índice serve as duas.
+ * A primeira migração perdeu as 155: o tema do site antigo carrega as imagens em
+ * diferido e põe no `src` um SVG de 1x1 em base64, que foi o que ficou gravado.
+ * O endereço verdadeiro está na API do WordPress, que devolve o corpo do artigo
+ * sem esse truque de front-end.
+ *
+ * Como se acerta a posição: do corpo da API sai uma sequência de âncoras —
+ * texto, imagem, texto, imagem — e cada imagem entra depois do parágrafo que a
+ * precede, encontrado pelo início do texto. Contar não servia (o parser antigo
+ * juntou e cortou parágrafos); o texto serve.
+ *
+ * O corpo inglês leva as mesmas imagens nas mesmas posições: nasceu do
+ * português com o texto trocado, por isso a posição é a mesma ainda que o texto
+ * não seja.
  *
  *   DATABASE_URL=… PAYLOAD_SECRET=… npm run posts:images -- --dry-run
  *
- * Idempotente: um artigo cujo corpo já tenha o nó de upload fica como está.
+ * Idempotente: um artigo que já tenha imagens no corpo fica como está.
  */
-import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { parse } from "node-html-parser";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
 import { purgeSite } from "./purge-site.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const value = (name) => args.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
 const limit = Number(value("limit") ?? 0) || Infinity;
+const onlySlug = value("slug");
 
-const posts = JSON.parse(fs.readFileSync(path.join(root, "src/content/generated/posts.json"), "utf8"));
-const comImagens = posts.filter((post) => (post.body ?? []).some((block) => block.type === "image")).slice(0, limit);
+const ORIGIN = "https://www.jelly.pt";
+const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/141.0 Safari/537.36";
 
-console.log(`${comImagens.length} artigos com imagens no corpo${dryRun ? " (ensaio)" : ""}`);
+const normalize = (value = "") =>
+  value
+    .replace(/\[\/?[a-z0-9_]+[^\]]*\]/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+/** Endereço verdadeiro de uma imagem, ignorando o SVG de carregamento. */
+function source(image) {
+  const candidates = [
+    image.getAttribute("data-src"),
+    image.getAttribute("data-lazy-src"),
+    image.getAttribute("data-large_image"),
+    image.getAttribute("src"),
+    (image.getAttribute("srcset") ?? "").split(",")[0]?.trim().split(" ")[0],
+  ];
+  return candidates.find((candidate) => candidate && !candidate.startsWith("data:")) ?? null;
+}
+
+/** Corpo do artigo na API do WordPress → sequência de âncoras. */
+function anchors(html) {
+  const root = parse(html ?? "", { blockTextElements: { script: false, style: false } });
+  const out = [];
+
+  const walk = (node) => {
+    for (const child of node.childNodes) {
+      const tag = child.rawTagName?.toLowerCase();
+      if (!tag) continue;
+      if (tag === "img") {
+        const src = source(child);
+        if (src) out.push({ kind: "image", src, alt: child.getAttribute("alt") ?? "" });
+        continue;
+      }
+      const image = child.querySelector?.("img");
+      const text = normalize(child.textContent);
+      if (image && (tag === "figure" || tag === "p" || tag === "div" || tag === "span")) {
+        const src = source(image);
+        if (src) out.push({ kind: "image", src, alt: image.getAttribute("alt") ?? "" });
+        if (text) out.push({ kind: "text", text });
+        continue;
+      }
+      if (["p", "h1", "h2", "h3", "h4", "li", "blockquote"].includes(tag)) {
+        if (text) out.push({ kind: "text", text });
+        continue;
+      }
+      walk(child);
+    }
+  };
+
+  walk(root);
+  return out;
+}
 
 const payload = await getPayload({ config });
+
+const where = onlySlug ? { slug: { equals: onlySlug } } : {};
+const { docs } = await payload.find({ collection: "posts", where, limit: 0, depth: 0, sort: "-date" });
 
 const uploadNode = (mediaId) => ({
   type: "upload",
@@ -46,94 +107,97 @@ const vazio = (node) =>
   (node.type === "paragraph" &&
     !(node.children ?? []).some((child) => typeof child.text === "string" && child.text.trim()));
 
-let reparados = 0;
+/** Carrega a imagem para o CMS, reaproveitando a que já lá esteja. */
+async function media(src, alt) {
+  const existing = await payload.find({ collection: "media", where: { legacyUrl: { equals: src } }, limit: 1, depth: 0 });
+  if (existing.docs.length) return existing.docs[0].id;
+
+  const response = await fetch(src, { headers: { "user-agent": UA, accept: "image/*,*/*" } });
+  if (!response.ok) throw new Error(`${response.status} em ${src}`);
+  const data = Buffer.from(await response.arrayBuffer());
+  const name = decodeURIComponent(path.basename(new URL(src).pathname));
+  const created = await payload.create({
+    collection: "media",
+    data: { alt: alt || name.replace(/[-_]/g, " ").replace(/\.\w+$/, ""), legacyUrl: src },
+    file: { name, data, mimetype: `image/${path.extname(name).slice(1) || "jpeg"}`, size: data.byteLength },
+  });
+  return created.id;
+}
+
+let tocados = 0;
 let imagens = 0;
 let saltados = 0;
+let semFonte = 0;
 
-for (const local of comImagens) {
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: { slug: { equals: local.slug } },
-    limit: 1,
-    depth: 0,
-  });
-  const doc = docs[0];
-  if (!doc) {
-    console.log(`? ${local.slug}: não está na base`);
-    continue;
-  }
+for (const doc of docs) {
+  if (tocados >= limit) break;
 
-  const body = structuredClone(doc.body);
-  const bodyEn = doc.bodyEn ? structuredClone(doc.bodyEn) : null;
-  const children = body?.root?.children;
-  if (!Array.isArray(children)) {
-    console.log(`? ${local.slug}: corpo sem estrutura`);
-    continue;
-  }
-
+  const children = doc.body?.root?.children;
+  if (!Array.isArray(children)) continue;
   if (children.some((node) => node.type === "upload")) {
     saltados += 1;
     continue;
   }
 
-  let mexidos = 0;
-  for (const [index, block] of (local.body ?? []).entries()) {
-    if (block.type !== "image" || !block.src) continue;
+  const response = await fetch(`${ORIGIN}/wp-json/wp/v2/posts?slug=${encodeURIComponent(doc.slug)}&_fields=content`, {
+    headers: { "user-agent": UA },
+  });
+  if (!response.ok) {
+    semFonte += 1;
+    continue;
+  }
+  const json = await response.json();
+  const sequencia = anchors(json?.[0]?.content?.rendered ?? "");
+  const doArtigo = sequencia.filter((item) => item.kind === "image");
+  if (!doArtigo.length) continue;
 
-    let mediaId;
-    if (!dryRun) {
-      const existente = await payload.find({
-        collection: "media",
-        where: { legacyUrl: { equals: block.src } },
-        limit: 1,
-        depth: 0,
-      });
-      if (existente.docs.length) {
-        mediaId = existente.docs[0].id;
-      } else {
-        const response = await fetch(block.src, { headers: { "user-agent": "Mozilla/5.0", accept: "image/*,*/*" } });
-        if (!response.ok) {
-          console.log(`! ${local.slug}: ${response.status} em ${block.src}`);
-          continue;
-        }
-        const data = Buffer.from(await response.arrayBuffer());
-        const name = decodeURIComponent(path.basename(new URL(block.src).pathname));
-        const criado = await payload.create({
-          collection: "media",
-          data: { alt: block.alt || local.title, legacyUrl: block.src },
-          file: { name, data, mimetype: `image/${path.extname(name).slice(1) || "jpeg"}`, size: data.byteLength },
-        });
-        mediaId = criado.id;
-      }
-    }
-
-    // O parágrafo vazio no lugar da imagem dá lugar ao nó de upload; se não
-    // houver parágrafo vazio ali, insere-se sem apagar nada.
-    const node = dryRun ? { type: "upload" } : uploadNode(mediaId);
-    if (vazio(children[index])) children[index] = node;
-    else children.splice(index, 0, node);
-    if (bodyEn?.root?.children) {
-      const enChildren = bodyEn.root.children;
-      if (vazio(enChildren[index])) enChildren[index] = node;
-      else enChildren.splice(index, 0, node);
-    }
-    mexidos += 1;
+  // Cada imagem entra depois do parágrafo que a precede no artigo original.
+  const plano = [];
+  for (const [index, item] of sequencia.entries()) {
+    if (item.kind !== "image") continue;
+    const anterior = sequencia
+      .slice(0, index)
+      .reverse()
+      .find((candidate) => candidate.kind === "text");
+    const alvo = anterior
+      ? children.findIndex((node) => {
+          const texto = normalize((node.children ?? []).map((child) => child.text ?? "").join(" "));
+          return texto && (texto.startsWith(anterior.text.slice(0, 40)) || anterior.text.startsWith(texto.slice(0, 40)));
+        })
+      : -1;
+    plano.push({ src: item.src, alt: item.alt, at: alvo === -1 ? children.length : alvo + 1 });
   }
 
-  if (!mexidos) continue;
-  imagens += mexidos;
-  reparados += 1;
+  console.log(`${dryRun ? "·" : "✓"} ${doc.slug}: ${plano.length} imagens`);
+  imagens += plano.length;
+  tocados += 1;
+  if (dryRun) continue;
 
-  if (!dryRun) {
-    await payload.update({
-      collection: "posts",
-      id: doc.id,
-      data: bodyEn ? { body, bodyEn } : { body },
-    });
+  const body = structuredClone(doc.body);
+  const bodyEn = doc.bodyEn ? structuredClone(doc.bodyEn) : null;
+
+  // De trás para a frente: inserir à frente não desloca o que falta inserir.
+  for (const item of [...plano].sort((a, b) => b.at - a.at)) {
+    let node;
+    try {
+      node = uploadNode(await media(item.src, item.alt));
+    } catch (error) {
+      console.log(`  ! ${error.message}`);
+      continue;
+    }
+    for (const tree of [body, bodyEn]) {
+      const list = tree?.root?.children;
+      if (!list) continue;
+      // Onde a imagem estava, o parser antigo deixou um parágrafo vazio.
+      if (vazio(list[item.at])) list[item.at] = node;
+      else if (vazio(list[item.at - 1])) list[item.at - 1] = node;
+      else list.splice(item.at, 0, node);
+    }
   }
-  console.log(`✓ ${local.slug}: ${mexidos} imagens${bodyEn ? " (PT e EN)" : ""}`);
+
+  await payload.update({ collection: "posts", id: doc.id, data: bodyEn ? { body, bodyEn } : { body } });
 }
 
-console.log(`${reparados} artigos, ${imagens} imagens${saltados ? `, ${saltados} já tinham` : ""}`);
+console.log(`${tocados} artigos, ${imagens} imagens${saltados ? `, ${saltados} já tinham` : ""}${semFonte ? `, ${semFonte} sem fonte` : ""}`);
 if (imagens && !dryRun) await purgeSite();
 process.exit(0);

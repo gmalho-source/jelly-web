@@ -54,6 +54,23 @@ function toBlocks(html) {
       .trim();
   const text = (node) => clean(node.textContent);
 
+  /**
+   * O endereço verdadeiro da imagem. O tema carrega as imagens em diferido e
+   * põe no `src` um SVG de 1x1 em base64 — foi assim que 155 imagens do corpo
+   * dos artigos se perderam na primeira migração.
+   */
+  const source = (image) => {
+    const candidates = [
+      image.getAttribute("data-src"),
+      image.getAttribute("data-lazy-src"),
+      image.getAttribute("data-large_image"),
+      image.getAttribute("src"),
+      (image.getAttribute("srcset") ?? "").split(",")[0]?.trim().split(" ")[0],
+      (image.getAttribute("data-srcset") ?? "").split(",")[0]?.trim().split(" ")[0],
+    ];
+    return candidates.find((value) => value && !value.startsWith("data:")) ?? null;
+  };
+
   for (const node of root.childNodes) {
     const tag = node.rawTagName?.toLowerCase();
     if (!tag) {
@@ -63,11 +80,13 @@ function toBlocks(html) {
     }
     if (tag === "p") {
       const image = node.querySelector("img");
-      if (image && !text(node)) {
-        blocks.push({ type: "image", src: image.getAttribute("src"), alt: image.getAttribute("alt") ?? "" });
+      const value = text(node);
+      if (image) {
+        // Com texto à volta, saem os dois: primeiro a imagem, depois a legenda.
+        blocks.push({ type: "image", src: source(image), alt: image.getAttribute("alt") ?? "" });
+        if (value) blocks.push({ type: "p", text: value });
         continue;
       }
-      const value = text(node);
       if (value) blocks.push({ type: "p", text: value });
       continue;
     }
@@ -91,7 +110,7 @@ function toBlocks(html) {
       if (image) {
         blocks.push({
           type: "image",
-          src: image.getAttribute("src"),
+          src: source(image),
           alt: image.getAttribute("alt") ?? "",
           caption: text(node.querySelector?.("figcaption") ?? { textContent: "" }) || undefined,
         });
@@ -117,6 +136,7 @@ function toBlocks(html) {
 
   // Junta parágrafos vazios e limita repetições do construtor.
   return blocks.filter((block, index, list) => {
+    if (block.type === "image" && !block.src) return false;
     if (block.type === "p" && block.text.length < 3) return false;
     if (index && block.type === "p" && list[index - 1].type === "p" && list[index - 1].text === block.text) return false;
     return true;
