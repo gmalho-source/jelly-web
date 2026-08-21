@@ -14,6 +14,7 @@ migrar uma coleção de cada vez sem nunca ter o site em branco.
 | `category` | Categoria do blog |
 | `project` | Caso escrito: cliente, resumo, disciplinas, equipa, número principal, até 4 KPI, citação |
 | `archivedProject` | Arquivo do portfolio antigo: cliente, ano, disciplinas, imagens. Sem narrativa, de propósito |
+
 | `service` | Serviço: claim, promessa, o que inclui, fases, casos por referência, cor de acento |
 | `client`, `teamMember`, `milestone` | Parede de clientes, equipa e cronologia do /sobre |
 | `newsItem` | Newsroom: notícia, evento ou press |
@@ -103,6 +104,18 @@ Slugs novos não precisam de nada: uma página que ainda não foi gerada é
 renderizada no primeiro pedido. Se algum dia for preciso reconstruir tudo (uma
 mudança de estrutura, por exemplo), a alternativa é um Deploy Hook da Vercel
 apontado no mesmo sítio, que faz um build novo em vez de revalidar.
+
+## O que está no dataset
+
+Carregado a 21 de agosto de 2026 (`ov3ljxah` / `production`): 179 artigos e 17
+categorias, 59 projetos de arquivo, 5 casos escritos, 4 serviços, 8 páginas com
+100 textos, 38 clientes, 21 pessoas, 6 marcos, 6 entradas de newsroom e 4
+galerias com 63 logos. **291 imagens** migradas para o CDN do Sanity — o site
+deixou de depender do jelly.pt para as servir.
+
+Três logos de 2018 ficaram de fora: os URLs no export estão corrompidos
+(`/jelly/jelly/jelly/jelly/…`) e já não existem no site antigo, nem com o
+caminho limpo. São da galeria "Google", não da parede de clientes.
 
 ## Falta
 

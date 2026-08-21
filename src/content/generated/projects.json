@@ -6,7 +6,7 @@
   "date": "2026-03-08",
   "year": "2026",
   "disciplines": [
-   "Development",
+   "Desenvolvimento",
    "Marketing",
    "Multimédia"
   ],
@@ -46,11 +46,11 @@
   "date": "2025-04-11",
   "year": "2025",
   "disciplines": [
-   "Audiovisuals",
+   "Audiovisuais",
    "Branding",
-   "Development",
+   "Desenvolvimento",
    "Marketing",
-   "Multimedia"
+   "Multimédia"
   ],
   "summary": "",
   "body": [],
@@ -123,7 +123,7 @@
   "date": "2024-04-09",
   "year": "2024",
   "disciplines": [
-   "Development",
+   "Desenvolvimento",
    "Marketing"
   ],
   "summary": "",
@@ -253,28 +253,9 @@
   "images": []
  },
  {
-  "slug": "m-f-pinto",
-  "legacyPath": "/portfolio/m-f-pinto/",
-  "client": "M.F. Pinto",
-  "date": "2022-09-27",
-  "year": "2022",
-  "disciplines": [
-   "Audiovisuals",
-   "Multimedia"
-  ],
-  "summary": "",
-  "body": [],
-  "cover": {
-   "src": "https://www.jelly.pt/wp-content/uploads/2022/09/capa-video-mfpinto.jpg",
-   "alt": "Instalações M.F.PINTO",
-   "title": "capa-video-mfpinto"
-  },
-  "images": []
- },
- {
   "slug": "clinica-da-farmacia",
   "legacyPath": "/portfolio/clinica-da-farmacia/",
-  "client": "Clínica DA Farma&cia",
+  "client": "Clínica da Farma&Cia",
   "date": "2022-09-26",
   "year": "2022",
   "disciplines": [
@@ -331,35 +312,14 @@
   "images": []
  },
  {
-  "slug": "clinica-da-farmacia",
-  "legacyPath": "/portfolio/clinica-da-farmacia/",
-  "client": "Clínica DA Farma&cia",
-  "date": "2022-09-26",
-  "year": "2022",
-  "disciplines": [
-   "Audiovisuals",
-   "Branding",
-   "Development",
-   "Marketing"
-  ],
-  "summary": "",
-  "body": [],
-  "cover": {
-   "src": "https://www.jelly.pt/wp-content/uploads/2022/09/Clinica-da-Farmacia-logo-Cover-big.jpg",
-   "alt": "Logo Clinica da Farmacia",
-   "title": "Clinica-da-Farmacia-logo-Cover-big"
-  },
-  "images": []
- },
- {
   "slug": "to-be-by-teresa-branco",
   "legacyPath": "/portfolio/to-be-by-teresa-branco/",
   "client": "TO BE - by Teresa Branco",
   "date": "2022-09-26",
   "year": "2022",
   "disciplines": [
-   "Audiovisuals",
-   "Photography"
+   "Audiovisuais",
+   "Fotografia"
   ],
   "summary": "",
   "body": [],
@@ -413,7 +373,7 @@
   "year": "2022",
   "disciplines": [
    "Branding",
-   "Development"
+   "Desenvolvimento"
   ],
   "summary": "",
   "body": [],
@@ -431,9 +391,9 @@
   "date": "2022-05-01",
   "year": "2022",
   "disciplines": [
-   "Audiovisuals",
+   "Audiovisuais",
    "Marketing",
-   "Multimedia"
+   "Multimédia"
   ],
   "summary": "",
   "body": [],
@@ -489,8 +449,8 @@
   "date": "2021-07-07",
   "year": "2021",
   "disciplines": [
-   "Audiovisuals",
-   "Multimedia"
+   "Audiovisuais",
+   "Multimédia"
   ],
   "summary": "The Scouts of Portugal challenged us to produce, direct and post production of this video that presents Portugal's application to MOOT 2025.",
   "body": [
@@ -600,44 +560,6 @@
   "images": []
  },
  {
-  "slug": "informa-db",
-  "legacyPath": "/portfolio/informa-db/",
-  "client": "Informa D&B",
-  "date": "2019-11-01",
-  "year": "2019",
-  "disciplines": [
-   "Multimedia"
-  ],
-  "summary": "",
-  "body": [],
-  "cover": {
-   "src": "https://www.jelly.pt/wp-content/uploads/2019/09/Informadb-capa-video.jpg",
-   "alt": "capa video informa db",
-   "title": "Informadb-capa-video"
-  },
-  "images": []
- },
- {
-  "slug": "auchan-jumbo-moda",
-  "legacyPath": "/portfolio/auchan-jumbo-moda/",
-  "client": "Auchan & Jumbo Moda",
-  "date": "2019-11-01",
-  "year": "2019",
-  "disciplines": [
-   "Development",
-   "Marketing",
-   "Multimedia"
-  ],
-  "summary": "",
-  "body": [],
-  "cover": {
-   "src": "https://www.jelly.pt/wp-content/uploads/2017/02/jumbo-moda-capa.jpg",
-   "alt": "web design and support",
-   "title": "jumbo moda"
-  },
-  "images": []
- },
- {
   "slug": "foambox",
   "legacyPath": "/portfolio/foambox/",
   "client": "Foambox",
@@ -664,7 +586,7 @@
   "date": "2019-09-24",
   "year": "2019",
   "disciplines": [
-   "Development"
+   "Desenvolvimento"
   ],
   "summary": "",
   "body": [],
@@ -722,7 +644,7 @@
   "date": "2019-09-22",
   "year": "2019",
   "disciplines": [
-   "Development"
+   "Desenvolvimento"
   ],
   "summary": "",
   "body": [],
@@ -730,24 +652,6 @@
    "src": "https://www.jelly.pt/wp-content/uploads/2019/08/top-brands-online-website-cover1.jpg",
    "alt": "Top Brands online",
    "title": "top brands online website cover"
-  },
-  "images": []
- },
- {
-  "slug": "smartholidays",
-  "legacyPath": "/portfolio/smartholidays/",
-  "client": "Smartholidays",
-  "date": "2019-09-22",
-  "year": "2019",
-  "disciplines": [
-   "Development"
-  ],
-  "summary": "",
-  "body": [],
-  "cover": {
-   "src": "https://www.jelly.pt/wp-content/uploads/2019/09/smartholidays-join.jpg",
-   "alt": "Smart holidays",
-   "title": "join smartholidays"
   },
   "images": []
  },

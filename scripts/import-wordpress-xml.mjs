@@ -53,6 +53,12 @@ const BRANDS = {
   "TAKE 1": "Take1",
 };
 
+/** Partículas que ficam em minúscula no meio de um nome: Clínica da Farma&Cia. */
+const PARTICLES = new Set(["da", "de", "do", "das", "dos", "e", "em", "na", "no", "com", "para"]);
+
+/** Capitaliza a letra inicial e a que vem depois de &, . ou -: Farma&Cia, M.F. */
+const capitalize = (word) => word.replace(/(^|[&.\-\/])(\p{Ll})/gu, (_, separator, letter) => separator + letter.toUpperCase());
+
 function brandName(raw) {
   const value = raw.trim();
   if (BRANDS[value.toUpperCase()]) return BRANDS[value.toUpperCase()];
@@ -60,8 +66,46 @@ function brandName(raw) {
   return value
     .toLowerCase()
     .split(/\s+/)
-    .map((word) => (word.length <= 3 ? word.toUpperCase() : word[0].toUpperCase() + word.slice(1)))
+    .map((word, index) => {
+      if (index > 0 && PARTICLES.has(word)) return word;
+      // Palavras curtas são siglas (NUK, SPA); com & ou ponto não são.
+      if (word.length <= 3 && !/[&.]/.test(word)) return word.toUpperCase();
+      return capitalize(word);
+    })
     .join(" ");
+}
+
+/**
+ * O portfolio antigo tinha cada projeto duas vezes, em PT e em EN, com a mesma
+ * ficha e os mesmos URLs — só a taxonomia das disciplinas mudava de língua.
+ * Normaliza-se para português e fica um registo por projeto.
+ */
+const DISCIPLINES = {
+  Development: "Desenvolvimento",
+  Multimedia: "Multimédia",
+  Audiovisuals: "Audiovisuais",
+  Photography: "Fotografia",
+  "Digital Marketing": "Marketing",
+};
+
+const normalizeDisciplines = (list) => [...new Set(list.map((item) => DISCIPLINES[item] ?? item))];
+
+/** De duas fichas do mesmo projeto fica a mais completa. */
+function dedupeBySlug(entries) {
+  const score = (entry) => [entry.disciplines.length, entry.summary.length, entry.body.length];
+  const bySlug = new Map();
+  for (const entry of entries) {
+    const current = bySlug.get(entry.slug);
+    if (!current) {
+      bySlug.set(entry.slug, entry);
+      continue;
+    }
+    const [a, b] = [score(entry), score(current)];
+    if (a.some((value, index) => value > b[index]) && a.every((value, index) => value >= b[index])) {
+      bySlug.set(entry.slug, entry);
+    }
+  }
+  return [...bySlug.values()];
 }
 
 const clean = (html) =>
@@ -93,7 +137,7 @@ function paragraphs(html, max = 6) {
 
 await mkdir(OUT, { recursive: true });
 
-const projects = [];
+let projects = [];
 const logoGalleries = [];
 let ignoredPosts = 0;
 
@@ -138,7 +182,7 @@ for (const file of files) {
         client: brandName(clean(tag(item, "title"))),
         date: tag(item, "wp:post_date").slice(0, 10),
         year: tag(item, "wp:post_date").slice(0, 4),
-        disciplines,
+        disciplines: normalizeDisciplines(disciplines),
         summary: clean(cdata(excerpt)) || paragraphs(cdata(content), 1)[0] || "",
         body: paragraphs(cdata(content)),
         cover: cover ?? null,
@@ -164,7 +208,11 @@ for (const file of files) {
 }
 
 if (projects.length) {
+  const unique = dedupeBySlug(projects);
+  const collapsed = projects.length - unique.length;
+  projects = unique;
   projects.sort((a, b) => b.date.localeCompare(a.date));
+  if (collapsed) console.log(`${collapsed} fichas duplicadas (PT/EN) fundidas`);
   await writeFile(path.join(OUT, "projects.json"), JSON.stringify(projects, null, 1));
   const withCover = projects.filter((project) => project.cover).length;
   console.log(`${projects.length} projetos (${withCover} com capa, ${projects.filter((p) => p.body.length).length} com texto) → projects.json`);

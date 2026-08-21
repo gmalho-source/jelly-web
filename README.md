@@ -215,13 +215,13 @@ componente se ver a funcionar. Para entrar a filmagem real:
 | Comando | O que faz |
 |---|---|
 | `npm run migrate` | API do WordPress → `src/content/generated/{posts,pages}.json`. **179 artigos** com corpo em blocos (parágrafos, títulos, listas, citações, imagens), autor, data, categoria, tempo de leitura e capa; 44 páginas |
-| `npm run import content-import/*.xml` | Exports WXR → `projects.json` (**64 projetos**: cliente, ano, disciplinas, capa) e `client-logos.json` (**63 logos** em 4 galerias, 38 na de Clientes) |
+| `npm run import content-import/*.xml` | Exports WXR → `projects.json` (**59 projetos**: cliente, ano, disciplinas, capa) e `client-logos.json` (**63 logos** em 4 galerias, 38 na de Clientes) |
 | `npm run redirects` | Sitemaps do site atual → `src/lib/redirects.generated.json`. **764 redirecionamentos** 301, ligados no `next.config.ts` |
 
 O que a migração **não** trouxe, e é trabalho de conteúdo, não de código:
 
 - **Narrativa dos projetos.** O export do portfolio vem sem texto — as histórias
-  viviam no construtor de páginas, não no conteúdo. Os 64 projetos entram como
+  viviam no construtor de páginas, não no conteúdo. Os 59 projetos entram como
   **arquivo visual** (cliente, ano, disciplinas, capa) em `/projetos`, e os casos
   escolhidos passam para `src/content/projects.ts` com narrativa e número.
 - **Números dos casos.** Os valores em `projects.ts` continuam exemplificativos até
