@@ -273,6 +273,7 @@ const nav = [...pages, ...captures].map((p) => `<a href="#${p.key}" data-p="${p.
 const bodies = sections.map((s) => `<section class="pv-page" data-p="${s.key}" id="${s.key}">${s.body}</section>`).join("");
 
 const out = `<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Novo jelly.pt</title>
 <style>
 ${css}
@@ -294,6 +295,10 @@ ${fontCss}
 .pv-fonts button:hover{background:rgba(255,255,255,.2)}
 .pv-fonts button.on{background:#dd364a;color:#fff}
 .pv-fonts em{margin-left:auto;font-style:normal;opacity:.5}
+/* A ilha do site é fixed no topo: no instantâneo desce abaixo do cromo. */
+@media (min-width:640px){
+  .pv-page .fixed.bottom-4.z-50{ top:calc(var(--pv-chrome,96px) + 12px) !important; bottom:auto !important; }
+}
 .pv-page{display:none}
 .pv-page.on{display:block}
 @media (max-width:640px){.pv-bar em{display:none}}
@@ -332,6 +337,13 @@ ${bodies}
       });
     });
   }
+  function measureChrome(){
+    var chrome=document.querySelector('.pv-chrome');
+    if(chrome) document.documentElement.style.setProperty('--pv-chrome', chrome.getBoundingClientRect().height+'px');
+  }
+  measureChrome();
+  window.addEventListener('resize', measureChrome);
+
   wire('data-t','title','bree');
   wire('data-f','font','poppins');
 })();
