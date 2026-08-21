@@ -45,7 +45,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             <h1 className="mt-5 text-display">{service.name[locale]}</h1>
           </div>
           <div>
-            <p className="text-md text-slate">{service.claim[locale]}</p>
+            <p className="subtitle">{service.claim[locale]}</p>
             <Link href="/contactos" className="btn btn-hero mt-6">
               {t("cta")} <span aria-hidden="true">→</span>
             </Link>

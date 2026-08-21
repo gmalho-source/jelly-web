@@ -40,7 +40,7 @@ export default async function SiteLayout({
       </head>
       <body>
         <NextIntlClientProvider>
-          <SiteHeader />
+          <SiteHeader locale={locale} />
           <main>{children}</main>
           <SiteFooter />
         </NextIntlClientProvider>

@@ -8,6 +8,7 @@
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { chromium } from "playwright";
 
 const BASE = process.env.PREVIEW_BASE ?? "http://localhost:3000";
 const OUT = path.join(process.cwd(), "docs", "preview");
@@ -18,7 +19,7 @@ const pages = [
   { key: "servicos", path: "/servicos", label: "Serviços" },
   { key: "servico", path: "/servicos/inteligencia-artificial", label: "Serviço · IA" },
   { key: "projetos", path: "/projetos", label: "Projetos" },
-  { key: "caso", path: "/projetos/adegamae", label: "Caso" },
+  { key: "caso", path: "/projetos/agriloja", label: "Caso" },
   { key: "clientes", path: "/clientes", label: "Clientes" },
   { key: "blog", path: "/blog", label: "Blog" },
   { key: "artigo", path: "/blog/ia-no-marketing-digital", label: "Artigo" },
@@ -28,13 +29,43 @@ const pages = [
   { key: "billing", path: "/billing", label: "billing.jelly.pt" },
 ];
 
+/**
+ * Estados interativos capturados com o browser: o instantâneo não corre o JS do
+ * Next, por isso o índice em ecrã inteiro e a paleta de comandos entram como
+ * páginas próprias, já abertas.
+ */
+const captures = [
+  {
+    key: "indice",
+    label: "Índice (aberto)",
+    path: "/",
+    async act(page) {
+      await page.click('button[aria-expanded="false"]');
+      await page.waitForTimeout(400);
+      await page.hover("[role=dialog] nav a:nth-child(3)");
+      await page.waitForTimeout(300);
+    },
+  },
+  {
+    key: "procura",
+    label: "Procura ⌘K",
+    path: "/",
+    async act(page) {
+      await page.keyboard.press("Control+k");
+      await page.waitForTimeout(400);
+      await page.keyboard.type("marketing");
+      await page.waitForTimeout(400);
+    },
+  },
+];
+
 const routes = {
   "/": "#home",
   "/sobre": "#sobre",
   "/servicos": "#servicos",
   "/servicos/inteligencia-artificial": "#servico",
   "/projetos": "#projetos",
-  "/projetos/adegamae": "#caso",
+  "/projetos/agriloja": "#caso",
   "/clientes": "#clientes",
   "/blog": "#blog",
   "/blog/ia-no-marketing-digital": "#artigo",
@@ -85,9 +116,26 @@ for (const page of pages) {
   sections.push({ ...page, body: await inlineAssets(body) });
 }
 
+// Estados interativos: abre-os no browser e guarda o DOM resultante.
+const browser = await chromium.launch();
+for (const capture of captures) {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(BASE + capture.path, { waitUntil: "networkidle" });
+  await capture.act(page);
+  // Guardamos só o diálogo, e passamo-lo a estático: num instantâneo não há JS
+  // para o manter em fixed por cima do resto.
+  let body = await page.evaluate(() => document.querySelector("[role=dialog]")?.outerHTML ?? document.body.innerHTML);
+  await page.close();
+  body = body.replace(/<script[\s\S]*?<\/script>/g, "");
+  body = body.replace(/class="fixed inset-0 z-50/g, 'class="relative z-0 min-h-[86vh]');
+  body = body.replace(/href="(\/[^"]*)"/g, (match, href) => `href="${routes[href] ?? "#" + capture.key}"`);
+  sections.push({ ...capture, body: await inlineAssets(body) });
+}
+await browser.close();
+
 css = await inlineAssets(css);
 
-const nav = pages.map((p) => `<a href="#${p.key}" data-p="${p.key}">${p.label}</a>`).join("");
+const nav = [...pages, ...captures].map((p) => `<a href="#${p.key}" data-p="${p.key}">${p.label}</a>`).join("");
 const bodies = sections.map((s) => `<section class="pv-page" data-p="${s.key}" id="${s.key}">${s.body}</section>`).join("");
 
 const out = `<meta charset="utf-8">

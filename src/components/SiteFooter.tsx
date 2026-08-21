@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { BILLING_HOST } from "@/lib/hosts";
 import { JellyWordmark } from "./JellyLogo";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
@@ -64,11 +63,6 @@ export async function SiteFooter() {
               <Link href="/contactos" className="text-paper/80 transition-colors duration-200 hover:text-red">
                 {footer("book")}
               </Link>
-            </li>
-            <li>
-              <a className="text-paper/80 transition-colors duration-200 hover:text-red" href={`https://${BILLING_HOST}`}>
-                {BILLING_HOST} · {footer("providers")}
-              </a>
             </li>
           </ul>
         </div>

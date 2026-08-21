@@ -67,7 +67,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
 
         <div>
           <span className="eyebrow">{post.category[locale]}</span>
-          <h1 className="mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
+          <h1 className="editorial mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
           <hr className="mt-8 border-ink" />
 
           <div className="mt-8 max-w-[64ch]">
@@ -75,7 +75,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
               post.body.map((paragraph, index) => (
                 <p
                   key={index}
-                  className={`text-md leading-[1.72] text-slate ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-display first-letter:text-[3.1em] first-letter:leading-[0.82] first-letter:text-red" : "mt-5"}`}
+                  className={`text-md leading-[1.72] text-slate ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-editorial first-letter:text-[3.1em] first-letter:leading-[0.82] first-letter:text-red" : "mt-5"}`}
                 >
                   {paragraph[locale]}
                 </p>
@@ -89,7 +89,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             {related.map((item) => (
               <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: item.slug } }}>
                 <span className="eyebrow text-mute">{t("related")}</span>
-                <h3 className="mt-2 font-display text-lg hover:text-red">{item.title[locale]}</h3>
+                <h3 className="editorial mt-2 text-lg hover:text-red">{item.title[locale]}</h3>
               </Link>
             ))}
           </div>

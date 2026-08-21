@@ -51,7 +51,7 @@ export const services: Service[] = [
       { name: { pt: "Cadência", en: "Cadence" }, body: { pt: "Ciclos curtos: testar, ler, decidir. Relatório semanal com o que muda na semana seguinte.", en: "Short cycles: test, read, decide. A weekly report with what changes next week." } },
       { name: { pt: "Escala", en: "Scale" }, body: { pt: "O que funciona ganha orçamento; o que não funciona morre depressa e sem drama.", en: "What works gets budget; what doesn't dies quickly and without drama." } },
     ],
-    caseSlugs: ["321-credito", "slide-splash"],
+    caseSlugs: ["vorwerk", "nuk"],
   },
   {
     slug: "inteligencia-artificial",
@@ -77,7 +77,7 @@ export const services: Service[] = [
       { name: { pt: "Escala", en: "Scale" }, body: { pt: "Agentes ligados ao CRM, ao catálogo e ao suporte, com custo por tarefa à vista.", en: "Agents connected to CRM, catalogue and support, with cost per task in plain sight." } },
       { name: { pt: "Autonomia", en: "Autonomy" }, body: { pt: "Formação da tua equipa. O objetivo é deixarmos de ser necessários para operar.", en: "Training your team. The goal is for us to stop being needed to operate it." } },
     ],
-    caseSlugs: ["defined-ai", "evidensia"],
+    caseSlugs: ["informa-db", "vorwerk"],
     accent: "lavender",
   },
   {
@@ -108,40 +108,50 @@ export const services: Service[] = [
   },
 ];
 
-/** Clientes reais do portfolio público, agrupados por setor. */
+/**
+ * Clientes observados no jelly.pt público (grelha de portfolio, parede de logos
+ * da homepage e sitemap de portfolio). O agrupamento por setor é nosso — a
+ * confirmar com a Jelly. Nada aqui é inventado.
+ */
 export const clients: Client[] = [
-  { name: "BNP Paribas", sector: "financeiro" },
   { name: "Cetelem", sector: "financeiro" },
-  { name: "321 Crédito", sector: "financeiro" },
   { name: "Unicâmbio", sector: "financeiro" },
   { name: "Informa D&B", sector: "servicos" },
-  { name: "Montblanc", sector: "retalho" },
+  { name: "Audit2Measure", sector: "servicos" },
+  { name: "Kompetenza", sector: "servicos" },
+  { name: "Normática", sector: "servicos" },
+  { name: "Maintarget", sector: "servicos" },
+  { name: "Oncorporate", sector: "servicos" },
+  { name: "Observatório de Enfermeiros dos Açores", sector: "servicos" },
+  { name: "M.F. Pinto", sector: "servicos" },
   { name: "Decathlon", sector: "retalho" },
   { name: "Auchan · Jumbo Moda", sector: "retalho" },
   { name: "Agriloja", sector: "retalho" },
+  { name: "NUK", sector: "retalho" },
   { name: "More than Beauty", sector: "retalho" },
   { name: "Top Brands Online", sector: "retalho" },
+  { name: "Mustik", sector: "retalho" },
+  { name: "Adegamãe", sector: "retalho" },
+  { name: "Vinuus", sector: "retalho" },
+  { name: "Arneiro 1969", sector: "retalho" },
   { name: "Central de Cervejas e Bebidas", sector: "industria" },
   { name: "Vorwerk", sector: "industria" },
   { name: "Coldkit", sector: "industria" },
   { name: "Systerra", sector: "industria" },
   { name: "Foambox", sector: "industria" },
-  { name: "NUK", sector: "retalho" },
-  { name: "Evidensia", sector: "servicos" },
-  { name: "Normática", sector: "servicos" },
-  { name: "Maintarget", sector: "servicos" },
-  { name: "Oncorporate", sector: "servicos" },
-  { name: "Observatório de Enfermeiros dos Açores", sector: "servicos" },
-  { name: "Slide & Splash", sector: "lazer" },
+  { name: "Sabrab", sector: "industria" },
+  { name: "Conorpe", sector: "industria" },
   { name: "Smartholidays", sector: "lazer" },
   { name: "Lifecooler", sector: "lazer" },
   { name: "Playplanet", sector: "lazer" },
   { name: "Fly Horus", sector: "lazer" },
-  { name: "Defined.ai", sector: "tecnologia" },
+  { name: "Logicalis", sector: "tecnologia" },
   { name: "Take1", sector: "tecnologia" },
-  { name: "uPlayback", sector: "tecnologia" },
   { name: "MyChange", sector: "tecnologia" },
   { name: "Faccia", sector: "tecnologia" },
+  { name: "Stronddo", sector: "tecnologia" },
+  { name: "Louis Bourgon", sector: "servicos" },
+  { name: "Adamus", sector: "servicos" },
 ];
 
 /**

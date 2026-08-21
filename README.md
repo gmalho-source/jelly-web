@@ -105,7 +105,7 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
 | `docs/manifesto/index.html` | Direção 01 aplicada às sete páginas: caso, serviço, blog, artigo, newsroom, contactos e billing. |
 | `docs/estado-arte/index.html` | Auditoria medida do site atual (52 páginas, 10 sitemaps), leitura do look & feel contra o design system 2026 e a homepage proposta. |
 | `scripts/audit-site.mjs` | Crawler de auditoria: estado HTTP, metadados, headings, peso e tempos por página. |
-| `docs/preview/index.html` | Instantâneo estático do site em código (homepage PT/EN, projetos, casos, login de billing), gerado por `npm run preview` com CSS, fontes e vídeo embutidos. |
+| `docs/preview/index.html` | Instantâneo estático do site em código: 13 páginas mais os estados do índice aberto e da procura ⌘K, capturados com o browser. Gerado por `npm run preview` com CSS, fontes e vídeo embutidos. |
 
 Abrir localmente: `npx http-server docs -p 8080`.
 
@@ -118,15 +118,33 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
   lilás `#c3abff`, chartreuse `#dce277` (um por superfície, nunca dois); ink `#151719`
   e slate `#2a384a` para texto e superfícies escuras; paper `#f4f6f8` como fundo.
   Cor plana — **sem gradientes, sem grão**.
-- **Tipografia** — display Jubilat (hoje servida por Bree Serif, SIL OFL, até a licença
-  Darden Studio estar ativa) em peso 400; corpo Poppins 300–500; eyebrows Poppins 600,
-  12 px, caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2 (345 KB no total).
+- **Tipografia** (decisão da Jelly, agosto de 2026 — inverte o brand book):
+  **Poppins 600 assina os títulos**, apertada (−3% a −4,5% de tracking);
+  **Jubilat** (hoje servida por Bree Serif, SIL OFL, até a licença Darden Studio estar
+  ativa) passa a **subtítulos** (utilitário `subtitle`) e a **títulos de conteúdo
+  editorial** — blog e newsroom (utilitário `editorial`). Eyebrows em Poppins 600, 12 px,
+  caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2 (345 KB no total).
 - **Forma** — botões 8 px (nunca pílula), cartões 20 px sem borda com sombra `sm`,
   painéis de herói 32 px, pílulas só para tags e filtros.
 - **Movimento** — uma curva (`cubic-bezier(.22,.61,.36,1)`), três durações (120/200/360 ms),
   elevações de 2 px, sem molas. Desligado em `prefers-reduced-motion`.
 - **Voz** — português europeu, tratamento por **tu**, voz ativa, sentence case.
   Assinatura: **be the change**.
+
+## Navegação
+
+O menu horizontal saiu. Ficam três coisas na barra: marca, procura e o botão **Índice**.
+
+- **Índice em ecrã inteiro** (`src/components/SiteNav.tsx`): entradas em Poppins 600 a
+  72 px, as inativas a 35% de opacidade, seta vermelha na ativa, e um painel de contexto
+  em cor plana que muda com o hover — com atalhos reais (os quatro pilares, os três
+  projetos com número mais recentes).
+- **Procura ⌘K**: paleta sobre todo o site — páginas, serviços, projetos e artigos — com
+  setas e Enter. Numa casa com 68 projetos e 179 artigos, procurar é a navegação principal.
+- Esc fecha, o foco volta ao botão, o scroll do documento fica bloqueado enquanto está
+  aberto, e o `aria-expanded` acompanha o estado.
+- **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
+  prestadores.
 
 ## Reel do herói
 

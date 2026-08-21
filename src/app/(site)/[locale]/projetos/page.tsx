@@ -27,7 +27,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
       </p>
       <div>
         <h1 className="text-chapter">{t("title")}</h1>
-        <p className="mt-4 max-w-[52ch] text-md text-slate">{t("lead")}</p>
+        <p className="subtitle mt-4 max-w-[52ch]">{t("lead")}</p>
         <div className="mt-10 border-t border-paper-3-strong">
           {projects.map((project) => (
             <Link

@@ -25,9 +25,9 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
       <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
         <div>
           <span className="eyebrow">{t("eyebrow")}</span>
-          <h1 className="mt-5 text-display">{t("title")}</h1>
+          <h1 className="editorial mt-5 text-display">{t("title")}</h1>
         </div>
-        <p className="text-md text-slate">{t("lead")}</p>
+        <p className="subtitle">{t("lead")}</p>
       </div>
 
       <Link
@@ -36,7 +36,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
       >
         <div>
           <span className="eyebrow">{featured.category[locale]}</span>
-          <h2 className="mt-3 max-w-[24ch] text-chapter">{featured.title[locale]}</h2>
+          <h2 className="editorial mt-3 max-w-[24ch] text-chapter">{featured.title[locale]}</h2>
           <p className="mt-4 max-w-[56ch] text-md text-slate">{featured.excerpt[locale]}</p>
         </div>
         <div className="flex flex-col justify-end gap-1 text-sm text-mute lg:items-end">
@@ -56,7 +56,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
           className="group grid grid-cols-[minmax(0,1fr)_84px] items-baseline gap-4 border-b border-paper-2 py-5 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3"
         >
           <div>
-            <h3 className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
+            <h3 className="editorial text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
               {post.title[locale]}
             </h3>
             <p className="mt-1 text-sm text-mute">

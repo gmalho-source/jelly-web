@@ -1,41 +1,90 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { JellyWordmark } from "./JellyLogo";
+import { getPathname } from "@/i18n/navigation";
+import { routing, type Locale } from "@/i18n/routing";
+import { getPosts, getProjects, getServices } from "@/lib/cms";
+import { SiteNav, type NavEntry, type PaletteItem } from "./SiteNav";
 
-/** Header fixo, 72px, translúcido com desfoque — o único uso de blur do site. */
-export async function SiteHeader() {
-  const t = await getTranslations("nav");
+/** Monta os dados do índice no servidor; a interação vive no SiteNav. */
+export async function SiteHeader({ locale }: { locale: Locale }) {
+  const [nav, home, work, blogT, newsroom] = await Promise.all([
+    getTranslations({ locale, namespace: "nav" }),
+    getTranslations({ locale, namespace: "home" }),
+    getTranslations({ locale, namespace: "work" }),
+    getTranslations({ locale, namespace: "blog" }),
+    getTranslations({ locale, namespace: "newsroom" }),
+  ]);
+  const [projects, services, posts] = await Promise.all([getProjects(), getServices(), getPosts()]);
 
-  const links = [
-    { href: "/sobre" as const, label: t("about"), always: true },
-    { href: "/servicos" as const, label: t("services"), always: true },
-    { href: "/projetos" as const, label: t("work"), always: true },
-    { href: "/clientes" as const, label: t("clients"), always: false },
-    { href: "/blog" as const, label: t("blog"), always: false },
-    { href: "/newsroom" as const, label: t("newsroom"), always: false },
+  const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
+
+  const entries: NavEntry[] = [
+    { label: nav("about"), href: url("/sobre"), context: home("eyebrow"), tone: "red" },
+    {
+      label: nav("services"),
+      href: url("/servicos"),
+      context: home("servicesTitle"),
+      tone: "lavender",
+      children: services.map((service) => ({
+        label: service.name[locale],
+        href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
+      })),
+    },
+    {
+      label: nav("work"),
+      href: url("/projetos"),
+      context: work("lead"),
+      tone: "chartreuse",
+      children: projects.slice(0, 3).map((project) => ({
+        label: `${project.client} · ${project.headline.value}`,
+        href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
+      })),
+    },
+    { label: nav("clients"), href: url("/clientes"), context: home("clientsLabel"), tone: "coral" },
+    { label: nav("blog"), href: url("/blog"), context: blogT("lead"), tone: "slate" },
+    { label: nav("newsroom"), href: url("/newsroom"), context: newsroom("lead"), tone: "slate" },
+    { label: nav("contact"), href: url("/contactos"), context: home("lead"), tone: "red" },
   ];
 
+  const palette: PaletteItem[] = [
+    ...entries.map((entry) => ({ label: entry.label, hint: locale === "pt" ? "página" : "page", href: entry.href, group: "Jelly" })),
+    ...services.map((service) => ({
+      label: service.name[locale],
+      hint: locale === "pt" ? "serviço" : "service",
+      href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
+      group: nav("services"),
+    })),
+    ...projects.map((project) => ({
+      label: project.client,
+      hint: project.headline.value,
+      href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
+      group: nav("work"),
+    })),
+    ...posts.map((post) => ({
+      label: post.title[locale],
+      hint: post.category[locale],
+      href: url({ pathname: "/blog/[slug]", params: { slug: post.slug } }),
+      group: nav("blog"),
+    })),
+  ];
+
+  const other = routing.locales.find((candidate) => candidate !== locale) ?? routing.defaultLocale;
+
   return (
-    <header className="sticky top-0 z-40 border-b border-paper-3 bg-paper/85 backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex min-h-[60px] max-w-[1200px] items-center justify-between gap-6 px-5 py-3 sm:min-h-[72px] sm:px-8">
-        <Link href="/" aria-label="Jelly">
-          <JellyWordmark className="w-[72px] text-red sm:w-[84px]" />
-        </Link>
-        <nav className="flex items-center gap-4 text-sm text-slate sm:gap-5 lg:gap-7">
-          {links.map((link, index) => (
-            <Link
-              key={`${link.label}-${index}`}
-              href={link.href}
-              className={`${link.always ? "hidden sm:inline" : "hidden lg:inline"} transition-colors duration-200 hover:text-red`}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link href="/contactos" className="btn">
-            {t("contact")} <span aria-hidden="true">→</span>
-          </Link>
-        </nav>
-      </div>
-    </header>
+    <SiteNav
+      entries={entries}
+      palette={palette}
+      contactHref={url("/contactos")}
+      languageHref={getPathname({ href: "/", locale: other })}
+      copy={{
+        index: locale === "pt" ? "Índice" : "Index",
+        close: locale === "pt" ? "Fechar" : "Close",
+        contact: nav("contact"),
+        searchHint: locale === "pt" ? "Procurar" : "Search",
+        searchLabel: locale === "pt" ? "Procurar em todo o site" : "Search the whole site",
+        searchPlaceholder: locale === "pt" ? "Cliente, serviço, artigo…" : "Client, service, article…",
+        empty: locale === "pt" ? "Sem resultados. Tenta outro termo." : "No results. Try another term.",
+        language: other === "en" ? "English" : "Português",
+      }}
+    />
   );
 }

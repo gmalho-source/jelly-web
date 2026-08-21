@@ -29,7 +29,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
             <span className="eyebrow">{t("eyebrow")}</span>
             <h1 className="mt-5 text-display">{t("title")}</h1>
           </div>
-          <p className="text-md text-slate">{t("lead")}</p>
+          <p className="subtitle">{t("lead")}</p>
         </div>
       </section>
 

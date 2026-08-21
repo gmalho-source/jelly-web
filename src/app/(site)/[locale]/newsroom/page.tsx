@@ -24,9 +24,9 @@ export default async function NewsroomPage({ params }: { params: Promise<{ local
       <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
         <div>
           <span className="eyebrow">{t("eyebrow")}</span>
-          <h1 className="mt-5 text-display">{t("title")}</h1>
+          <h1 className="editorial mt-5 text-display">{t("title")}</h1>
         </div>
-        <p className="text-md text-slate">{t("lead")}</p>
+        <p className="subtitle">{t("lead")}</p>
       </div>
 
       {/* Feed cronológico: a data manda, o tipo assinala-se à direita. */}
@@ -41,7 +41,7 @@ export default async function NewsroomPage({ params }: { params: Promise<{ local
               <span className="block text-xs font-normal text-mute">{year.format(new Date(item.date))}</span>
             </time>
             <div>
-              <h2 className="font-display text-xl lg:text-2xl">{item.title[locale]}</h2>
+              <h2 className="editorial text-xl lg:text-2xl">{item.title[locale]}</h2>
               {item.summary ? <p className="mt-2 max-w-[62ch] text-sm text-slate">{item.summary[locale]}</p> : null}
               {item.outlet ? <p className="mt-2 text-sm text-mute">{item.outlet}</p> : null}
             </div>

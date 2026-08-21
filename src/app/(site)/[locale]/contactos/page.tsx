@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { BILLING_HOST } from "@/lib/hosts";
 import { ContactForm } from "./ContactForm";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
@@ -24,7 +23,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <span className="eyebrow">{t("eyebrow")}</span>
           <h1 className="mt-5 text-display">{t("title")}</h1>
         </div>
-        <p className="text-md text-slate">{t("lead")}</p>
+        <p className="subtitle">{t("lead")}</p>
       </div>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,52%)_minmax(0,40%)] lg:justify-between">
@@ -64,15 +63,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div className="border-t border-paper-3 pt-6">
             <h2 className="eyebrow text-mute">{t("careers")}</h2>
             <p className="mt-2 text-md text-slate">iwork@jelly.pt</p>
-          </div>
-          <div className="border-t border-paper-3 pt-6">
-            <h2 className="eyebrow text-mute">{t("providers")}</h2>
-            <p className="mt-2 text-md text-slate">
-              {t("providersBody")}{" "}
-              <a className="text-red" href={`https://${BILLING_HOST}`}>
-                {BILLING_HOST}
-              </a>
-            </p>
           </div>
           <p className="text-sm text-mute">{t("reply")}</p>
         </div>

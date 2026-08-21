@@ -3,6 +3,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { HeroReel } from "@/components/HeroReel";
+import { Ticker } from "@/components/Ticker";
+import { WorkIndex, type WorkRow } from "@/components/WorkIndex";
+import { getPathname } from "@/i18n/navigation";
 import { getClients, getProjects, getServices } from "@/lib/cms";
 import { alternates, organizationJsonLd } from "@/lib/seo";
 
@@ -19,6 +22,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const t = await getTranslations("home");
   const [projects, services, clients] = await Promise.all([getProjects(), getServices(), getClients()]);
   const featured = projects.slice(0, 3);
+  const tones: WorkRow["tone"][] = ["slate", "red", "lavender", "chartreuse", "coral"];
+  const rows: WorkRow[] = projects.map((project, index) => ({
+    client: project.client,
+    discipline: project.disciplines[locale],
+    value: project.headline.value,
+    label: project.headline.label[locale],
+    href: getPathname({ href: { pathname: "/projetos/[slug]", params: { slug: project.slug } }, locale }),
+    tone: tones[index % tones.length],
+  }));
 
   return (
     <>
@@ -29,11 +41,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
           <div>
             <span className="eyebrow">{t("eyebrow")}</span>
+            {/* A palavra riscada é a tese: a estratégia sozinha não muda nada. */}
             <h1 className="mt-5 text-display">
-              A ação é a<br />
-              nossa <span className="text-red">estratégia</span>.
+              <span className="relative inline-block">
+                Estratégia
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-[-2%] top-[52%] h-[6px] -rotate-[1.2deg] bg-red lg:h-[10px]"
+                />
+              </span>
+              <br />
+              <span className="text-red">Ação</span> é a nossa estratégia.
             </h1>
-            <p className="mt-8 max-w-[46ch] text-md text-slate">{t("lead")}</p>
+            <p className="subtitle mt-8 max-w-[46ch]">{t("lead")}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/" className="btn btn-hero">
                 {t("contactCta")} <span aria-hidden="true">→</span>
@@ -78,23 +98,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           </div>
           <span className="text-sm text-mute">{projects.length} · 2010—2026</span>
         </div>
-        <div className="border-t border-ink">
-          {projects.map((project) => (
-            <Link
-              key={project.slug}
-              href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-              className="group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-paper-2 py-4 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
-            >
-              <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
-                {project.client}
-              </span>
-              <span className="hidden text-sm text-mute sm:block">{project.disciplines[locale]}</span>
-              <span className="text-right font-display tabular-nums text-red lg:text-lg">
-                {project.headline.value}
-              </span>
-            </Link>
-          ))}
-        </div>
+        <WorkIndex rows={rows} />
 
         {/* Três casos em cartão: raio 20, sombra sm, cor plana no lugar da fotografia. */}
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,6 +141,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <p className="text-md text-ink/80">{t("bandBody")}</p>
         </div>
       </section>
+
+      <Ticker
+        items={[
+          "be the change",
+          t("eyebrow"),
+          locale === "pt" ? "quando a visão é clara, a estratégia é fácil" : "when the vision is clear, strategy is easy",
+        ]}
+      />
 
       {/* Bloco ink: os quatro pilares, com um único acento na IA. */}
       <section className="bg-ink py-16 text-paper lg:py-24">

@@ -37,8 +37,10 @@
   --color-paper-3: #d6dbe1;
   --color-mute: #8a93a0;
 
-  /* Tipografia */
-  --font-display: "Jubilat", "Bree Serif", Georgia, serif;
+  /* Tipografia — decisão da Jelly (ago 2026): Poppins assina os títulos,
+     Jubilat passa a subtítulos e a títulos de conteúdo editorial. */
+  --font-display: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-editorial: "Jubilat", "Bree Serif", Georgia, serif;
   --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Escala de terça maior (12 → 112) */
@@ -55,12 +57,12 @@
   --text-6xl: 112px;
 
   /* Display fluido do herói */
-  --text-display: clamp(40px, 7vw, 96px);
-  --text-display--line-height: 0.98;
-  --text-display--letter-spacing: -0.02em;
-  --text-chapter: clamp(28px, 4vw, 48px);
-  --text-chapter--line-height: 1.05;
-  --text-chapter--letter-spacing: -0.02em;
+  --text-display: clamp(40px, 7.4vw, 104px);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.045em;
+  --text-chapter: clamp(28px, 4.2vw, 52px);
+  --text-chapter--line-height: 0.98;
+  --text-chapter--letter-spacing: -0.035em;
 
   /* Forma */
   --radius-xs: 4px;
@@ -95,9 +97,9 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
     text-wrap: balance;
   }
   p { line-height: 1.6; text-wrap: pretty; }
@@ -157,4 +159,21 @@
   .btn:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
   .btn-ghost:hover { background: rgba(221, 54, 74, 0.08); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-paper-3); transform: none; }
   .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+}
+
+/* Jubilat: subtítulos e títulos de conteúdo editorial (blog e newsroom). */
+@utility editorial {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* Subtítulo: a frase calma debaixo da afirmação. */
+@utility subtitle {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--color-slate);
 }
