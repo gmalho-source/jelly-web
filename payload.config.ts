@@ -42,7 +42,21 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, "src/payload/types.ts") },
   // Os ficheiros vivem no Blob da Vercel: não há disco persistente no serverless.
   // Sem token, ficam no disco local, o que serve para desenvolver.
-  plugins: blobToken ? [vercelBlobStorage({ collections: { media: true }, token: blobToken })] : [],
+  plugins: blobToken
+    ? [
+        vercelBlobStorage({
+          // Sem o controlo de acesso do Payload à frente, os endereços apontam
+          // direitos ao CDN do Blob: as imagens deixam de passar por uma função
+          // a cada pedido. São capas de projetos, públicas de qualquer maneira.
+          collections: { media: { disablePayloadAccessControl: true } },
+          // O upload vai do browser para o Blob sem passar pela função, que na
+          // Vercel não aceita corpos acima de 4,5 MB — uma fotografia grande
+          // falhava no painel.
+          clientUploads: true,
+          token: blobToken,
+        }),
+      ]
+    : [],
   // Redimensionamento das imagens carregadas.
   sharp,
   // Recuperação de senha do painel. Sem chave, o Payload escreve no log, que
