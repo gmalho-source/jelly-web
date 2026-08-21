@@ -54,15 +54,29 @@ composta no JSX — mudar-lhe a frase é um commit, não uma edição.
 
 ## Arrancar
 
+O projeto é o `ov3ljxah`, dataset `production`, e está escrito no
+`sanity.cli.ts` e no `sanity.config.ts` — o Studio corre sem configuração
+nenhuma na máquina de quem escreve. O ID não é segredo: quem manda no acesso é
+o login.
+
 ```bash
-# 1. criar o projeto (uma vez), com a conta Jelly
-npx sanity@latest init --env .env.local   # escreve NEXT_PUBLIC_SANITY_PROJECT_ID e o dataset
+# uma vez, na máquina de quem vai escrever
+git clone https://github.com/gmalho-source/jelly-web.git
+cd jelly-web
+npm install
+npm i -D sanity @sanity/vision   # dependências só do Studio
 
-# 2. Studio em local (as dependências do Studio ficam fora do build do site)
-npm i -D sanity @sanity/vision
-npm run studio            # http://localhost:3333
+npm run studio                   # http://localhost:3333
+npm run studio:deploy            # publica em <nome>.sanity.studio
+```
 
-# 3. carregar o conteúdo do repositório
+Para correr **o site** em local é preciso um `.env.local` com
+`NEXT_PUBLIC_SANITY_PROJECT_ID=ov3ljxah` — sem isso o site lê o conteúdo do
+repositório em vez do CMS, que é o comportamento por omissão.
+
+Carregar conteúdo do repositório para o CMS (já feito uma vez, a 21 de agosto):
+
+```bash
 node scripts/sanity-seed.mjs --dry-run                    # conta e mostra um documento
 SANITY_API_WRITE_TOKEN=... npm run sanity:seed             # tudo, com imagens
 SANITY_API_WRITE_TOKEN=... npm run sanity:seed -- --only=pages
