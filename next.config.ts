@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 import createNextIntlPlugin from "next-intl/plugin";
-import generatedRedirects from "./src/lib/redirects.generated.json";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
@@ -20,11 +19,6 @@ const nextConfig: NextConfig = {
       // Imagens ainda por migrar do site antigo.
       { protocol: "https", hostname: "www.jelly.pt" },
     ],
-  },
-  // 764 redirecionamentos gerados a partir dos sitemaps do site atual
-  // (npm run redirects). Sem isto, a migração perde o histórico de SEO.
-  async redirects() {
-    return generatedRedirects as { source: string; destination: string; permanent: boolean }[];
   },
   async headers() {
     return [

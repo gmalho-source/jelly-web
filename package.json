@@ -20,7 +20,8 @@
     "payload:importmap": "payload generate:importmap",
     "media:optimize": "tsx scripts/optimize-media.mjs",
     "translate": "tsx scripts/translate.mjs",
-    "posts:images": "tsx scripts/repair-post-images.mjs"
+    "posts:images": "tsx scripts/repair-post-images.mjs",
+    "redirects:check": "node scripts/check-redirects.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

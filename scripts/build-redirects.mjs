@@ -87,11 +87,14 @@ const add = (source, destination, permanent = true) => {
   redirects.push({ source: from, destination, permanent });
 };
 
-// Artigos: o URL antigo leva a categoria depois do slug (/slug/categoria/).
+// Artigos: o URL antigo leva a categoria depois do slug (/slug/categoria/), mas
+// o WordPress serve o mesmo artigo em /slug/ — as duas formas respondem 200 no
+// site antigo, e as duas andam por aí em links e no índice do Google.
 for (const pathname of posts) {
   const parts = pathname.split("/").filter(Boolean);
   if (!parts.length) continue;
   add(pathname, `/blog/${parts[0]}`);
+  add(`/${parts[0]}`, `/blog/${parts[0]}`);
 }
 
 // Portfolio: /portfolio/{slug}/ → /projetos/{slug}
@@ -108,6 +111,21 @@ for (const pathname of recrutamento) {
 
 // Categorias e tags: o índice do blog absorve-as (as tags saem do índice).
 for (const pathname of [...categories, ...tags]) add(pathname, "/blog");
+
+/**
+ * O que o WordPress publica sem estar em sitemap nenhum. As famílias com número
+ * de página e os feeds ficam para o middleware, que as resolve com duas regras
+ * em vez de uma entrada por arquivo.
+ */
+for (const [source, destination] of [
+  ["/feed", "/blog"],
+  ["/comments/feed", "/blog"],
+  ["/author", "/blog"],
+  ["/wp-sitemap.xml", "/sitemap.xml"],
+  ["/sitemap_index.xml", "/sitemap.xml"],
+]) {
+  add(source, destination);
+}
 
 // Páginas e serviços, com mapeamento explícito.
 for (const pathname of pages) {

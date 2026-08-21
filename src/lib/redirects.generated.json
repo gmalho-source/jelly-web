@@ -5,7 +5,17 @@
   "permanent": true
  },
  {
+  "source": "/google-hummingbird-qual-o-impacto-seo-seu-website",
+  "destination": "/blog/google-hummingbird-qual-o-impacto-seo-seu-website",
+  "permanent": true
+ },
+ {
   "source": "/jellycode-chega-ao-porto/noticias",
+  "destination": "/blog/jellycode-chega-ao-porto",
+  "permanent": true
+ },
+ {
+  "source": "/jellycode-chega-ao-porto",
   "destination": "/blog/jellycode-chega-ao-porto",
   "permanent": true
  },
@@ -15,7 +25,17 @@
   "permanent": true
  },
  {
+  "source": "/scallent-the-new-word-for-talent",
+  "destination": "/blog/scallent-the-new-word-for-talent",
+  "permanent": true
+ },
+ {
   "source": "/jellycode-inaugura-my-jellyfit-2/noticias",
+  "destination": "/blog/jellycode-inaugura-my-jellyfit-2",
+  "permanent": true
+ },
+ {
+  "source": "/jellycode-inaugura-my-jellyfit-2",
   "destination": "/blog/jellycode-inaugura-my-jellyfit-2",
   "permanent": true
  },
@@ -25,7 +45,17 @@
   "permanent": true
  },
  {
+  "source": "/renault-clio-25-anos",
+  "destination": "/blog/renault-clio-25-anos",
+  "permanent": true
+ },
+ {
   "source": "/nova-imagem-os-mesmos-valores/noticias",
+  "destination": "/blog/nova-imagem-os-mesmos-valores",
+  "permanent": true
+ },
+ {
+  "source": "/nova-imagem-os-mesmos-valores",
   "destination": "/blog/nova-imagem-os-mesmos-valores",
   "permanent": true
  },
@@ -35,7 +65,17 @@
   "permanent": true
  },
  {
+  "source": "/que-tal-reputacao-seu-e-mail",
+  "destination": "/blog/que-tal-reputacao-seu-e-mail",
+  "permanent": true
+ },
+ {
   "source": "/nova-lei-e-mail-marketing-dec-lei-462012-de-29-de-agosto/noticias",
+  "destination": "/blog/nova-lei-e-mail-marketing-dec-lei-462012-de-29-de-agosto",
+  "permanent": true
+ },
+ {
+  "source": "/nova-lei-e-mail-marketing-dec-lei-462012-de-29-de-agosto",
   "destination": "/blog/nova-lei-e-mail-marketing-dec-lei-462012-de-29-de-agosto",
   "permanent": true
  },
@@ -45,7 +85,17 @@
   "permanent": true
  },
  {
+  "source": "/passatempo-youre-my-homepage-ofereceu-jellyshirts",
+  "destination": "/blog/passatempo-youre-my-homepage-ofereceu-jellyshirts",
+  "permanent": true
+ },
+ {
   "source": "/online-clicking-nova-campanha-de-marketing-jellycode-pt/noticias",
+  "destination": "/blog/online-clicking-nova-campanha-de-marketing-jellycode-pt",
+  "permanent": true
+ },
+ {
+  "source": "/online-clicking-nova-campanha-de-marketing-jellycode-pt",
   "destination": "/blog/online-clicking-nova-campanha-de-marketing-jellycode-pt",
   "permanent": true
  },
@@ -55,7 +105,17 @@
   "permanent": true
  },
  {
+  "source": "/jellycode-promove-evento-google-partners-connect",
+  "destination": "/blog/jellycode-promove-evento-google-partners-connect",
+  "permanent": true
+ },
+ {
   "source": "/google-cloud-day-lisboa/noticias/eventos",
+  "destination": "/blog/google-cloud-day-lisboa",
+  "permanent": true
+ },
+ {
+  "source": "/google-cloud-day-lisboa",
   "destination": "/blog/google-cloud-day-lisboa",
   "permanent": true
  },
@@ -65,7 +125,17 @@
   "permanent": true
  },
  {
+  "source": "/estivemos-no-wordcamp-porto-2018",
+  "destination": "/blog/estivemos-no-wordcamp-porto-2018",
+  "permanent": true
+ },
+ {
   "source": "/razoes-para-subcontratar-a-gestao-da-comunicacao-digital/marketing-digital",
+  "destination": "/blog/razoes-para-subcontratar-a-gestao-da-comunicacao-digital",
+  "permanent": true
+ },
+ {
+  "source": "/razoes-para-subcontratar-a-gestao-da-comunicacao-digital",
   "destination": "/blog/razoes-para-subcontratar-a-gestao-da-comunicacao-digital",
   "permanent": true
  },
@@ -75,7 +145,17 @@
   "permanent": true
  },
  {
+  "source": "/potenciar-o-email-marketing-da-sua-empresa",
+  "destination": "/blog/potenciar-o-email-marketing-da-sua-empresa",
+  "permanent": true
+ },
+ {
   "source": "/como-humanizar-a-sua-marca-nas-redes-sociais/marketing-digital",
+  "destination": "/blog/como-humanizar-a-sua-marca-nas-redes-sociais",
+  "permanent": true
+ },
+ {
+  "source": "/como-humanizar-a-sua-marca-nas-redes-sociais",
   "destination": "/blog/como-humanizar-a-sua-marca-nas-redes-sociais",
   "permanent": true
  },
@@ -85,7 +165,17 @@
   "permanent": true
  },
  {
+  "source": "/estrategia-na-comunicacao",
+  "destination": "/blog/estrategia-na-comunicacao",
+  "permanent": true
+ },
+ {
   "source": "/think-conference-5-palestras-que-nos-inspiraram/noticias",
+  "destination": "/blog/think-conference-5-palestras-que-nos-inspiraram",
+  "permanent": true
+ },
+ {
+  "source": "/think-conference-5-palestras-que-nos-inspiraram",
   "destination": "/blog/think-conference-5-palestras-que-nos-inspiraram",
   "permanent": true
  },
@@ -95,7 +185,17 @@
   "permanent": true
  },
  {
+  "source": "/estivemos-na-think-conference-2018",
+  "destination": "/blog/estivemos-na-think-conference-2018",
+  "permanent": true
+ },
+ {
   "source": "/google-marketing-platform/marketing-digital",
+  "destination": "/blog/google-marketing-platform",
+  "permanent": true
+ },
+ {
+  "source": "/google-marketing-platform",
   "destination": "/blog/google-marketing-platform",
   "permanent": true
  },
@@ -105,7 +205,17 @@
   "permanent": true
  },
  {
+  "source": "/5-pilares-para-o-sucesso-redes-sociais",
+  "destination": "/blog/5-pilares-para-o-sucesso-redes-sociais",
+  "permanent": true
+ },
+ {
   "source": "/algoritmo-do-instagram-a-favor-da-sua-marca/marketing-digital",
+  "destination": "/blog/algoritmo-do-instagram-a-favor-da-sua-marca",
+  "permanent": true
+ },
+ {
+  "source": "/algoritmo-do-instagram-a-favor-da-sua-marca",
   "destination": "/blog/algoritmo-do-instagram-a-favor-da-sua-marca",
   "permanent": true
  },
@@ -115,7 +225,17 @@
   "permanent": true
  },
  {
+  "source": "/cookies-rgpd-realmente-exigido",
+  "destination": "/blog/cookies-rgpd-realmente-exigido",
+  "permanent": true
+ },
+ {
   "source": "/rgpd-iniciados-respostas-as-questoes-elementares/consultoria-web",
+  "destination": "/blog/rgpd-iniciados-respostas-as-questoes-elementares",
+  "permanent": true
+ },
+ {
+  "source": "/rgpd-iniciados-respostas-as-questoes-elementares",
   "destination": "/blog/rgpd-iniciados-respostas-as-questoes-elementares",
   "permanent": true
  },
@@ -125,7 +245,17 @@
   "permanent": true
  },
  {
+  "source": "/tendencias-do-google-ultimo-semestre-2018",
+  "destination": "/blog/tendencias-do-google-ultimo-semestre-2018",
+  "permanent": true
+ },
+ {
   "source": "/novas-formas-de-identificar-links-nofollow/marketing-digital/seo",
+  "destination": "/blog/novas-formas-de-identificar-links-nofollow",
+  "permanent": true
+ },
+ {
+  "source": "/novas-formas-de-identificar-links-nofollow",
   "destination": "/blog/novas-formas-de-identificar-links-nofollow",
   "permanent": true
  },
@@ -135,7 +265,17 @@
   "permanent": true
  },
  {
+  "source": "/jellyfit-um-plano-todos-os-servicos",
+  "destination": "/blog/jellyfit-um-plano-todos-os-servicos",
+  "permanent": true
+ },
+ {
   "source": "/google-avanca-com-a-indexacao-mobile-first/noticias",
+  "destination": "/blog/google-avanca-com-a-indexacao-mobile-first",
+  "permanent": true
+ },
+ {
+  "source": "/google-avanca-com-a-indexacao-mobile-first",
   "destination": "/blog/google-avanca-com-a-indexacao-mobile-first",
   "permanent": true
  },
@@ -145,7 +285,17 @@
   "permanent": true
  },
  {
+  "source": "/landing-pages-de-sucesso-o-segredo-para-a-geracao-de-leads",
+  "destination": "/blog/landing-pages-de-sucesso-o-segredo-para-a-geracao-de-leads",
+  "permanent": true
+ },
+ {
   "source": "/dicas-para-legendar-publicacoes-no-instagram/marketing-digital",
+  "destination": "/blog/dicas-para-legendar-publicacoes-no-instagram",
+  "permanent": true
+ },
+ {
+  "source": "/dicas-para-legendar-publicacoes-no-instagram",
   "destination": "/blog/dicas-para-legendar-publicacoes-no-instagram",
   "permanent": true
  },
@@ -155,7 +305,17 @@
   "permanent": true
  },
  {
+  "source": "/falacia-do-planeamento-o-fosso-entre-estimativa-e-realidade",
+  "destination": "/blog/falacia-do-planeamento-o-fosso-entre-estimativa-e-realidade",
+  "permanent": true
+ },
+ {
   "source": "/automacao-de-marketing-perigos-de-um-monologo/marketing-digital",
+  "destination": "/blog/automacao-de-marketing-perigos-de-um-monologo",
+  "permanent": true
+ },
+ {
+  "source": "/automacao-de-marketing-perigos-de-um-monologo",
   "destination": "/blog/automacao-de-marketing-perigos-de-um-monologo",
   "permanent": true
  },
@@ -165,7 +325,17 @@
   "permanent": true
  },
  {
+  "source": "/jellycode-na-grande-final-do-denon-dj-contest",
+  "destination": "/blog/jellycode-na-grande-final-do-denon-dj-contest",
+  "permanent": true
+ },
+ {
   "source": "/da-terra-para-o-digital/artigos-opiniao",
+  "destination": "/blog/da-terra-para-o-digital",
+  "permanent": true
+ },
+ {
+  "source": "/da-terra-para-o-digital",
   "destination": "/blog/da-terra-para-o-digital",
   "permanent": true
  },
@@ -175,7 +345,17 @@
   "permanent": true
  },
  {
+  "source": "/qual-o-impacto-do-covid-19-no-e-commerce",
+  "destination": "/blog/qual-o-impacto-do-covid-19-no-e-commerce",
+  "permanent": true
+ },
+ {
   "source": "/marketing-de-conteudo-ja-e-um-influencer-na-sua-area-de-negocio/marketing-digital",
+  "destination": "/blog/marketing-de-conteudo-ja-e-um-influencer-na-sua-area-de-negocio",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-de-conteudo-ja-e-um-influencer-na-sua-area-de-negocio",
   "destination": "/blog/marketing-de-conteudo-ja-e-um-influencer-na-sua-area-de-negocio",
   "permanent": true
  },
@@ -185,7 +365,17 @@
   "permanent": true
  },
  {
+  "source": "/covid-19-as-marcas-antes-e-depois-da-pandemia",
+  "destination": "/blog/covid-19-as-marcas-antes-e-depois-da-pandemia",
+  "permanent": true
+ },
+ {
   "source": "/coronavirus-o-lado-humano-das-marcas/marketing-digital",
+  "destination": "/blog/coronavirus-o-lado-humano-das-marcas",
+  "permanent": true
+ },
+ {
+  "source": "/coronavirus-o-lado-humano-das-marcas",
   "destination": "/blog/coronavirus-o-lado-humano-das-marcas",
   "permanent": true
  },
@@ -195,7 +385,17 @@
   "permanent": true
  },
  {
+  "source": "/jelly-be-the-change-nos-media",
+  "destination": "/blog/jelly-be-the-change-nos-media",
+  "permanent": true
+ },
+ {
   "source": "/humtosearch/tecnologia",
+  "destination": "/blog/humtosearch",
+  "permanent": true
+ },
+ {
+  "source": "/humtosearch",
   "destination": "/blog/humtosearch",
   "permanent": true
  },
@@ -205,7 +405,17 @@
   "permanent": true
  },
  {
+  "source": "/jelly-na-valor-magazine-11-as-pessoas-sao-perenes",
+  "destination": "/blog/jelly-na-valor-magazine-11-as-pessoas-sao-perenes",
+  "permanent": true
+ },
+ {
   "source": "/oportunidades-turismo-pandemia/marketing-digital",
+  "destination": "/blog/oportunidades-turismo-pandemia",
+  "permanent": true
+ },
+ {
+  "source": "/oportunidades-turismo-pandemia",
   "destination": "/blog/oportunidades-turismo-pandemia",
   "permanent": true
  },
@@ -215,7 +425,17 @@
   "permanent": true
  },
  {
+  "source": "/app-bairro-de-alvalade-nos-media",
+  "destination": "/blog/app-bairro-de-alvalade-nos-media",
+  "permanent": true
+ },
+ {
   "source": "/as-polemicas-do-5g/tecnologia",
+  "destination": "/blog/as-polemicas-do-5g",
+  "permanent": true
+ },
+ {
+  "source": "/as-polemicas-do-5g",
   "destination": "/blog/as-polemicas-do-5g",
   "permanent": true
  },
@@ -225,7 +445,17 @@
   "permanent": true
  },
  {
+  "source": "/o-fim-dos-third-party-cookies",
+  "destination": "/blog/o-fim-dos-third-party-cookies",
+  "permanent": true
+ },
+ {
   "source": "/community-manager-o-elo-mais-forte/marketing-digital",
+  "destination": "/blog/community-manager-o-elo-mais-forte",
+  "permanent": true
+ },
+ {
+  "source": "/community-manager-o-elo-mais-forte",
   "destination": "/blog/community-manager-o-elo-mais-forte",
   "permanent": true
  },
@@ -235,7 +465,17 @@
   "permanent": true
  },
  {
+  "source": "/automacao-de-marketing-e-publicidade-programatica-a-web-3-0-ja-chegou",
+  "destination": "/blog/automacao-de-marketing-e-publicidade-programatica-a-web-3-0-ja-chegou",
+  "permanent": true
+ },
+ {
   "source": "/igtv-e-reels/marketing-digital/social-media-pt",
+  "destination": "/blog/igtv-e-reels",
+  "permanent": true
+ },
+ {
+  "source": "/igtv-e-reels",
   "destination": "/blog/igtv-e-reels",
   "permanent": true
  },
@@ -245,7 +485,17 @@
   "permanent": true
  },
  {
+  "source": "/social-shopping-d2c",
+  "destination": "/blog/social-shopping-d2c",
+  "permanent": true
+ },
+ {
   "source": "/influencers-como-descobrir-o-ideal/marketing-digital",
+  "destination": "/blog/influencers-como-descobrir-o-ideal",
+  "permanent": true
+ },
+ {
+  "source": "/influencers-como-descobrir-o-ideal",
   "destination": "/blog/influencers-como-descobrir-o-ideal",
   "permanent": true
  },
@@ -255,7 +505,17 @@
   "permanent": true
  },
  {
+  "source": "/os-meios-digitais-e-o-segmento-b2b",
+  "destination": "/blog/os-meios-digitais-e-o-segmento-b2b",
+  "permanent": true
+ },
+ {
   "source": "/black-hat-seo/marketing-digital/seo",
+  "destination": "/blog/black-hat-seo",
+  "permanent": true
+ },
+ {
+  "source": "/black-hat-seo",
   "destination": "/blog/black-hat-seo",
   "permanent": true
  },
@@ -265,7 +525,17 @@
   "permanent": true
  },
  {
+  "source": "/whatsapp-business-e-telegram",
+  "destination": "/blog/whatsapp-business-e-telegram",
+  "permanent": true
+ },
+ {
   "source": "/ansiedade-e-as-redes-sociais/marketing-digital",
+  "destination": "/blog/ansiedade-e-as-redes-sociais",
+  "permanent": true
+ },
+ {
+  "source": "/ansiedade-e-as-redes-sociais",
   "destination": "/blog/ansiedade-e-as-redes-sociais",
   "permanent": true
  },
@@ -275,7 +545,17 @@
   "permanent": true
  },
  {
+  "source": "/o-poder-de-um-directo",
+  "destination": "/blog/o-poder-de-um-directo",
+  "permanent": true
+ },
+ {
   "source": "/ativismo-digital/branding",
+  "destination": "/blog/ativismo-digital",
+  "permanent": true
+ },
+ {
+  "source": "/ativismo-digital",
   "destination": "/blog/ativismo-digital",
   "permanent": true
  },
@@ -285,7 +565,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-no-pinterest",
+  "destination": "/blog/marketing-no-pinterest",
+  "permanent": true
+ },
+ {
   "source": "/clubhouse-enquanto-ferramenta-de-negocio/marketing-digital/social-media-pt",
+  "destination": "/blog/clubhouse-enquanto-ferramenta-de-negocio",
+  "permanent": true
+ },
+ {
+  "source": "/clubhouse-enquanto-ferramenta-de-negocio",
   "destination": "/blog/clubhouse-enquanto-ferramenta-de-negocio",
   "permanent": true
  },
@@ -295,7 +585,17 @@
   "permanent": true
  },
  {
+  "source": "/live-video-shopping",
+  "destination": "/blog/live-video-shopping",
+  "permanent": true
+ },
+ {
   "source": "/pensar-como-um-designer/branding",
+  "destination": "/blog/pensar-como-um-designer",
+  "permanent": true
+ },
+ {
+  "source": "/pensar-como-um-designer",
   "destination": "/blog/pensar-como-um-designer",
   "permanent": true
  },
@@ -305,7 +605,17 @@
   "permanent": true
  },
  {
+  "source": "/motivos-para-criar-um-podcast",
+  "destination": "/blog/motivos-para-criar-um-podcast",
+  "permanent": true
+ },
+ {
   "source": "/fake-news/marketing-digital",
+  "destination": "/blog/fake-news",
+  "permanent": true
+ },
+ {
+  "source": "/fake-news",
   "destination": "/blog/fake-news",
   "permanent": true
  },
@@ -315,7 +625,17 @@
   "permanent": true
  },
  {
+  "source": "/video-formula-de-sucesso-na-comunicacao",
+  "destination": "/blog/video-formula-de-sucesso-na-comunicacao",
+  "permanent": true
+ },
+ {
   "source": "/o-comportamento-das-criancas-no-mundo-digital/artigos-opiniao",
+  "destination": "/blog/o-comportamento-das-criancas-no-mundo-digital",
+  "permanent": true
+ },
+ {
+  "source": "/o-comportamento-das-criancas-no-mundo-digital",
   "destination": "/blog/o-comportamento-das-criancas-no-mundo-digital",
   "permanent": true
  },
@@ -325,7 +645,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-verde",
+  "destination": "/blog/marketing-verde",
+  "permanent": true
+ },
+ {
   "source": "/apps-amigas-em-tempos-de-pandemia/noticias",
+  "destination": "/blog/apps-amigas-em-tempos-de-pandemia",
+  "permanent": true
+ },
+ {
+  "source": "/apps-amigas-em-tempos-de-pandemia",
   "destination": "/blog/apps-amigas-em-tempos-de-pandemia",
   "permanent": true
  },
@@ -335,7 +665,17 @@
   "permanent": true
  },
  {
+  "source": "/marca-crise-cresceu",
+  "destination": "/blog/marca-crise-cresceu",
+  "permanent": true
+ },
+ {
   "source": "/2021-tendencias-do-marketing-digital/marketing-digital",
+  "destination": "/blog/2021-tendencias-do-marketing-digital",
+  "permanent": true
+ },
+ {
+  "source": "/2021-tendencias-do-marketing-digital",
   "destination": "/blog/2021-tendencias-do-marketing-digital",
   "permanent": true
  },
@@ -345,7 +685,17 @@
   "permanent": true
  },
  {
+  "source": "/funcionalidades-nas-redes-sociais",
+  "destination": "/blog/funcionalidades-nas-redes-sociais",
+  "permanent": true
+ },
+ {
   "source": "/interacao-das-marcas-nas-redes-sociais/marketing-digital/social-media-pt",
+  "destination": "/blog/interacao-das-marcas-nas-redes-sociais",
+  "permanent": true
+ },
+ {
+  "source": "/interacao-das-marcas-nas-redes-sociais",
   "destination": "/blog/interacao-das-marcas-nas-redes-sociais",
   "permanent": true
  },
@@ -355,7 +705,17 @@
   "permanent": true
  },
  {
+  "source": "/o-potencial-das-parcerias",
+  "destination": "/blog/o-potencial-das-parcerias",
+  "permanent": true
+ },
+ {
   "source": "/marketing-de-influencia/marketing-digital",
+  "destination": "/blog/marketing-de-influencia",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-de-influencia",
   "destination": "/blog/marketing-de-influencia",
   "permanent": true
  },
@@ -365,7 +725,17 @@
   "permanent": true
  },
  {
+  "source": "/a-ascensao-do-tiktok",
+  "destination": "/blog/a-ascensao-do-tiktok",
+  "permanent": true
+ },
+ {
   "source": "/tendencias-do-marketing-digital-ctrs-impressoes/noticias",
+  "destination": "/blog/tendencias-do-marketing-digital-ctrs-impressoes",
+  "permanent": true
+ },
+ {
+  "source": "/tendencias-do-marketing-digital-ctrs-impressoes",
   "destination": "/blog/tendencias-do-marketing-digital-ctrs-impressoes",
   "permanent": true
  },
@@ -375,7 +745,17 @@
   "permanent": true
  },
  {
+  "source": "/o-que-faz-uma-marca-ser-unica-aos-olhos-do-consumidor",
+  "destination": "/blog/o-que-faz-uma-marca-ser-unica-aos-olhos-do-consumidor",
+  "permanent": true
+ },
+ {
   "source": "/importancia-do-video-no-marketing-digital/marketing-digital",
+  "destination": "/blog/importancia-do-video-no-marketing-digital",
+  "permanent": true
+ },
+ {
+  "source": "/importancia-do-video-no-marketing-digital",
   "destination": "/blog/importancia-do-video-no-marketing-digital",
   "permanent": true
  },
@@ -385,7 +765,17 @@
   "permanent": true
  },
  {
+  "source": "/remarketing-a-sua-segunda-oportunidade",
+  "destination": "/blog/remarketing-a-sua-segunda-oportunidade",
+  "permanent": true
+ },
+ {
   "source": "/o-papel-do-branding-no-sucesso-das-marcas/branding",
+  "destination": "/blog/o-papel-do-branding-no-sucesso-das-marcas",
+  "permanent": true
+ },
+ {
+  "source": "/o-papel-do-branding-no-sucesso-das-marcas",
   "destination": "/blog/o-papel-do-branding-no-sucesso-das-marcas",
   "permanent": true
  },
@@ -395,7 +785,17 @@
   "permanent": true
  },
  {
+  "source": "/o-que-e-preciso-para-ser-copywriter",
+  "destination": "/blog/o-que-e-preciso-para-ser-copywriter",
+  "permanent": true
+ },
+ {
   "source": "/google-discover-feed-ou-a-tecnologia-a-recriar-a-humanidade/marketing-digital",
+  "destination": "/blog/google-discover-feed-ou-a-tecnologia-a-recriar-a-humanidade",
+  "permanent": true
+ },
+ {
+  "source": "/google-discover-feed-ou-a-tecnologia-a-recriar-a-humanidade",
   "destination": "/blog/google-discover-feed-ou-a-tecnologia-a-recriar-a-humanidade",
   "permanent": true
  },
@@ -405,7 +805,17 @@
   "permanent": true
  },
  {
+  "source": "/a-voz-no-comando-do-futuro-da-tecnologia",
+  "destination": "/blog/a-voz-no-comando-do-futuro-da-tecnologia",
+  "permanent": true
+ },
+ {
   "source": "/aviso-nem-pense-em-formar-uma-opiniao-sobre-o-tiktok-enquanto-nao-ler-isto/marketing-digital",
+  "destination": "/blog/aviso-nem-pense-em-formar-uma-opiniao-sobre-o-tiktok-enquanto-nao-ler-isto",
+  "permanent": true
+ },
+ {
+  "source": "/aviso-nem-pense-em-formar-uma-opiniao-sobre-o-tiktok-enquanto-nao-ler-isto",
   "destination": "/blog/aviso-nem-pense-em-formar-uma-opiniao-sobre-o-tiktok-enquanto-nao-ler-isto",
   "permanent": true
  },
@@ -415,7 +825,17 @@
   "permanent": true
  },
  {
+  "source": "/content-seo-criar-conteudo-amigavel-para-seo",
+  "destination": "/blog/content-seo-criar-conteudo-amigavel-para-seo",
+  "permanent": true
+ },
+ {
   "source": "/storytelling-o-que-e/marketing-digital",
+  "destination": "/blog/storytelling-o-que-e",
+  "permanent": true
+ },
+ {
+  "source": "/storytelling-o-que-e",
   "destination": "/blog/storytelling-o-que-e",
   "permanent": true
  },
@@ -425,7 +845,17 @@
   "permanent": true
  },
  {
+  "source": "/por-que-razao-estao-as-marcas-a-apagar-as-suas-redes-sociais",
+  "destination": "/blog/por-que-razao-estao-as-marcas-a-apagar-as-suas-redes-sociais",
+  "permanent": true
+ },
+ {
   "source": "/algoritmo-o-novo-deus/tecnologia",
+  "destination": "/blog/algoritmo-o-novo-deus",
+  "permanent": true
+ },
+ {
+  "source": "/algoritmo-o-novo-deus",
   "destination": "/blog/algoritmo-o-novo-deus",
   "permanent": true
  },
@@ -435,7 +865,17 @@
   "permanent": true
  },
  {
+  "source": "/por-um-youtube-mais-imersivo",
+  "destination": "/blog/por-um-youtube-mais-imersivo",
+  "permanent": true
+ },
+ {
   "source": "/nao-corra-mais-riscos-o-data-marketing-e-um-braco-direito-para-tomar-decisoes/consultoria-web/protecao-de-dados",
+  "destination": "/blog/nao-corra-mais-riscos-o-data-marketing-e-um-braco-direito-para-tomar-decisoes",
+  "permanent": true
+ },
+ {
+  "source": "/nao-corra-mais-riscos-o-data-marketing-e-um-braco-direito-para-tomar-decisoes",
   "destination": "/blog/nao-corra-mais-riscos-o-data-marketing-e-um-braco-direito-para-tomar-decisoes",
   "permanent": true
  },
@@ -445,7 +885,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-a-magia-que-nos-liga-em-tempos-de-crise",
+  "destination": "/blog/marketing-a-magia-que-nos-liga-em-tempos-de-crise",
+  "permanent": true
+ },
+ {
   "source": "/bem-vindo-ao-futuro-como-os-nfts-estao-a-revolucionar-a-tecnologia-desta-geracao/tecnologia",
+  "destination": "/blog/bem-vindo-ao-futuro-como-os-nfts-estao-a-revolucionar-a-tecnologia-desta-geracao",
+  "permanent": true
+ },
+ {
+  "source": "/bem-vindo-ao-futuro-como-os-nfts-estao-a-revolucionar-a-tecnologia-desta-geracao",
   "destination": "/blog/bem-vindo-ao-futuro-como-os-nfts-estao-a-revolucionar-a-tecnologia-desta-geracao",
   "permanent": true
  },
@@ -455,7 +905,17 @@
   "permanent": true
  },
  {
+  "source": "/admiravel-e-hibrido-mundo-novo-a-mudanca-de-paradigma-do-trabalho",
+  "destination": "/blog/admiravel-e-hibrido-mundo-novo-a-mudanca-de-paradigma-do-trabalho",
+  "permanent": true
+ },
+ {
   "source": "/como-a-tecnologia-pode-facilitar-a-vida-das-pessoas-e-criar-experiencias-imersivas-atraves-do-metaverso/tecnologia",
+  "destination": "/blog/como-a-tecnologia-pode-facilitar-a-vida-das-pessoas-e-criar-experiencias-imersivas-atraves-do-metaverso",
+  "permanent": true
+ },
+ {
+  "source": "/como-a-tecnologia-pode-facilitar-a-vida-das-pessoas-e-criar-experiencias-imersivas-atraves-do-metaverso",
   "destination": "/blog/como-a-tecnologia-pode-facilitar-a-vida-das-pessoas-e-criar-experiencias-imersivas-atraves-do-metaverso",
   "permanent": true
  },
@@ -465,7 +925,17 @@
   "permanent": true
  },
  {
+  "source": "/sintonize-a-musica-ao-seu-branding",
+  "destination": "/blog/sintonize-a-musica-ao-seu-branding",
+  "permanent": true
+ },
+ {
   "source": "/o-sucesso-das-marcas-vai-mais-alem-da-definicao-de-kpis/marketing-digital",
+  "destination": "/blog/o-sucesso-das-marcas-vai-mais-alem-da-definicao-de-kpis",
+  "permanent": true
+ },
+ {
+  "source": "/o-sucesso-das-marcas-vai-mais-alem-da-definicao-de-kpis",
   "destination": "/blog/o-sucesso-das-marcas-vai-mais-alem-da-definicao-de-kpis",
   "permanent": true
  },
@@ -475,7 +945,17 @@
   "permanent": true
  },
  {
+  "source": "/jellyfit-a-historia",
+  "destination": "/blog/jellyfit-a-historia",
+  "permanent": true
+ },
+ {
   "source": "/sera-que-ja-segue-algum-influenciador-virtual/marketing-digital",
+  "destination": "/blog/sera-que-ja-segue-algum-influenciador-virtual",
+  "permanent": true
+ },
+ {
+  "source": "/sera-que-ja-segue-algum-influenciador-virtual",
   "destination": "/blog/sera-que-ja-segue-algum-influenciador-virtual",
   "permanent": true
  },
@@ -485,7 +965,17 @@
   "permanent": true
  },
  {
+  "source": "/conteudos-para-pessoas-nao-so-para-o-googlebot",
+  "destination": "/blog/conteudos-para-pessoas-nao-so-para-o-googlebot",
+  "permanent": true
+ },
+ {
   "source": "/a-voz-e-o-tom-na-comunicacao/branding",
+  "destination": "/blog/a-voz-e-o-tom-na-comunicacao",
+  "permanent": true
+ },
+ {
+  "source": "/a-voz-e-o-tom-na-comunicacao",
   "destination": "/blog/a-voz-e-o-tom-na-comunicacao",
   "permanent": true
  },
@@ -495,7 +985,17 @@
   "permanent": true
  },
  {
+  "source": "/neuromarketing-a-experiencia-3-0-do-marketing",
+  "destination": "/blog/neuromarketing-a-experiencia-3-0-do-marketing",
+  "permanent": true
+ },
+ {
   "source": "/jornada-do-consumidor-conhece-o-relacionamento-do-cliente-com-a-sua-marca/marketing-digital",
+  "destination": "/blog/jornada-do-consumidor-conhece-o-relacionamento-do-cliente-com-a-sua-marca",
+  "permanent": true
+ },
+ {
+  "source": "/jornada-do-consumidor-conhece-o-relacionamento-do-cliente-com-a-sua-marca",
   "destination": "/blog/jornada-do-consumidor-conhece-o-relacionamento-do-cliente-com-a-sua-marca",
   "permanent": true
  },
@@ -505,7 +1005,17 @@
   "permanent": true
  },
  {
+  "source": "/plataformas-de-streaming-um-presente-solido-um-futuro-fragmentado",
+  "destination": "/blog/plataformas-de-streaming-um-presente-solido-um-futuro-fragmentado",
+  "permanent": true
+ },
+ {
   "source": "/inteligencia-artificial-e-marketing-digital-o-casamento-perfeito/tecnologia",
+  "destination": "/blog/inteligencia-artificial-e-marketing-digital-o-casamento-perfeito",
+  "permanent": true
+ },
+ {
+  "source": "/inteligencia-artificial-e-marketing-digital-o-casamento-perfeito",
   "destination": "/blog/inteligencia-artificial-e-marketing-digital-o-casamento-perfeito",
   "permanent": true
  },
@@ -515,7 +1025,17 @@
   "permanent": true
  },
  {
+  "source": "/como-os-anuncios-de-natal-jantam-a-nossa-mesa",
+  "destination": "/blog/como-os-anuncios-de-natal-jantam-a-nossa-mesa",
+  "permanent": true
+ },
+ {
   "source": "/ano-novo-novas-tendencias-de-marketing-para-2023/marketing-digital",
+  "destination": "/blog/ano-novo-novas-tendencias-de-marketing-para-2023",
+  "permanent": true
+ },
+ {
+  "source": "/ano-novo-novas-tendencias-de-marketing-para-2023",
   "destination": "/blog/ano-novo-novas-tendencias-de-marketing-para-2023",
   "permanent": true
  },
@@ -525,7 +1045,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-inclusivo-porque-a-inclusao-e-a-diversidade-sao-essenciais-para-as-marcas",
+  "destination": "/blog/marketing-inclusivo-porque-a-inclusao-e-a-diversidade-sao-essenciais-para-as-marcas",
+  "permanent": true
+ },
+ {
   "source": "/user-delight-um-trabalho-de-encantar/noticias/audiovisuais",
+  "destination": "/blog/user-delight-um-trabalho-de-encantar",
+  "permanent": true
+ },
+ {
+  "source": "/user-delight-um-trabalho-de-encantar",
   "destination": "/blog/user-delight-um-trabalho-de-encantar",
   "permanent": true
  },
@@ -535,7 +1065,17 @@
   "permanent": true
  },
  {
+  "source": "/porque-e-que-as-marcas-autenticas-importam-tanto",
+  "destination": "/blog/porque-e-que-as-marcas-autenticas-importam-tanto",
+  "permanent": true
+ },
+ {
   "source": "/lets-talk-chat-o-nosso-amigo-chatgpt/marketing-digital",
+  "destination": "/blog/lets-talk-chat-o-nosso-amigo-chatgpt",
+  "permanent": true
+ },
+ {
+  "source": "/lets-talk-chat-o-nosso-amigo-chatgpt",
   "destination": "/blog/lets-talk-chat-o-nosso-amigo-chatgpt",
   "permanent": true
  },
@@ -545,7 +1085,17 @@
   "permanent": true
  },
  {
+  "source": "/antipersonas-em-ux",
+  "destination": "/blog/antipersonas-em-ux",
+  "permanent": true
+ },
+ {
   "source": "/tiktok-uma-linha-tenue-entre-o-entretenimento-e-o-negocio/marketing-digital/social-media-pt",
+  "destination": "/blog/tiktok-uma-linha-tenue-entre-o-entretenimento-e-o-negocio",
+  "permanent": true
+ },
+ {
+  "source": "/tiktok-uma-linha-tenue-entre-o-entretenimento-e-o-negocio",
   "destination": "/blog/tiktok-uma-linha-tenue-entre-o-entretenimento-e-o-negocio",
   "permanent": true
  },
@@ -555,7 +1105,17 @@
   "permanent": true
  },
  {
+  "source": "/subscricoes-o-futuro-das-redes-sociais",
+  "destination": "/blog/subscricoes-o-futuro-das-redes-sociais",
+  "permanent": true
+ },
+ {
   "source": "/first-party-data-uma-mudanca-de-paradigma/consultoria-web/protecao-de-dados",
+  "destination": "/blog/first-party-data-uma-mudanca-de-paradigma",
+  "permanent": true
+ },
+ {
+  "source": "/first-party-data-uma-mudanca-de-paradigma",
   "destination": "/blog/first-party-data-uma-mudanca-de-paradigma",
   "permanent": true
  },
@@ -565,7 +1125,17 @@
   "permanent": true
  },
  {
+  "source": "/google-analytics-4-o-que-muda-em-julho",
+  "destination": "/blog/google-analytics-4-o-que-muda-em-julho",
+  "permanent": true
+ },
+ {
   "source": "/campanhas-segmentadas-por-experiencias-e-comportamentos-sao-mais-eficazes/marketing-digital",
+  "destination": "/blog/campanhas-segmentadas-por-experiencias-e-comportamentos-sao-mais-eficazes",
+  "permanent": true
+ },
+ {
+  "source": "/campanhas-segmentadas-por-experiencias-e-comportamentos-sao-mais-eficazes",
   "destination": "/blog/campanhas-segmentadas-por-experiencias-e-comportamentos-sao-mais-eficazes",
   "permanent": true
  },
@@ -575,7 +1145,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-medico",
+  "destination": "/blog/marketing-medico",
+  "permanent": true
+ },
+ {
   "source": "/o-poder-da-influencia-a-ascensao-continua-do-influencer-marketing-em-2023/marketing-digital",
+  "destination": "/blog/o-poder-da-influencia-a-ascensao-continua-do-influencer-marketing-em-2023",
+  "permanent": true
+ },
+ {
+  "source": "/o-poder-da-influencia-a-ascensao-continua-do-influencer-marketing-em-2023",
   "destination": "/blog/o-poder-da-influencia-a-ascensao-continua-do-influencer-marketing-em-2023",
   "permanent": true
  },
@@ -585,7 +1165,17 @@
   "permanent": true
  },
  {
+  "source": "/customer-experience-como-influencia-os-resultados-das-empresas",
+  "destination": "/blog/customer-experience-como-influencia-os-resultados-das-empresas",
+  "permanent": true
+ },
+ {
   "source": "/a-utilizacao-de-dados-pela-inteligencia-artificial-e-machine-learning/tecnologia",
+  "destination": "/blog/a-utilizacao-de-dados-pela-inteligencia-artificial-e-machine-learning",
+  "permanent": true
+ },
+ {
+  "source": "/a-utilizacao-de-dados-pela-inteligencia-artificial-e-machine-learning",
   "destination": "/blog/a-utilizacao-de-dados-pela-inteligencia-artificial-e-machine-learning",
   "permanent": true
  },
@@ -595,7 +1185,17 @@
   "permanent": true
  },
  {
+  "source": "/gatekeepers-comissao-europeia-designa-6-controladores-dos-mercados-digitais",
+  "destination": "/blog/gatekeepers-comissao-europeia-designa-6-controladores-dos-mercados-digitais",
+  "permanent": true
+ },
+ {
   "source": "/chatbots-inteligentes-otimize-o-seu-atendimento-ao-cliente-em-estrategias-de-marketing-digital/tecnologia",
+  "destination": "/blog/chatbots-inteligentes-otimize-o-seu-atendimento-ao-cliente-em-estrategias-de-marketing-digital",
+  "permanent": true
+ },
+ {
+  "source": "/chatbots-inteligentes-otimize-o-seu-atendimento-ao-cliente-em-estrategias-de-marketing-digital",
   "destination": "/blog/chatbots-inteligentes-otimize-o-seu-atendimento-ao-cliente-em-estrategias-de-marketing-digital",
   "permanent": true
  },
@@ -605,7 +1205,17 @@
   "permanent": true
  },
  {
+  "source": "/tomada-de-decisao-do-consumidor-como-o-comportamento-do-cliente-influencia-a-decisao-de-compra",
+  "destination": "/blog/tomada-de-decisao-do-consumidor-como-o-comportamento-do-cliente-influencia-a-decisao-de-compra",
+  "permanent": true
+ },
+ {
   "source": "/marketing-h2h-humanizar-a-comunicacao-de-uma-marca/marketing-digital",
+  "destination": "/blog/marketing-h2h-humanizar-a-comunicacao-de-uma-marca",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-h2h-humanizar-a-comunicacao-de-uma-marca",
   "destination": "/blog/marketing-h2h-humanizar-a-comunicacao-de-uma-marca",
   "permanent": true
  },
@@ -615,7 +1225,17 @@
   "permanent": true
  },
  {
+  "source": "/o-que-mudou-e-todas-as-inovacoes-de-2023-versao-mundo-digital",
+  "destination": "/blog/o-que-mudou-e-todas-as-inovacoes-de-2023-versao-mundo-digital",
+  "permanent": true
+ },
+ {
   "source": "/web3-um-futuro-descentralizado/tecnologia",
+  "destination": "/blog/web3-um-futuro-descentralizado",
+  "permanent": true
+ },
+ {
+  "source": "/web3-um-futuro-descentralizado",
   "destination": "/blog/web3-um-futuro-descentralizado",
   "permanent": true
  },
@@ -625,7 +1245,17 @@
   "permanent": true
  },
  {
+  "source": "/multichannel-marketing-vs-omnichannel-marketing",
+  "destination": "/blog/multichannel-marketing-vs-omnichannel-marketing",
+  "permanent": true
+ },
+ {
   "source": "/marketing-multicanal-vs-marketing-omnicanal/marketing-digital",
+  "destination": "/blog/marketing-multicanal-vs-marketing-omnicanal",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-multicanal-vs-marketing-omnicanal",
   "destination": "/blog/marketing-multicanal-vs-marketing-omnicanal",
   "permanent": true
  },
@@ -635,7 +1265,17 @@
   "permanent": true
  },
  {
+  "source": "/lead-nurturing-a-importancia-de-nutrir-a-relacao-com-o-cliente",
+  "destination": "/blog/lead-nurturing-a-importancia-de-nutrir-a-relacao-com-o-cliente",
+  "permanent": true
+ },
+ {
   "source": "/comunicacao-para-a-geracao-z-como-usar-o-digital-para-atrair-a-atencao-dos-nativos-digitais/marketing-digital",
+  "destination": "/blog/comunicacao-para-a-geracao-z-como-usar-o-digital-para-atrair-a-atencao-dos-nativos-digitais",
+  "permanent": true
+ },
+ {
+  "source": "/comunicacao-para-a-geracao-z-como-usar-o-digital-para-atrair-a-atencao-dos-nativos-digitais",
   "destination": "/blog/comunicacao-para-a-geracao-z-como-usar-o-digital-para-atrair-a-atencao-dos-nativos-digitais",
   "permanent": true
  },
@@ -645,7 +1285,17 @@
   "permanent": true
  },
  {
+  "source": "/video-e-o-conteudo-rei",
+  "destination": "/blog/video-e-o-conteudo-rei",
+  "permanent": true
+ },
+ {
   "source": "/1-100-o-poder-da-conversao/marketing-digital",
+  "destination": "/blog/1-100-o-poder-da-conversao",
+  "permanent": true
+ },
+ {
+  "source": "/1-100-o-poder-da-conversao",
   "destination": "/blog/1-100-o-poder-da-conversao",
   "permanent": true
  },
@@ -655,7 +1305,17 @@
   "permanent": true
  },
  {
+  "source": "/ghostwriting-o-trabalho-no-anonimato-de-um-copywriter",
+  "destination": "/blog/ghostwriting-o-trabalho-no-anonimato-de-um-copywriter",
+  "permanent": true
+ },
+ {
   "source": "/psicologia-do-consumo-a-influencia-da-black-friday-no-comportamento-dos-consumidores-no-ambiente-digital/marketing-digital",
+  "destination": "/blog/psicologia-do-consumo-a-influencia-da-black-friday-no-comportamento-dos-consumidores-no-ambiente-digital",
+  "permanent": true
+ },
+ {
+  "source": "/psicologia-do-consumo-a-influencia-da-black-friday-no-comportamento-dos-consumidores-no-ambiente-digital",
   "destination": "/blog/psicologia-do-consumo-a-influencia-da-black-friday-no-comportamento-dos-consumidores-no-ambiente-digital",
   "permanent": true
  },
@@ -665,7 +1325,17 @@
   "permanent": true
  },
  {
+  "source": "/a-era-dos-dados-o-novo-ouro-digital",
+  "destination": "/blog/a-era-dos-dados-o-novo-ouro-digital",
+  "permanent": true
+ },
+ {
   "source": "/3x-seo-traffic-with-ai-como-o-neil-patel-esta-a-transformar-o-seo-com-inteligencia-artificial-ia/marketing-digital/seo",
+  "destination": "/blog/3x-seo-traffic-with-ai-como-o-neil-patel-esta-a-transformar-o-seo-com-inteligencia-artificial-ia",
+  "permanent": true
+ },
+ {
+  "source": "/3x-seo-traffic-with-ai-como-o-neil-patel-esta-a-transformar-o-seo-com-inteligencia-artificial-ia",
   "destination": "/blog/3x-seo-traffic-with-ai-como-o-neil-patel-esta-a-transformar-o-seo-com-inteligencia-artificial-ia",
   "permanent": true
  },
@@ -675,7 +1345,17 @@
   "permanent": true
  },
  {
+  "source": "/o-fim-do-saas-como-o-conhecemos-a-revolucao-das-aplicacoes-empresariais-liderada-pela-ia",
+  "destination": "/blog/o-fim-do-saas-como-o-conhecemos-a-revolucao-das-aplicacoes-empresariais-liderada-pela-ia",
+  "permanent": true
+ },
+ {
   "source": "/jelly-digital-agency-faz-parceria-inedita-com-a-informa-db-a-maior-base-de-dados-de-negocios-do-mundo/noticias",
+  "destination": "/blog/jelly-digital-agency-faz-parceria-inedita-com-a-informa-db-a-maior-base-de-dados-de-negocios-do-mundo",
+  "permanent": true
+ },
+ {
+  "source": "/jelly-digital-agency-faz-parceria-inedita-com-a-informa-db-a-maior-base-de-dados-de-negocios-do-mundo",
   "destination": "/blog/jelly-digital-agency-faz-parceria-inedita-com-a-informa-db-a-maior-base-de-dados-de-negocios-do-mundo",
   "permanent": true
  },
@@ -685,7 +1365,17 @@
   "permanent": true
  },
  {
+  "source": "/a-realidade-aumentada-e-o-marketing-a-experiencia-imersiva-a-favor-das-marcas",
+  "destination": "/blog/a-realidade-aumentada-e-o-marketing-a-experiencia-imersiva-a-favor-das-marcas",
+  "permanent": true
+ },
+ {
   "source": "/a-nova-forma-de-pesquisa-com-a-ia-generativa/marketing-digital",
+  "destination": "/blog/a-nova-forma-de-pesquisa-com-a-ia-generativa",
+  "permanent": true
+ },
+ {
+  "source": "/a-nova-forma-de-pesquisa-com-a-ia-generativa",
   "destination": "/blog/a-nova-forma-de-pesquisa-com-a-ia-generativa",
   "permanent": true
  },
@@ -695,7 +1385,17 @@
   "permanent": true
  },
  {
+  "source": "/de-consumidores-a-criadores-de-conteudo-como-o-ugc-esta-a-redefinir-marcas-e-negocios",
+  "destination": "/blog/de-consumidores-a-criadores-de-conteudo-como-o-ugc-esta-a-redefinir-marcas-e-negocios",
+  "permanent": true
+ },
+ {
   "source": "/neuromarketing-a-fusao-entre-a-neurociencia-e-o-marketing-para-uma-estrategia-eficiente/marketing-digital",
+  "destination": "/blog/neuromarketing-a-fusao-entre-a-neurociencia-e-o-marketing-para-uma-estrategia-eficiente",
+  "permanent": true
+ },
+ {
+  "source": "/neuromarketing-a-fusao-entre-a-neurociencia-e-o-marketing-para-uma-estrategia-eficiente",
   "destination": "/blog/neuromarketing-a-fusao-entre-a-neurociencia-e-o-marketing-para-uma-estrategia-eficiente",
   "permanent": true
  },
@@ -705,7 +1405,17 @@
   "permanent": true
  },
  {
+  "source": "/diretiva-europeia-da-acessibilidade-web",
+  "destination": "/blog/diretiva-europeia-da-acessibilidade-web",
+  "permanent": true
+ },
+ {
   "source": "/o-impacto-das-mudancas-geopoliticas-globais-nos-setores-do-marketing-digital-da-tecnologia-e-da-publicidade/marketing-digital",
+  "destination": "/blog/o-impacto-das-mudancas-geopoliticas-globais-nos-setores-do-marketing-digital-da-tecnologia-e-da-publicidade",
+  "permanent": true
+ },
+ {
+  "source": "/o-impacto-das-mudancas-geopoliticas-globais-nos-setores-do-marketing-digital-da-tecnologia-e-da-publicidade",
   "destination": "/blog/o-impacto-das-mudancas-geopoliticas-globais-nos-setores-do-marketing-digital-da-tecnologia-e-da-publicidade",
   "permanent": true
  },
@@ -715,7 +1425,17 @@
   "permanent": true
  },
  {
+  "source": "/o-futuro-do-consumo-como-a-tecnologia-e-a-sustentabilidade-estao-a-redefinir-o-mercado-em-2025",
+  "destination": "/blog/o-futuro-do-consumo-como-a-tecnologia-e-a-sustentabilidade-estao-a-redefinir-o-mercado-em-2025",
+  "permanent": true
+ },
+ {
   "source": "/eeat-or-die-a-nova-guerra-da-relevancia-digital/marketing-digital/marketing-digital-marketing-digital",
+  "destination": "/blog/eeat-or-die-a-nova-guerra-da-relevancia-digital",
+  "permanent": true
+ },
+ {
+  "source": "/eeat-or-die-a-nova-guerra-da-relevancia-digital",
   "destination": "/blog/eeat-or-die-a-nova-guerra-da-relevancia-digital",
   "permanent": true
  },
@@ -725,7 +1445,17 @@
   "permanent": true
  },
  {
+  "source": "/direitos-de-autor-na-era-da-ia-generativa-quem-detem-a-autoria-do-conteudo-criado-por-maquinas",
+  "destination": "/blog/direitos-de-autor-na-era-da-ia-generativa-quem-detem-a-autoria-do-conteudo-criado-por-maquinas",
+  "permanent": true
+ },
+ {
   "source": "/marketing-em-tempo-real-como-capturar-oportunidades-e-criar-conexoes-genuinas-com-o-publico/marketing-digital",
+  "destination": "/blog/marketing-em-tempo-real-como-capturar-oportunidades-e-criar-conexoes-genuinas-com-o-publico",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-em-tempo-real-como-capturar-oportunidades-e-criar-conexoes-genuinas-com-o-publico",
   "destination": "/blog/marketing-em-tempo-real-como-capturar-oportunidades-e-criar-conexoes-genuinas-com-o-publico",
   "permanent": true
  },
@@ -735,7 +1465,17 @@
   "permanent": true
  },
  {
+  "source": "/prr-inteligencia-artificial-nas-pme-candidaturas-abertas",
+  "destination": "/blog/prr-inteligencia-artificial-nas-pme-candidaturas-abertas",
+  "permanent": true
+ },
+ {
   "source": "/o-que-as-marcas-tem-de-fazer-para-continuar-a-ser-relevantes-nos-motores-de-pesquisa/marketing-digital/marketing-digital-marketing-digital",
+  "destination": "/blog/o-que-as-marcas-tem-de-fazer-para-continuar-a-ser-relevantes-nos-motores-de-pesquisa",
+  "permanent": true
+ },
+ {
+  "source": "/o-que-as-marcas-tem-de-fazer-para-continuar-a-ser-relevantes-nos-motores-de-pesquisa",
   "destination": "/blog/o-que-as-marcas-tem-de-fazer-para-continuar-a-ser-relevantes-nos-motores-de-pesquisa",
   "permanent": true
  },
@@ -745,7 +1485,17 @@
   "permanent": true
  },
  {
+  "source": "/jelly-e-agencia-parceira-herois-pme",
+  "destination": "/blog/jelly-e-agencia-parceira-herois-pme",
+  "permanent": true
+ },
+ {
   "source": "/do-chat-a-execucao-como-os-agentes-autonomos-vao-mudar-a-sua-estrategia-de-marketing-em-2026/tecnologia",
+  "destination": "/blog/do-chat-a-execucao-como-os-agentes-autonomos-vao-mudar-a-sua-estrategia-de-marketing-em-2026",
+  "permanent": true
+ },
+ {
+  "source": "/do-chat-a-execucao-como-os-agentes-autonomos-vao-mudar-a-sua-estrategia-de-marketing-em-2026",
   "destination": "/blog/do-chat-a-execucao-como-os-agentes-autonomos-vao-mudar-a-sua-estrategia-de-marketing-em-2026",
   "permanent": true
  },
@@ -755,7 +1505,17 @@
   "permanent": true
  },
  {
+  "source": "/shopify-vs-woocommerce-qual-e-a-melhor-plataforma-de-e-commerce",
+  "destination": "/blog/shopify-vs-woocommerce-qual-e-a-melhor-plataforma-de-e-commerce",
+  "permanent": true
+ },
+ {
   "source": "/agentic-ai-e-ai-agents-para-pme-quando-contratar-mais-pessoas-ja-nao-e-a-solucao/artigos-opiniao",
+  "destination": "/blog/agentic-ai-e-ai-agents-para-pme-quando-contratar-mais-pessoas-ja-nao-e-a-solucao",
+  "permanent": true
+ },
+ {
+  "source": "/agentic-ai-e-ai-agents-para-pme-quando-contratar-mais-pessoas-ja-nao-e-a-solucao",
   "destination": "/blog/agentic-ai-e-ai-agents-para-pme-quando-contratar-mais-pessoas-ja-nao-e-a-solucao",
   "permanent": true
  },
@@ -765,7 +1525,17 @@
   "permanent": true
  },
  {
+  "source": "/marketing-desligado-do-negocio-nao-e-business-e-buzziness",
+  "destination": "/blog/marketing-desligado-do-negocio-nao-e-business-e-buzziness",
+  "permanent": true
+ },
+ {
   "source": "/como-implementar-agentes-de-ia-no-atendimento-ao-cliente/tecnologia",
+  "destination": "/blog/como-implementar-agentes-de-ia-no-atendimento-ao-cliente",
+  "permanent": true
+ },
+ {
+  "source": "/como-implementar-agentes-de-ia-no-atendimento-ao-cliente",
   "destination": "/blog/como-implementar-agentes-de-ia-no-atendimento-ao-cliente",
   "permanent": true
  },
@@ -775,7 +1545,17 @@
   "permanent": true
  },
  {
+  "source": "/inteligencia-artificial-nas-empresas-o-guia-para-comecar",
+  "destination": "/blog/inteligencia-artificial-nas-empresas-o-guia-para-comecar",
+  "permanent": true
+ },
+ {
   "source": "/super-agents-a-nova-estrutura-das-equipas-de-marketing/inteligencia-artificial",
+  "destination": "/blog/super-agents-a-nova-estrutura-das-equipas-de-marketing",
+  "permanent": true
+ },
+ {
+  "source": "/super-agents-a-nova-estrutura-das-equipas-de-marketing",
   "destination": "/blog/super-agents-a-nova-estrutura-das-equipas-de-marketing",
   "permanent": true
  },
@@ -785,7 +1565,17 @@
   "permanent": true
  },
  {
+  "source": "/qual-a-diferen-a-entre-chatbot-tradicional-e-agente-de-ia",
+  "destination": "/blog/qual-a-diferen-a-entre-chatbot-tradicional-e-agente-de-ia",
+  "permanent": true
+ },
+ {
   "source": "/marketing-b2b/digital-marketing",
+  "destination": "/blog/marketing-b2b",
+  "permanent": true
+ },
+ {
+  "source": "/marketing-b2b",
   "destination": "/blog/marketing-b2b",
   "permanent": true
  },
@@ -795,7 +1585,17 @@
   "permanent": true
  },
  {
+  "source": "/jelly-anuncia-nova-equipa-de-gestao-e-plano-estrategico-para-os-proximos-5-anos",
+  "destination": "/blog/jelly-anuncia-nova-equipa-de-gestao-e-plano-estrategico-para-os-proximos-5-anos",
+  "permanent": true
+ },
+ {
   "source": "/o-fim-dos-funis-tradicionais-a-evolucao-para-funis-adaptativos-em-2026/marketing-digital",
+  "destination": "/blog/o-fim-dos-funis-tradicionais-a-evolucao-para-funis-adaptativos-em-2026",
+  "permanent": true
+ },
+ {
+  "source": "/o-fim-dos-funis-tradicionais-a-evolucao-para-funis-adaptativos-em-2026",
   "destination": "/blog/o-fim-dos-funis-tradicionais-a-evolucao-para-funis-adaptativos-em-2026",
   "permanent": true
  },
@@ -805,7 +1605,17 @@
   "permanent": true
  },
  {
+  "source": "/inteligencia-artificial-no-mercado-de-trabalho-um-risco-ou-revolucao",
+  "destination": "/blog/inteligencia-artificial-no-mercado-de-trabalho-um-risco-ou-revolucao",
+  "permanent": true
+ },
+ {
   "source": "/instagram-em-mudancas-um-caminho-rumo-a-autenticidade-perdida/marketing-digital/social-media-pt",
+  "destination": "/blog/instagram-em-mudancas-um-caminho-rumo-a-autenticidade-perdida",
+  "permanent": true
+ },
+ {
+  "source": "/instagram-em-mudancas-um-caminho-rumo-a-autenticidade-perdida",
   "destination": "/blog/instagram-em-mudancas-um-caminho-rumo-a-autenticidade-perdida",
   "permanent": true
  },
@@ -815,7 +1625,17 @@
   "permanent": true
  },
  {
+  "source": "/crescemos-com-as-redes-sociais-ou-sera-que-estas-crescem-connosco",
+  "destination": "/blog/crescemos-com-as-redes-sociais-ou-sera-que-estas-crescem-connosco",
+  "permanent": true
+ },
+ {
   "source": "/inteligencia-artificial-ia-generativa-nos-produtos-do-google/tecnologia",
+  "destination": "/blog/inteligencia-artificial-ia-generativa-nos-produtos-do-google",
+  "permanent": true
+ },
+ {
+  "source": "/inteligencia-artificial-ia-generativa-nos-produtos-do-google",
   "destination": "/blog/inteligencia-artificial-ia-generativa-nos-produtos-do-google",
   "permanent": true
  },
@@ -825,7 +1645,17 @@
   "permanent": true
  },
  {
+  "source": "/google-i-o-2025-a-verdadeira-inovacao-exige-nao-apenas-inteligencia-mas-consciencia",
+  "destination": "/blog/google-i-o-2025-a-verdadeira-inovacao-exige-nao-apenas-inteligencia-mas-consciencia",
+  "permanent": true
+ },
+ {
   "source": "/tiktok-criatividade-ou-controlo-o-lado-menos-visivel-da-app-que-molda-uma-geracao/marketing-digital",
+  "destination": "/blog/tiktok-criatividade-ou-controlo-o-lado-menos-visivel-da-app-que-molda-uma-geracao",
+  "permanent": true
+ },
+ {
+  "source": "/tiktok-criatividade-ou-controlo-o-lado-menos-visivel-da-app-que-molda-uma-geracao",
   "destination": "/blog/tiktok-criatividade-ou-controlo-o-lado-menos-visivel-da-app-que-molda-uma-geracao",
   "permanent": true
  },
@@ -835,7 +1665,17 @@
   "permanent": true
  },
  {
+  "source": "/saude-mental-e-marcas-e-se-o-silencio-tambem-comunicasse",
+  "destination": "/blog/saude-mental-e-marcas-e-se-o-silencio-tambem-comunicasse",
+  "permanent": true
+ },
+ {
   "source": "/hiperpersonalizacao-estamos-a-ser-lidos-ou-ouvidos/marketing-digital",
+  "destination": "/blog/hiperpersonalizacao-estamos-a-ser-lidos-ou-ouvidos",
+  "permanent": true
+ },
+ {
+  "source": "/hiperpersonalizacao-estamos-a-ser-lidos-ou-ouvidos",
   "destination": "/blog/hiperpersonalizacao-estamos-a-ser-lidos-ou-ouvidos",
   "permanent": true
  },
@@ -845,7 +1685,17 @@
   "permanent": true
  },
  {
+  "source": "/sustentabilidade-e-marketing-digital-estrategias-para-um-futuro-sustentavel",
+  "destination": "/blog/sustentabilidade-e-marketing-digital-estrategias-para-um-futuro-sustentavel",
+  "permanent": true
+ },
+ {
   "source": "/social-selling-e-e-commerce-a-revolucao-das-vendas-nas-redes-sociais/marketing-digital",
+  "destination": "/blog/social-selling-e-e-commerce-a-revolucao-das-vendas-nas-redes-sociais",
+  "permanent": true
+ },
+ {
+  "source": "/social-selling-e-e-commerce-a-revolucao-das-vendas-nas-redes-sociais",
   "destination": "/blog/social-selling-e-e-commerce-a-revolucao-das-vendas-nas-redes-sociais",
   "permanent": true
  },
@@ -855,7 +1705,17 @@
   "permanent": true
  },
  {
+  "source": "/booktok-o-fenomeno-que-esta-a-redefinir-o-marketing-editorial-e-o-comportamento-dos-jovens-leitores-em-portugal",
+  "destination": "/blog/booktok-o-fenomeno-que-esta-a-redefinir-o-marketing-editorial-e-o-comportamento-dos-jovens-leitores-em-portugal",
+  "permanent": true
+ },
+ {
   "source": "/seo-sem-cliques-o-que-a-evidencia-diz-e-como-reagir/marketing-digital",
+  "destination": "/blog/seo-sem-cliques-o-que-a-evidencia-diz-e-como-reagir",
+  "permanent": true
+ },
+ {
+  "source": "/seo-sem-cliques-o-que-a-evidencia-diz-e-como-reagir",
   "destination": "/blog/seo-sem-cliques-o-que-a-evidencia-diz-e-como-reagir",
   "permanent": true
  },
@@ -865,7 +1725,17 @@
   "permanent": true
  },
  {
+  "source": "/premios-herois-pme-distinguem-os-melhores-do-tecido-empresarial-portugues-na-8-a-edicao",
+  "destination": "/blog/premios-herois-pme-distinguem-os-melhores-do-tecido-empresarial-portugues-na-8-a-edicao",
+  "permanent": true
+ },
+ {
   "source": "/como-gerar-leads-qualificados-com-marketing-digital/lead-scoring",
+  "destination": "/blog/como-gerar-leads-qualificados-com-marketing-digital",
+  "permanent": true
+ },
+ {
+  "source": "/como-gerar-leads-qualificados-com-marketing-digital",
   "destination": "/blog/como-gerar-leads-qualificados-com-marketing-digital",
   "permanent": true
  },
@@ -875,7 +1745,17 @@
   "permanent": true
  },
  {
+  "source": "/8a-edicao-dos-premios-herois-pme-na-cnn-portugal",
+  "destination": "/blog/8a-edicao-dos-premios-herois-pme-na-cnn-portugal",
+  "permanent": true
+ },
+ {
   "source": "/imunidade-algoritmica-quando-a-autoridade-da-marca-torna-o-seo-inevitavel/marketing-digital",
+  "destination": "/blog/imunidade-algoritmica-quando-a-autoridade-da-marca-torna-o-seo-inevitavel",
+  "permanent": true
+ },
+ {
+  "source": "/imunidade-algoritmica-quando-a-autoridade-da-marca-torna-o-seo-inevitavel",
   "destination": "/blog/imunidade-algoritmica-quando-a-autoridade-da-marca-torna-o-seo-inevitavel",
   "permanent": true
  },
@@ -885,12 +1765,27 @@
   "permanent": true
  },
  {
+  "source": "/ia-no-marketing",
+  "destination": "/blog/ia-no-marketing",
+  "permanent": true
+ },
+ {
   "source": "/como-usar-trafego-pago-para-aumentar-as-vendas-do-meu-e-commerce/marketing-digital",
   "destination": "/blog/como-usar-trafego-pago-para-aumentar-as-vendas-do-meu-e-commerce",
   "permanent": true
  },
  {
+  "source": "/como-usar-trafego-pago-para-aumentar-as-vendas-do-meu-e-commerce",
+  "destination": "/blog/como-usar-trafego-pago-para-aumentar-as-vendas-do-meu-e-commerce",
+  "permanent": true
+ },
+ {
   "source": "/agentes-de-ia-para-responder-clientes-automaticamente-24-horas/inteligencia-artificial",
+  "destination": "/blog/agentes-de-ia-para-responder-clientes-automaticamente-24-horas",
+  "permanent": true
+ },
+ {
+  "source": "/agentes-de-ia-para-responder-clientes-automaticamente-24-horas",
   "destination": "/blog/agentes-de-ia-para-responder-clientes-automaticamente-24-horas",
   "permanent": true
  },
@@ -3657,6 +4552,31 @@
  {
   "source": "/tag/zendesk",
   "destination": "/blog",
+  "permanent": true
+ },
+ {
+  "source": "/feed",
+  "destination": "/blog",
+  "permanent": true
+ },
+ {
+  "source": "/comments/feed",
+  "destination": "/blog",
+  "permanent": true
+ },
+ {
+  "source": "/author",
+  "destination": "/blog",
+  "permanent": true
+ },
+ {
+  "source": "/wp-sitemap.xml",
+  "destination": "/sitemap.xml",
+  "permanent": true
+ },
+ {
+  "source": "/sitemap_index.xml",
+  "destination": "/sitemap.xml",
   "permanent": true
  },
  {

@@ -2,6 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
 import { BILLING_HOST, isBillingHost, isLocalHost } from "@/lib/hosts";
+import { legacyDestination } from "@/lib/legacy";
 
 const handleI18n = createMiddleware(routing);
 
@@ -36,6 +37,16 @@ export default function middleware(request: NextRequest) {
   // A proposta visual vive fora das duas árvores de língua: é um ecrã para ver,
   // não uma página do site.
   if (pathname.startsWith("/proposta")) return NextResponse.next();
+
+  // Os endereços do site antigo, antes da árvore de línguas: um artigo antigo
+  // não é um caminho português, é um 301 à espera de acontecer.
+  const legacy = legacyDestination(pathname);
+  if (legacy) {
+    const url = request.nextUrl.clone();
+    url.pathname = legacy;
+    url.search = "";
+    return NextResponse.redirect(url, 301);
+  }
 
   return handleI18n(request);
 }
