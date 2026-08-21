@@ -186,9 +186,16 @@ const pt = (text) => ({ pt: text });
 
 async function buildPosts() {
   const posts = readJson("src/content/generated/posts.json").slice(0, limit);
-  const categories = new Map();
+
+  // As categorias entram antes dos artigos: o Sanity valida as referências no
+  // momento da escrita, e um artigo escrito antes da sua categoria faz falhar a
+  // transação inteira.
+  const categories = new Map(posts.map((post) => [post.categorySlug, post.category]));
+  for (const [slug, title] of categories) {
+    push({ _id: `category-${slug}`, _type: "category", title: pt(title), slug: { _type: "slug", current: slug } });
+  }
+
   for (const post of posts) {
-    categories.set(post.categorySlug, post.category);
     const cover = await uploadImage(post.cover?.src, { alt: post.cover?.alt });
     push({
       _id: `post-${post.slug}`,
@@ -206,9 +213,6 @@ async function buildPosts() {
       body: await toPortableText(post.body),
       draft: false,
     });
-  }
-  for (const [slug, title] of categories) {
-    push({ _id: `category-${slug}`, _type: "category", title: pt(title), slug: { _type: "slug", current: slug } });
   }
   console.log(`  ${posts.length} artigos, ${categories.size} categorias`);
 }
