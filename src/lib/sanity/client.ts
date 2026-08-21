@@ -17,13 +17,15 @@ export const sanity: SanityClient | null = configured
     })
   : null;
 
-/** Segundos de vida de uma resposta em cache. Um webhook do Sanity revalida antes. */
+/** Segundos de vida de uma resposta em cache. O webhook do Sanity revalida antes. */
 const REVALIDATE = 300;
+/** Etiqueta única do conteúdo: o webhook invalida-a e o site relê tudo. */
+export const CMS_TAG = "cms";
 
 export async function query<T>(groq: string, params: Record<string, unknown> = {}, fallback: T): Promise<T> {
   if (!sanity) return fallback;
   try {
-    return await sanity.fetch<T>(groq, params, { next: { revalidate: REVALIDATE } });
+    return await sanity.fetch<T>(groq, params, { next: { revalidate: REVALIDATE, tags: [CMS_TAG] } });
   } catch (error) {
     // Uma falha do CMS não pode deixar o site em branco: cai no conteúdo local.
     console.error("[sanity] consulta falhou, a usar conteúdo local:", error);

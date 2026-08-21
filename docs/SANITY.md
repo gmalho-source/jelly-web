@@ -76,11 +76,30 @@ para as servir.
 
 Para alojar o Studio: `npm run studio:deploy` (fica em `jelly.sanity.studio`).
 
+## Publicar sem esperar por um deploy
+
+Todas as leituras do CMS levam a etiqueta `cms` e vivem 300 segundos em cache.
+`POST /api/revalidate` invalida essa etiqueta e o site relê o Sanity no pedido
+seguinte.
+
+No Sanity: **API → Webhooks → Create webhook**, URL
+`https://<host>/api/revalidate`, método `POST`, trigger em create/update/delete,
+projeção vazia (o corpo não é usado) e o cabeçalho
+`Authorization: Bearer <SANITY_REVALIDATE_SECRET>`. O mesmo valor tem de estar
+nas variáveis de ambiente do projeto.
+
+```bash
+curl -i -X POST https://<host>/api/revalidate -H "Authorization: Bearer $SANITY_REVALIDATE_SECRET"
+# 200 {"ok":true,"revalidated":"cms"}   401 sem segredo certo   503 sem segredo definido
+```
+
+Slugs novos não precisam de nada: uma página que ainda não foi gerada é
+renderizada no primeiro pedido. Se algum dia for preciso reconstruir tudo (uma
+mudança de estrutura, por exemplo), a alternativa é um Deploy Hook da Vercel
+apontado no mesmo sítio, que faz um build novo em vez de revalidar.
+
 ## Falta
 
-- **Webhook de revalidação.** Hoje o conteúdo entra no build; publicar no Studio
-  não atualiza o site até ao próximo deploy. Falta uma rota de revalidação por
-  tag e o webhook no Sanity a apontar-lhe.
 - **Rascunhos em pré-visualização** (`perspective: "drafts"` com token).
 - **Imagens pelo CDN do Sanity** com transformações — hoje a projeção devolve o
   URL original e as dimensões reais, que é o que o `next/image` precisa.
