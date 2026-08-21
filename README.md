@@ -133,18 +133,31 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
 
 ## Navegação
 
-O menu horizontal saiu. Ficam três coisas na barra: marca, procura e o botão **Índice**.
+Não há barra de menu. Há uma **ilha flutuante** (`src/components/SiteNav.tsx`): no topo em
+desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre paper, raio
+20 px, sombra `md`. Ao primeiro scroll encolhe e a marca passa a monograma.
 
-- **Índice em ecrã inteiro** (`src/components/SiteNav.tsx`): entradas em Poppins 600 a
-  72 px, as inativas a 35% de opacidade, seta vermelha na ativa, e um painel de contexto
-  em cor plana que muda com o hover — com atalhos reais (os quatro pilares, os três
-  projetos com número mais recentes).
+- **Entradas com submenu** (Serviços, Projetos) e **Tudo** abrem um **painel em ecrã
+  inteiro** sobre ink: entradas a 68 px, as inativas a 35% de opacidade, seta vermelha na
+  ativa, entrada em cascata de 34 ms por item. A ilha fica visível por cima do painel, com
+  a entrada ativa marcada — quem abre nunca perde o sítio onde está.
+- **Painel de contexto** em cor plana à direita, que muda com o hover: em Serviços mostra a
+  promessa do pilar, em Projetos o número do caso.
 - **Procura ⌘K**: paleta sobre todo o site — páginas, serviços, projetos e artigos — com
-  setas e Enter. Numa casa com 68 projetos e 179 artigos, procurar é a navegação principal.
-- Esc fecha, o foco volta ao botão, o scroll do documento fica bloqueado enquanto está
-  aberto, e o `aria-expanded` acompanha o estado.
+  setas e Enter. Numa casa com 68 projetos e 179 artigos, procurar é navegação principal.
+- Esc fecha, o foco volta ao botão que abriu, o scroll do documento fica bloqueado, e o
+  `aria-expanded` acompanha cada gatilho.
 - **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
   prestadores.
+
+### Escolha de tipografia em curso
+
+A Poppins está cansada. `npm run preview` gera um comparador ao vivo em
+`docs/preview/index.html`: uma barra que troca a fonte de títulos e interface em todo o
+site — Poppins, Instrument Sans, Schibsted Grotesk, Geist e Bricolage Grotesque, todas com
+licença aberta e self-hostáveis. A Jubilat mantém-se no editorial em qualquer das opções.
+Quando a escolha estiver feita, muda-se `--font-display` e `--font-sans` em
+`src/app/globals.css` e converte-se a família para WOFF2 em `public/fonts/`.
 
 ## Reel do herói
 

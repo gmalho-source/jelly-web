@@ -41,7 +41,7 @@ export default async function SiteLayout({
       <body>
         <NextIntlClientProvider>
           <SiteHeader locale={locale} />
-          <main>{children}</main>
+          <main className="pb-24 pt-6 sm:pb-0 sm:pt-24">{children}</main>
           <SiteFooter />
         </NextIntlClientProvider>
       </body>

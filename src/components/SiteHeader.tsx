@@ -18,8 +18,9 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
 
   const entries: NavEntry[] = [
-    { label: nav("about"), href: url("/sobre"), context: home("eyebrow"), tone: "red" },
+    { key: "sobre", label: nav("about"), href: url("/sobre"), context: home("eyebrow"), tone: "red" },
     {
+      key: "servicos",
       label: nav("services"),
       href: url("/servicos"),
       context: home("servicesTitle"),
@@ -27,22 +28,25 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       children: services.map((service) => ({
         label: service.name[locale],
         href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
+        hint: service.claim[locale],
       })),
     },
     {
+      key: "projetos",
       label: nav("work"),
       href: url("/projetos"),
       context: work("lead"),
       tone: "chartreuse",
-      children: projects.slice(0, 3).map((project) => ({
-        label: `${project.client} · ${project.headline.value}`,
+      children: projects.slice(0, 5).map((project) => ({
+        label: project.client,
         href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
+        hint: `${project.headline.value} · ${project.headline.label[locale]}`,
       })),
     },
-    { label: nav("clients"), href: url("/clientes"), context: home("clientsLabel"), tone: "coral" },
-    { label: nav("blog"), href: url("/blog"), context: blogT("lead"), tone: "slate" },
-    { label: nav("newsroom"), href: url("/newsroom"), context: newsroom("lead"), tone: "slate" },
-    { label: nav("contact"), href: url("/contactos"), context: home("lead"), tone: "red" },
+    { key: "clientes", label: nav("clients"), href: url("/clientes"), context: home("clientsLabel"), tone: "coral" },
+    { key: "blog", label: nav("blog"), href: url("/blog"), context: blogT("lead"), tone: "slate" },
+    { key: "newsroom", label: nav("newsroom"), href: url("/newsroom"), context: newsroom("lead"), tone: "slate" },
+    { key: "contactos", label: nav("contact"), href: url("/contactos"), context: home("lead"), tone: "red" },
   ];
 
   const palette: PaletteItem[] = [
@@ -74,9 +78,12 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       entries={entries}
       palette={palette}
       contactHref={url("/contactos")}
+      homeHref={url("/")}
       languageHref={getPathname({ href: "/", locale: other })}
       copy={{
-        index: locale === "pt" ? "Índice" : "Index",
+        more: locale === "pt" ? "Tudo" : "All",
+        menu: locale === "pt" ? "Navegação" : "Navigation",
+        everything: locale === "pt" ? "Todo o site, num ecrã." : "The whole site, on one screen.",
         close: locale === "pt" ? "Fechar" : "Close",
         contact: nav("contact"),
         searchHint: locale === "pt" ? "Procurar" : "Search",

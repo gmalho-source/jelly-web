@@ -2,32 +2,36 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { JellyWordmark } from "./JellyLogo";
+import { JellyMonogram, JellyWordmark } from "./JellyLogo";
+
+export type NavChild = { label: string; href: string; hint?: string };
 
 export type NavEntry = {
+  key: string;
   label: string;
   href: string;
-  /** Linha de contexto que aparece no painel ao passar o rato. */
-  context: string;
-  /** Atalhos que entram no painel (pilares, casos, artigos). */
-  children?: { label: string; href: string }[];
-  tone: "red" | "lavender" | "chartreuse" | "coral" | "slate";
+  /** Linha de contexto do painel em ecrã inteiro. */
+  context?: string;
+  children?: NavChild[];
+  tone?: "red" | "lavender" | "chartreuse" | "coral" | "slate";
 };
 
 export type PaletteItem = { label: string; hint: string; href: string; group: string };
 
 type Copy = {
-  index: string;
+  more: string;
   close: string;
   contact: string;
+  menu: string;
   searchHint: string;
   searchLabel: string;
   searchPlaceholder: string;
   empty: string;
   language: string;
+  everything: string;
 };
 
-const tones: Record<NavEntry["tone"], string> = {
+const tones: Record<NonNullable<NavEntry["tone"]>, string> = {
   red: "bg-red text-white",
   lavender: "bg-lavender text-ink",
   chartreuse: "bg-chartreuse text-ink",
@@ -36,10 +40,7 @@ const tones: Record<NavEntry["tone"], string> = {
 };
 
 function normalize(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 }
 
 export function SiteNav({
@@ -48,40 +49,60 @@ export function SiteNav({
   copy,
   languageHref,
   contactHref,
+  homeHref,
 }: {
   entries: NavEntry[];
   palette: PaletteItem[];
   copy: Copy;
   languageHref: string;
   contactHref: string;
+  homeHref: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState(false);
+  /** Chave do painel aberto: uma entrada com filhos, "tudo" ou "procura". */
+  const [panel, setPanel] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const [hovered, setHovered] = useState(0);
-  const opener = useRef<HTMLButtonElement>(null);
+  const [compact, setCompact] = useState(false);
+  const trigger = useRef<HTMLElement | null>(null);
   const input = useRef<HTMLInputElement>(null);
+
+  const quick = entries.filter((entry) => entry.children?.length);
+  const rest = entries.filter((entry) => !entry.children?.length);
+  const open = panel !== null;
+  const searching = panel === "procura";
+  const current = entries.find((entry) => entry.key === panel);
+  const items: NavChild[] =
+    panel === "tudo" ? entries.map((entry) => ({ label: entry.label, href: entry.href })) : (current?.children ?? []);
 
   const results = query.trim()
     ? palette.filter((item) => normalize(`${item.label} ${item.hint} ${item.group}`).includes(normalize(query.trim()))).slice(0, 8)
     : [];
 
-  // Atalho global: ⌘K / Ctrl+K abre a procura; Esc fecha tudo.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setOpen(true);
-        setSearch(true);
+        setPanel("procura");
       }
-      if (event.key === "Escape") {
-        setSearch(false);
-        setOpen(false);
-      }
+      if (event.key === "Escape") setPanel(null);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // A ilha encolhe depois do primeiro scroll: fica só o monograma.
+  useEffect(() => {
+    function onScroll() {
+      setCompact(window.scrollY > 48);
+    }
+    // Diferido para o próximo frame: cobre quem chega a meio da página.
+    const frame = requestAnimationFrame(onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -92,81 +113,105 @@ export function SiteNav({
   }, [open]);
 
   useEffect(() => {
-    if (search) input.current?.focus();
-    if (!open) opener.current?.focus({ preventScroll: true });
-  }, [search, open]);
+    if (searching) input.current?.focus();
+    if (!open) trigger.current?.focus({ preventScroll: true });
+  }, [panel, open, searching]);
 
-  const active = entries[Math.min(hovered, entries.length - 1)];
+  function toggle(key: string, event?: React.MouseEvent<HTMLButtonElement>) {
+    if (event) trigger.current = event.currentTarget;
+    setPanel((value) => (value === key ? null : key));
+    setQuery("");
+    setHovered(0);
+  }
+
+  const pill =
+    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors duration-200 ease-out hover:bg-ink/5";
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-paper-3 bg-paper/85 backdrop-blur-xl backdrop-saturate-150">
-        <div className="mx-auto flex min-h-[60px] max-w-[1200px] items-center justify-between gap-4 px-5 py-3 sm:min-h-[72px] sm:px-8">
-          <Link href={entries[0]?.href ?? "/"} aria-label="Jelly">
-            <JellyWordmark className="w-[72px] text-red sm:w-[84px]" />
+      {/* ── Ilha: flutua no topo em desktop, ancora em baixo no mobile ── */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-auto sm:top-4">
+        <nav
+          aria-label={copy.menu}
+          className={`pointer-events-auto flex max-w-full items-center gap-1 rounded-[20px] border border-paper-3/70 bg-paper/80 shadow-md backdrop-blur-xl backdrop-saturate-150 transition-[padding] duration-200 ease-out ${
+            compact ? "p-1.5" : "p-2"
+          }`}
+        >
+          <Link
+            href={homeHref}
+            aria-label="Jelly"
+            className="grid h-9 place-items-center rounded-full px-3 transition-colors duration-200 hover:bg-ink/5"
+          >
+            {compact ? (
+              <JellyMonogram className="w-[13px] text-red" />
+            ) : (
+              <JellyWordmark className="w-[58px] text-red" />
+            )}
           </Link>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => {
-                setSearch(true);
-                setOpen(true);
-              }}
-              className="hidden items-center gap-2 rounded-[8px] px-3 py-2 text-sm text-slate transition-colors duration-200 hover:text-red sm:flex"
-            >
-              {copy.searchHint}
-              <kbd className="rounded-[4px] border border-paper-3 px-1.5 py-0.5 font-sans text-xs text-mute">⌘K</kbd>
-            </button>
+          <span aria-hidden="true" className="mx-1 hidden h-6 w-px bg-paper-3 sm:block" />
 
-            <Link href={contactHref} className="btn hidden sm:inline-flex">
-              {copy.contact} <span aria-hidden="true">→</span>
-            </Link>
-
+          {quick.map((entry) => (
             <button
-              ref={opener}
+              key={entry.key}
               type="button"
-              aria-expanded={open}
-              onClick={() => {
-                setOpen((value) => !value);
-                setSearch(false);
-              }}
-              className="flex items-center gap-3 rounded-[8px] bg-ink px-4 py-2.5 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-red"
+              aria-expanded={panel === entry.key}
+              onClick={(event) => toggle(entry.key, event)}
+              className={`${pill} hidden items-center gap-1.5 sm:flex ${panel === entry.key ? "bg-ink text-paper hover:bg-ink" : "text-ink"}`}
             >
-              {open ? copy.close : copy.index}
-              <span aria-hidden="true" className="relative block h-3 w-4">
-                <span
-                  className={`absolute left-0 block h-px w-4 bg-current transition-transform duration-200 ease-out ${open ? "top-1.5 rotate-45" : "top-0.5"}`}
-                />
-                <span
-                  className={`absolute left-0 block h-px w-4 bg-current transition-transform duration-200 ease-out ${open ? "top-1.5 -rotate-45" : "top-2.5"}`}
-                />
+              {entry.label}
+              <span aria-hidden="true" className="text-[10px] text-red">
+                ●
               </span>
             </button>
-          </div>
-        </div>
-      </header>
+          ))}
 
+          {rest.slice(0, 2).map((entry) => (
+            <Link key={entry.key} href={entry.href} className={`${pill} hidden text-ink lg:block`}>
+              {entry.label}
+            </Link>
+          ))}
+
+          <button
+            type="button"
+            aria-expanded={panel === "tudo"}
+            onClick={(event) => toggle("tudo", event)}
+            className={`${pill} ${panel === "tudo" ? "bg-ink text-paper hover:bg-ink" : "text-ink"}`}
+          >
+            {copy.more}
+          </button>
+
+          <button
+            type="button"
+            aria-label={copy.searchLabel}
+            aria-expanded={searching}
+            onClick={(event) => toggle("procura", event)}
+            className={`${pill} flex items-center gap-2 ${searching ? "bg-ink text-paper hover:bg-ink" : "text-slate"}`}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <kbd className="hidden font-sans text-xs text-mute sm:inline">⌘K</kbd>
+          </button>
+
+          <Link href={contactHref} className="ml-1 hidden rounded-full bg-red px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-red-deep sm:block">
+            {copy.contact}
+          </Link>
+        </nav>
+      </div>
+
+      {/* ── Painel em ecrã inteiro: impacto no tipo, calma no resto ── */}
       {open ? (
-        <div role="dialog" aria-modal="true" aria-label={copy.index} className="fixed inset-0 z-50 bg-ink text-paper">
-          <div className="mx-auto flex h-full max-w-[1200px] flex-col px-5 pb-8 pt-4 sm:px-8">
-            <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
-              <JellyWordmark className="w-[72px] text-red" />
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setSearch(false);
-                }}
-                className="flex items-center gap-3 rounded-[8px] bg-paper px-4 py-2.5 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-red hover:text-white"
-              >
-                {copy.close}
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-
-            {search ? (
-              <div className="flex min-h-0 flex-1 flex-col pt-8">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={current?.label ?? copy.everything}
+          className="fixed inset-0 z-40 bg-ink text-paper"
+        >
+          <div className="mx-auto flex h-full max-w-[1200px] flex-col px-5 pb-8 pt-24 sm:px-8 sm:pt-28">
+            {searching ? (
+              <div className="flex min-h-0 flex-1 flex-col">
                 <label htmlFor="nav-search" className="eyebrow text-chartreuse">
                   {copy.searchLabel}
                 </label>
@@ -187,13 +232,11 @@ export function SiteNav({
                       event.preventDefault();
                       setCursor((value) => Math.max(value - 1, 0));
                     }
-                    if (event.key === "Enter" && results[cursor]) {
-                      window.location.assign(results[cursor].href);
-                    }
+                    if (event.key === "Enter" && results[cursor]) window.location.assign(results[cursor].href);
                   }}
                   placeholder={copy.searchPlaceholder}
-                  className="mt-3 w-full border-b border-white/20 bg-transparent pb-4 font-display text-3xl font-semibold tracking-[-0.03em] text-paper outline-none placeholder:text-white/30 lg:text-5xl"
                   autoComplete="off"
+                  className="mt-3 w-full border-b border-white/20 bg-transparent pb-4 text-3xl font-semibold tracking-[-0.035em] text-paper outline-none placeholder:text-white/25 lg:text-5xl"
                 />
                 <ul className="mt-6 min-h-0 flex-1 overflow-y-auto">
                   {results.map((item, index) => (
@@ -214,46 +257,38 @@ export function SiteNav({
                 </ul>
               </div>
             ) : (
-              <div className="grid min-h-0 flex-1 gap-8 pt-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between">
-                {/* Índice em escala grande: o resto esmorece para o item ativo respirar. */}
-                <nav className="flex min-h-0 flex-col justify-center gap-1 overflow-y-auto">
-                  {entries.map((entry, index) => (
+              <div className="grid min-h-0 flex-1 gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,34%)] lg:justify-between">
+                <div className="flex min-h-0 flex-col justify-center gap-1 overflow-y-auto">
+                  {current?.context ? <p className="eyebrow mb-6 text-chartreuse">{current.label}</p> : null}
+                  {items.map((item, index) => (
                     <Link
-                      key={entry.href}
-                      href={entry.href}
+                      key={item.href}
+                      href={item.href}
                       onMouseEnter={() => setHovered(index)}
                       onFocus={() => setHovered(index)}
-                      onClick={() => setOpen(false)}
-                      className={`group flex items-baseline gap-4 font-display text-4xl font-semibold leading-[0.95] tracking-[-0.045em] transition-[opacity,transform] duration-200 ease-out sm:text-5xl lg:text-[72px] ${
+                      onClick={() => setPanel(null)}
+                      style={{ animationDelay: `${index * 34}ms` }}
+                      className={`nav-rise group flex items-baseline gap-4 text-4xl font-semibold leading-[0.95] tracking-[-0.045em] transition-opacity duration-200 ease-out sm:text-5xl lg:text-[68px] ${
                         hovered === index ? "text-paper" : "text-paper/35"
                       }`}
                     >
-                      <span
-                        aria-hidden="true"
-                        className={`text-red transition-opacity duration-200 ${hovered === index ? "opacity-100" : "opacity-0"}`}
-                      >
+                      <span aria-hidden="true" className={`text-red transition-opacity duration-200 ${hovered === index ? "opacity-100" : "opacity-0"}`}>
                         →
                       </span>
-                      {entry.label}
+                      {item.label}
                     </Link>
                   ))}
-                </nav>
+                  {current ? (
+                    <Link href={current.href} onClick={() => setPanel(null)} className="mt-8 w-fit text-sm font-semibold text-chartreuse hover:underline">
+                      {current.label} →
+                    </Link>
+                  ) : null}
+                </div>
 
-                {/* Painel de contexto: cor plana, uma linha de verdade, atalhos reais. */}
                 <aside className="flex flex-col justify-end gap-4 pb-2">
-                  <div className={`flex min-h-[180px] flex-col justify-between rounded-[20px] p-6 ${tones[active.tone]}`}>
-                    <p className="editorial max-w-[28ch] text-lg leading-snug">{active.context}</p>
-                    {active.children?.length ? (
-                      <ul className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
-                        {active.children.map((child) => (
-                          <li key={child.href}>
-                            <Link href={child.href} onClick={() => setOpen(false)} className="hover:underline">
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
+                  <div className={`flex min-h-[170px] flex-col justify-between rounded-[20px] p-6 ${tones[current?.tone ?? "slate"]}`}>
+                    <p className="editorial max-w-[26ch] text-lg leading-snug">{current?.context ?? copy.everything}</p>
+                    {items[hovered]?.hint ? <p className="mt-4 text-sm font-semibold">{items[hovered].hint}</p> : null}
                   </div>
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-paper/70">
                     <Link href={languageHref} className="hover:text-red">
@@ -262,14 +297,28 @@ export function SiteNav({
                     <a href="mailto:geral@jelly.pt" className="hover:text-red">
                       geral@jelly.pt
                     </a>
-                    <button type="button" onClick={() => setSearch(true)} className="hover:text-red">
+                    <button type="button" onClick={() => setPanel("procura")} className="hover:text-red">
                       {copy.searchHint} ⌘K
                     </button>
                   </div>
                 </aside>
               </div>
             )}
+
+            <button
+              type="button"
+              onClick={() => setPanel(null)}
+              className="mt-6 w-fit rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-red hover:text-white"
+            >
+              {copy.close} ×
+            </button>
           </div>
+
+          <style>{`
+            .nav-rise { animation: nav-rise 260ms cubic-bezier(.22,.61,.36,1) both; }
+            @keyframes nav-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+            @media (prefers-reduced-motion: reduce) { .nav-rise { animation: none; } }
+          `}</style>
         </div>
       ) : null}
     </>

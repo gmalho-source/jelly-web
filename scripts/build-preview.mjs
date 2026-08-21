@@ -37,12 +37,40 @@ const pages = [
 const captures = [
   {
     key: "indice",
-    label: "Índice (aberto)",
+    label: "Tudo (ecrã inteiro)",
     path: "/",
     async act(page) {
-      await page.click('button[aria-expanded="false"]');
-      await page.waitForTimeout(400);
-      await page.hover("[role=dialog] nav a:nth-child(3)");
+      const buttons = await page.$$("nav[aria-label] button");
+      await buttons[2].click();
+      await page.waitForTimeout(500);
+      const links = await page.$$("[role=dialog] a");
+      if (links[2]) await links[2].hover();
+      await page.waitForTimeout(300);
+    },
+  },
+  {
+    key: "servicos-panel",
+    label: "Submenu Serviços",
+    path: "/",
+    async act(page) {
+      const buttons = await page.$$("nav[aria-label] button");
+      await buttons[0].click();
+      await page.waitForTimeout(500);
+      const links = await page.$$("[role=dialog] a");
+      if (links[2]) await links[2].hover();
+      await page.waitForTimeout(300);
+    },
+  },
+  {
+    key: "projetos-panel",
+    label: "Submenu Projetos",
+    path: "/",
+    async act(page) {
+      const buttons = await page.$$("nav[aria-label] button");
+      await buttons[1].click();
+      await page.waitForTimeout(500);
+      const links = await page.$$("[role=dialog] a");
+      if (links[1]) await links[1].hover();
       await page.waitForTimeout(300);
     },
   },
@@ -74,6 +102,40 @@ const routes = {
   "/en": "#en",
   "/billing": "#billing",
 };
+
+/**
+ * Candidatas a substituir a Poppins nos títulos e na interface. Todas com
+ * licença aberta e self-hostáveis. A Jubilat mantém-se no editorial.
+ */
+const FONTS = [
+  { key: "poppins", label: "Poppins (atual)", family: "Poppins", google: "Poppins:wght@400;600" },
+  { key: "instrument", label: "Instrument Sans", family: "Instrument Sans", google: "Instrument+Sans:wght@400;600" },
+  { key: "schibsted", label: "Schibsted Grotesk", family: "Schibsted Grotesk", google: "Schibsted+Grotesk:wght@400;600" },
+  { key: "geist", label: "Geist", family: "Geist", google: "Geist:wght@400;600" },
+  { key: "bricolage", label: "Bricolage Grotesque", family: "Bricolage Grotesque", google: "Bricolage+Grotesque:wght@400;600" },
+];
+
+const UA_MODERN =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
+
+/** Só o subconjunto latino, embutido em data URI. */
+async function fontFaces(spec) {
+  const response = await fetch(`https://fonts.googleapis.com/css2?family=${spec}&display=swap`, {
+    headers: { "user-agent": UA_MODERN },
+  });
+  const css = await response.text();
+  const blocks = css.split("@font-face").slice(1).map((block) => "@font-face" + block.split("}")[0] + "}");
+  const latin = blocks.filter((block) => /U\+0000-00FF/.test(block));
+  const chosen = latin.length ? latin : blocks.slice(0, 2);
+  let out = "";
+  for (const block of chosen) {
+    const url = block.match(/url\((https:[^)]+)\)/)?.[1];
+    if (!url) continue;
+    const buffer = Buffer.from(await (await fetch(url, { headers: { "user-agent": UA_MODERN } })).arrayBuffer());
+    out += block.replace(url, `data:font/woff2;base64,${buffer.toString("base64")}`) + "\n";
+  }
+  return out;
+}
 
 const mime = { ".woff2": "font/woff2", ".webm": "video/webm", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".png": "image/png", ".svg": "image/svg+xml" };
 
@@ -133,6 +195,13 @@ for (const capture of captures) {
 }
 await browser.close();
 
+// Tipografia candidata: faces embutidas + override por data-font.
+let fontCss = "";
+for (const font of FONTS) {
+  fontCss += await fontFaces(font.google);
+  fontCss += `:root[data-font="${font.key}"]{--font-display:"${font.family}",system-ui,sans-serif;--font-sans:"${font.family}",system-ui,sans-serif}\n`;
+}
+
 css = await inlineAssets(css);
 
 const nav = [...pages, ...captures].map((p) => `<a href="#${p.key}" data-p="${p.key}">${p.label}</a>`).join("");
@@ -142,8 +211,10 @@ const out = `<meta charset="utf-8">
 <title>Novo jelly.pt</title>
 <style>
 ${css}
+${fontCss}
 /* chrome do instantâneo */
-.pv-bar{position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;gap:14px;padding:10px 16px;
+.pv-chrome{position:sticky;top:0;z-index:9999}
+.pv-bar{display:flex;align-items:center;gap:14px;padding:10px 16px;
   background:#151719;color:#f4f6f8;font-family:"Poppins",system-ui,sans-serif;font-size:13px;flex-wrap:wrap}
 .pv-bar strong{font-family:"Jubilat","Bree Serif",Georgia,serif;font-weight:400;font-size:16px}
 .pv-bar nav{display:flex;gap:4px;flex-wrap:wrap}
@@ -151,13 +222,21 @@ ${css}
 .pv-bar nav a:hover{color:#fff;background:rgba(255,255,255,.08)}
 .pv-bar nav a.on{background:#dd364a;color:#fff}
 .pv-bar em{margin-left:auto;font-style:normal;color:#8a93a0;font-size:11.5px}
-.pv-shift{height:46px}
+.pv-fonts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:8px 16px;background:#2a384a;color:#f4f6f8;font-family:"Poppins",system-ui,sans-serif;font-size:12px}
+.pv-fonts span{opacity:.6;margin-right:6px}
+.pv-fonts button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:5px 10px;background:rgba(255,255,255,.1);color:inherit}
+.pv-fonts button:hover{background:rgba(255,255,255,.2)}
+.pv-fonts button.on{background:#dd364a;color:#fff}
+.pv-fonts em{margin-left:auto;font-style:normal;opacity:.5}
 .pv-page{display:none}
 .pv-page.on{display:block}
 @media (max-width:640px){.pv-bar em{display:none}}
 </style>
+<div class="pv-chrome">
 <div class="pv-bar"><strong>Novo jelly.pt</strong><nav>${nav}</nav><em>Instantâneo estático do código — os formulários não submetem</em></div>
-<div class="pv-shift"></div>
+<div class="pv-fonts"><span>Tipografia dos títulos e da interface</span>${FONTS.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>A Jubilat mantém-se no editorial</em></div>
+</div>
 ${bodies}
 <script>
 (function(){
@@ -177,6 +256,15 @@ ${bodies}
     if(pages.some(function(p){return p.dataset.p===key;})){ e.preventDefault(); show(key); }
   });
   show((location.hash||'#home').slice(1));
+
+  var fontButtons=[].slice.call(document.querySelectorAll('.pv-fonts button'));
+  document.documentElement.dataset.font='poppins';
+  fontButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.documentElement.dataset.font=btn.dataset.f;
+      fontButtons.forEach(function(other){ other.classList.toggle('on', other===btn); });
+    });
+  });
 })();
 </script>
 `;
