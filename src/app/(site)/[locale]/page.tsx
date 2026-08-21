@@ -9,7 +9,7 @@ import {
   getArchivedProjects,
   getClientLogos,
   getMilestones,
-  getPageImage,
+  getPageImages,
   getPosts,
   getServices,
   getTeam,
@@ -37,7 +37,7 @@ export default async function HomePage({
   setRequestLocale(locale);
 
   const t = await getTranslations("home");
-  const [archive, services, posts, logos, team, milestones, hero] =
+  const [archive, services, posts, logos, team, milestones, heroImages] =
     await Promise.all([
       getArchivedProjects(),
       getServices(),
@@ -45,7 +45,7 @@ export default async function HomePage({
       getClientLogos(),
       getTeam(),
       getMilestones(),
-      getPageImage("home"),
+      getPageImages("home"),
     ]);
 
   const withCover = archive.filter((project) => project.cover?.src);
@@ -88,17 +88,39 @@ export default async function HomePage({
             nossa estratégia.
           </h1>
 
-          {hero ? (
+          {heroImages.length ? (
             <div className="relative">
-              <Image
-                src={hero.src}
-                alt={hero.alt || t("heroImageAlt")}
-                width={hero.width ?? 2000}
-                height={hero.height ?? 1080}
-                priority
-                sizes="(max-width: 1024px) 100vw, 44vw"
-                className="w-full object-cover"
-              />
+              {/* Empilhadas no mesmo enquadramento: com mais do que uma, o CSS
+                  troca-as em fundido, sem javascript e sem salto de layout. */}
+              <div
+                className="relative aspect-square overflow-hidden"
+                data-hero-count={heroImages.length}
+              >
+                {heroImages.map((photo, index) => (
+                  <Image
+                    key={photo.src}
+                    src={photo.src}
+                    alt={photo.alt || t("heroImageAlt")}
+                    width={photo.width ?? 1600}
+                    height={photo.height ?? 1600}
+                    priority={index === 0}
+                    sizes="(max-width: 1024px) 100vw, 44vw"
+                    className={
+                      heroImages.length > 1
+                        ? "hero-fade absolute inset-0 h-full w-full object-cover"
+                        : "h-full w-full object-cover"
+                    }
+                    style={
+                      heroImages.length > 1
+                        ? {
+                            animationDuration: `${5.2 * heroImages.length}s`,
+                            animationDelay: `-${5.2 * index}s`,
+                          }
+                        : undefined
+                    }
+                  />
+                ))}
+              </div>
               {/* A legenda fica fora da imagem: quem troca a fotografia no
                   painel não tem de pensar se o texto ainda se lê por cima. */}
               <p className="mt-3 text-right text-[11px] uppercase tracking-[0.1em] text-fg-soft sm:pr-32">

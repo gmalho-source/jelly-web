@@ -18,11 +18,15 @@ o conteúdo pela **API local** do Payload: sem rede pelo meio, sem chaves de API
 | `media` | Imagens, com texto alternativo obrigatório e três tamanhos derivados |
 | `users` | Quem entra no painel |
 
-A **imagem principal** de uma página é hoje usada só pela homepage: é a
-fotografia larga do topo, ao lado do título. Sem imagem, o topo cai na capa do
-primeiro projeto — trocar a fotografia é carregar outra no painel, não mexer no
-código. A legenda vive fora da imagem de propósito: assim quem a troca não tem
-de pensar se o texto ainda se lê por cima.
+As **imagens principais** de uma página são hoje usadas só pela homepage: são as
+fotografias do topo, ao lado do título. Com mais do que uma (até quatro), trocam
+entre si em fundido, pela ordem da lista — em CSS, sem javascript, e paradas
+para quem pediu menos movimento. Sem nenhuma, o topo cai na capa do primeiro
+projeto. Trocar as fotografias é carregar outras no painel, não mexer no código.
+
+O enquadramento é quadrado, porque é o que permite empilhá-las: uma fotografia
+muito larga entra cortada dos lados. A legenda vive fora da imagem de propósito:
+assim quem a troca não tem de pensar se o texto ainda se lê por cima.
 
 Tradução ao nível do campo (`{ pt, en }`), como antes. O EN em falta cai no PT
 em vez de mostrar um espaço vazio.
@@ -108,6 +112,18 @@ Pela ordem, porque cada passo depende do anterior:
    (`*.public.blob.vercel-storage.com`) em vez de `www.jelly.pt`: é o sinal de
    que a leitura já vem do Payload. Em local, sem Blob, o endereço é
    `/api/media/file/…`.
+
+## Mudar a estrutura
+
+O Payload acerta as tabelas sozinho quando corre fora de produção — é o que faz
+o `payload:migrate` e qualquer script local. Em produção não mexe no esquema, de
+propósito. Portanto uma mudança de campos aplica-se correndo um script da
+máquina contra a base, **antes** do deploy que a usa; quando a mudança apaga uma
+coluna, o drizzle pergunta e há que confirmar.
+
+Isto serve enquanto somos poucos a mexer. A forma certa, quando o site estiver
+no ar a sério, é gerar migrações com `payload migrate:create`, guardá-las no
+repositório e corrê-las no build.
 
 ## Variáveis
 

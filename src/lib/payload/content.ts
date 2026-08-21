@@ -266,7 +266,7 @@ export function fetchLogoGalleries(fallback: LogoGallery[]) {
 
 export type PageCopy = {
   slug: string;
-  image?: { src: string; alt?: string; width?: number; height?: number };
+  images: { src: string; alt?: string; width?: number; height?: number }[];
   entries: { key: string; pt?: string; en?: string }[];
 };
 
@@ -275,7 +275,7 @@ export function fetchPageCopy(): Promise<PageCopy[]> {
     const { docs } = await payload.find({ collection: "pages", limit: 0, depth: 1 });
     return (docs as unknown as Doc[]).map((raw): PageCopy => ({
       slug: text(raw.key),
-      image: image(raw.image as MediaDoc),
+      images: ((raw.images ?? []) as MediaDoc[]).map(image).filter((found): found is NonNullable<typeof found> => Boolean(found)),
       entries: ((raw.entries ?? []) as Doc[]).map((entry) => ({
         key: text(entry.key),
         pt: text(entry.pt) || undefined,

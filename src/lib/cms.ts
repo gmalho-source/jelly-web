@@ -63,12 +63,13 @@ export async function getProjectsBySlugs(slugs: string[] = []) {
 }
 
 /**
- * Imagem principal de uma página, carregada no painel. Hoje só a homepage a usa
- * — a fotografia larga do topo — e sem ela o topo cai na capa de um projeto.
+ * Imagens principais de uma página, carregadas no painel. Hoje só a homepage as
+ * usa — as fotografias do topo, em fundido quando há mais do que uma — e sem
+ * elas o topo cai na capa de um projeto.
  */
-export const getPageImage = cache(async (key: string) => {
+export const getPageImages = cache(async (key: string) => {
   const pages = await fetchPageCopy();
-  return pages.find((page) => page.slug === key)?.image;
+  return pages.find((page) => page.slug === key)?.images ?? [];
 });
 
 export const getTeam = cache(async () => fetchTeam(team));

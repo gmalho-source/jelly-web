@@ -148,9 +148,9 @@ export interface Page {
   title: string;
   key: string;
   /**
-   * Hoje só a homepage a usa: é a fotografia larga do topo. Sem imagem, o topo mostra a capa do primeiro projeto.
+   * Hoje só a homepage as usa: são as fotografias do topo, ao lado do título. Com mais do que uma, trocam entre si em fundido, pela ordem desta lista. Sem nenhuma, o topo mostra a capa do primeiro projeto.
    */
-  image?: (number | null) | Media;
+  images?: (number | Media)[] | null;
   entries?:
     | {
         key: string;
@@ -684,7 +684,7 @@ export interface PayloadMigration {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   key?: T;
-  image?: T;
+  images?: T;
   entries?:
     | T
     | {

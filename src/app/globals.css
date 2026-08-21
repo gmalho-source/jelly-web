@@ -336,3 +336,42 @@
   /* Segue a superfície: slate sobre ink não se lê. */
   color: var(--color-fg-soft);
 }
+
+/* ── Herói: fotografias em fundido ──────────────────────────────────────────
+   As imagens ficam empilhadas no mesmo enquadramento e trocam entre si. A
+   janela visível de cada uma é uma fração do ciclo, e as percentagens dos
+   fotogramas não aceitam variáveis — daí um conjunto por número de imagens.
+   A duração e o desfasamento de cada camada vêm do componente. */
+@keyframes hero-fade-2 {
+  0%, 44% { opacity: 1; }
+  50%, 94% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes hero-fade-3 {
+  0%, 27% { opacity: 1; }
+  33.33%, 94% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes hero-fade-4 {
+  0%, 20% { opacity: 1; }
+  25%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.hero-fade {
+  opacity: 0;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+[data-hero-count="2"] .hero-fade { animation-name: hero-fade-2; }
+[data-hero-count="3"] .hero-fade { animation-name: hero-fade-3; }
+[data-hero-count="4"] .hero-fade { animation-name: hero-fade-4; }
+
+/* Quem pediu menos movimento fica com a primeira fotografia, quieta. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade { animation: none; }
+  .hero-fade:first-child { opacity: 1; }
+}
