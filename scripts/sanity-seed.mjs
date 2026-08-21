@@ -49,9 +49,14 @@ const client = projectId && token
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 
 /** O conteúdo escrito à mão vive em TypeScript: compila-se para JS e importa-se. */
-async function loadWrittenContent() {
+/** O conteúdo e a lista de páginas vivem em TypeScript: compila-se para JS. */
+function compileTypeScriptContent() {
   execFileSync("npx", ["tsc", "-p", "scripts/tsconfig.content.json"], { cwd: root, stdio: "inherit" });
-  const at = (file) => `file://${path.join(root, ".cache/content/content", file)}`;
+}
+
+async function loadWrittenContent() {
+  compileTypeScriptContent();
+  const at = (file) => `file://${path.join(root, ".cache/content/src/content", file)}`;
   const [site, projects, editorial] = await Promise.all([
     import(at("site.js")),
     import(at("projects.js")),
@@ -244,6 +249,58 @@ async function buildLogos() {
   console.log(`  ${galleries.length} galerias de logos`);
 }
 
+/**
+ * Páginas: os textos de `src/messages/pt.json` que o site desenha, chave a
+ * chave. A lista de páginas vem de `sanity/schemas/page.ts` — a mesma que o
+ * Studio mostra e que a fusão no site aceita, para não haver duas verdades. Fica de fora a navegação, o footer e a faturação (interface, não
+ * conteúdo), a headline do herói (composta no JSX, porque a palavra riscada é
+ * desenho) e as chaves que já não são usadas por nenhuma página.
+ */
+const SKIP_KEYS = new Set([
+  // headline do herói: fica em código
+  "home.headlineStrike",
+  "home.headlineEm",
+  "home.headlineRest",
+  "home.headlineLead",
+  "home.signature",
+  // restos sem página que os desenhe
+  "work.briefing",
+  "services.ctaLead",
+  "blog.featured",
+  "newsroom.all",
+  "contact.providers",
+  "contact.providersBody",
+]);
+
+function flatten(node, prefix = "") {
+  return Object.entries(node).flatMap(([key, value]) =>
+    value && typeof value === "object" ? flatten(value, `${prefix}${key}.`) : [[`${prefix}${key}`, value]],
+  );
+}
+
+async function buildPages() {
+  const { PAGE_KEYS } = await import(`file://${path.join(root, ".cache/content/sanity/schemas/page.js")}`);
+  const pt = readJson("src/messages/pt.json");
+  const en = readJson("src/messages/en.json");
+
+  for (const { slug, title } of PAGE_KEYS) {
+    const entries = flatten(pt[slug] ?? {})
+      .filter(([key]) => !SKIP_KEYS.has(`${slug}.${key}`))
+      .map(([key, value], index) => {
+        const englishValue = flatten(en[slug] ?? {}).find(([enKey]) => enKey === key)?.[1];
+        return {
+          _type: "entry",
+          _key: `e${index}`,
+          key,
+          pt: value,
+          ...(englishValue ? { en: englishValue } : {}),
+        };
+      });
+    push({ _id: `page-${slug}`, _type: "page", title, slug: { _type: "slug", current: slug }, entries });
+  }
+  console.log(`  ${PAGE_KEYS.length} páginas, ${docs.filter((doc) => doc._type === "page").reduce((total, doc) => total + doc.entries.length, 0)} textos`);
+}
+
 function buildWritten(content) {
   if (wants("cases")) {
     for (const project of content.projects) {
@@ -327,6 +384,10 @@ function buildWritten(content) {
 async function main() {
   console.log(`Sanity: ${projectId ?? "(sem projeto)"} / ${dataset}${dryRun ? " — dry run" : ""}`);
 
+  if (wants("pages")) {
+    compileTypeScriptContent();
+    await buildPages();
+  }
   if (wants("posts")) await buildPosts();
   if (wants("archive")) await buildArchive();
   if (wants("logos")) await buildLogos();

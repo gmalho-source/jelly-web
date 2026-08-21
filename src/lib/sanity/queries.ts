@@ -86,3 +86,8 @@ export const LOGO_GALLERIES = `*[_type == "logoGallery"] {
   "slug": slug.current,
   "logos": logos[] { name, link, "src": image.asset->url }
 }`;
+
+export const PAGE_COPY = `*[_type == "page"] {
+  "slug": slug.current,
+  "entries": entries[] { key, pt, en }
+}`;

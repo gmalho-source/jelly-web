@@ -227,3 +227,25 @@ export function fetchLogoGalleries(fallback: LogoGallery[]) {
     fallback,
   );
 }
+
+export type PageCopy = { slug: string; entries: { key: string; pt?: string; en?: string }[] };
+
+/**
+ * Caderno de copy das páginas. Devolve o que está no CMS, sem inventar chaves —
+ * quem decide que chaves existem é `src/messages/*.json`, e a fusão em
+ * `src/i18n/request.ts` só substitui as que já existem lá.
+ */
+export async function fetchPageCopy(): Promise<PageCopy[]> {
+  if (!sanity) return [];
+  const raw = await query<
+    ({ slug?: string | null; entries?: ({ key?: string | null; pt?: string | null; en?: string | null } | null)[] | null } | null)[]
+  >(groq.PAGE_COPY, {}, []);
+  return raw
+    .filter((doc): doc is { slug: string; entries: NonNullable<PageCopy["entries"]> } => Boolean(doc?.slug))
+    .map((doc) => ({
+      slug: doc.slug,
+      entries: (doc.entries ?? [])
+        .filter((entry): entry is { key: string; pt?: string; en?: string } => Boolean(entry?.key))
+        .map((entry) => ({ key: entry.key, pt: entry.pt ?? undefined, en: entry.en ?? undefined })),
+    }));
+}

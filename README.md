@@ -235,6 +235,9 @@ subirem para o CDN do CMS na fase do Sanity.
 ## CMS e deploy
 
 - **Sanity** — modelo, seed e o que falta: [`docs/SANITY.md`](docs/SANITY.md).
+  A copy das páginas (herói, leads, títulos, CTAs — 100 textos em 8 páginas) é
+  editável no Studio e sobrepõe-se a `src/messages/*.json`. A navegação, o
+  footer e a headline do herói ficam em código.
   O `src/lib/cms.ts` lê do Sanity quando `NEXT_PUBLIC_SANITY_PROJECT_ID` existe
   e cai no conteúdo local em `src/content` sempre que não existe, a coleção está
   vazia ou a consulta falha — coleção a coleção, sem o site ficar em branco.

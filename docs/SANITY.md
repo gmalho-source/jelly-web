@@ -18,6 +18,7 @@ migrar uma coleção de cada vez sem nunca ter o site em branco.
 | `client`, `teamMember`, `milestone` | Parede de clientes, equipa e cronologia do /sobre |
 | `newsItem` | Newsroom: notícia, evento ou press |
 | `logoGallery` | Paredes de logos herdadas do Smart Logo |
+| `page` | Caderno de copy de uma página: os textos que ela usa, chave a chave, nas duas línguas |
 
 Tradução ao nível do campo (`{ pt, en }`). O EN em falta cai no PT em vez de
 mostrar um espaço vazio — e no Studio vê-se logo o que falta traduzir, porque o
@@ -27,6 +28,28 @@ O Portable Text é limitado ao que o site desenha: parágrafo, título 2 e 3,
 citação, lista, imagem, mais negrito, itálico e link. `src/lib/sanity/normalize.ts`
 converte-o nos blocos que o `ArticleBody` já renderiza — testado nos 179 artigos
 migrados, ida e volta sem perdas.
+
+## Copy das páginas
+
+O texto das páginas (herói, leads, títulos de secção, CTAs) vive em
+`src/messages/{pt,en}.json` e passa a ser editável no Studio através do
+documento `page`: um por página — Homepage, Sobre, Serviços, Projetos, Clientes,
+Blog, Newsroom, Contactos — com a lista dos textos que aquela página desenha.
+As páginas são uma lista fixa no Studio: editam-se, não se criam nem se apagam.
+
+`src/i18n/request.ts` sobrepõe a copy do CMS às mensagens do repositório, por
+isso as páginas continuam a chamar `t("...")` sem saberem de onde vem o texto.
+Três regras que mantêm isto seguro, e que estão testadas:
+
+- só substitui **chaves que já existem** no ficheiro de mensagens — uma chave
+  inventada no Studio não passa a texto no site, porque quem decide o que existe
+  é o código;
+- **valor vazio cai no texto do repositório** em vez de apagar a secção;
+- só as **8 páginas da lista** são editáveis. A navegação, o footer e a área de
+  faturação ficam em código: são interface, não conteúdo.
+
+Fora do CMS por decisão: a **headline do herói**. A palavra riscada é desenho,
+composta no JSX — mudar-lhe a frase é um commit, não uma edição.
 
 ## Arrancar
 
@@ -41,6 +64,7 @@ npm run studio            # http://localhost:3333
 # 3. carregar o conteúdo do repositório
 node scripts/sanity-seed.mjs --dry-run                    # conta e mostra um documento
 SANITY_API_WRITE_TOKEN=... npm run sanity:seed             # tudo, com imagens
+SANITY_API_WRITE_TOKEN=... npm run sanity:seed -- --only=pages
 SANITY_API_WRITE_TOKEN=... npm run sanity:seed -- --only=posts --skip-images
 ```
 
