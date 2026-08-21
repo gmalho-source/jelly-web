@@ -150,6 +150,22 @@ desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre pa
 - **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
   prestadores.
 
+### Serifada dos títulos: Bree Serif
+
+Escolhida a Bree Serif e não a Lora. Motivo: a Bree é uma slab de peso cheio e aguenta o
+herói a 98 px ao lado do vermelho #dd364a; a Lora é uma serifada de leitura, afina nos
+títulos grandes e fica dominada pelo risco. A Bree está também na mesma família de ideias
+da Jubilat do brand book — a Lora seria outra categoria.
+
+Limitação a conhecer: a Bree Serif **não tem itálico nem outros pesos**. Por isso:
+
+- todos os títulos ficam a 400 (nunca `font-semibold` sobre a serifada, que sintetiza bold);
+- onde havia itálico — a citação do cliente na página de caso — passou a redondo. Se a
+  Jelly quiser itálico verdadeiro em citações, entra a Lora **só** nesse papel, ou usa-se a
+  Poppins itálica.
+
+O comparador do instantâneo mantém as duas serifadas para revisão a qualquer momento.
+
 ### Escolha da sans em curso
 
 Os títulos estão fixos em Bree Serif. O que falta decidir é a **sans de corpo e

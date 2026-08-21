@@ -120,6 +120,12 @@ const FONTS = [
   { key: "sohne", label: "Söhne (teste)", family: "Sohne", source: "local", files: { 400: "sohne-400.woff2", 600: "sohne-600.woff2" } },
 ];
 
+/** Serifadas candidatas para os títulos. */
+const TITLE_FONTS = [
+  { key: "bree", label: "Bree Serif", family: "Bree Serif", source: "google", spec: "Bree+Serif" },
+  { key: "lora", label: "Lora", family: "Lora", source: "google", spec: "Lora:ital,wght@0,400;0,600;1,400" },
+];
+
 const UA_MODERN =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
 
@@ -237,6 +243,15 @@ await browser.close();
 
 // Tipografia candidata: faces embutidas + override por data-font.
 let fontCss = "";
+
+// Serifadas dos títulos: comparação lado a lado no site inteiro.
+const titlesAvailable = [];
+for (const font of TITLE_FONTS) {
+  fontCss += await googleFaces(font.spec);
+  fontCss += `:root[data-title="${font.key}"]{--font-display:"${font.family}",Georgia,serif;--font-editorial:"${font.family}",Georgia,serif}\n`;
+  titlesAvailable.push(font);
+}
+
 const available = [];
 for (const font of FONTS) {
   let faces = null;
@@ -285,7 +300,7 @@ ${fontCss}
 </style>
 <div class="pv-chrome">
 <div class="pv-bar"><strong>Novo jelly.pt</strong><nav>${nav}</nav><em>Instantâneo estático do código — os formulários não submetem</em></div>
-<div class="pv-fonts"><span>Sans de corpo e interface</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>Títulos em Bree Serif nas cinco opções</em></div>
+<div class="pv-fonts"><span>Serifada dos títulos</span>${titlesAvailable.map((f, i) => `<button type="button" data-t="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<span style="margin-left:18px">Sans de corpo</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}</div>
 </div>
 ${bodies}
 <script>
@@ -307,14 +322,18 @@ ${bodies}
   });
   show((location.hash||'#home').slice(1));
 
-  var fontButtons=[].slice.call(document.querySelectorAll('.pv-fonts button'));
-  document.documentElement.dataset.font='poppins';
-  fontButtons.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.documentElement.dataset.font=btn.dataset.f;
-      fontButtons.forEach(function(other){ other.classList.toggle('on', other===btn); });
+  function wire(attr, prop, initial){
+    var buttons=[].slice.call(document.querySelectorAll('.pv-fonts button['+attr+']'));
+    document.documentElement.dataset[prop]=initial;
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.documentElement.dataset[prop]=btn.getAttribute(attr);
+        buttons.forEach(function(other){ other.classList.toggle('on', other===btn); });
+      });
     });
-  });
+  }
+  wire('data-t','title','bree');
+  wire('data-f','font','poppins');
 })();
 </script>
 `;

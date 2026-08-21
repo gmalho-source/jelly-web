@@ -83,7 +83,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         <section className="grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14">
           <p className="eyebrow text-mute">{t("clientWord")}</p>
           <blockquote>
-            <p className="max-w-[34ch] font-display text-2xl font-normal italic leading-snug tracking-tight lg:text-[38px]">
+            <p className="max-w-[34ch] font-display text-2xl leading-snug tracking-[-0.02em] lg:text-[38px]">
               “{project.quote.text[locale]}”
             </p>
             <footer className="eyebrow mt-4 text-mute">
