@@ -119,6 +119,60 @@
   }
 }
 
+/* Tipo em contorno: uma palavra vazada no meio de uma frase cheia. Barato de
+   fazer, forte a ler, e não precisa de outra fonte. */
+@utility type-outline {
+  color: transparent;
+  /* A cor da moldura não pode ser currentColor: essa é a que acabámos de pôr
+     transparente. Vem de uma variável, para servir fundo escuro e claro. */
+  -webkit-text-stroke: 1.5px var(--outline-color, var(--color-paper));
+  paint-order: stroke fill;
+}
+
+@utility type-outline-ink {
+  --outline-color: var(--color-ink);
+}
+
+@media (min-width: 1024px) {
+  .type-outline {
+    -webkit-text-stroke-width: 2.5px;
+  }
+}
+
+/* Palavra fantasma: enche a secção por trás do texto, sem competir com ele. */
+@utility ghost-word {
+  position: absolute;
+  inset-inline-start: 0;
+  top: -0.12em;
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: clamp(140px, 26vw, 420px);
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  opacity: 0.08;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Fita de capas: anda sozinha, devagar, e para quando o sistema pede menos
+   movimento (o bloco de prefers-reduced-motion acima corta a duração). */
+@keyframes marquee-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility marquee {
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.marquee-track {
+  animation: marquee-slide 64s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Entrada das linhas do índice: sobem 8 px e aparecem, com desfasamento por
    linha dado no componente. Quem pediu menos movimento não vê nada disto —
    o bloco de prefers-reduced-motion acima corta a duração. */
