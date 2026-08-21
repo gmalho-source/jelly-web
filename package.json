@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "audit": "node scripts/audit-site.mjs",
-    "preview": "node scripts/build-preview.mjs"
+    "preview": "node scripts/build-preview.mjs",
+    "migrate": "node scripts/migrate-wordpress.mjs",
+    "redirects": "node scripts/build-redirects.mjs",
+    "import": "node scripts/import-wordpress-xml.mjs"
   },
   "dependencies": {
     "@sanity/client": "^7.13.0",
@@ -27,6 +30,7 @@
     "@types/react-dom": "^19.2.0",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.3.1",
+    "node-html-parser": "^9.0.1",
     "playwright": "^1.56.1",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",

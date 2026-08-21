@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
+import { ArticleBody } from "@/components/ArticleBody";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPosts, getRelatedPosts } from "@/lib/cms";
@@ -58,7 +60,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <span>
             {post.readingMinutes} {t("minutes")}
           </span>
-          {post.draft ? (
+          {post.draft && !post.blocks?.length ? (
             <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-ink">
               {t("draft")}
             </span>
@@ -70,20 +72,36 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <h1 className="editorial mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
           <hr className="mt-8 border-ink" />
 
+          {post.cover?.src ? (
+            <Image
+              src={post.cover.src}
+              alt={post.cover.alt ?? ""}
+              width={post.cover.width ?? 1200}
+              height={post.cover.height ?? 675}
+              priority
+              sizes="(max-width: 1200px) 100vw, 1040px"
+              className="mt-8 w-full rounded-[20px] object-cover"
+            />
+          ) : null}
+
           {/* Corpo em Lora: leitura longa, itálico verdadeiro, capitular na
               mesma família para a coluna ler como um só bloco. */}
-          <div className="mt-8 max-w-[66ch]">
-            {post.body?.length ? (
-              post.body.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className={`reading ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
-                >
-                  {paragraph[locale]}
-                </p>
-              ))
+          <div className="mt-8">
+            {post.blocks?.length ? (
+              <ArticleBody blocks={post.blocks} />
+            ) : post.body?.length ? (
+              <div className="max-w-[66ch]">
+                {post.body.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className={`reading ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
+                  >
+                    {paragraph[locale]}
+                  </p>
+                ))}
+              </div>
             ) : (
-              <p className="reading">{post.excerpt[locale]}</p>
+              <p className="reading max-w-[66ch]">{post.excerpt[locale]}</p>
             )}
           </div>
 

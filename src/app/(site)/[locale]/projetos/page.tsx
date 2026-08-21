@@ -3,7 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { getProjects } from "@/lib/cms";
+import Image from "next/image";
+import { getArchivedProjects, getProjects } from "@/lib/cms";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -16,14 +17,16 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
   setRequestLocale(locale);
 
   const t = await getTranslations("work");
-  const projects = await getProjects();
+  const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
 
   return (
     <section className="grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
       <p className="eyebrow text-mute">
         {t("title")}
         <br />
-        <span className="text-red">{projects.length} / 68</span>
+        <span className="text-red">
+          {projects.length} / {projects.length + archive.length}
+        </span>
       </p>
       <div>
         <h1 className="text-chapter">{t("title")}</h1>
@@ -44,6 +47,49 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
               </span>
             </Link>
           ))}
+        </div>
+
+        {/* Arquivo: 64 projetos do portfolio antigo. Cliente, ano, disciplinas e
+            capa — sem narrativa, que o export não trazia. */}
+        <div className="mt-16">
+          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
+            <h2 className="eyebrow">{locale === "pt" ? "Arquivo" : "Archive"}</h2>
+            <span className="text-sm tabular-nums text-mute">
+              {archive.length} {locale === "pt" ? "projetos" : "projects"} · 2016—2026
+            </span>
+          </div>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {archive.map((project) => (
+              <li key={project.slug}>
+                <Link
+                  href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+                  className="card group flex h-full flex-col overflow-hidden"
+                >
+                  {project.cover?.src ? (
+                    <div className="aspect-[4/3] overflow-hidden bg-paper-2">
+                      <Image
+                        src={project.cover.src}
+                        alt={project.cover.alt || project.client}
+                        width={640}
+                        height={480}
+                        sizes="(max-width: 640px) 100vw, 380px"
+                        className="h-full w-full object-cover transition-transform duration-200 ease-out group-hover:scale-[1.02]"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[4/3] items-end bg-slate p-4">
+                      <span className="text-xs font-semibold uppercase tracking-[0.08em] text-paper/70">{project.client}</span>
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col gap-1 p-5">
+                    <h3 className="text-lg transition-colors duration-200 group-hover:text-red">{project.client}</h3>
+                    <span className="text-sm text-mute">{project.disciplines.slice(0, 3).join(" · ")}</span>
+                    <span className="mt-auto pt-3 text-sm tabular-nums text-mute">{project.year}</span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

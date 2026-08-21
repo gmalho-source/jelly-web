@@ -18,6 +18,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
   const t = await getTranslations("blog");
   const posts = await getPosts();
   const [featured, ...rest] = posts;
+  const latest = rest.slice(0, 23);
   const formatter = new Intl.DateTimeFormat(locale === "pt" ? "pt-PT" : "en-GB", { day: "numeric", month: "short", year: "numeric" });
 
   return (
@@ -48,8 +49,13 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
         </div>
       </Link>
 
-      <h2 className="eyebrow mt-14 border-b border-ink pb-3">{t("latest")}</h2>
-      {rest.map((post) => (
+      <div className="mt-14 flex items-baseline justify-between gap-4 border-b border-ink pb-3">
+        <h2 className="eyebrow">{t("latest")}</h2>
+        <span className="text-sm tabular-nums text-mute">
+          {posts.length} {locale === "pt" ? "artigos" : "articles"}
+        </span>
+      </div>
+      {latest.map((post) => (
         <Link
           key={post.slug}
           href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}

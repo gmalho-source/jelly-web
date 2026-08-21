@@ -4,7 +4,8 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import type { Client } from "@/content/types";
-import { getClients, getProjects } from "@/lib/cms";
+import Image from "next/image";
+import { getClientLogos, getClients, getProjects } from "@/lib/cms";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -19,7 +20,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
   setRequestLocale(locale);
 
   const t = await getTranslations("clients");
-  const [clients, projects] = await Promise.all([getClients(), getProjects()]);
+  const [clients, projects, logos] = await Promise.all([getClients(), getProjects(), getClientLogos()]);
 
   return (
     <>
@@ -32,6 +33,26 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
           <p className="subtitle">{t("lead")}</p>
         </div>
       </section>
+
+      {/* Parede de logos: os 38 logos reais da galeria do site atual. */}
+      {logos.length ? (
+        <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
+          <ul className="grid grid-cols-2 gap-px bg-paper-3 sm:grid-cols-4 lg:grid-cols-6">
+            {logos.map((logo) => (
+              <li key={logo.src} className="flex aspect-[3/2] items-center justify-center bg-white p-5">
+                <Image
+                  src={logo.src}
+                  alt={logo.name || ""}
+                  width={200}
+                  height={120}
+                  sizes="180px"
+                  className="max-h-[52px] w-auto object-contain opacity-70 transition-opacity duration-200 hover:opacity-100"
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
         {order.map((sector) => {

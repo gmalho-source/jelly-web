@@ -46,8 +46,13 @@ export type Post = {
   readingMinutes: number;
   title: Localized;
   excerpt: Localized;
-  /** Corpo em parágrafos. Rascunho enquanto o conteúdo real não é migrado. */
+  /** Corpo em parágrafos, dos artigos de estrutura escritos à mão. */
   body?: Localized[];
+  /** Corpo migrado do WordPress, em blocos. */
+  blocks?: Block[];
+  cover?: { src: string; alt?: string; width?: number; height?: number };
+  legacyPath?: string;
+  lang?: "pt" | "en";
   draft?: boolean;
 };
 
@@ -60,4 +65,50 @@ export type NewsItem = {
   title: Localized;
   summary?: Localized;
   outlet?: string;
+};
+
+/** Bloco de corpo de artigo, como sai da migração do WordPress. */
+export type Block =
+  | { type: "p"; text: string }
+  | { type: "h2"; text: string }
+  | { type: "h3"; text: string }
+  | { type: "quote"; text: string }
+  | { type: "list"; ordered?: boolean; items: string[] }
+  | { type: "image"; src: string; alt?: string; caption?: string };
+
+/** Artigo migrado do jelly.pt. Uma língua por registo (hoje só PT). */
+export type MigratedPost = {
+  slug: string;
+  legacyPath: string;
+  date: string;
+  updated?: string;
+  lang: "pt" | "en";
+  title: string;
+  excerpt: string;
+  author: string;
+  category: string;
+  categorySlug: string;
+  readingMinutes: number;
+  cover?: { src: string; alt?: string; width?: number; height?: number } | null;
+  body: Block[];
+};
+
+/** Projeto migrado do portfolio antigo: sem narrativa nem número — arquivo. */
+export type ArchivedProject = {
+  slug: string;
+  legacyPath: string | null;
+  client: string;
+  date: string;
+  year: string;
+  disciplines: string[];
+  summary: string;
+  body: string[];
+  cover?: { src: string; alt?: string; title?: string } | null;
+  images: string[];
+};
+
+export type LogoGallery = {
+  gallery: string;
+  slug: string;
+  logos: { src: string; name: string; link: string | null }[];
 };

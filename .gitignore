@@ -11,3 +11,6 @@ next-env.d.ts
 public/fonts/trials/*.woff2
 public/fonts/trials/*.ttf
 public/fonts/trials/*.otf
+
+# Exports do WordPress: despejo do site antigo, não fonte de verdade
+content-import/*.xml

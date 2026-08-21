@@ -1,7 +1,10 @@
+import logoGalleries from "@/content/generated/client-logos.json";
+import generated from "@/content/generated/posts.json";
+import archived from "@/content/generated/projects.json";
 import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { clients, milestones, services, team } from "@/content/site";
-import type { NewsItem, Post, Project } from "@/content/types";
+import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
 
 /**
  * Camada de conteúdo. Hoje lê o conteúdo local versionado no repositório;
@@ -48,19 +51,70 @@ export async function getMilestones() {
   return milestones;
 }
 
+/**
+ * Artigos migrados do WordPress (`npm run migrate`). Enquanto a migração não
+ * corre, o site usa os seis artigos de estrutura em `content/editorial.ts`.
+ */
+const migrated = generated as MigratedPost[];
+
+function fromMigrated(post: MigratedPost): Post {
+  return {
+    slug: post.slug,
+    date: post.date,
+    category: { pt: post.category, en: post.category },
+    author: post.author,
+    readingMinutes: post.readingMinutes,
+    title: { pt: post.title, en: post.title },
+    excerpt: { pt: post.excerpt, en: post.excerpt },
+    blocks: post.body,
+    cover: post.cover ?? undefined,
+    legacyPath: post.legacyPath,
+    lang: post.lang,
+  };
+}
+
+export const postsAreMigrated = migrated.length > 0;
+
 export async function getPosts(): Promise<Post[]> {
-  return [...posts].sort((a, b) => b.date.localeCompare(a.date));
+  const source = postsAreMigrated ? migrated.map(fromMigrated) : posts;
+  return [...source].sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
-  return posts.find((post) => post.slug === slug);
+  const all = await getPosts();
+  return all.find((post) => post.slug === slug);
 }
 
 export async function getRelatedPosts(slug: string, limit = 3): Promise<Post[]> {
   const all = await getPosts();
-  return all.filter((post) => post.slug !== slug).slice(0, limit);
+  const current = all.find((post) => post.slug === slug);
+  const sameCategory = all.filter((post) => post.slug !== slug && post.category.pt === current?.category.pt);
+  const rest = all.filter((post) => post.slug !== slug && post.category.pt !== current?.category.pt);
+  return [...sameCategory, ...rest].slice(0, limit);
 }
 
 export async function getNews(): Promise<NewsItem[]> {
   return [...news].sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/**
+ * Arquivo do portfolio antigo: 64 projetos com cliente, ano, disciplinas e capa.
+ * O export do WordPress não trazia narrativa — as histórias e os números entram
+ * à mão nos casos escolhidos, e esses passam a viver em content/projects.ts.
+ */
+const archive = archived as ArchivedProject[];
+
+export async function getArchivedProjects(): Promise<ArchivedProject[]> {
+  const featured = new Set(projects.map((project) => project.slug));
+  return archive.filter((project) => !featured.has(project.slug));
+}
+
+export async function getArchivedProject(slug: string): Promise<ArchivedProject | undefined> {
+  return archive.find((project) => project.slug === slug);
+}
+
+/** Logos de clientes, das galerias Smart Logo do site antigo. */
+export async function getClientLogos(gallery = "Clientes") {
+  const galleries = logoGalleries as LogoGallery[];
+  return galleries.find((item) => item.gallery.toLowerCase() === gallery.toLowerCase())?.logos ?? [];
 }

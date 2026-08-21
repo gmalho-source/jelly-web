@@ -1,0 +1,2572 @@
+[
+ {
+  "slug": "pre-qualificacao-leads-agentes-ia",
+  "legacyPath": "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia/",
+  "title": "Agentes IA",
+  "updated": "2026-07-18",
+  "words": 667,
+  "body": [
+   {
+    "type": "p",
+    "text": "O cenário"
+   },
+   {
+    "type": "p",
+    "text": "[split_line_heading line_reveal_by_space_text_effect=”default” font_style=”h4″ stagger_animation=”true” content_alignment=”default” mobile_content_alignment=”inherit” animation_type=”line-reveal-by-space” link_target=”_self” text_content=”São 22h47. Um lead escreve: “Boa noite, queria mais informações.“"
+   },
+   {
+    "type": "p",
+    "text": "A maioria das empresas responde na manhã seguinte. Ou nunca."
+   },
+   {
+    "type": "p",
+    "text": "O concorrente que respondeu em 30 segundos ficou com o cliente.” text_direction=”default”]"
+   },
+   {
+    "type": "h3",
+    "text": "mais provável qualificar um lead respondendo em menos de 5 minutos"
+   },
+   {
+    "type": "h3",
+    "text": "dos compradores fecham com a primeira empresa que responde"
+   },
+   {
+    "type": "h3",
+    "text": "o tempo médio de resposta B2B que o agente substitui por segundos"
+   },
+   {
+    "type": "h2",
+    "text": "O que é a pré-qualificação de leads com agentes de IA?"
+   },
+   {
+    "type": "p",
+    "text": "A pré-qualificação de leads com agentes de IA é o processo de usar um agente conversacional inteligente para responder de imediato a cada novo contacto comercial, conduzir uma conversa natural de qualificação (orçamento, urgência, perfil, necessidade) e entregar à equipa de vendas apenas os leads com real potencial — já classificados, contextualizados e registados no CRM. Funciona 24 horas por dia em canais como WhatsApp, email, webchat e Instagram."
+   },
+   {
+    "type": "p",
+    "text": "Convém ser claro sobre o que isto não é: não é um chatbot de menus com botões que irrita toda a gente. Não é um autoresponder que diz “obrigado pelo seu contacto”. É um agente parametrizado à medida do seu negócio, que conversa no tom da sua marca, sabe o que pode e não pode responder, e sabe quando passar a conversa a um humano."
+   },
+   {
+    "type": "quote",
+    "text": "O agente qualifica. As pessoas vendem. O objetivo nunca é substituir a sua equipa comercial — é devolver-lhe as horas que hoje gasta a filtrar curiosos, e entregar-lhe conversas que valem o seu tempo."
+   },
+   {
+    "type": "h2",
+    "text": "O que isto faz pelo seu negócio?"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Nenhum lead sem resposta — atendimento em segundos, 24/7, incluindo os 40% que chegam fora de horário.",
+     "Só leads qualificados chegam à equipa — o agente filtra curiosos e aplica os seus critérios comerciais.",
+     "Reuniões marcadas na própria conversa — sem vai-e-vem de emails e chamadas perdidas.",
+     "Tudo no CRM, automaticamente — score, dados e histórico de cada contacto, sem trabalho manual."
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "Como funciona: do clique ao CRM em cinco passos"
+   },
+   {
+    "type": "h3",
+    "text": "E os leads que não respondem? O mesmo sistema faz follow-up contextual em 24–48h e coloca os “mornos” em nurturing até estarem prontos. A qualificação não é um momento. É um processo contínuo."
+   },
+   {
+    "type": "h2",
+    "text": "Alguns verticais que apoiamos"
+   },
+   {
+    "type": "h2",
+    "text": "01"
+   },
+   {
+    "type": "h2",
+    "text": "Imobiliário: a velocidade vale (literalmente) casas"
+   },
+   {
+    "type": "p",
+    "text": "Num teste às 74 maiores mediadoras norte-americanas, 41% nunca respondeu aos leads do próprio site — e apenas 9% respondeu dentro dos 5 minutos críticos. O agente qualifica intenção, orçamento, financiamento, zona e tipologia, e agenda visitas diretamente na agenda do consultor certo."
+   },
+   {
+    "type": "h2",
+    "text": "02"
+   },
+   {
+    "type": "h2",
+    "text": "Clínicas e saúde: da pergunta à consulta marcada"
+   },
+   {
+    "type": "p",
+    "text": "A receção é o estrangulamento de qualquer clínica: o telefone toca enquanto se atende ao balcão, e o pedido de sexta à noite só tem resposta na segunda. O agente responde com informação aprovada pela clínica, faz triagem administrativa, marca na agenda real, envia lembretes que reduzem no-shows e reativa pacientes inativos."
+   },
+   {
+    "type": "h2",
+    "text": "03"
+   },
+   {
+    "type": "h2",
+    "text": "B2B e serviços: menos reuniões desperdiçadas, pipeline mais limpo"
+   },
+   {
+    "type": "p",
+    "text": "O custo no B2B não está só no lead perdido — está na reunião de 45 minutos com quem nunca poderia comprar. O agente aplica o seu framework de qualificação (BANT ou variante à medida) antes de qualquer humano investir tempo, agenda a discovery com o comercial certo e mantém em nurturing os “ainda não”."
+   },
+   {
+    "type": "h2",
+    "text": "Tudo o que precisa saber"
+   },
+   {
+    "type": "p",
+    "text": "Não. Vai substituir a pior parte do trabalho dela. A triagem repetitiva passa para o agente; a relação e o fecho continuam humanos, com mais tempo e melhor contexto. O agente responde apenas com base em informação aprovada por si e escala para humano quando sai desse perímetro. Toda a conversa fica registada e auditável. Preferem falar com quem responde. A alternativa real não é uma pessoa disponível 24/7, é o silêncio até segunda-feira. E quando o cliente pede um humano, o agente entrega a conversa imediatamente. Sim. Integramos com os principais CRM do mercado. E se ainda não tem CRM, estruturamos um como parte do projeto. Um projeto típico vai de kickoff a go-live em 4 a 6 semanas: diagnóstico e desenho, parametrização e integração, testes supervisionados e lançamento faseado. Qualquer uma. Para começar, em Português, inglês e as línguas relevantes para o seu mercado, com deteção automática do idioma do lead. Depende dos canais, integrações e volume de conversas. O investimento estrutura-se em projeto de implementação + acompanhamento mensal de otimização, dimensionado em proposta após o diagnóstico gratuito."
+   }
+  ]
+ },
+ {
+  "slug": "login-faturacao-recuperacao-de-email",
+  "legacyPath": "/login-faturacao-recuperacao-de-email/",
+  "title": "Login Faturação – Recuperação de Email",
+  "updated": "2025-12-08",
+  "words": 97,
+  "body": [
+   {
+    "type": "p",
+    "text": "Submissão de faturas"
+   },
+   {
+    "type": "p",
+    "text": "Para receber o link de acesso ao sistema de submissão de faturas da Jelly, por favor, introduza o seu endereço de e-mail e clique em “Receber link de acesso.”."
+   },
+   {
+    "type": "h3",
+    "text": "Dificuldade em aceder à sua área reservada?"
+   },
+   {
+    "type": "p",
+    "text": "Por favor, preencha os campos do formulário, para que possamos verificar o acesso."
+   },
+   {
+    "type": "p",
+    "text": "NameEste campo é para efeitos de validação e deve ser mantido inalterado.Nome(Obrigatório)Email(Obrigatório) NIF(Obrigatório)Consentimento Concordo e aceito a Política de Privacidade da Jelly. Submeter"
+   },
+   {
+    "type": "p",
+    "text": "Regressar à página de login."
+   },
+   {
+    "type": "p",
+    "text": "© 2024 JELLY – Agência de Comunicação e Marketing Digital. | Política de Privacidade | R.A.L."
+   },
+   {
+    "type": "p",
+    "text": "JTNDdWwlMjBjbGFzcyUzRCUyMnNvY2lhbCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGdHdpdHRlci5jb20lMkZqZWxseV9wdCUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRXgtdHdpdHRlciUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJpY29uLXNhbGllbnQteC10d2l0dGVyJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGd3d3LmZhY2Vib29rLmNvbSUyRkplbGx5RGlnaXRhbEFnZW5jeSUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRWZhY2Vib29rJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtZmFjZWJvb2slMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NhJTIwdGFyZ2V0JTNEJTIyX2JsYW5rJTIyJTIwcmVsJTNEJTIybm9vcGVuZXIlMjIlMjBocmVmJTNEJTIyaHR0cHMlM0ElMkYlMkZ3d3cubGlua2VkaW4uY29tJTJGY29tcGFueSUyRmplbGx5Y29kZS0tLXdlYi0lMjZhbXAlM0ItZ3JhcGhpYy1kZXNpZ24lMjIlM0UlM0NzcGFuJTIwY2xhc3MlM0QlMjJzY3JlZW4tcmVhZGVyLXRleHQlMjIlM0VsaW5rZWRpbiUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJmYSUyMGZhLWxpbmtlZGluJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGd3d3LnlvdXR1YmUuY29tJTJGY2hhbm5lbCUyRlVDcXVOelFZZmdjR3l0Q1lSUVEtcVVFQSUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRXlvdXR1YmUlM0MlMkZzcGFuJTNFJTNDaSUyMGNsYXNzJTNEJTIyZmElMjBmYS15b3V0dWJlLXBsYXklMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NhJTIwdGFyZ2V0JTNEJTIyX2JsYW5rJTIyJTIwcmVsJTNEJTIybm9vcGVuZXIlMjIlMjBocmVmJTNEJTIyaHR0cHMlM0ElMkYlMkZpbnN0YWdyYW0uY29tJTJGamVsbHkuYWdlbmN5JTIyJTNFJTNDc3BhbiUyMGNsYXNzJTNEJTIyc2NyZWVuLXJlYWRlci10ZXh0JTIyJTNFaW5zdGFncmFtJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtaW5zdGFncmFtJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGb3Blbi5zcG90aWZ5LmNvbSUyRnVzZXIlMkYzMXBweXVuaW9jdTZjYWdhbWR2b29yNzVxZjdlJTNGc2klM0RkYzBjODM0MGYxNjg0MGEwJTIyJTNFJTNDc3BhbiUyMGNsYXNzJTNEJTIyc2NyZWVuLXJlYWRlci10ZXh0JTIyJTNFc3BvdGlmeSUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJpY29uLXNhbGllbnQtc3BvdGlmeSUyMiUyMGFyaWEtaGlkZGVuJTNEJTIydHJ1ZSUyMiUzRSUzQyUyRmklM0UlM0MlMkZhJTNFJTNDJTJGbGklM0UlM0NsaSUzRSUzQ2ElMjBocmVmJTNEJTIybWFpbHRvJTNBaGVsbG8lNDBqZWxseS5wdCUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRWVtYWlsJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtZW52ZWxvcGUlMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGdWwlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "consultoria-e-sistemas-crm-erp-cdp",
+  "legacyPath": "/servicos/consultoria-e-sistemas-crm-erp-cdp/",
+  "title": "Consultoria e Sistemas",
+  "updated": "2025-10-05",
+  "words": 119,
+  "body": [
+   {
+    "type": "p",
+    "text": "Onde podemos ajudar"
+   },
+   {
+    "type": "h3",
+    "text": "Implementação ERP / CRM / CDP"
+   },
+   {
+    "type": "p",
+    "text": "Consultoria na parametrização e implementação de sistemas"
+   },
+   {
+    "type": "p",
+    "text": "ERP,"
+   },
+   {
+    "type": "p",
+    "text": "CRM e CDP"
+   },
+   {
+    "type": "p",
+    "text": "para alinhar marketing, vendas, operações e suporte."
+   },
+   {
+    "type": "h3",
+    "text": "LegalTech"
+   },
+   {
+    "type": "p",
+    "text": "Somos parceiros certificados Iubenda e especialistas na implementação de conformidade de requisitos legais."
+   },
+   {
+    "type": "h3",
+    "text": "Consultoria Digital"
+   },
+   {
+    "type": "p",
+    "text": "Diagnóstico, arquitetura e execução de estratégias de transformação digital."
+   },
+   {
+    "type": "h3",
+    "text": "Infraestrutura e Suporte"
+   },
+   {
+    "type": "p",
+    "text": "Suporte ao cliente experiente e monitorização do desempenho e estabilidade dos sistemas que sustentam a operação digital."
+   },
+   {
+    "type": "h2",
+    "text": "Consultoria e Sistemas"
+   },
+   {
+    "type": "h2",
+    "text": "Parceiros e Especialização Técnica"
+   },
+   {
+    "type": "p",
+    "text": "Somos parceiros certificados da Pipedrive (CRM) e Iubenda (LegalTech), garantindo a implementação das melhores práticas em gestão comercial e conformidade legal digital."
+   },
+   {
+    "type": "p",
+    "text": "A nossa equipa tem também experiência comprovada em ecossistemas Shopify, Zoho, WordPress, Google Workspace e outras integrações personalizadas."
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   }
+  ]
+ },
+ {
+  "slug": "inteligencia-artificial",
+  "legacyPath": "/inteligencia-artificial/",
+  "title": "Inteligência Artificial",
+  "updated": "2026-07-17",
+  "words": 155,
+  "body": [
+   {
+    "type": "p",
+    "text": "Onde podemos ajudar"
+   },
+   {
+    "type": "h3",
+    "text": "Consultoria estratégica em IA aplicada ao negócio"
+   },
+   {
+    "type": "p",
+    "text": "Transformar dados em insights acionáveis para orientar decisões, prever tendências e identificar oportunidades de crescimento com base em evidências reais."
+   },
+   {
+    "type": "h3",
+    "text": "Implementação de agentes e copilotos internos"
+   },
+   {
+    "type": "p",
+    "text": "Eliminar tarefas repetitivas, integrar plataformas e criar fluxos automatizados que libertam tempo e aumentam a produtividade das equipas."
+   },
+   {
+    "type": "h3",
+    "text": "Otimização de websites e conteúdos para agentes de pesquisa IA"
+   },
+   {
+    "type": "p",
+    "text": "Preparamos websites e conteúdos para serem compreendidos e recomendados por agentes de pesquisa IA, garantindo relevância, contexto e autoridade digital."
+   },
+   {
+    "type": "h3",
+    "text": "Marketing e vendas"
+   },
+   {
+    "type": "p",
+    "text": "Personalização de conteúdos, otimização de campanhas e melhorar a performance digital com automação, segmentação e análise preditiva suportadas por IA."
+   },
+   {
+    "type": "h2",
+    "text": "Vamos transformar o seu negócio?"
+   },
+   {
+    "type": "p",
+    "text": "Não há hype. Há propósito."
+   },
+   {
+    "type": "p",
+    "text": "Cada projeto começa com uma análise clara das oportunidades reais de adoção da IA no negócio, onde faz sentido e onde traz retorno."
+   },
+   {
+    "type": "p",
+    "text": "Desenhamos estratégias híbridas, em que a"
+   },
+   {
+    "type": "p",
+    "text": "tecnologia serve o pensamento"
+   },
+   {
+    "type": "p",
+    "text": ", e não o contrário."
+   }
+  ]
+ },
+ {
+  "slug": "calendar-gmalho",
+  "legacyPath": "/calendar-gmalho/",
+  "title": "calendar gmalho",
+  "updated": "2026-06-20",
+  "words": 0,
+  "body": []
+ },
+ {
+  "slug": "estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db",
+  "legacyPath": "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db/",
+  "title": "Estratégia Digital e Crescimento das Vendas by Informa D&#038;B",
+  "updated": "2025-06-21",
+  "words": 299,
+  "body": [
+   {
+    "type": "p",
+    "text": "Estratégia digital B2B, em esteróides. Uma estratégia de marketing digital ligada à terra e com impacto real no crescimento do seu negócio. JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMGRhdGEtdGYtaGlkZGVuJTNEJTIydXRtX3NvdXJjZSUzRGplbGx5JTIwc2l0ZSUyQ3V0bV9tZWRpdW0lM0Rob21lJTIyJTIwc3R5bGUlM0QlMjJhbGwlM0F1bnNldCUzQmZvbnQtZmFtaWx5JTNBSGVsdmV0aWNhJTJDQXJpYWwlMkNzYW5zLXNlcmlmJTNCZGlzcGxheSUzQWlubGluZS1ibG9jayUzQm1heC13aWR0aCUzQTEwMCUyNSUzQndoaXRlLXNwYWNlJTNBbm93cmFwJTNCb3ZlcmZsb3clM0FoaWRkZW4lM0J0ZXh0LW92ZXJmbG93JTNBZWxsaXBzaXMlM0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIzZWI3MjZiJTNCY29sb3IlM0ElMjNmZmZmZmYlM0Jmb250LXNpemUlM0EyMHB4JTNCYm9yZGVyLXJhZGl1cyUzQTlweCUzQnBhZGRpbmclM0EwJTIwMzNweCUzQmZvbnQtd2VpZ2h0JTNBYm9sZCUzQmhlaWdodCUzQTUwcHglM0JjdXJzb3IlM0Fwb2ludGVyJTNCbGluZS1oZWlnaHQlM0E1MHB4JTNCdGV4dC1hbGlnbiUzQWNlbnRlciUzQm1hcmdpbiUzQTAlM0J0ZXh0LWRlY29yYXRpb24lM0Fub25lJTNCJTIyJTNFVmFtb3MlMjBmYWxhciUzRiUzQyUyRmJ1dHRvbiUzRSUzQ3NjcmlwdCUyMHNyYyUzRCUyMiUyRiUyRmVtYmVkLnR5cGVmb3JtLmNvbSUyRm5leHQlMkZlbWJlZC5qcyUyMiUzRSUzQyUyRnNjcmlwdCUzRQ=="
+   },
+   {
+    "type": "p",
+    "text": "Combinando a inteligência de dados da Informa D&B com a execução estratégica da Jelly, transformamos oportunidades em resultados reais:"
+   },
+   {
+    "type": "p",
+    "text": "mais clientes, mais vendas."
+   },
+   {
+    "type": "p",
+    "text": "Digital sem propósito é ruído. Comercial sem visão é esforço. Juntas, são estratégia. E estratégia move resultados."
+   },
+   {
+    "type": "h2",
+    "text": "Negócio B2B? Descubra como transformar dados em crescimento real."
+   },
+   {
+    "type": "h3",
+    "text": "Diagnóstico e Análise da Carteira"
+   },
+   {
+    "type": "h3",
+    "text": "Atrair novos clientes"
+   },
+   {
+    "type": "h3",
+    "text": "Aumentar vendas na carteira atual"
+   },
+   {
+    "type": "h3",
+    "text": "Estratégia de marketing digital com impacto no terreno."
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Quem são e quanto valem os novos clientes a conquistar?",
+     "Qual o potencial de crescimento na carteira de clientes?",
+     "Potencial de crescimento do negócio em vendas."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Já imaginou esta ferramenta comercial poderosa ligada à nossa proposta criativa e estratégica de marketing digital?"
+   },
+   {
+    "type": "p",
+    "text": "Crescimento potencial da faturação inicial por tipo de cliente – clientes atuais com potencial de crescimento e novos clientes."
+   },
+   {
+    "type": "p",
+    "text": "Insights que permitem maximizar o retorno sobre o investimento em marketing e vendas.​ Combinando a inteligência de dados da Informa D&B com a execução estratégica da Jelly, transformamos oportunidades em resultados reais. Combinando dados da Informa D&B com a visão estratégica da Jelly, identificamos quem são os seus clientes mais valiosos — e onde estão os próximos."
+   },
+   {
+    "type": "p",
+    "text": "Saiba como"
+   },
+   {
+    "type": "h2",
+    "text": "Levar o seu negócio B2B a um outro nível de crescimento."
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMGRhdGEtdGYtaGlkZGVuJTNEJTIydXRtX3NvdXJjZSUzRGplbGx5JTIwc2l0ZSUyQ3V0bV9tZWRpdW0lM0Rob21lJTIyJTIwc3R5bGUlM0QlMjJhbGwlM0F1bnNldCUzQmZvbnQtZmFtaWx5JTNBSGVsdmV0aWNhJTJDQXJpYWwlMkNzYW5zLXNlcmlmJTNCZGlzcGxheSUzQWlubGluZS1ibG9jayUzQm1heC13aWR0aCUzQTEwMCUyNSUzQndoaXRlLXNwYWNlJTNBbm93cmFwJTNCb3ZlcmZsb3clM0FoaWRkZW4lM0J0ZXh0LW92ZXJmbG93JTNBZWxsaXBzaXMlM0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIzZWI3MjZiJTNCY29sb3IlM0ElMjNmZmZmZmYlM0Jmb250LXNpemUlM0EyMHB4JTNCYm9yZGVyLXJhZGl1cyUzQTlweCUzQnBhZGRpbmclM0EwJTIwMzNweCUzQmZvbnQtd2VpZ2h0JTNBYm9sZCUzQmhlaWdodCUzQTUwcHglM0JjdXJzb3IlM0Fwb2ludGVyJTNCbGluZS1oZWlnaHQlM0E1MHB4JTNCdGV4dC1hbGlnbiUzQWNlbnRlciUzQm1hcmdpbiUzQTAlM0J0ZXh0LWRlY29yYXRpb24lM0Fub25lJTNCJTIyJTNFVmFtb3MlMjBmYWxhciUzRiUzQyUyRmJ1dHRvbiUzRSUzQ3NjcmlwdCUyMHNyYyUzRCUyMiUyRiUyRmVtYmVkLnR5cGVmb3JtLmNvbSUyRm5leHQlMkZlbWJlZC5qcyUyMiUzRSUzQyUyRnNjcmlwdCUzRQ=="
+   },
+   {
+    "type": "p",
+    "text": "SOBRE A INFORMA D&B"
+   },
+   {
+    "type": "p",
+    "text": "Informa D&B"
+   },
+   {
+    "type": "p",
+    "text": "é especialista no conhecimento do tecido empresarial. Através de análises inovadoras, disponibiliza o acesso a informação atualizada e relevante sobre a atividade de empresas e gestores, fundamental para a condução dos negócios dos seus clientes. A Informa D&B está integrada na maior rede mundial de informação empresarial, a D&B Worldwide Network, com acesso aos dados de mais de 500 milhões de agentes económicos em todo o mundo. A base de dados empresarial da Informa D&B é a mais utilizada em Portugal, servindo mais de 500 mil utilizadores através das duas marcas: INFORMA e eInforma."
+   }
+  ]
+ },
+ {
+  "slug": "impacto-do-comercio-eletronico-no-setor-de-i-gaming",
+  "legacyPath": "/impacto-do-comercio-eletronico-no-setor-de-i-gaming/",
+  "title": "Impacto do comércio eletrônico no setor de i-Gaming",
+  "updated": "2024-12-30",
+  "words": 405,
+  "body": [
+   {
+    "type": "p",
+    "text": "Impacto do comércio eletrônico no setor de i-Gaming"
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "A esfera do comércio eletrônico mudou nosso mundo. A possibilidade de comprar produtos e solicitar serviços pela Internet tornou a vida muito mais conveniente para as pessoas modernas. Além disso, o comércio eletrônico tem um impacto em outros aspectos de nossas vidas. E os jogos de azar não são exceção."
+   },
+   {
+    "type": "p",
+    "text": "Como mostram as investigações, o mercado de comércio eletrônico em Portugal está crescendo ativamente. Apesar do território relativamente pequeno do país, Portugal demonstra um desenvolvimento econômico estável. O país tem uma infraestrutura digital bem desenvolvida, o que impulsiona a popularidade do comércio on-line e o uso de tecnologia moderna."
+   },
+   {
+    "type": "p",
+    "text": "O setor de iGaming não é menos popular em Portugal. As estatísticas mostram que a receita de apostas esportivas e cassinos on-line aumenta anualmente, e o número de usuários dessas plataformas continua a crescer. As lojas e os serviços on-line estão apoiando ativamente esse crescimento, integrando-se ao ecossistema. Mas como exatamente essa influência se manifesta?"
+   },
+   {
+    "type": "p",
+    "text": "Um dos principais fatores de influência do comércio eletrônico no iGaming é o uso de pagamentos on-line. Sem várias ferramentas de pagamento, nem as lojas on-line nem os cassinos on-line poderiam funcionar plenamente."
+   },
+   {
+    "type": "p",
+    "text": "Isso é fácil de perceber ao examinar as plataformas populares que oferecem uma variedade de caça-níqueis de vídeo. Há estatísticas dos mais populares, como Gates of Olympus, Sweet Bonanza e Fortune Tiger, sendo este último o mais popular entre os jogadores portugueses. Ao procurarmos informações, encontramos o site fortune-tiger-slots.org, onde muitos portugueses deixaram comentários reais e compartilharam suas experiências de jogo."
+   },
+   {
+    "type": "p",
+    "text": "Outra característica comum dos varejistas e cassinos on-line é o uso de aplicativos móveis. Em Portugal, os smartphones são populares entre todas as faixas etárias e as organizações estão ativamente criando aplicativos para facilitar a interação com os clientes. Os cassinos on-line sem aplicativos móveis no ambiente competitivo de hoje simplesmente não terão chance de lutar pelos usuários."
+   },
+   {
+    "type": "p",
+    "text": "Os cassinos e as casas de apostas adotaram o serviço de atendimento ao cliente dos varejistas on-line. Hoje, todo cliente de cassino on-line pode usar o bate-papo on-line para entrar em contato com o atendimento ao cliente em tempo real. Além disso, é possível enviar um e-mail ou ligar para os números de telefone. Normalmente, há um formulário de feedback nos sites e aplicativos. E, nesse caso, as oportunidades dos cassinos não são inferiores às das lojas que estão em contato com os clientes atuais e potenciais 24 horas por dia."
+   }
+  ]
+ },
+ {
+  "slug": "login-faturacao",
+  "legacyPath": "/login-faturacao/",
+  "title": "Login Faturação",
+  "updated": "2025-10-06",
+  "words": 80,
+  "body": [
+   {
+    "type": "h2",
+    "text": "Submissão de faturas"
+   },
+   {
+    "type": "p",
+    "text": "Para receber o link de acesso ao sistema de submissão de faturas da Jelly, por favor, introduza o seu endereço de e-mail e clique em “Receber link de acesso.”."
+   },
+   {
+    "type": "p",
+    "text": "Please enter your username or email address. You will receive an email message to log in."
+   },
+   {
+    "type": "p",
+    "text": "Username or Email Address"
+   },
+   {
+    "type": "p",
+    "text": "Dificuldade em aceder à sua área reservada? Clique para pedir ajuda."
+   },
+   {
+    "type": "p",
+    "text": "© 2024 JELLY – Agência de Comunicação e Marketing Digital. | Política de Privacidade | R.A.L."
+   },
+   {
+    "type": "p",
+    "text": "JTNDdWwlMjBjbGFzcyUzRCUyMnNvY2lhbCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGdHdpdHRlci5jb20lMkZqZWxseV9wdCUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRXgtdHdpdHRlciUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJpY29uLXNhbGllbnQteC10d2l0dGVyJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGd3d3LmZhY2Vib29rLmNvbSUyRkplbGx5RGlnaXRhbEFnZW5jeSUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRWZhY2Vib29rJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtZmFjZWJvb2slMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NhJTIwdGFyZ2V0JTNEJTIyX2JsYW5rJTIyJTIwcmVsJTNEJTIybm9vcGVuZXIlMjIlMjBocmVmJTNEJTIyaHR0cHMlM0ElMkYlMkZ3d3cubGlua2VkaW4uY29tJTJGY29tcGFueSUyRmplbGx5Y29kZS0tLXdlYi0lMjZhbXAlM0ItZ3JhcGhpYy1kZXNpZ24lMjIlM0UlM0NzcGFuJTIwY2xhc3MlM0QlMjJzY3JlZW4tcmVhZGVyLXRleHQlMjIlM0VsaW5rZWRpbiUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJmYSUyMGZhLWxpbmtlZGluJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGd3d3LnlvdXR1YmUuY29tJTJGY2hhbm5lbCUyRlVDcXVOelFZZmdjR3l0Q1lSUVEtcVVFQSUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRXlvdXR1YmUlM0MlMkZzcGFuJTNFJTNDaSUyMGNsYXNzJTNEJTIyZmElMjBmYS15b3V0dWJlLXBsYXklMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NhJTIwdGFyZ2V0JTNEJTIyX2JsYW5rJTIyJTIwcmVsJTNEJTIybm9vcGVuZXIlMjIlMjBocmVmJTNEJTIyaHR0cHMlM0ElMkYlMkZpbnN0YWdyYW0uY29tJTJGamVsbHkuYWdlbmN5JTIyJTNFJTNDc3BhbiUyMGNsYXNzJTNEJTIyc2NyZWVuLXJlYWRlci10ZXh0JTIyJTNFaW5zdGFncmFtJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtaW5zdGFncmFtJTIyJTIwYXJpYS1oaWRkZW4lM0QlMjJ0cnVlJTIyJTNFJTNDJTJGaSUzRSUzQyUyRmElM0UlM0MlMkZsaSUzRSUzQ2xpJTNFJTNDYSUyMHRhcmdldCUzRCUyMl9ibGFuayUyMiUyMHJlbCUzRCUyMm5vb3BlbmVyJTIyJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGb3Blbi5zcG90aWZ5LmNvbSUyRnVzZXIlMkYzMXBweXVuaW9jdTZjYWdhbWR2b29yNzVxZjdlJTNGc2klM0RkYzBjODM0MGYxNjg0MGEwJTIyJTNFJTNDc3BhbiUyMGNsYXNzJTNEJTIyc2NyZWVuLXJlYWRlci10ZXh0JTIyJTNFc3BvdGlmeSUzQyUyRnNwYW4lM0UlM0NpJTIwY2xhc3MlM0QlMjJpY29uLXNhbGllbnQtc3BvdGlmeSUyMiUyMGFyaWEtaGlkZGVuJTNEJTIydHJ1ZSUyMiUzRSUzQyUyRmklM0UlM0MlMkZhJTNFJTNDJTJGbGklM0UlM0NsaSUzRSUzQ2ElMjBocmVmJTNEJTIybWFpbHRvJTNBaGVsbG8lNDBqZWxseS5wdCUyMiUzRSUzQ3NwYW4lMjBjbGFzcyUzRCUyMnNjcmVlbi1yZWFkZXItdGV4dCUyMiUzRWVtYWlsJTNDJTJGc3BhbiUzRSUzQ2klMjBjbGFzcyUzRCUyMmZhJTIwZmEtZW52ZWxvcGUlMjIlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlM0UlM0MlMkZpJTNFJTNDJTJGYSUzRSUzQyUyRmxpJTNFJTIwJTIwJTIwJTIwJTIwJTIwJTNDJTJGdWwlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "envio-de-faturas",
+  "legacyPath": "/envio-de-faturas/",
+  "title": "Envio de faturas",
+  "updated": "2024-06-24",
+  "words": 0,
+  "body": []
+ },
+ {
+  "slug": "equipa-jelly",
+  "legacyPath": "/equipa-jelly/",
+  "title": "Equipa Jelly",
+  "updated": "2026-05-11",
+  "words": 1306,
+  "body": [
+   {
+    "type": "h3",
+    "text": "Jelly"
+   },
+   {
+    "type": "p",
+    "text": "[team_member image_url=”218290″ bio_image_url=”217040″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Alícia Coquim” job_position=”Content Marketing Manager” team_member_bio=”Sou a Alícia e sou de Aveiro – o que significa que, de vez em quando, o “v“ foge e dá lugar ao “b“. Mas não é só na fala que gosto de dar o meu toque especial. Sempre fui apaixonada por livros, especialmente por histórias que me transportam para outros mundos, e foi isso que me levou ao marketing: uma área onde posso criar, contar narrativas e dar asas à minha imaginação."
+   },
+   {
+    "type": "p",
+    "text": "Mas nem só de palavras e criatividade se faz a minha vida. Tenho uma costela agregada ao desporto, especialmente o basquetebol e a natação, que pratiquei durante a minha adolescência. Disciplina, estratégia e espírito de equipa tornaram-se parte da minha essência. No entanto, existe uma pequena (ou talvez grande) controvérsia na minha história: adoro comer."
+   },
+   {
+    "type": "p",
+    "text": "Entre livros, criatividade, desporto e boa comida, sou um equilíbrio improvável, mas que faz todo o sentido para mim. Afinal a vida é para ser vivida intensamente.” social_icon_1=”fa fa-linkedin” image_size=”full”] [team_member image_url=”218293″ bio_image_url=”217102″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Anderson Carlos” job_position=”Senior Digital Designer” team_member_bio=”Com mais de 12 anos de experiência, já trabalhou com grandes marcas como a Bayer e Kepler. A sua trajetória é marcada por criação de identidades visuais impactantes, soluções estratégicas de design e uma paixão por transformar ideias em experiências visuais memoráveis."
+   },
+   {
+    "type": "p",
+    "text": "Mas não é só de pixels e cores que vive. É um apaixonado por tipografia, um curioso por novas tecnologias e um entusiasta de branding. Quando não está mergulhado em projetos, encontramo-lo a explorar tendências de design, a estudar o comportamento do consumidor ou em busca de inspiração em tudo, desde arquitetura até música."
+   },
+   {
+    "type": "p",
+    "text": "Vive no equilíbrio entre criatividade e estratégia, entre o minimalismo e o ousado, entre o digital e o físico. Porque, no fim, design não é apenas sobre como as coisas parecem, mas sobre como elas funcionam, comunicam e emocionam.” social_icon_3=”fa fa-linkedin” social_link_3=”https://www.linkedin.com/in/cristina-craveiro-87aaa11b9/” image_size=”full”] [team_member image_url=”218295″ bio_image_url=”21019″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Cristina Craveiro” job_position=”Senior Web Developer” team_member_bio=”Cristina Craveiro depois de terminar a sua licenciatura em Engenharia de Sistemas e Informática no Instituto Politécnico de Viseu, rumou em direção a Lisboa onde teve oportunidade de trabalhar em projetos emocionantes solidificando a sua paixão pela programação e análise de sistemas, sempre com o foco em tornar o trabalho dos nossos clientes mais fácil e simplificado."
+   },
+   {
+    "type": "p",
+    "text": "Adora ler, ver filmes e viajar.” social_icon_3=”fa fa-linkedin” social_link_3=”https://www.linkedin.com/in/cristina-craveiro-87aaa11b9/” image_size=”full”] [team_member image_url=”218296″ bio_image_url=”218258″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Daniela Costa” job_position=”Marketing Account Manager” team_member_bio=”Licenciada em Marketing e Publicidade, integra a equipa da Jelly, onde combina criatividade, estratégia e boa disposição para dar vida a ideias e transformá-las em projetos que fazem a diferença. Apaixonada por comunicação, gosta de pensar fora da caixa e de encontrar soluções que façam sentido tanto para as marcas como para as pessoas."
+   },
+   {
+    "type": "p",
+    "text": "Com um espírito colaborativo e uma curiosidade constante, acredita que os melhores resultados nascem do trabalho em equipa e da vontade de aprender todos os dias. Encarar desafios faz parte da sua forma de estar, sempre com foco em criar, evoluir e fazer a diferença.” image_size=”full”] [team_member image_url=”218297″ bio_image_url=”21073″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Fausto Pinto” job_position=”Web Dev & Support” team_member_bio=”Fausto Pinto, mais conhecido como “Takumi“, é o nosso “velhote“."
+   },
+   {
+    "type": "p",
+    "text": "Chegou à Jelly em 2014 como Developer, mas para além dos zeros e uns, dá uma mãozinha aos nossos clientes… para garantir que nenhum problema fique por resolver."
+   },
+   {
+    "type": "p",
+    "text": "Tem uma grande paixão por carros, por boa música e é fã de animes.” social_icon_1=”fa fa-twitter” social_icon_2=”fa fa-youtube-play” image_size=”full”] [team_member image_url=”218298″ bio_image_url=”216548″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Filipa Barata” job_position=”Marketing Account Manager” team_member_bio=”Filipa é licenciada em Gestão e possui um mestrado em Marketing, complementado por uma pós-graduação em Gestão de Projetos em Saúde. Desde o início da sua carreira, tem uma ligação forte à área da saúde, sempre atuando nas áreas de gestão e marketing."
+   },
+   {
+    "type": "p",
+    "text": "Com um espírito entusiasta e colaborativo, acredita que o trabalho em equipa é essencial para transformar ideias em projetos incríveis e para superar desafios. Está constantemente motivada a abraçar novos desafios e a fazer a diferença, tornando as suas visões uma realidade.” social_icon_1=”fa fa-linkedin-square” image_size=”full”] [team_member image_url=”218624″ bio_image_url=”218627″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Filipa Santos” job_position=”PPC Manager” team_member_bio=”Fascinada por marketing, publicidade e vendas, fiz mestrado em Marketing e Inovação. Diria que são estas as áreas que me puxam e onde gosto de estar sempre a aprender mais."
+   },
+   {
+    "type": "p",
+    "text": "Acredito genuinamente que o conhecimento não ocupa lugar, por isso procuro constantemente evoluir e desafiar-me. Fora do lado profissional, gosto de manter o equilíbrio: pratico desporto regularmente, com um gosto especial pelo kickboxing, que me ajuda a libertar energia e manter o foco. Adoro ler – é uma das minhas formas favoritas de viajar, mas também gosto de apanhar um avião sempre que posso. Para além disso, adoro animais e sou uma assumida cat lover.” social_icon_1=”fa fa-linkedin-square” image_size=”full”] [team_member image_url=”218308″ bio_image_url=”218242″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Frederico Teopisto” job_position=”Head of Design” team_member_bio=”Licenciado em Design Gráfico e com quase uma década de experiência, Frederico trabalha entre branding, identidade visual e editorial, a criar sistemas que fazem sentido na forma e na função. Na Jelly, transforma ideias em marcas claras, consistentes e prontas para crescer."
+   },
+   {
+    "type": "p",
+    "text": "Fora do ecrã, mantém uma ligação próxima à natureza e ao lado manual de criar e reparar. Está sempre a testar, desmontar e reconstruir, com uma mentalidade de artesão dentro e fora do estúdio.” social_icon_1=”fa fa-linkedin-square” social_icon_2=”fa fa-instagram” social_icon_3=”fa fa-facebook” image_size=”full”] [team_member image_url=”218300″ bio_image_url=”20942″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Gonçalo Malho Rodrigues” job_position=”Founder & CEO” team_member_bio=”Com um percurso ligado ao marketing, à tecnologia e ao empreendedorismo, Gonçalo Malho Rodrigues trabalha diariamente com marcas e empresas que procuram mais do que visibilidade: procuram clareza, foco e resultados sustentáveis. A sua abordagem parte sempre do mindset e da compreensão profunda do negócio, antes das ferramentas ou canais."
+   },
+   {
+    "type": "p",
+    "text": "Ao longo do seu percurso, tem desenvolvido e liderado projetos em áreas como branding, performance digital, análise de mercado e inovação, cruzando pensamento estratégico com uma forte orientação prática. Acredita que boas ideias só têm valor quando conseguem ser implementadas e medidas."
+   },
+   {
+    "type": "p",
+    "text": "Na Jelly, lidera a visão estratégica da agência, ajudando equipas e clientes a tomar melhores decisões num contexto digital cada vez mais complexo e, por isso, desafiante.” social_icon_1=”fa fa-linkedin-square” social_icon_2=”fa fa-instagram” social_icon_3=”fa fa-facebook” social_link_1=”https://www.linkedin.com/in/gmalho/” image_size=”full”] [team_member image_url=”218312″ bio_image_url=”21065″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Rafaela Barros” job_position=”Marketing Account Manager” team_member_bio=”A Rafaela tem um mestrado em Marketing e Promoção Turística pelo IPLeiria. Com o objetivo de expandir horizontes para além do setor do turismo, decidiu explorar novos desafios em diferentes mercados, adquirindo uma visão estratégica mais abrangente ao integrar a Jelly em 2022."
+   },
+   {
+    "type": "p",
+    "text": "Determinada, curiosa e metódica, encara a aprendizagem e os desafios como uma verdadeira aventura. Acredita que, além da superação constante, o espírito crítico e o trabalho em equipa são pilares fundamentais para o sucesso. Por isso, está sempre motivada para novos projetos."
+   },
+   {
+    "type": "p",
+    "text": "Entre um desafio e outro, dá um saltinho à praia para recarregar energias e procura inspiração em viagens e passeios, sempre com a curiosidade de experimentar novos sabores e descobrir diferentes gastronomias. O desporto faz parte do seu dia a dia, equilibrando a energia que coloca em tudo o que faz.” social_icon_1=”fa fa-linkedin” social_link_1=”https://www.linkedin.com/in/rafaelabarros00/” image_size=”full”] [team_member image_url=”218313″ bio_image_url=”21061″ team_memeber_style=”bio_fullscreen” image_loading=”default” team_member_bio_full_html=”simple” name=”Raquel Reis” job_position=”Senior Marketing Strategist & Content Manager” team_member_bio=”Da saúde oral para o marketing digital. É verdade! Saiu da zona de (des)conforto e abraçou a mudança. Fez a sua especialização em Estratégia de Marketing Digital na Lisbon Digital School e pelo caminho foi fazendo outras formações em copywriting e social media."
+   },
+   {
+    "type": "p",
+    "text": "Procura desenvolver várias skills, mas estratégias de marketing e comunicação é o que a fascina. Acredita que uma boa estratégia apenas acontece com trabalho de equipa."
+   },
+   {
+    "type": "p",
+    "text": "Nos tempos livres é uma devoradora de séries e filmes. Adora ficção e fantasia. Se fosse uma personagem de um filme era claramente uma vampira.‍♀️” social_icon_1=”fa fa-facebook” social_icon_2=”fa fa-instagram” social_icon_3=”fa fa-linkedin” social_link_3=”#” image_size=”full”] Como vê a JELLY hoje, em comparação com a expectativa inicial?"
+   }
+  ]
+ },
+ {
+  "slug": "noticias-eventos",
+  "legacyPath": "/noticias-eventos/",
+  "title": "Notícias &#038; Eventos",
+  "updated": "2026-07-05",
+  "words": 3,
+  "body": [
+   {
+    "type": "p",
+    "text": "NOTÍCIAS & EVENTOS"
+   }
+  ]
+ },
+ {
+  "slug": "blog",
+  "legacyPath": "/blog/",
+  "title": "Blog",
+  "updated": "2026-06-20",
+  "words": 31,
+  "body": [
+   {
+    "type": "p",
+    "text": "Pesquisar"
+   },
+   {
+    "type": "p",
+    "text": "Results for"
+   },
+   {
+    "type": "p",
+    "text": "{phrase}"
+   },
+   {
+    "type": "p",
+    "text": "{results_count}"
+   },
+   {
+    "type": "p",
+    "text": "{results_count_total}"
+   },
+   {
+    "type": "p",
+    "text": "Displaying"
+   },
+   {
+    "type": "p",
+    "text": "{results_count}"
+   },
+   {
+    "type": "p",
+    "text": "results of"
+   },
+   {
+    "type": "p",
+    "text": "{results_count_total}"
+   },
+   {
+    "type": "p",
+    "text": "Mais resultados..."
+   },
+   {
+    "type": "p",
+    "text": "Generic filters Correspondência exata apenas Search in excerpt"
+   },
+   {
+    "type": "p",
+    "text": "Todos os artigos"
+   },
+   {
+    "type": "h2",
+    "text": "Por tópico"
+   },
+   {
+    "type": "h2",
+    "text": "Acabado de chegar"
+   },
+   {
+    "type": "h2",
+    "text": "Por tópico"
+   }
+  ]
+ },
+ {
+  "slug": "producoes-3d",
+  "legacyPath": "/servicos/producoes-3d/",
+  "title": "Produções 3D",
+  "updated": "2019-09-09",
+  "words": 73,
+  "body": [
+   {
+    "type": "h2",
+    "text": "3D Renderização Fotorealística"
+   },
+   {
+    "type": "p",
+    "text": "Criatividade, desenho e modelação de ambientes 3D, para utilização em visualizações de arquitectura como para marketing e publicidade. 3D Green Studio"
+   },
+   {
+    "type": "p",
+    "text": "Filmagem no local ou em estúdio com chroma key para representações realistas de ambientes virtuais. Filmes 3D"
+   },
+   {
+    "type": "p",
+    "text": "Produção de filmes de animação 3D, incluindo todo a produção desde o guião, story board e edição. Realidade Aumentada 3D"
+   },
+   {
+    "type": "p",
+    "text": "Produção de elementos 3D para utilização em aplicativos de AI e AR."
+   }
+  ]
+ },
+ {
+  "slug": "contactos-jelly",
+  "legacyPath": "/contactos-jelly/",
+  "title": "Contactos Jelly",
+  "updated": "2026-02-21",
+  "words": 62,
+  "body": [
+   {
+    "type": "h3",
+    "text": "Contactos."
+   },
+   {
+    "type": "p",
+    "text": "Telefone e e-mail"
+   },
+   {
+    "type": "p",
+    "text": "(+351) 915 098 769 | hello@jelly.pt"
+   },
+   {
+    "type": "p",
+    "text": "Morada"
+   },
+   {
+    "type": "p",
+    "text": "Rua Dom João V, 29C 1250-089 Lisboa"
+   },
+   {
+    "type": "p",
+    "text": "Candidaturas"
+   },
+   {
+    "type": "p",
+    "text": "Se, tal como nós, acreditas que o poder da mudança começa em ti e queres juntar-te à Jelly, então submete aqui a tua candidatura ou se preferires por email, para talent@jelly.pt"
+   },
+   {
+    "type": "p",
+    "text": "Queremos saber (quase) tudo sobre ti para liderarmos a mudança, juntos."
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMHN0eWxlJTNEJTIyYWxsJTNBdW5zZXQlM0Jmb250LWZhbWlseSUzQUhlbHZldGljYSUyQ0FyaWFsJTJDc2Fucy1zZXJpZiUzQmRpc3BsYXklM0FpbmxpbmUtYmxvY2slM0JtYXgtd2lkdGglM0ExMDAlMjUlM0J3aGl0ZS1zcGFjZSUzQW5vd3JhcCUzQm92ZXJmbG93JTNBaGlkZGVuJTNCdGV4dC1vdmVyZmxvdyUzQWVsbGlwc2lzJTNCYmFja2dyb3VuZC1jb2xvciUzQSUyM0ZGRkZGRiUzQmNvbG9yJTNBJTIzMDAwMDAwJTNCZm9udC1zaXplJTNBMjBweCUzQmJvcmRlci1yYWRpdXMlM0E5cHglM0JwYWRkaW5nJTNBMCUyMDMzcHglM0Jmb250LXdlaWdodCUzQWJvbGQlM0JoZWlnaHQlM0E1MHB4JTNCY3Vyc29yJTNBcG9pbnRlciUzQmxpbmUtaGVpZ2h0JTNBNTBweCUzQnRleHQtYWxpZ24lM0FjZW50ZXIlM0JtYXJnaW4lM0EwJTNCdGV4dC1kZWNvcmF0aW9uJTNBbm9uZSUzQiUyMiUzRUNvbWUlQzMlQTdhciUyMGElMjBtdWRhbiVDMyVBN2ElM0MlMkZidXR0b24lM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "mensagem-ok",
+  "legacyPath": "/mensagem-ok/",
+  "title": "mensagem-ok",
+  "updated": "2020-09-28",
+  "words": 22,
+  "body": [
+   {
+    "type": "p",
+    "text": "Obrigado pelo seu contacto!"
+   },
+   {
+    "type": "h2",
+    "text": "Um elemento da nossa equipa assistirá a sua questão com a máxima brevidade. Até já!"
+   },
+   {
+    "type": "p",
+    "text": "voltar a jelly.pt"
+   }
+  ]
+ },
+ {
+  "slug": "proposta-ok",
+  "legacyPath": "/proposta-ok/",
+  "title": "proposta-ok",
+  "updated": "2019-09-30",
+  "words": 19,
+  "body": [
+   {
+    "type": "p",
+    "text": "Obrigado pela oportunidade!"
+   },
+   {
+    "type": "h2",
+    "text": "Um elemento da nossa equipa entrará em contacto para dar seguimento à sua consulta."
+   },
+   {
+    "type": "h3",
+    "text": "Até breve!"
+   }
+  ]
+ },
+ {
+  "slug": "jellycare-subscribe",
+  "legacyPath": "/jellycare-subscribe/",
+  "title": "jellycare-success-page",
+  "updated": "2019-10-21",
+  "words": 10,
+  "body": [
+   {
+    "type": "p",
+    "text": "Obrigado pelo seu interesse no JellyCARE!"
+   },
+   {
+    "type": "h2",
+    "text": "O seu website merece!"
+   }
+  ]
+ },
+ {
+  "slug": "marketing-digital-success-page",
+  "legacyPath": "/marketing-digital-success-page/",
+  "title": "marketing-digital-success-page",
+  "updated": "2022-01-31",
+  "words": 0,
+  "body": []
+ },
+ {
+  "slug": "portfolio",
+  "legacyPath": "/portfolio/",
+  "title": "Portfolio",
+  "updated": "2026-02-24",
+  "words": 0,
+  "body": []
+ },
+ {
+  "slug": "confirmacao-consulta-marketing-digital",
+  "legacyPath": "/confirmacao-consulta-marketing-digital/",
+  "title": "confirmação consulta marketing digital",
+  "updated": "2019-09-08",
+  "words": 31,
+  "body": [
+   {
+    "type": "p",
+    "text": "[vc_custom_heading text=”A sua consulta foi enviada e receberá o contacto de um elemento da nossa equipa com toda a brevidade."
+   },
+   {
+    "type": "p",
+    "text": "Até já!” font_container=”tag:h3|text_align:center” google_fonts=”font_family:Nunito%3A300%2Cregular%2C700|font_style:400%20regular%3A400%3Anormal” css=”.vc_custom_1567977102417{padding-right: 6% !important;padding-bottom: 30px !important;padding-left: 6% !important;}”]"
+   }
+  ]
+ },
+ {
+  "slug": "jellyblog",
+  "legacyPath": "/jellyblog/",
+  "title": "JellyBlog",
+  "updated": "2019-08-29",
+  "words": 26,
+  "body": [
+   {
+    "type": "p",
+    "text": "Pesquisar"
+   },
+   {
+    "type": "p",
+    "text": "Results for"
+   },
+   {
+    "type": "p",
+    "text": "{phrase}"
+   },
+   {
+    "type": "p",
+    "text": "{results_count}"
+   },
+   {
+    "type": "p",
+    "text": "{results_count_total}"
+   },
+   {
+    "type": "p",
+    "text": "Displaying"
+   },
+   {
+    "type": "p",
+    "text": "{results_count}"
+   },
+   {
+    "type": "p",
+    "text": "results of"
+   },
+   {
+    "type": "p",
+    "text": "{results_count_total}"
+   },
+   {
+    "type": "p",
+    "text": "Mais resultados..."
+   },
+   {
+    "type": "p",
+    "text": "Generic filters Correspondência exata apenas Search in excerpt"
+   },
+   {
+    "type": "h2",
+    "text": "Topics"
+   },
+   {
+    "type": "h2",
+    "text": "Just arrived"
+   },
+   {
+    "type": "p",
+    "text": "All Articles"
+   }
+  ]
+ },
+ {
+  "slug": "404-pt",
+  "legacyPath": "/404-pt/",
+  "title": "404-pt",
+  "updated": "2019-06-29",
+  "words": 22,
+  "body": [
+   {
+    "type": "p",
+    "text": "Oops! Página não encontrada. A página que procura não existe. Por favor regresse à página anterior ou se preferir, para a homepage."
+   }
+  ]
+ },
+ {
+  "slug": "live-video-shopping",
+  "legacyPath": "/servicos/web-marketing-digital/live-video-shopping/",
+  "title": "Live Video Shopping",
+  "updated": "2022-07-02",
+  "words": 117,
+  "body": [
+   {
+    "type": "p",
+    "text": "[vc_custom_heading text=”Live Video"
+   },
+   {
+    "type": "p",
+    "text": "Shopping” font_container=”tag:h1|font_size:100|text_align:left|line_height:120px” use_theme_fonts=”yes” css_animation=”fadeIn”]"
+   },
+   {
+    "type": "h2",
+    "text": "A ponte entre offline e online."
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1zbGlkZXIlM0QlMjJCVldjVm1jdyUyMiUyMGRhdGEtdGYtd2lkdGglM0QlMjI1NTAlMjIlMjBkYXRhLXRmLWlmcmFtZS1wcm9wcyUzRCUyMnRpdGxlJTNERGVzYWZpbyUyMEplbGx5JTIyJTIwZGF0YS10Zi1tZWRpdW0lM0QlMjJzbmlwcGV0JTIyJTIwZGF0YS10Zi1oaWRkZW4lM0QlMjJ1dG1fc291cmNlJTNEamVsbHklMjBzaXRlJTJDdXRtX21lZGl1bSUzRHZpZGVvJTIyJTIwc3R5bGUlM0QlMjJhbGwlM0F1bnNldCUzQmZvbnQtZmFtaWx5JTNBSGVsdmV0aWNhJTJDQXJpYWwlMkNzYW5zLXNlcmlmJTNCZGlzcGxheSUzQWlubGluZS1ibG9jayUzQm1heC13aWR0aCUzQTEwMCUyNSUzQndoaXRlLXNwYWNlJTNBbm93cmFwJTNCb3ZlcmZsb3clM0FoaWRkZW4lM0J0ZXh0LW92ZXJmbG93JTNBZWxsaXBzaXMlM0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIzQkYzOTVEJTNCY29sb3IlM0ElMjNGRkZGRkYlM0Jmb250LXNpemUlM0EyMHB4JTNCYm9yZGVyLXJhZGl1cyUzQTI1cHglM0JwYWRkaW5nJTNBMCUyMDMzcHglM0Jmb250LXdlaWdodCUzQWJvbGQlM0JoZWlnaHQlM0E1MHB4JTNCY3Vyc29yJTNBcG9pbnRlciUzQmxpbmUtaGVpZ2h0JTNBNTBweCUzQnRleHQtYWxpZ24lM0FjZW50ZXIlM0JtYXJnaW4lM0EwJTNCdGV4dC1kZWNvcmF0aW9uJTNBbm9uZSUzQiUyMiUzRVZhbW9zJTIwZmFsYXIlM0YlM0MlMkZidXR0b24lM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   },
+   {
+    "type": "h3",
+    "text": "A tecnologia de Live Video Shopping humaniza a experiência de compra online. Suportada por uma estratégia de marketing vencedora, a sua marca vai conquistar a audiência e aumentar as vendas online."
+   },
+   {
+    "type": "h2",
+    "text": "Funcionalidades que os Clientes adoram"
+   },
+   {
+    "type": "h3",
+    "text": "Integração com a sua loja"
+   },
+   {
+    "type": "h3",
+    "text": "Uma adição nativa ao seu site: incorpore, transmita ao vivo, interaja com os seus clientes e aumente as vendas."
+   },
+   {
+    "type": "h3",
+    "text": "A sua marca"
+   },
+   {
+    "type": "h3",
+    "text": "Uma experiência de utilizador familiar, adaptada à narrativa da sua marca com design, logotipos, esquemas de cores, fontes e idioma personalizados."
+   },
+   {
+    "type": "h3",
+    "text": "Compra instantânea in-stream"
+   },
+   {
+    "type": "h3",
+    "text": "Permita que a sua audiência adicione ao carrinho e conclua a compra sem sair do evento."
+   }
+  ]
+ },
+ {
+  "slug": "jellycare",
+  "legacyPath": "/jellycare/",
+  "title": "JellyCARE – Manutenção Ativa e Preventiva de Websites",
+  "updated": "2023-10-19",
+  "words": 336,
+  "body": [
+   {
+    "type": "p",
+    "text": "JellyCARE"
+   },
+   {
+    "type": "p",
+    "text": "Atualizações de Plugins Checkup de Segurança Monitor de Atividade Performance Links Quebrados Relatórios JellyCARE"
+   },
+   {
+    "type": "h2",
+    "text": "Não precisa de pedir nada, porque tratamos de tudo"
+   },
+   {
+    "type": "p",
+    "text": "Proativamente"
+   },
+   {
+    "type": "p",
+    "text": "CommentsEste campo é para efeitos de validação e deve ser mantido inalterado.Selecione o seu plano JellyCARE JellyCARE (75€/ mês) JellyCARE Plus (90€/ mês) (Valores sujeitos ao IVA à taxa legal em vigor)O seu websiteSite infectado O site está infetado com Malware Quero Experimentar! Nome* Primeiro Email* Telefone*EmpresaConsentimento* Concordo e aceito a Política de Privacidade da Jelly.Privacy Policy Anterior Submeter"
+   },
+   {
+    "type": "h2",
+    "text": "Como começar?"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Segurança – checkup diário",
+     "Atualização temas e Plugins",
+     "Otimização Base de dados",
+     "Links Quebrados",
+     "Analytics",
+     "Relatório mensal JellyCARE"
+    ]
+   },
+   {
+    "type": "p",
+    "text": "SUBSCREVER"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Segurança – checkup diário",
+     "Atualização temas e Plugins",
+     "Otimização Base de dados",
+     "Links Quebrados",
+     "Analytics",
+     "Relatório mensal JellyCARE",
+     "+ Backup Diário na Cloud",
+     "Atualização Segura"
+    ]
+   },
+   {
+    "type": "p",
+    "text": "SUBSCREVER"
+   },
+   {
+    "type": "p",
+    "text": "(Acresce o IVA à taxa legal em vigor)"
+   },
+   {
+    "type": "h2",
+    "text": "Serviços JellyCARE"
+   },
+   {
+    "type": "h3",
+    "text": "Segurança"
+   },
+   {
+    "type": "p",
+    "text": "Checkups diários de segurança ao seu website, que detecta a existência de vulnerabilidades, existência de virus ou malware."
+   },
+   {
+    "type": "h3",
+    "text": "Atualizações de Temas e Plugins"
+   },
+   {
+    "type": "p",
+    "text": "Atualização permanente de temas e plugins, prevenindo a ocorrência de vulnerabilidades."
+   },
+   {
+    "type": "h3",
+    "text": "Monitor de Disponibilidade"
+   },
+   {
+    "type": "p",
+    "text": "Verificamos a disponibilidade do seu website de 5 em 5 segundos, para que seja o primeiro a saber se estiver indisponível."
+   },
+   {
+    "type": "h3",
+    "text": "Links Quebrados"
+   },
+   {
+    "type": "p",
+    "text": "Links quebrados tem um impacto negativo no SEO do website. Por isso procuramos e identificamo-los para que sejam atualizados."
+   },
+   {
+    "type": "h3",
+    "text": "Desempenho"
+   },
+   {
+    "type": "p",
+    "text": "Conheça a avaliação de desempenho do seu website, com base nas auditorias do Page Speed e YSlow grade."
+   },
+   {
+    "type": "h3",
+    "text": "Otimização Base de Dados"
+   },
+   {
+    "type": "p",
+    "text": "As bases de dados armazenam dados temporários e por vezes necessitam ser limpas e re-estruturadas, acelerando o carregamento do website."
+   },
+   {
+    "type": "h3",
+    "text": "Gestão de Conteúdo"
+   },
+   {
+    "type": "p",
+    "text": "De vez em quando é preciso mudar uma imagem, um texto, um produto ou serviço? Conte connosco para que o conteúdo esteja sempre atual."
+   },
+   {
+    "type": "h3",
+    "text": "Suporte Web"
+   },
+   {
+    "type": "p",
+    "text": "A nossa equipa de suporte está ao dispor para assistir qualquer questão relacionada com o seu website, com atendimento prioritário."
+   },
+   {
+    "type": "h3",
+    "text": "Analytics"
+   },
+   {
+    "type": "p",
+    "text": "Ligamos a sua conta Google Analytics (ou estatísticas do WordPress) para que analise os principais indicadores de atividade dos seu website no mesmo relatório."
+   },
+   {
+    "type": "h2",
+    "text": "+ Addons JellyCARE"
+   },
+   {
+    "type": "h3",
+    "text": "Backups diários"
+   },
+   {
+    "type": "p",
+    "text": "O seu website sempre com uma cópia de segurança na cloud, todos os dias."
+   },
+   {
+    "type": "h3",
+    "text": "SEO Ranking"
+   },
+   {
+    "type": "p",
+    "text": "Saiba como se posiciona o seu website face aos seus concorrentes,"
+   },
+   {
+    "type": "p",
+    "text": "com base nas"
+   },
+   {
+    "type": "p",
+    "text": "keywords"
+   },
+   {
+    "type": "p",
+    "text": "mais utilizadas pelos seus clientes."
+   }
+  ]
+ },
+ {
+  "slug": "rgpd-regulamento-geral-protecao-dados",
+  "legacyPath": "/servicos/rgpd-regulamento-geral-protecao-dados/",
+  "title": "RGPD – Regulamento Geral de Proteção de Dados",
+  "updated": "2019-11-01",
+  "words": 639,
+  "body": [
+   {
+    "type": "p",
+    "text": "O RGPD (Regulamento Geral de Proteção de Dados) ou GDPR (General Data Protection Regulation) especifica as funções, processos e tecnologias que as organizações devem adoptar, para garantir que os dados pessoais dos residentes da UE estão seguros, acessíveis, utilizados de forma adequada e com o seu consentimento."
+   },
+   {
+    "type": "h2",
+    "text": "Qual é o objetivo do GDPR?"
+   },
+   {
+    "type": "p",
+    "text": "O objectivo do GDPR é o de proteger todos os cidadãos da UE de violações da privacidade de dados, num mundo cada vez mais orientado para dados e, portanto, muito diferente dos tempos em que a directiva de 1995 foi estabelecida."
+   },
+   {
+    "type": "p",
+    "text": "Embora os princípios fundamentais da privacidade de dados se mantenham válidos para a diretiva anterior, foram propostas muitas alterações às políticas regulamentares. Saiba como podemos ajudar a sua organização a cumprir com o RGPD A quem se aplica o RGPD?"
+   },
+   {
+    "type": "p",
+    "text": "Qualquer empresa ou entidade, que recolha dados pessoais de cidadãos europeus."
+   },
+   {
+    "type": "p",
+    "text": "Se a sua empresa for uma pequena ou média empresa (PME) que efetua o tratamento de dados pessoais, tem de cumprir o RGPD. No entanto, se o tratamento de dados pessoais não for uma parte principal do seu negócio e a sua atividade não criar riscos para as pessoas, então algumas obrigações do RGPD não se aplicam a si (por exemplo, a nomeação de um encarregado da proteção de dados (EPD ou DPO em inglês). Alcance Territorial Aumentado (aplicabilidade extra-territorial)"
+   },
+   {
+    "type": "p",
+    "text": "Provavelmente a maior mudança no cenário regulamentar da privacidade de dados: a jurisdição alargada do GDPR, já que que se aplica a todas as empresas que processam os dados pessoais das pessoas que residem na União, independentemente da localização da empresa."
+   },
+   {
+    "type": "p",
+    "text": "O GPDR torna sua aplicabilidade muito clara: processamento de dados pessoais por controladores e processadores na UE, independentemente de o processamento ter lugar na UE ou não. O GDPR também se aplicará ao processamento de dados pessoais de pessoas em questão na UE por um controlador ou processador não estabelecido na UE, onde as atividades se relacionam com: oferta de bens ou serviços aos cidadãos da UE (independentemente de o pagamento ser ou não exigido) e o acompanhamento do comportamento que ocorre na UE."
+   },
+   {
+    "type": "p",
+    "text": "As empresas não-UE que processam os dados dos cidadãos da UE também terão de nomear um representante na UE. Penalidades"
+   },
+   {
+    "type": "p",
+    "text": "As organizações que violarem o GDPR, poderão ser multadas até 4% do volume de negócios global anual ou até 20 milhões de euros (o que for maior). Esta é a multa máxima que pode ser imposta pelas infrações mais graves, por exemplo, sem ter consentimento suficiente do cliente para processar dados ou violar o núcleo de Privacidade por conceitos de design."
+   },
+   {
+    "type": "p",
+    "text": "Existe uma abordagem em camadas para multas, por exemplo, uma empresa pode ser multada em 2% por não ter seus registros em ordem (artigo 28), não notificando a autoridade de supervisão e a pessoa em questão sobre uma violação ou não realização de avaliação de impacto. É importante notar que essas regras se aplicam tanto a controladores quanto a processadores – o que significa que a “clouds” não estarão isentas da execução do GDPR. Consentimento"
+   },
+   {
+    "type": "p",
+    "text": "As condições de consentimento foram reforçadas e as empresas não poderão mais usar termos e condições longas ilegais, uma vez que o pedido de consentimento deve ser claro e distinguível de outros assuntos e fornecido de forma inteligível e facilmente acessível, usando linguagem clara e simples. Deve ser tão fácil retirar o consentimento, como concede-lo. Notificação de violação"
+   },
+   {
+    "type": "p",
+    "text": "Com o GDPR, a notificação de violação tornará-se obrigatória em todos os Estados membros onde uma violação de dados é susceptível de “resultar em um risco para os direitos e liberdades de indivíduos”."
+   },
+   {
+    "type": "p",
+    "text": "Isso deve ser feito no prazo de 72 horas após ter tomado conhecimento da violação. Os processadores de dados também serão obrigados a notificar os seus clientes, os controladores, “sem atraso indevido” depois de terem tomado conhecimento de uma violação de dados."
+   }
+  ]
+ },
+ {
+  "slug": "ui-ux-design",
+  "legacyPath": "/ui-ux-design/",
+  "title": "UI UX Design",
+  "updated": "2018-06-16",
+  "words": 199,
+  "body": [
+   {
+    "type": "p",
+    "text": "Websites, web and mobile applications, have become increasingly complex, following the evolution of the technology and methodology of web development. Websites once (more or less) static have now become extremely rich and interactive experiences."
+   },
+   {
+    "type": "h2",
+    "text": "Usability (UI / UX Design)"
+   },
+   {
+    "type": "p",
+    "text": "The greater the mechanical complexity of a system, the greater the requirement in the development of a user interface that offers a simple, intuitive and amusing experience. User Interface Design (UI Design)"
+   },
+   {
+    "type": "p",
+    "text": "Based on the usability study carried out, design of the user interface is created according to the brand concept and appealing to the user. This stage of the process involves the design of all iconography, signage, buttons and other elements that may become part of the system. User Experience (UX Design)"
+   },
+   {
+    "type": "p",
+    "text": "The Usability Experience results from the concept defined in Usability and relates to all (ideally positive) sensations that the user takes when using a particular system (website or application, for example). These sensation may be the responsiveness of the touch, the texture, the sliding effect with which a message appears on the screen, among many other possible shapes. You can also reach us y email info@jelly.pt or phone 219 259 819 (lisboa) / 220 028 513 (Porto)"
+   }
+  ]
+ },
+ {
+  "slug": "design-ui-ux",
+  "legacyPath": "/servicos/design-ui-ux/",
+  "title": "Design UI UX",
+  "updated": "2019-08-30",
+  "words": 88,
+  "body": [
+   {
+    "type": "p",
+    "text": "Porque preferimos navegar num website em detrimento de outro aparentemente igual?"
+   },
+   {
+    "type": "h3",
+    "text": "Nem sempre conseguimos traduzir em palavras, porque a diferença é sensorial e está precisamente na melhor experiência de utilização que esse website oferece."
+   },
+   {
+    "type": "p",
+    "text": "DESIGN UI / UX"
+   },
+   {
+    "type": "h2",
+    "text": "Design de interface para websites, aplicações web e mobile"
+   },
+   {
+    "type": "h2",
+    "text": "Usabilidade (UI / UX Design)"
+   },
+   {
+    "type": "p",
+    "text": "Quanto maior a complexidade mecânica de um sistema, maior a exigência no desenvolvimento de uma interface de utilizador que transforme a experiência de utilização numa tarefa simples, intuitiva e, sempre que possível, cativante."
+   },
+   {
+    "type": "p",
+    "text": "By Andrew Munoz"
+   }
+  ]
+ },
+ {
+  "slug": "politica-de-privacidade-2",
+  "legacyPath": "/politica-de-privacidade-2/",
+  "title": "Política de Privacidade",
+  "updated": "2023-01-17",
+  "words": 9,
+  "body": [
+   {
+    "type": "h2",
+    "text": "Política de Privacidade"
+   },
+   {
+    "type": "p",
+    "text": "Política de Privacidade"
+   },
+   {
+    "type": "p",
+    "text": "Política de Cookies"
+   }
+  ]
+ },
+ {
+  "slug": "termos-e-condicoes",
+  "legacyPath": "/termos-e-condicoes/",
+  "title": "Termos e Condições",
+  "updated": "2016-08-26",
+  "words": 0,
+  "body": []
+ },
+ {
+  "slug": "entidades-resolucao-alternativa-litigios",
+  "legacyPath": "/entidades-resolucao-alternativa-litigios/",
+  "title": "Entidades de Resolução Alternativa de Litígios",
+  "updated": "2020-03-10",
+  "words": 304,
+  "body": [
+   {
+    "type": "h3",
+    "text": "INFORMAÇÃO AO CONSUMIDOR"
+   },
+   {
+    "type": "p",
+    "text": "No cumprimento do dever de informação e de acordo com o definido no artigo 18.º, n. º1, da Lei 144/2015, de 8 de setembro, informa-se os clientes que para dirimir qualquer conflito proveniente da nossa prestação de serviços, e que apesar de não estarmos vinculados a uma ERAL por adesão ou imposição legal, os nossos clientes poderão aceder ao sítio eletrónico infra para verificar a lista das entidades de RAL existentes e efetuar a livre escolha."
+   },
+   {
+    "type": "p",
+    "text": "Lista das Entidades de Resolução Alternativa de Litígios existentes nos diversos Estados-Membros da União Europeia, elaborada pela Comissão Europeia."
+   },
+   {
+    "type": "p",
+    "text": "1. CNIACC – Centro Nacional de Informação e Arbitragem de Conflitos de Consumo Tel.: 213 847 484; E-mail: cniacc@unl.pt 2. CIMAAL – Centro de Informação, Mediação e Arbitragem de Conflitos de Consumo do Algarve Tel.: 289 823 135; E-mail: cimaal@mail.telepac.pt 3. Centro de Arbitragem de Conflitos de Consumo do Distrito de Coimbra Tel.: 239 821 690/289. E-mail: geral@centrodearbitragemdecoimbra.com 4. Centro de Arbitragem de Conflitos de Consumo de Lisboa Tel.: 218 807 000 / 218807030. E-mail: juridico@centroarbitragemlisboa.pt; director@centroarbitragemlisboa.pt 5. Centro de Informação de Consumo e Arbitragem do Porto Tel.: 225 508 349 / 225 029 791; E-mail: cicap@mail.telepac.pt 6. Centro de Arbitragem de Conflitos de Consumo do Vale do Ave/Tribunal Arbitral Tel.: 253 422 410; E-mail: triave@gmail.com 7. Centro de Informação, Mediação e Arbitragem de Consumo (Tribunal Arbitral de Consumo) Tel.: 253 617 604; E-mail: geral@ciab.pt 8. Centro de Arbitragem de Conflitos de Consumo da Região Autónoma da Madeira Morada: Rua Direita, 27 – 1º Andar, 9050-405 Funchal; E-mail: centroarbitragem.sras@govmadeira.pt 9. Centro de Informação, Mediação, Provedoria e Arbitragem de Seguros Lisboa Tel.: 213 827 700; E-mail: geral@cimpas.pt. Web: www.cimpas.pt."
+   },
+   {
+    "type": "p",
+    "text": "Para mais informações consulte o Portal do Consumidor em www.consumidor.pt , para análise daquelas ou de outras entidades disponíveis, em permanente atualização. Sintra, 20 de Março de 2016"
+   }
+  ]
+ },
+ {
+  "slug": "aplicacoes-web-e-mobile",
+  "legacyPath": "/servicos/aplicacoes-web-e-mobile/",
+  "title": "Aplicações web e mobile",
+  "updated": "2025-04-12",
+  "words": 86,
+  "body": [
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U= [vc_custom_heading text=”O mobile não é apenas mais um canal."
+   },
+   {
+    "type": "p",
+    "text": "Para muitas marcas, é o canal.” font_container=”tag:h2|text_align:left|color:%23de4c4c” use_theme_fonts=”yes” css=””] É onde os seus clientes vivem, trabalham, pesquisam e tomam decisões."
+   },
+   {
+    "type": "p",
+    "text": "É onde a sua marca pode estar presente de forma útil, intuitiva e constante. Desenvolvemos aplicações mobile para iOS e Android. Dependendo das características, requisitos e orçamento do projeto, será possível optar entre desenvolvimento nativo ou híbrido ."
+   },
+   {
+    "type": "p",
+    "text": "Temos experiência em aplicações de Reserva de Taxis (Uber), leilões on-line, Saúde, plataformas de descontos, entre outros. JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "politica-de-utilizacao-responsavel-pur",
+  "legacyPath": "/politica-de-utilizacao-responsavel-pur/",
+  "title": "POLÍTICA DE UTILIZAÇÃO RESPONSÁVEL (PUR)",
+  "updated": "2022-02-06",
+  "words": 445,
+  "body": [
+   {
+    "type": "p",
+    "text": "A JELLY – Digital Agency, Unip. Lda. opera no mercado nacional desde 2011 na área do design e desenvolvimento web, prestando como complemento da sua atividade, o serviço de alojamento de websites em servidores próprios, em data center nacional."
+   },
+   {
+    "type": "p",
+    "text": "A PUR definida pela JELLY aplica-se aos serviços de alojamento partilhado, alojamento dedicado, servidores virtuais, servidores cloud e housing de servidores."
+   },
+   {
+    "type": "p",
+    "text": "Esta Política de Utilização Responsável destina-se a proteger os sistemas e serviços da JELLY e de todos os seus clientes de modo a garantir que a disponibilidade de ambos é a desejada para total satisfação e proteção dos mesmos."
+   },
+   {
+    "type": "h3",
+    "text": "Segurança de redes e sistemas"
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido aos utilizadores a violação ou tentativa de violação de qualquer sistema que componha a infraestrutura da JELLY nomeadamente os seus sistemas de segurança."
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido o seguinte tipo de ações:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Entrada ou tentativa de entrada em servidores sem autorização.",
+     "Uso de cracking, brute-force ou ataques de dicionário para acessos não autorizados.",
+     "Deteção automática de serviços em servidores (Port scan).",
+     "Pesquisa não autorizada de vulnerabilidades em servidores, serviços e redes.",
+     "É expressamente proibida a falsificação de dados com o intuito de iludir e induzir em erro os recetores dos dados. Estão incluídas sem se limitarem a isso:"
+    ]
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Alterações de endereços IP (IP Spoofing).",
+     "Alterações de endereços ARP (ARP Spoofing).",
+     "Alterações dos cabeçalhos das mensagens de correio electrónico."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido ao utilizador interferir intencionalmente no bom funcionamento de servidores, serviços ou redes."
+   },
+   {
+    "type": "p",
+    "text": "Nestes casos incluem-se:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Ação de sobrecarga, que visem prejudicar o normal funcionamento de serviços (Denial of Service).",
+     "Envio em massa de pacotes (Flooding).",
+     "Quaisquer tipo de tentativas de bloquear ou perturbar serviço, servidores ou redes."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Conteúdos"
+   },
+   {
+    "type": "p",
+    "text": "Os utilizadores do serviço de alojamento disponibilizado pela JELLY são os únicos responsáveis pelos conteúdos alojados nos nossos servidores, devendo por isso gerir de forma segura os dados de acesso aos mesmos e garantindo que respeitam as regras abaixo referidas."
+   },
+   {
+    "type": "p",
+    "text": "Não são permitidos quer em alojamentos partilhados ou dedicados:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Conteúdos que violem os direitos de autor.",
+     "Conteúdos que contenham pedofilia.",
+     "Conteúdos que incitem à prática de atos criminosos.",
+     "Conteúdos que incitem à violência.",
+     "Conteúdos que sejam considerados ilegais.",
+     "Conteúdos que sejam ofensivos ou discriminatórios com base em religião, sexo ou raça.",
+     "Conteúdos que iludam o cliente a julgar tratar-se de outro site (Phishing).",
+     "Vírus, Trojans, Malware ou qualquer outro software prejudicial aos utilizadores que visitem esses websites.",
+     "A partilha e/ou facilitação de troca de software ou informação protegida por direitos de autor.",
+     "Software que permita a utilização dos servidores como Open Relay ou Open Proxy.",
+     "Software sem o devido licenciamento.",
+     "Software desactualizado ou com falhas conhecidas que possibilitem a sua exploração para tomar controlo do servidor.",
+     "A instalação de Proxies ou NAT.",
+     "A instalação de anonimizadores."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Alojamento partilhado"
+   },
+   {
+    "type": "p",
+    "text": "Por se tratar de um serviço em que os servidores utilizados são partilhados com mais utilizadores, não é permitido no alojamento partilhado qualquer uso de CPU, disco ou memória que possa causar um impacto negativo na performance ou qualidade do serviço do alojamento dos outros utilizadores."
+   },
+   {
+    "type": "p",
+    "text": "Assim sendo não é permitido no serviço de alojamento partilhado:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Uso do CPU acima dos 25% durante mais de 90 segundos.",
+     "Utilização de mais de 100.000 ficheiros na conta de alojamento.",
+     "A utilização do alojamento partilhado como dispositivo de backup.",
+     "Utilização do serviço de alojamento para partilha de ficheiros.",
+     "A criação de Cron Jobs com intervalos inferiores a 15 minutos.",
+     "A instalação de software de peer-to-peer.",
+     "O uso de web spiders ou indexers.",
+     "Exceder o limite de 500 emails/hora."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Correio electrónico e política anti-spam"
+   },
+   {
+    "type": "p",
+    "text": "O uso abusivo de correio eletrónico causa transtornos e prejuízos à infraestrutura da JELLY, assim como aos restantes utilizadores e terceiros, direta e indiretamente, ao pôr em causa o normal funcionamento dos sistemas e do suporte ao serviço."
+   },
+   {
+    "type": "p",
+    "text": "A JELLY considera como SPAM todo e qualquer email enviado com intuito comercial e não solicitado pelo destinatário. Em adição ao anterior exposto, qualquer email que possa causar impacto negativo na infraestrutura da JELLY ou colocar IPs do nosso espaço de endereçamento em listas negras será também considerado SPAM."
+   },
+   {
+    "type": "p",
+    "text": "Como tal não é permitido:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Envio de SPAM.",
+     "Envio de email para as denominadas SPAMTRAPS.",
+     "Envio massivo de correio electrónico comercial ou pessoal não solicitado.",
+     "Envio massivo de correio electrónico comercial ou pessoal não solicitado, na qual os destinatários estão todos em BCC (undisclosed recipients)",
+     "Envio de emails a quem tenha expressamente solicitado o seu cancelamento.",
+     "Utilização dos nossos servidores como SMTP “Open Proxy” ou “Open Relay”.",
+     "Alojamento de páginas que forneçam serviços de SPAM.",
+     "Alojamento de páginas anunciadas através de SPAM enviado de outras redes (“spamvertising”).",
+     "Qualquer ação que coloque o espaço de endereçamento IP da JELLY em listas negras."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Sempre que se verifique uma das situações acimas referidas a JELLY reserva-se no direito de suspender de imediato o serviço de alojamento sem direito a reativação ou a quaisquer reembolsos."
+   },
+   {
+    "type": "h3",
+    "text": "Atribuição de IP"
+   },
+   {
+    "type": "p",
+    "text": "A JELLY possui o seu próprio espaço de endereçamento e atribui a cada servidor um endereço IP não sendo permitido:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "A utilização de outros IPs que não os atribuídos.",
+     "A utilização de IPs de outros servidores."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Intervenções"
+   },
+   {
+    "type": "p",
+    "text": "Sempre que forem detectados atos abusivos e for necessária a intervenção da JELLY para resolver estas situações, a JELLY pode, sem qualquer consulta prévia do cliente, optar por:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Avisar o cliente por email ou telefone, concedendo-lhe um prazo de 24 horas para parar com o abuso ou a violação da atual PUR.",
+     "Efetuar a necessária intervenção para resolução imediata do problema, sendo ao cliente causador do mesmo faturada a intervenção técnica com base no valor hora atual descriminado no site.",
+     "Suspender de imediato o serviço, sem aviso prévio, caso a gravidade da situação o justifique."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Considerações gerais"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "A JELLY reserva-se o direito de cancelar definitivamente ou suspender temporariamente qualquer serviço de alojamento (alojamento partilhado, alojamento dedicado, servidores virtuais, servidores cloud e housing de servidores) sem qualquer devolução do período não utilizado se esta PUR for violada.",
+     "A JELLY reserva-se o direito de suspender qualquer serviço se este causar degradação na nossa infraestrutura ou no serviço prestado a outros clientes.",
+     "A JELLY reserva-se o direito de rever as suas políticas e esta PUR, a qualquer momento e sem aviso prévio, podendo a versão actualizada ser consultada no nosso site.",
+     "A JELLY não poderá ser considerada responsável por qualquer prejuízo causado pelo cancelamento do site ou serviço se esta PUR for violada."
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "empresa",
+  "legacyPath": "/empresa/",
+  "title": "empresa",
+  "updated": "2026-07-09",
+  "words": 151,
+  "body": [
+   {
+    "type": "p",
+    "text": "Servimos a quem, como nós, acredita que a mudança que queremos ver no mundo, começa em nós próprios."
+   },
+   {
+    "type": "h2",
+    "text": "Uma agência movida por propósito e mudança."
+   },
+   {
+    "type": "h3",
+    "text": "Ideias há muitas e boas."
+   },
+   {
+    "type": "h3",
+    "text": "Mas até que uma ideia se converta num bom produto ou resultado, existe um caminho feito de muito trabalho e sentido de compromisso."
+   },
+   {
+    "type": "h2",
+    "text": "É nesse caminho desafiante, de fazer acontecer, que precisamos de toda a nossa criatividade, resiliência e flexibilidade."
+   },
+   {
+    "type": "h2",
+    "text": "Criatividade para superar os desafios, Resiliência para persistirmos na nossa visão apesar dos obstáculos, e flexibilidade para nos adaptarmos rapidamente às lições do caminho."
+   },
+   {
+    "type": "h2",
+    "text": "Sabemos que o digital é uma extensão das nossas vidas. Por trás de cada clique, existem pessoas reais, desafios concretos e sonhos por realizar."
+   },
+   {
+    "type": "h2",
+    "text": "E o problema das estratégias é o facto de se basearem em pressupostos lógicos, raramente presentes na prática."
+   },
+   {
+    "type": "h2",
+    "text": "Por isso, valorizamos um plano tático sólido."
+   },
+   {
+    "type": "h2",
+    "text": "​Ação. Essa é a nossa estratégia."
+   },
+   {
+    "type": "p",
+    "text": "(Abrir video)"
+   }
+  ]
+ },
+ {
+  "slug": "suporte-e-manutencao-web",
+  "legacyPath": "/servicos/suporte-e-manutencao-web/",
+  "title": "Suporte e manutenção web",
+  "updated": "2019-08-29",
+  "words": 63,
+  "body": [
+   {
+    "type": "p",
+    "text": "Os melhores websites não param no tempo."
+   },
+   {
+    "type": "h3",
+    "text": "Uma vez on-line, é fundamental assegurar que se mantém atualizado, seguro e funcional."
+   },
+   {
+    "type": "h3",
+    "text": "A nossa equipa assegura uma manutenção ativa e preventiva do seu website."
+   },
+   {
+    "type": "p",
+    "text": "Ideal para quem não precisa de planos de suporte, mas quer assegurar a saúde e atualização do seu website."
+   },
+   {
+    "type": "p",
+    "text": "Ideal para empresas que precisam de tudo, num único plano e preço."
+   }
+  ]
+ },
+ {
+  "slug": "web-marketing-digital",
+  "legacyPath": "/servicos/web-marketing-digital/",
+  "title": "Marketing Digital",
+  "updated": "2025-01-06",
+  "words": 272,
+  "body": [
+   {
+    "type": "p",
+    "text": "Especialistas em Estratégia Digital"
+   },
+   {
+    "type": "h3",
+    "text": "Com uma visão omnicanal, onde o mundo físico e digital convivem e as soluções integradas de marketing fazem a diferença na vida das pessoas."
+   },
+   {
+    "type": "h2",
+    "text": "Tem um desafio?"
+   },
+   {
+    "type": "p",
+    "text": "free ace study guide 2023 – studying made simple"
+   },
+   {
+    "type": "p",
+    "text": "where to buy oxandrolone online"
+   },
+   {
+    "type": "p",
+    "text": "leg press machine workouts: 7 leg press variations | eōs fitness"
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMHN0eWxlJTNEJTIyYWxsJTNBdW5zZXQlM0Jmb250LWZhbWlseSUzQUhlbHZldGljYSUyQ0FyaWFsJTJDc2Fucy1zZXJpZiUzQmRpc3BsYXklM0FpbmxpbmUtYmxvY2slM0JtYXgtd2lkdGglM0ExMDAlMjUlM0J3aGl0ZS1zcGFjZSUzQW5vd3JhcCUzQm92ZXJmbG93JTNBaGlkZGVuJTNCdGV4dC1vdmVyZmxvdyUzQWVsbGlwc2lzJTNCYmFja2dyb3VuZC1jb2xvciUzQSUyM0M5Mjc0MyUzQmNvbG9yJTNBJTIzRkZGRkZGJTNCZm9udC1zaXplJTNBMjBweCUzQmJvcmRlci1yYWRpdXMlM0E5cHglM0JwYWRkaW5nJTNBMCUyMDMzcHglM0Jmb250LXdlaWdodCUzQWJvbGQlM0JoZWlnaHQlM0E1MHB4JTNCY3Vyc29yJTNBcG9pbnRlciUzQmxpbmUtaGVpZ2h0JTNBNTBweCUzQnRleHQtYWxpZ24lM0FjZW50ZXIlM0JtYXJnaW4lM0EwJTNCdGV4dC1kZWNvcmF0aW9uJTNBbm9uZSUzQiUyMiUzRVZhbW9zJTIwYSUyMGlzc28lM0MlMkZidXR0b24lM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   },
+   {
+    "type": "p",
+    "text": "10% Inspiração, 90% transpiração."
+   },
+   {
+    "type": "h3",
+    "text": "Criatividade ao serviço dos resultados."
+   },
+   {
+    "type": "h3",
+    "text": "Momento Zero"
+   },
+   {
+    "type": "quote",
+    "text": "Qual é o desafio? Qual a medida do sucesso?"
+   },
+   {
+    "type": "h3",
+    "text": "1- Estratégia"
+   },
+   {
+    "type": "h3",
+    "text": "Nunca partimos do princípio que sabemos, mas sabemos que o Design Thinking é o nosso alicerce para um plano estratégico de marketing e comunicação vencedor, para atingir os resultados a que nos propusemos."
+   },
+   {
+    "type": "h3",
+    "text": "2- Planeamento e Produção"
+   },
+   {
+    "type": "p",
+    "text": "Organização cronológica, por meios e canais, de todos os suportes de comunicação, de acordo com os orçamentos previstos."
+   },
+   {
+    "type": "p",
+    "text": "Produção do conteúdo e suportes visuais gráficos, vídeo, copywriting, landing pages, entre outros adequados à estratégia definida."
+   },
+   {
+    "type": "h3",
+    "text": "3- Gestão"
+   },
+   {
+    "type": "p",
+    "text": "Atividade diária de implementação de campanhas, publicações e outros conteúdos, em articulação com a equipa e cliente."
+   },
+   {
+    "type": "h3",
+    "text": "4- Monitorização e Otimização"
+   },
+   {
+    "type": "p",
+    "text": "Análise e interpretação dos dados, afinação das campanhas e elementos de comunicação em função da orientação que os dados transmitem."
+   },
+   {
+    "type": "h2",
+    "text": "As nossas competências em"
+   },
+   {
+    "type": "p",
+    "text": "Marketing Digital"
+   },
+   {
+    "type": "h3",
+    "text": "Marketing Performance"
+   },
+   {
+    "type": "p",
+    "text": "Paid Media"
+   },
+   {
+    "type": "h3",
+    "text": "Live Video Shopping"
+   },
+   {
+    "type": "p",
+    "text": "Bridging the gap between offline and online shopping"
+   },
+   {
+    "type": "h3",
+    "text": "Redes Sociais"
+   },
+   {
+    "type": "p",
+    "text": "Gestão de Redes Sociais e Comunidades"
+   },
+   {
+    "type": "h3",
+    "text": "Inbound Marketing"
+   },
+   {
+    "type": "p",
+    "text": "Metodologia para conquistar e cuidar de leads."
+   },
+   {
+    "type": "h3",
+    "text": "ESTRATÉGIA DE MARKETING"
+   },
+   {
+    "type": "p",
+    "text": "O centro de tudo o que fazemos"
+   },
+   {
+    "type": "h3",
+    "text": "SEO"
+   },
+   {
+    "type": "p",
+    "text": "Auditoria, setup e manutenção SEO"
+   },
+   {
+    "type": "h3",
+    "text": "Criação de Conteúdo"
+   },
+   {
+    "type": "p",
+    "text": "Copywriting e multimedia"
+   },
+   {
+    "type": "h3",
+    "text": "Marketing Automation"
+   },
+   {
+    "type": "p",
+    "text": "O negócio não para, mesmo enquanto dormimos."
+   },
+   {
+    "type": "h3",
+    "text": "Infraestrutura e Consultoria de Sistemas"
+   },
+   {
+    "type": "p",
+    "text": "CRM, Parametrização e automação"
+   }
+  ]
+ },
+ {
+  "slug": "branding",
+  "legacyPath": "/branding/",
+  "title": "Branding – Design de Comunicação",
+  "updated": "2026-01-13",
+  "words": 45,
+  "body": [
+   {
+    "type": "p",
+    "text": "Se vê a sua marca como algo mais do que um logotipo — e sabe que o que a torna relevante é aquilo que representa — está no sítio certo."
+   },
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   },
+   {
+    "type": "h2",
+    "text": "Projetos recentes"
+   },
+   {
+    "type": "p",
+    "text": "Serviços de Branding"
+   },
+   {
+    "type": "h3",
+    "text": "Estratégia"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Análise da Concorrência",
+     "Entrevistas e Workshops",
+     "Pesquisa com Clientes",
+     "Configuração e Auditoria de Analytics",
+     "Estratégia de Marca",
+     "Posicionamento",
+     "Arquitetura da Marca",
+     "Naming (Criação de Nome)",
+     "Tom de Voz e Linguagem",
+     "Estratégia de Conteúdo",
+     "Personas e Arquétipos",
+     "Estratégia de Website",
+     "Visão de Produto"
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Design"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Identidade Visual",
+     "Guia de Marca (Brand Guidelines)",
+     "Direção de Arte",
+     "Materiais de Marketing",
+     "Design de Experiência do Utilizador (UX)",
+     "Arquitetura da Informação",
+     "Wireframes e Prototipagem",
+     "Testes de Usabilidade",
+     "Design de Website",
+     "Design de Produto",
+     "Sistemas de Design",
+     "Design de Interação",
+     "Design em Movimento (Motion Design)",
+     "Sistemas de Animação"
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Execução"
+   },
+   {
+    "type": "h3",
+    "text": "Expressar a marca no dia-a-dia:"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Estratégia e planos de comunicação",
+     "Conteúdo editorial",
+     "Ativações e campanhas"
+    ]
+   },
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "web-design-criacao-de-sites",
+  "legacyPath": "/servicos/web-design-criacao-de-sites/",
+  "title": "web design – criação de sites",
+  "updated": "2025-10-05",
+  "words": 168,
+  "body": [
+   {
+    "type": "p",
+    "text": "Your business “live and clicking”"
+   },
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U= Com mais de 20 anos de experiência em desenvolvimento web e aplicacional, somos uma equipa suficientemente experiente para evitar erros desnecessários — e suficientemente focada no cliente para garantir que o resultado final está à altura do que é preciso: funcional, robusto e com qualidade de topo. Mapeamos objetivos, públicos e fluxos de navegação. Organizamos o conteúdo com clareza e contexto. Planeamos antes de construir. Desenvolvimento frontend e backend com base no que o projeto pede. Sites institucionais, lojas online ou soluções à medida. Com performance, segurança e facilidade de gestão."
+   },
+   {
+    "type": "p",
+    "text": "Costumamos dizer que, quando se inicia um projeto, tudo pode correr mal. Se não for bem gerido, claro."
+   },
+   {
+    "type": "p",
+    "text": "É por isso que mantemos uma comunicação constante, clara e acessível. Utilizamos uma plataforma colaborativa de gestão de projeto, onde tudo fica registado — tarefas, decisões, evoluções — para que todos saibam sempre o que está a acontecer, sem surpresas nem ruído."
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "image",
+    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwZGF0YS10Zi1saXZlJTNEJTIyMDFKUk1WVkJXU0cySENEWkgyOUpIMlcwSDAlMjIlM0UlM0MlMkZkaXYlM0UlM0NzY3JpcHQlMjBzcmMlM0QlMjIlMkYlMkZlbWJlZC50eXBlZm9ybS5jb20lMkZuZXh0JTJGZW1iZWQuanMlMjIlM0UlM0MlMkZzY3JpcHQlM0U="
+   },
+   {
+    "type": "h2",
+    "text": "JELLYCARE"
+   },
+   {
+    "type": "h3",
+    "text": "Plano de manutenção ativa e preventiva do seu website"
+   }
+  ]
+ },
+ {
+  "slug": "audiovisuais-producao-video",
+  "legacyPath": "/servicos/audiovisuais-producao-video/",
+  "title": "audiovisuais produção video",
+  "updated": "2022-07-02",
+  "words": 67,
+  "body": [
+   {
+    "type": "p",
+    "text": "Performance Marketing Video"
+   },
+   {
+    "type": "h2",
+    "text": "Vídeos feitos para atrair e converter"
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMGRhdGEtdGYtaGlkZGVuJTNEJTIydXRtX3NvdXJjZSUzRGplbGx5JTIwc2l0ZSUyQ3V0bV9tZWRpdW0lM0R2aWRlbyUyMiUyMHN0eWxlJTNEJTIyYWxsJTNBdW5zZXQlM0Jmb250LWZhbWlseSUzQUhlbHZldGljYSUyQ0FyaWFsJTJDc2Fucy1zZXJpZiUzQmRpc3BsYXklM0FpbmxpbmUtYmxvY2slM0JtYXgtd2lkdGglM0ExMDAlMjUlM0J3aGl0ZS1zcGFjZSUzQW5vd3JhcCUzQm92ZXJmbG93JTNBaGlkZGVuJTNCdGV4dC1vdmVyZmxvdyUzQWVsbGlwc2lzJTNCYmFja2dyb3VuZC1jb2xvciUzQSUyM0M5Mjc0MyUzQmNvbG9yJTNBJTIzRkZGRkZGJTNCZm9udC1zaXplJTNBMjBweCUzQmJvcmRlci1yYWRpdXMlM0E5cHglM0JwYWRkaW5nJTNBMCUyMDMzcHglM0Jmb250LXdlaWdodCUzQWJvbGQlM0JoZWlnaHQlM0E1MHB4JTNCY3Vyc29yJTNBcG9pbnRlciUzQmxpbmUtaGVpZ2h0JTNBNTBweCUzQnRleHQtYWxpZ24lM0FjZW50ZXIlM0JtYXJnaW4lM0EwJTNCdGV4dC1kZWNvcmF0aW9uJTNBbm9uZSUzQiUyMiUzRVRlbSUyMHVtJTIwZGVzYWZpbyUzRiUzQyUyRmJ1dHRvbiUzRSUzQ3NjcmlwdCUyMHNyYyUzRCUyMiUyRiUyRmVtYmVkLnR5cGVmb3JtLmNvbSUyRm5leHQlMkZlbWJlZC5qcyUyMiUzRSUzQyUyRnNjcmlwdCUzRQ=="
+   },
+   {
+    "type": "h2",
+    "text": "Fases de produção e promoção"
+   },
+   {
+    "type": "h2",
+    "text": "Bem vindo(a) ao Jelly.Studio"
+   },
+   {
+    "type": "p",
+    "text": "Asseguramos todas as fases de produção vídeo. Começando pela criatividade do storytelling, passando por todas as fases de produção e pós produção vídeo, suportada por equipamentos e meios adequados a cada projeto."
+   },
+   {
+    "type": "p",
+    "text": "Dispomos de estúdio próprio para a realização de trabalhos de vídeo ou fotografia."
+   },
+   {
+    "type": "h2",
+    "text": "Projetos recentes"
+   },
+   {
+    "type": "p",
+    "text": "JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMGRhdGEtdGYtaGlkZGVuJTNEJTIydXRtX3NvdXJjZSUzRGplbGx5JTIwc2l0ZSUyQ3V0bV9tZWRpdW0lM0R2aWRlbyUyMiUyMHN0eWxlJTNEJTIyYWxsJTNBdW5zZXQlM0Jmb250LWZhbWlseSUzQUhlbHZldGljYSUyQ0FyaWFsJTJDc2Fucy1zZXJpZiUzQmRpc3BsYXklM0FpbmxpbmUtYmxvY2slM0JtYXgtd2lkdGglM0ExMDAlMjUlM0J3aGl0ZS1zcGFjZSUzQW5vd3JhcCUzQm92ZXJmbG93JTNBaGlkZGVuJTNCdGV4dC1vdmVyZmxvdyUzQWVsbGlwc2lzJTNCYmFja2dyb3VuZC1jb2xvciUzQSUyM0M5Mjc0MyUzQmNvbG9yJTNBJTIzRkZGRkZGJTNCZm9udC1zaXplJTNBMjBweCUzQmJvcmRlci1yYWRpdXMlM0E5cHglM0JwYWRkaW5nJTNBMCUyMDMzcHglM0Jmb250LXdlaWdodCUzQWJvbGQlM0JoZWlnaHQlM0E1MHB4JTNCY3Vyc29yJTNBcG9pbnRlciUzQmxpbmUtaGVpZ2h0JTNBNTBweCUzQnRleHQtYWxpZ24lM0FjZW50ZXIlM0JtYXJnaW4lM0EwJTNCdGV4dC1kZWNvcmF0aW9uJTNBbm9uZSUzQiUyMiUzRVF1YWwlMjAlQzMlQTklMjBvJTIwZGVzYWZpbyUzRiUzQyUyRmJ1dHRvbiUzRSUzQ3NjcmlwdCUyMHNyYyUzRCUyMiUyRiUyRmVtYmVkLnR5cGVmb3JtLmNvbSUyRm5leHQlMkZlbWJlZC5qcyUyMiUzRSUzQyUyRnNjcmlwdCUzRQ=="
+   }
+  ]
+ },
+ {
+  "slug": "imunidade-algoritmica",
+  "legacyPath": "/imunidade-algoritmica/",
+  "title": "Imunidade Algoritmica",
+  "updated": "2026-07-21",
+  "words": 993,
+  "body": [
+   {
+    "type": "p",
+    "text": "O que é Imunidade Algorítmica?"
+   },
+   {
+    "type": "p",
+    "text": "Imunidade Algorítmica é o estado atingido por uma marca quando se torna incontornável nos resultados de pesquisa e nas respostas geradas pela inteligência artificial. Quando alguém pergunta sobre o seu universo e essa marca surge como resposta e recomendação. Não por um acaso, mas porque o sistema a reconhece como referência no tópico."
+   },
+   {
+    "type": "p",
+    "text": "Por isso, convém já desfazer um equívoco. Imunidade Algorítmica não se conquista com uma palavra-chave, com um esquema de SEO ou com um atalho técnico. Conquista-se de uma maneira mais lenta e mais antiga: por fazer bem feito, durante muito tempo, aquilo que se faz."
+   },
+   {
+    "type": "p",
+    "text": "O algoritmo não cria a autoridade de uma marca. Ele lê uma autoridade que já existe lá fora, no mundo real, e devolve-a a quem pergunta."
+   },
+   {
+    "type": "p",
+    "text": "Gonçalo Malho Rodrigues, fundador da Jelly, cunhou o termo “Imunidade Algorítmica” para dar nome à filosofia que aplica há quase três décadas: uma estratégia de marca de longo prazo, assente em táticas intemporais e, por isso mesmo, imune às variações de algoritmo."
+   },
+   {
+    "type": "h2",
+    "text": "Constrói-se por camadas, e a técnica é a última"
+   },
+   {
+    "type": "p",
+    "text": "A autoridade não nasce de uma estratégia de conteúdo. Nasce do trabalho bem feito que deixa rasto."
+   },
+   {
+    "type": "p",
+    "text": "A qualidade consistente do produto que a marca entrega, a lealdade dos clientes, as parcerias bem-sucedidas, os eventos… As pessoas falam, recomendam, citam. E é esse rasto, deixado por outros, que a máquina valoriza. Tudo o que se faz na terra é, mais cedo ou mais tarde, lido no digital."
+   },
+   {
+    "type": "h2",
+    "text": "Sobre a técnica (SEO/GEO)"
+   },
+   {
+    "type": "p",
+    "text": "A componente técnica conta, claro, mas o seu lugar é no fim. SEO, GEO, dados estruturados: servem para que a autoridade já construída seja lida sem ruído e o sinal amplificado."
+   },
+   {
+    "type": "p",
+    "text": "A técnica amplifica o que é real, deixando a marca sujeita ao próprio desempenho. Primeiro a substância, depois a técnica que a torna legível."
+   },
+   {
+    "type": "h2",
+    "text": "O que distingue Imunidade Algorítmica de SEO tradicional"
+   },
+   {
+    "type": "p",
+    "text": "O SEO tradicional, é uma corrida atrás do algoritmo. Sai uma atualização, ajusta-se a estratégia. Muda um fator de ranking, refaz-se o trabalho."
+   },
+   {
+    "type": "p",
+    "text": "A Imunidade Algorítmica inverte essa relação. A autoridade conquistada pela marca torna-a incontornável, apesar das mudanças algorítmicas ou até mesmo das revoluções tecnológicas, como é o caso da maior de todas: a IA."
+   },
+   {
+    "type": "h2",
+    "text": "01"
+   },
+   {
+    "type": "h2",
+    "text": "Substância"
+   },
+   {
+    "type": "p",
+    "text": "Ganhar o sinal na terra. Produto, serviço e assistência com qualidade real, e um posicionamento inequívoco: ser a resposta óbvia a uma pergunta específica. Critério de saída: clientes reais a recomendar-te espontaneamente. Sem isto, tudo o resto é ruído fabricado."
+   },
+   {
+    "type": "h2",
+    "text": "02"
+   },
+   {
+    "type": "h2",
+    "text": "Registo"
+   },
+   {
+    "type": "p",
+    "text": "Capturar o sinal. Transformar a experiência vivida em prova pública e sistemática: reviews como processo (não como acaso), cases documentados, imprensa e citações de terceiros. Critério de saída: a reputação existe por escrito, fora dos canais proprietários, em fontes que a marca não controla."
+   },
+   {
+    "type": "h2",
+    "text": "03"
+   },
+   {
+    "type": "h2",
+    "text": "Coerência"
+   },
+   {
+    "type": "p",
+    "text": "Limpar o ruído. Consistência de entidade em todos os pontos onde a marca é “lida”: mesmo nome, mesma promessa, mesma linguagem, dados alinhados (site, diretórios, redes, imprensa). Critério de saída: não existe informação contraditória sobre a marca em lado nenhum."
+   },
+   {
+    "type": "h2",
+    "text": "04"
+   },
+   {
+    "type": "h2",
+    "text": "Amplificação"
+   },
+   {
+    "type": "p",
+    "text": "Fazer o sinal chegar à máquina. GEO/AEO: dados estruturados, conteúdo citável, presença nas fontes que os motores de resposta usam como referência. Critério de saída: a IA cita a marca quando alguém pergunta pela sua categoria."
+   },
+   {
+    "type": "h2",
+    "text": "05"
+   },
+   {
+    "type": "h2",
+    "text": "Imunidade"
+   },
+   {
+    "type": "p",
+    "text": "O efeito composto. Distribuição própria (email, comunidade, marca pessoal), monitorização contínua de como a IA te representa, e reinvestimento no ciclo. Critério de saída: não há, é regime permanente. É aqui que a marca deixa de depender de qualquer algoritmo em particular."
+   },
+   {
+    "type": "h3",
+    "text": "Frequently asked questions"
+   },
+   {
+    "type": "p",
+    "text": "Não. SEO e GEO são a camada técnica que ajuda a máquina a ler corretamente uma marca. A Imunidade Algorítmica é o resultado de fundo, alcançado sobretudo através de reputação e trabalho bem feito, para os quais a técnica é o último elo e não o primeiro. Não é imediato. Depende da reputação acumulada e da consistência da marca ao longo de meses e anos. É precisamente por não ter atalho que se torna uma vantagem competitiva difícil de copiar. Aos dois, e pela mesma lógica. Uma marca pessoal e uma empresa são ambas entidades que a máquina tem de reconhecer, ligar a um território e citar. A diferença está na escala e nas fontes do rasto, não no princípio. É a consequência disso, lida por um novo intermediário. A reputação sempre existiu; o que mudou é que agora há um modelo a interpretá-la e a devolvê-la em nome da marca. Boa reputação sem legibilidade técnica fica invisível; legibilidade técnica sem reputação não tem o que mostrar. Pela substância e pela coerência, nunca pela técnica. Primeiro, ter algo que mereça ser dito e um ponto de vista próprio. Depois, apresentar-se de forma consistente em todo o lado. Só quando isto existe é que faz sentido investir em SEO e GEO. Sim, de forma imperfeita, mas útil. Pergunta-se regularmente às próprias IA sobre o teu tema e vê-se se a marca aparece, com que frequência e se é bem caracterizada. Acompanha-se a evolução ao longo do tempo, não num único dia, pois as respostas oscilam. Não é volume, é densidade e credibilidade. Um conteúdo substancial e citável, referido por terceiros, vale mais do que dezenas de artigos que ninguém menciona. A máquina premeia a substância e ignora o ruído. Não, e a diferença é a ordem. SEO e GEO são a camada técnica, o último elo. A Imunidade Algorítmica é o resultado de fundo, construído sobre reputação real. Quem trata a técnica como o princípio, e não como o fim, otimiza o vazio. Não é assim que funciona, e é essa a boa notícia. Não há um botão nem um espaço publicitário que garanta a citação orgânica de uma marca como referência. Precisamente por não se comprar é que é um ativo defensável. É um risco real e faz parte do trabalho geri-lo. Caracterizações erradas corrigem-se alimentando a máquina com sinais corretos e consistentes nas fontes que ela lê. Ignorar é que é perigoso, porque a versão errada consolida-se."
+   }
+  ]
+ },
+ {
+  "slug": "seo-search-everywhere-optimization",
+  "legacyPath": "/servicos/web-marketing-digital/seo-search-everywhere-optimization/",
+  "title": "SEO – Search Everywhere Optimization",
+  "updated": "2025-10-13",
+  "words": 269,
+  "body": [
+   {
+    "type": "p",
+    "text": "A forma de pesquisar mudou. As pessoas já não recorrem apenas ao Google; fazem perguntas ao ChatGPT, pesquisam no TikTok, leem respostas instantâneas nas “answer boxes” e confiam nos resumos gerados por IA."
+   },
+   {
+    "type": "h3",
+    "text": "A Jelly prepara a sua marca para esta nova realidade, garantindo visibilidade consistente onde quer que o seu público pesquise, pergunte ou converse."
+   },
+   {
+    "type": "h2",
+    "text": "Auditoria SEO"
+   },
+   {
+    "type": "p",
+    "text": "Site(Obrigatório) Email(Obrigatório) Empresa(Obrigatório)Nome(Obrigatório) Primeiro Último Telefone(Obrigatório)Consentimento(Obrigatório) Concordo com a política de privacidade.Autorizo a Jelly - Digital Agency a armazenar e utilizar os dados submetidos neste formulário para a produção da auditoria SEO, de acordo com a Política de Privacidade Submeter"
+   },
+   {
+    "type": "p",
+    "text": "Tradicional"
+   },
+   {
+    "type": "h3",
+    "text": "01. Motores de Pesquisa"
+   },
+   {
+    "type": "p",
+    "text": "Google, Bing, Yandex: auditoria técnica, Page Experience, Core Web Vitals, IndexNow. Social"
+   },
+   {
+    "type": "h3",
+    "text": "02. Social Search"
+   },
+   {
+    "type": "p",
+    "text": "YouTube SEO, TikTok SEO, Pinterest & LinkedIn: research de tendências, tags, thumbnails, descrições ricas em keywords. Contextual"
+   },
+   {
+    "type": "h3",
+    "text": "03. Inteligência Artificial"
+   },
+   {
+    "type": "p",
+    "text": "ChatGPT, Gemini, Copilot, Perplexity: schema focado em snippets, parágrafos ancorados, licenças de reutilização, APIs de conteúdo."
+   },
+   {
+    "type": "h3",
+    "text": "1. SEO Machine"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Instalação Google Site Kit & Bing Webmaster + IndexNow",
+     "Sitemaps, robots.txt (incluindo GPTBot e Google-Extended)",
+     "Titles, meta descriptions, alt texts, H1 e mapeamento de keywords",
+     "Schema básico e directivas de licenciamento para IA Ideal para: websites que precisam de uma base sólida e rastreável."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "2. SEO Content"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Calendário editorial baseado em intenção de pesquisa",
+     "Produção de artigos, FAQs, vídeos short-form e peças sociais",
+     "Otimização on-page contínua, interlinking, atualização de freshness",
+     "Marcação avançada (HowTo, Recipe, Video, Review) Ideal para: marcas que querem crescer tráfego e autoridade com conteúdos consistentes."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "3. SEO Strategy"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Pesquisa de mercado e topic clusters",
+     "Construção de autoridade (digital PR, link-building ético, colaborações)",
+     "Governance editorial, guidelines EEAT, auditorias de compliance IA",
+     "Dashboards de share of voice, citações em IA e ROI multicanal Ideal para: empresas que precisam integrar SEO no planeamento de marketing e produto."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Frequently asked questions"
+   },
+   {
+    "type": "p",
+    "text": "Sim. Ao otimizar para answer boxes e citações em IA garantimos que a sua marca aparece como fonte confiável, ganhando cliques de utilizadores avançados e notoriedade junto dos restantes. Monitorizamos resumos SGE, menções em ChatGPT (modo navegação) e Perplexity, além de relatórios de log dos principais bots de IA. Projetos de SEO Machine mostram melhorias técnicas imediatas; ganhos de tráfego compõem-se entre 3-6 meses consoante concorrência e investimento em conteúdo. Não. Incluímos Bing, social search e indexadores de IA para que o seu conteúdo esteja onde o seu público está. Integramos com equipas internas, oferecendo auditorias, templates de conteúdo e workshops de capacitação."
+   }
+  ]
+ },
+ {
+  "slug": "home-2",
+  "legacyPath": "/",
+  "title": "Home",
+  "updated": "2026-06-20",
+  "words": 221,
+  "body": [
+   {
+    "type": "p",
+    "text": "Branding, marketing digital & Inteligência Artificial"
+   },
+   {
+    "type": "p",
+    "text": "Based in Lisbon"
+   },
+   {
+    "type": "p",
+    "text": "Ajudamos empresas a comunicar e desempenhar melhor"
+   },
+   {
+    "type": "p",
+    "text": "Desde 2010"
+   },
+   {
+    "type": "h2",
+    "text": "Não dispensamos uma boa companhia"
+   },
+   {
+    "type": "h3",
+    "text": "O que temos andado a fazer"
+   },
+   {
+    "type": "h2",
+    "text": "Por onde quer começar?"
+   },
+   {
+    "type": "h3",
+    "text": "Social Media"
+   },
+   {
+    "type": "p",
+    "text": "Conteúdos para redes sociais"
+   },
+   {
+    "type": "h3",
+    "text": "Performance & Growth Marketing"
+   },
+   {
+    "type": "p",
+    "text": "Geração de Leads / vendas"
+   },
+   {
+    "type": "h3",
+    "text": "Inteligência Artificial"
+   },
+   {
+    "type": "p",
+    "text": "Ao serviço do negócio e da eficiência operacional."
+   },
+   {
+    "type": "h3",
+    "text": "Website ou eCommerce"
+   },
+   {
+    "type": "h3",
+    "text": "Branding"
+   },
+   {
+    "type": "h3",
+    "text": "Produção Video"
+   },
+   {
+    "type": "p",
+    "text": "Novas estratégias, diferentes agências, promessas de resultados que nunca chegaram."
+   },
+   {
+    "type": "p",
+    "text": "Cada tentativa parecia a certa, mas o que ficou foi a frustração de oportunidades desperdiçadas. Porque já acompanhámos muitas marcas que passaram pelo mesmo."
+   },
+   {
+    "type": "p",
+    "text": "E sabemos também que há um outro caminho."
+   },
+   {
+    "type": "p",
+    "text": "Um caminho onde estratégia e execução andam de mãos dadas, porque uma boa ideia não basta."
+   },
+   {
+    "type": "p",
+    "text": "E onde o digital serve as pessoas e não o contrário. Porque transformar uma visão em realidade exige mais do que planos bem intencionados, somos a equipa que faz acontecer ao seu lado, com criatividade, resiliência e flexibilidade. Se chegou até aqui, é porque acredita que a sua marca pode chegar onde merece."
+   },
+   {
+    "type": "p",
+    "text": "Nós acreditamos também."
+   },
+   {
+    "type": "p",
+    "text": "E estamos preparados para provar isso. JTNDYnV0dG9uJTIwZGF0YS10Zi1wb3B1cCUzRCUyMkJWV2NWbWN3JTIyJTIwZGF0YS10Zi1pZnJhbWUtcHJvcHMlM0QlMjJ0aXRsZSUzRERlc2FmaW8lMjBKZWxseSUyMiUyMGRhdGEtdGYtbWVkaXVtJTNEJTIyc25pcHBldCUyMiUyMGRhdGEtdGYtaGlkZGVuJTNEJTIydXRtX3NvdXJjZSUzRGplbGx5JTIwc2l0ZSUyQ3V0bV9tZWRpdW0lM0Rob21lJTIyJTIwc3R5bGUlM0QlMjJhbGwlM0F1bnNldCUzQmZvbnQtZmFtaWx5JTNBSGVsdmV0aWNhJTJDQXJpYWwlMkNzYW5zLXNlcmlmJTNCZGlzcGxheSUzQWlubGluZS1ibG9jayUzQm1heC13aWR0aCUzQTEwMCUyNSUzQndoaXRlLXNwYWNlJTNBbm93cmFwJTNCb3ZlcmZsb3clM0FoaWRkZW4lM0J0ZXh0LW92ZXJmbG93JTNBZWxsaXBzaXMlM0JiYWNrZ3JvdW5kLWNvbG9yJTNBJTIzZWI3MjZiJTNCY29sb3IlM0ElMjNmZmZmZmYlM0Jmb250LXNpemUlM0EyMHB4JTNCYm9yZGVyLXJhZGl1cyUzQTlweCUzQnBhZGRpbmclM0EwJTIwMzNweCUzQmZvbnQtd2VpZ2h0JTNBYm9sZCUzQmhlaWdodCUzQTUwcHglM0JjdXJzb3IlM0Fwb2ludGVyJTNCbGluZS1oZWlnaHQlM0E1MHB4JTNCdGV4dC1hbGlnbiUzQWNlbnRlciUzQm1hcmdpbiUzQTAlM0J0ZXh0LWRlY29yYXRpb24lM0Fub25lJTNCJTIyJTNFQ29tZSVDMyVBN2FyJTIwYSUyMG11ZGFuJUMzJUE3YSUzQyUyRmJ1dHRvbiUzRSUzQ3NjcmlwdCUyMHNyYyUzRCUyMiUyRiUyRmVtYmVkLnR5cGVmb3JtLmNvbSUyRm5leHQlMkZlbWJlZC5qcyUyMiUzRSUzQyUyRnNjcmlwdCUzRQ=="
+   },
+   {
+    "type": "h3",
+    "text": "Branding"
+   },
+   {
+    "type": "h3",
+    "text": "Performance Marketing"
+   },
+   {
+    "type": "h3",
+    "text": "Conteúdos e Publicidade"
+   },
+   {
+    "type": "h3",
+    "text": "Websites / eCommerce"
+   },
+   {
+    "type": "h3",
+    "text": "Inteligência Artificial"
+   },
+   {
+    "type": "h3",
+    "text": "Consultoria e Sistemas"
+   },
+   {
+    "type": "h2",
+    "text": "Jelly blogue"
+   },
+   {
+    "type": "p",
+    "text": "Para quem procura estar a par de tudo o que interessa no universo do branding, marketing e tecnologia."
+   },
+   {
+    "type": "p",
+    "text": "No Blog"
+   }
+  ]
+ },
+ {
+  "slug": "recrutamento",
+  "legacyPath": "/recrutamento/",
+  "title": "iWork @ JellyCode",
+  "updated": "2025-08-26",
+  "words": 468,
+  "body": [
+   {
+    "type": "p",
+    "text": "Procuramos mentes criativas e apaixonadas pela mudança. Valorizamos a curiosidade, a coragem de começar mesmo não sabendo tudo e a capacidade de pensar profunda e seriamente sobre os desafios de todos nós, os consumidores."
+   },
+   {
+    "type": "p",
+    "text": "Start the change"
+   },
+   {
+    "type": "p",
+    "text": "\"*\" indica campos obrigatórios"
+   },
+   {
+    "type": "p",
+    "text": "Passo 1 de 2 - About you 0% CompanyEste campo é para efeitos de validação e deve ser mantido inalterado.Dados pessoaisName* Primeiro Último Email* Número de Telefone*Data Nascimento* Género* Feminino Masculino Morada* Endereço Cidade Código postal PaísAfeganistãoÁfrica do SulAlbâniaAlemanhaAndorraAngolaAnguillaAntártidaAntígua e BarbudaArábia SauditaArgéliaArgentinaArméniaArubaAustráliaÁustriaAzerbeijãoBahamasBahrainBangladeshBarbadosBélgicaBelizeBeninBermudasBielorrússiaBirmâniaBolíviaBonaire, Santo Eustáquio e SabaBósnia e HezergovinaBotsuanaBrasilBrunei DarussalamBulgáriaBurkina FasoBurundiButãoCabo VerdeCamarõesCambodjaCanadáCazaquistãoChadeChéquiaChileChinaChipreColômbiaComoresCongoCongo, República DemocráticaCoreia, República daCoreia, República Popular daCosta do MarfimCosta RicaCroáciaCubaCuraçãoDinamarcaDjiboutiDominicaEgitoEl SalvadorEmirados Árabes UnidosEquadorEritreiaEslováquiaEslovéniaEspanhaEssuatíniEstado da PalestinaEstados UnidosEstóniaEtiópiaFederação RussaFijiFilipinasFinlândiaFrançaGabãoGâmbiaGanaGeórgiaGibraltarGranadaGréciaGronelândiaGuadalupeGuamGuatemalaGuernseyGuianaGuiana FrancesaGuinéGuiné EquatorialGuiné-BissauHaitiHolandaHondurasHong KongHungriaIêmenIlha BouvetIlha de ManIlha do NatalIlha Heard e Ilhas McDonaldIlha NorfolkIlhas CaimãoIlhas CocosIlhas CookIlhas de AlandaIlhas FaroéIlhas Geórgia do Sul e Sandwich do SulIlhas MalvinasIlhas Marianas do NorteIlhas MarshallIlhas MauríciasIlhas Menores Afastadas dos Estados UnidosIlhas SalomãoIlhas Turcas e CaicosIlhas Virgens BritânicasIlhas Virgens, EUAÍndiaIndonésiaIrãoIraqueIrlandaIslândiaIsraelItáliaJamaicaJapãoJerseyJordâniaKiribatiKuwaitLaosLesotoLetóniaLíbanoLibériaLíbiaLiechtensteinLituâniaLuxemburgoMacauMacedónia do NorteMadagáscarMalásiaMalawiMaldivasMaliMaltaMarrocosMartinicaMauritâniaMayotteMéxicoMicronésiaMoçambiqueMoldáviaMónacoMongóliaMontenegroMontserratNamíbiaNauruNepalNicaráguaNígerNigériaNiueNoruegaNova CaledóniaNova ZelândiaOmãPalauPanamáPapua Nova GuinéPaquistãoParaguaiPerúPitcairnPolinésia francesaPolóniaPorto RicoPortugalQatarQuéniaQuirguistãoReino UnidoRepública Centro AfricanaRepública DominicanaReuniãoRoméniaRuandaSaint MartinSamoaSamoa AmericanaSanta Helena, Ascensão e Tristão da CunhaSanta LúciaSanta SéSão BartolomeuSão Cristóvão e NévisSão MarinoSão MartinhoSão Pedro e MiguelãoSão Tomé e PríncipeSão Vicente e GranadinasSara OcidentalSeichelesSenegalSerra LeoaSérviaSingapuraSíria, República ÁrabeSomáliaSri LankaSudãoSudão do SulSuéciaSuíçaSurinameSvalbard e Jan MayenTadjiquistãoTailândiaTaiwanTanzânia, República Unida daTerras Austrais e Antárticas FrancesasTerritório Britânico do Oceano ÍndicoTimor-LesteTogoTongaToquelaoTrinidade e TobagoTunísiaTurquemenistãoTurquiaTuvaluUcrâniaUgandaUruguaiUzbequistãoVanuatuVenezuelaVietnameWallis e FutunaZâmbiaZimbabue País Seguinte Sobre as suas aspirações e competências...Função a que se candidata* MARKETING DEVELOPMENT PERFORMANCE DESIGN MULTIMEDIA COMERCIAL SUPORTE OUTRA (pode selecionar uma ou mais opções)Stack TecnológicoDescreva as tecnologias, frameworks e CMS que dominaCompetências em DesignDescreva as competências e ferramentas que domina (ex. competências: branding, editorial; ferramentas: adobe photoshop, Illustrator, etc).Competências em MultimédiaDescreva as competências e ferramentas que domina (ex. competências: edição vídeo; ferramentas: adobe premiere, after effects, etc).Competências em MarketingDescreva as competências e ferramentas que domina (ex. competências: Gestão campanhas Google Ads; ferramentas: Google Ads, Facebook Ads, etc).Competências em PerformanceDescreva as competências e ferramentas que domina (ex. competências: Gestão campanhas Google Ads; ferramentas: Google Ads, Facebook Ads, etc).Outra candidaturaComo se avalia na principal competência a que se candidata?Domínio totalMuito bomBomSatisfatórioBásicoLinks para projetos / portefolio*Quantos anos de experiência?* Menos de um ano 1 ano 2 anos ou mais Sem experiência Tem experiência em liderar projetos:* Sim Não Qual o projeto que considera que foi mais desafiante e porquê?*Enviar CV*Tipos de ficheiro aceites: pdf, doc, docx, ppt, pptx, Tamanho máx. de ficheiro: 20 MB. Carta de MotivaçãoTipos de ficheiro aceites: pdf, doc, docx, ppt, pptx, Tamanho máx. de ficheiro: 20 MB. Comentários adicionaisRegime preferencial de contratação Estágio Freelancer Contrato de Trabalho Consentimento* Concordo com a política de privacidade.Subscrever as nossas comunicações? Subscrever as nossas comunicações? Anterior Enviar Candidatura"
+   },
+   {
+    "type": "h3",
+    "text": "Procuramos mentes criativas e apaixonadas pela mudança. Valorizamos a curiosidade, a coragem de começar mesmo não sabendo tudo e a capacidade de pensar profunda e seriamente sobre os desafios de todos nós, os consumidores."
+   },
+   {
+    "type": "p",
+    "text": "JTNDaWZyYW1lJTIwaWQlM0QlMjJmYWN0b3JpYWwtaWZyYW1lJTIyJTIwd2lkdGglM0QlMjIxMDAlMjUlMjIlMjBoZWlnaHQlM0QlMjI2MDAlMjIlMjBzcmMlM0QlMjJodHRwcyUzQSUyRiUyRmplbGx5LWFnZW5jeS5mYWN0b3JpYWxoci5wdCUyRmVtYmVkJTJGam9icyUyMiUyMGZyYW1lYm9yZGVyJTNEJTIyMCUyMiUzRSUzQyUyRmlmcmFtZSUzRSUyMCUzQ3NjcmlwdCUzRSUyMGZ1bmN0aW9uJTIwaGFuZGxlSWZyYW1lTWVzc2FnZSUyOGV2ZW50JTI5JTIwJTdCJTIwaWYlMjAlMjhldmVudC5vcmlnaW4lMjAlM0QlM0QlM0QlMjAlMjJodHRwcyUzQSUyRiUyRmplbGx5LWFnZW5jeS5mYWN0b3JpYWxoci5wdCUyMiUyMCUyNiUyNiUyMGV2ZW50LmRhdGEudHlwZSUyMCUzRCUzRCUzRCUyMCUyMnJlc2l6ZUlmcmFtZSUyMiUyOSUyMCU3QiUyMGNvbnN0JTIwaWZyYW1lJTIwJTNEJTIwZG9jdW1lbnQucXVlcnlTZWxlY3RvciUyOCUyMiUyM2ZhY3RvcmlhbC1pZnJhbWUlMjIlMjklM0IlMjBpZnJhbWUuc3R5bGUuaGVpZ2h0JTIwJTNEJTIwZXZlbnQuZGF0YS5oZWlnaHQlMjAlMkIlMjAlMjJweCUyMiUzQiUyMCU3RCUyMCU3RCUyMHdpbmRvdy5hZGRFdmVudExpc3RlbmVyJTI4JTIybWVzc2FnZSUyMiUyQyUyMGhhbmRsZUlmcmFtZU1lc3NhZ2UlMjklM0IlMjAlM0MlMkZzY3JpcHQlM0U="
+   }
+  ]
+ },
+ {
+  "slug": "subscrever-newsletter-jellycode",
+  "legacyPath": "/subscrever-newsletter-jellycode/",
+  "title": "Subscrever comunicações Jellycode",
+  "updated": "2025-02-17",
+  "words": 16,
+  "body": [
+   {
+    "type": "p",
+    "text": "JTNDZGl2JTIwaWQlM0QlMjJtY19lbWJlZF9zaGVsbCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUzQ2xpbmslMjBocmVmJTNEJTIyJTJGJTJGY2RuLWltYWdlcy5tYWlsY2hpbXAuY29tJTJGZW1iZWRjb2RlJTJGY2xhc3NpYy0wNjE1MjMuY3NzJTIyJTIwcmVsJTNEJTIyc3R5bGVzaGVldCUyMiUyMHR5cGUlM0QlMjJ0ZXh0JTJGY3NzJTIyJTNFJTBBJTIwJTIwJTNDc3R5bGUlMjB0eXBlJTNEJTIydGV4dCUyRmNzcyUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyM21jX2VtYmVkX3NpZ251cCU3QmJhY2tncm91bmQlM0ElMjNmZmYlM0IlMjBmYWxzZSUzQmNsZWFyJTNBbGVmdCUzQiUyMGZvbnQlM0ExNHB4JTIwSGVsdmV0aWNhJTJDQXJpYWwlMkNzYW5zLXNlcmlmJTNCJTIwd2lkdGglM0ElMjA2MDBweCUzQiU3RCUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyRiUyQSUyMEFkZCUyMHlvdXIlMjBvd24lMjBNYWlsY2hpbXAlMjBmb3JtJTIwc3R5bGUlMjBvdmVycmlkZXMlMjBpbiUyMHlvdXIlMjBzaXRlJTIwc3R5bGVzaGVldCUyMG9yJTIwaW4lMjB0aGlzJTIwc3R5bGUlMjBibG9jay4lMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjBXZSUyMHJlY29tbWVuZCUyMG1vdmluZyUyMHRoaXMlMjBibG9jayUyMGFuZCUyMHRoZSUyMHByZWNlZGluZyUyMENTUyUyMGxpbmslMjB0byUyMHRoZSUyMEhFQUQlMjBvZiUyMHlvdXIlMjBIVE1MJTIwZmlsZS4lMjAlMkElMkYlMEElM0MlMkZzdHlsZSUzRSUzQ3N0eWxlJTIwdHlwZSUzRCUyMnRleHQlMkZjc3MlMjIlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjNtYy1lbWJlZGRlZC1zdWJzY3JpYmUtZm9ybSUyMGlucHV0JTVCdHlwZSUzRGNoZWNrYm94JTVEJTdCZGlzcGxheSUzQSUyMGlubGluZSUzQiUyMHdpZHRoJTNBJTIwYXV0byUzQm1hcmdpbi1yaWdodCUzQSUyMDEwcHglM0IlN0QlMEElMjNtZXJnZVJvdy1nZHByJTIwJTdCbWFyZ2luLXRvcCUzQSUyMDIwcHglM0IlN0QlMEElMjNtZXJnZVJvdy1nZHByJTIwZmllbGRzZXQlMjBsYWJlbCUyMCU3QmZvbnQtd2VpZ2h0JTNBJTIwbm9ybWFsJTNCJTdEJTBBJTIzbWMtZW1iZWRkZWQtc3Vic2NyaWJlLWZvcm0lMjAubWNfZmllbGRzZXQlN0Jib3JkZXIlM0Fub25lJTNCbWluLWhlaWdodCUzQSUyMDBweCUzQnBhZGRpbmctYm90dG9tJTNBMHB4JTNCJTdEJTBBJTNDJTJGc3R5bGUlM0UlMEElM0NkaXYlMjBpZCUzRCUyMm1jX2VtYmVkX3NpZ251cCUyMiUzRSUwQSUyMCUyMCUyMCUyMCUzQ2Zvcm0lMjBhY3Rpb24lM0QlMjJodHRwcyUzQSUyRiUyRmplbGx5LnVzOS5saXN0LW1hbmFnZS5jb20lMkZzdWJzY3JpYmUlMkZwb3N0JTNGdSUzRGY0MjkzYmRjYzc1MDFhZDlkMDMyZmZhOTMlMjZhbXAlM0JpZCUzRDliZTI4MjJmZDklMjZhbXAlM0J2X2lkJTNEMzU0NyUyNmFtcCUzQmZfaWQlM0QwMDdhNTFlMWYwJTIyJTIwbWV0aG9kJTNEJTIycG9zdCUyMiUyMGlkJTNEJTIybWMtZW1iZWRkZWQtc3Vic2NyaWJlLWZvcm0lMjIlMjBuYW1lJTNEJTIybWMtZW1iZWRkZWQtc3Vic2NyaWJlLWZvcm0lMjIlMjBjbGFzcyUzRCUyMnZhbGlkYXRlJTIyJTIwdGFyZ2V0JTNEJTIyX2JsYW5rJTIyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwaWQlM0QlMjJtY19lbWJlZF9zaWdudXBfc2Nyb2xsJTIyJTNFJTNDaDIlM0VTdWJzY3JldmVyJTIwY29tdW5pY2ElQzMlQTclQzMlQjVlcyUzQyUyRmgyJTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwY2xhc3MlM0QlMjJpbmRpY2F0ZXMtcmVxdWlyZWQlMjIlM0UlM0NzcGFuJTIwY2xhc3MlM0QlMjJhc3RlcmlzayUyMiUzRSUyQSUzQyUyRnNwYW4lM0UlMjBpbmRpY2F0ZXMlMjByZXF1aXJlZCUzQyUyRmRpdiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIybWMtZmllbGQtZ3JvdXAlMjIlM0UlM0NsYWJlbCUyMGZvciUzRCUyMm1jZS1FTUFJTCUyMiUzRUVtYWlsJTIwQWRkcmVzcyUyMCUzQ3NwYW4lMjBjbGFzcyUzRCUyMmFzdGVyaXNrJTIyJTNFJTJBJTNDJTJGc3BhbiUzRSUzQyUyRmxhYmVsJTNFJTNDaW5wdXQlMjB0eXBlJTNEJTIyZW1haWwlMjIlMjBuYW1lJTNEJTIyRU1BSUwlMjIlMjBjbGFzcyUzRCUyMnJlcXVpcmVkJTIwZW1haWwlMjIlMjBpZCUzRCUyMm1jZS1FTUFJTCUyMiUyMHJlcXVpcmVkJTNEJTIyJTIyJTIwdmFsdWUlM0QlMjIlMjIlM0UlM0MlMkZkaXYlM0UlM0NkaXYlMjBjbGFzcyUzRCUyMm1jLWZpZWxkLWdyb3VwJTIyJTNFJTNDbGFiZWwlMjBmb3IlM0QlMjJtY2UtRk5BTUUlMjIlM0VQcmltZWlybyUyME5vbWUlMjAlM0MlMkZsYWJlbCUzRSUzQ2lucHV0JTIwdHlwZSUzRCUyMnRleHQlMjIlMjBuYW1lJTNEJTIyRk5BTUUlMjIlMjBjbGFzcyUzRCUyMiUyMHRleHQlMjIlMjBpZCUzRCUyMm1jZS1GTkFNRSUyMiUyMHZhbHVlJTNEJTIyJTIyJTNFJTNDJTJGZGl2JTNFJTNDZGl2JTIwY2xhc3MlM0QlMjJtYy1maWVsZC1ncm91cCUyMiUzRSUzQ2xhYmVsJTIwZm9yJTNEJTIybWNlLUxOQU1FJTIyJTNFJUMzJTlBbHRpbW8lMjBOb21lJTIwJTNDJTJGbGFiZWwlM0UlM0NpbnB1dCUyMHR5cGUlM0QlMjJ0ZXh0JTIyJTIwbmFtZSUzRCUyMkxOQU1FJTIyJTIwY2xhc3MlM0QlMjIlMjB0ZXh0JTIyJTIwaWQlM0QlMjJtY2UtTE5BTUUlMjIlMjB2YWx1ZSUzRCUyMiUyMiUzRSUzQyUyRmRpdiUzRSUzQ2RpdiUyMGNsYXNzJTNEJTIybWMtZmllbGQtZ3JvdXAlMjBpbnB1dC1ncm91cCUyMiUzRSUzQ3N0cm9uZyUzRUludGVyZXNzZXMlMjAlM0MlMkZzdHJvbmclM0UlM0N1bCUzRSUzQ2xpJTNFJTNDaW5wdXQlMjB0eXBlJTNEJTIyY2hlY2tib3glMjIlMjBuYW1lJTNEJTIyZ3JvdXAlNUIzMTIxMyU1RCU1QjElNUQlMjIlMjBpZCUzRCUyMm1jZS1ncm91cCU1QjMxMjEzJTVELTMxMjEzLTAlMjIlMjB2YWx1ZSUzRCUyMiUyMiUzRSUzQ2xhYmVsJTIwZm9yJTNEJTIybWNlLWdyb3VwJTVCMzEyMTMlNUQtMzEyMTMtMCUyMiUzRU1hcmtldGluZyUzQyUyRmxhYmVsJTNFJTNDJTJGbGklM0UlM0NsaSUzRSUzQ2lucHV0JTIwdHlwZSUzRCUyMmNoZWNrYm94JTIyJTIwbmFtZSUzRCUyMmdyb3VwJTVCMzEyMTMlNUQlNUIyJTVEJTIyJTIwaWQlM0QlMjJtY2UtZ3JvdXAlNUIzMTIxMyU1RC0zMTIxMy0xJTIyJTIwdmFsdWUlM0QlMjIlMjIlM0UlM0NsYWJlbCUyMGZvciUzRCUyMm1jZS1ncm91cCU1QjMxMjEzJTVELTMxMjEzLTElMjIlM0VEZXNpZ24lM0MlMkZsYWJlbCUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NpbnB1dCUyMHR5cGUlM0QlMjJjaGVja2JveCUyMiUyMG5hbWUlM0QlMjJncm91cCU1QjMxMjEzJTVEJTVCNCU1RCUyMiUyMGlkJTNEJTIybWNlLWdyb3VwJTVCMzEyMTMlNUQtMzEyMTMtMiUyMiUyMHZhbHVlJTNEJTIyJTIyJTNFJTNDbGFiZWwlMjBmb3IlM0QlMjJtY2UtZ3JvdXAlNUIzMTIxMyU1RC0zMTIxMy0yJTIyJTNFVGVjbm9sb2dpYSUzQyUyRmxhYmVsJTNFJTNDJTJGbGklM0UlM0NsaSUzRSUzQ2lucHV0JTIwdHlwZSUzRCUyMmNoZWNrYm94JTIyJTIwbmFtZSUzRCUyMmdyb3VwJTVCMzEyMTMlNUQlNUI4JTVEJTIyJTIwaWQlM0QlMjJtY2UtZ3JvdXAlNUIzMTIxMyU1RC0zMTIxMy0zJTIyJTIwdmFsdWUlM0QlMjIlMjIlM0UlM0NsYWJlbCUyMGZvciUzRCUyMm1jZS1ncm91cCU1QjMxMjEzJTVELTMxMjEzLTMlMjIlM0VEZXNlbnZvbHZpbWVudG8lM0MlMkZsYWJlbCUzRSUzQyUyRmxpJTNFJTNDbGklM0UlM0NpbnB1dCUyMHR5cGUlM0QlMjJjaGVja2JveCUyMiUyMG5hbWUlM0QlMjJncm91cCU1QjMxMjEzJTVEJTVCMTYlNUQlMjIlMjBpZCUzRCUyMm1jZS1ncm91cCU1QjMxMjEzJTVELTMxMjEzLTQlMjIlMjB2YWx1ZSUzRCUyMiUyMiUzRSUzQ2xhYmVsJTIwZm9yJTNEJTIybWNlLWdyb3VwJTVCMzEyMTMlNUQtMzEyMTMtNCUyMiUzRUF1ZGlvdmlzdWFpcyUzQyUyRmxhYmVsJTNFJTNDJTJGbGklM0UlM0MlMkZ1bCUzRSUzQyUyRmRpdiUzRSUzQ2RpdiUyMGlkJTNEJTIybWVyZ2VSb3ctZ2RwciUyMiUyMGNsYXNzJTNEJTIybWVyZ2VSb3clMjBnZHByLW1lcmdlUm93JTIwY29udGVudF9fZ2RwckJsb2NrJTIwbWMtZmllbGQtZ3JvdXAlMjIlM0UlM0NkaXYlMjBjbGFzcyUzRCUyMmNvbnRlbnRfX2dkcHIlMjIlM0UlM0NsYWJlbCUzRVBlcm1pc3MlQzMlQjVlcyUyMGRlJTIwTWFya2V0aW5nJTNDJTJGbGFiZWwlM0UlM0NwJTNFSkVMTFklMjAtJTIwRGlnaXRhbCUyMEFnZW5jeSUyQyUyMExkYS4lMjB1dGlsaXphcmVtb3MlMjBhJTIwc3VhJTIwaW5mb3JtYSVDMyVBNyVDMyVBM28lMjBuZXN0ZSUyMGZvcm11bCVDMyVBMXJpbyUyMHBhcmElMjBvJTI4YSUyOSUyMG1hbnRlciUyMGF0dWFsaXphZG8lMjhhJTI5JTIwc29icmUlMjBhdGl2aWRhZGVzJTIwY29tZXJjaWFpcyUyQyUyMGZpbmFuY2VpcmFzJTJDJTIwbWFya2V0aW5nJTIwZSUyMHJlY3J1dGFtZW50by4lMjBQb3IlMjBmYXZvciUyMHNlbGVjaW9uZSUyMGElMjBzZWd1aXIlMjBxdWFpcyUyMG9zJTIwdGVtYXMlMjBkbyUyMHNldSUyMGludGVyZXNzZS4lM0MlMkZwJTNFJTNDZmllbGRzZXQlMjBjbGFzcyUzRCUyMm1jX2ZpZWxkc2V0JTIwZ2RwclJlcXVpcmVkJTIwbWMtZmllbGQtZ3JvdXAlMjIlMjBuYW1lJTNEJTIyaW50ZXJlc3Rncm91cF9maWVsZCUyMiUzRSUzQ2xhYmVsJTIwY2xhc3MlM0QlMjJjaGVja2JveCUyMHN1YmZpZWxkJTIyJTIwZm9yJTNEJTIyZ2RwcjIwODElMjIlM0UlM0NpbnB1dCUyMHR5cGUlM0QlMjJjaGVja2JveCUyMiUyMGlkJTNEJTIyZ2Rwcl8yMDgxJTIyJTIwbmFtZSUzRCUyMmdkcHIlNUIyMDgxJTVEJTIyJTIwY2xhc3MlM0QlMjJnZHByJTIyJTIwdmFsdWUlM0QlMjJZJTIyJTNFJTNDc3BhbiUzRU9mZXJ0YXMlMjBjb21lcmNpYWlzJTNDJTJGc3BhbiUzRSUzQyUyRmxhYmVsJTNFJTNDbGFiZWwlMjBjbGFzcyUzRCUyMmNoZWNrYm94JTIwc3ViZmllbGQlMjIlMjBmb3IlM0QlMjJnZHByMjA4NSUyMiUzRSUzQ2lucHV0JTIwdHlwZSUzRCUyMmNoZWNrYm94JTIyJTIwaWQlM0QlMjJnZHByXzIwODUlMjIlMjBuYW1lJTNEJTIyZ2RwciU1QjIwODUlNUQlMjIlMjBjbGFzcyUzRCUyMmdkcHIlMjIlMjB2YWx1ZSUzRCUyMlklMjIlM0UlM0NzcGFuJTNFQXJ0aWdvcyUyMGUlMjBub3QlQzMlQURjaWFzJTIwSmVsbHklM0MlMkZzcGFuJTNFJTNDJTJGbGFiZWwlM0UlM0MlMkZmaWVsZHNldCUzRSUzQ3AlM0VQb2RlJTIwbXVkYXIlMjBkZSUyMGlkZWlhJTIwYSUyMHF1YWxxdWVyJTIwbW9tZW50byUyQyUyMGNsaWNhbmRvJTIwbm8lMjBsaW5rJTIwZGUlMjBjYW5jZWxhbWVudG8lMjBkYSUyMHN1YnNjcmklQzMlQTclQzMlQTNvJTIwbm8lMjByb2RhcCVDMyVBOSUyMGRlJTIwcXVhbHF1ZXIlMjBlLW1haWwlMjBlbnZpYWRvJTIwcG9yJTIwbiVDMyVCM3MlMjBvdSUyMGVudHJhbmRvJTIwZW0lMjBjb250YXRvJTIwY29ubm9zY28lMjBwZWxvJTIwZS1tYWlsJTIwZHBvJTQwamVsbHkucHQuJTIwVHJhdGFyZW1vcyUyMGFzJTIwc3VhcyUyMGluZm9ybWElQzMlQTclQzMlQjVlcyUyMGNvbSUyMHJlc3BlaXRvJTIwZSUyMGNvbmZpZGVuY2lhbGlkYWRlLiUyMCUwQSUwQVBhcmElMjBtYWlzJTIwaW5mb3JtYSVDMyVBNyVDMyVCNWVzJTIwc29icmUlMjBub3NzYXMlMjBwciVDMyVBMXRpY2FzJTIwZGUlMjBwcml2YWNpZGFkZSUyQyUyMHZpc2l0ZSUyMG5vc3NvJTIwc2l0ZS4lMjBBbyUyMGNsaWNhciUyMGFiYWl4byUyQyUyMHZvYyVDMyVBQSUyMGNvbmNvcmRhJTIwcXVlJTIwcG9kZW1vcyUyMHByb2Nlc3NhciUyMHN1YXMlMjBpbmZvcm1hJUMzJUE3JUMzJUI1ZXMlMjBkZSUyMGFjb3JkbyUyMGNvbSUyMGVzdGVzJTIwdGVybW9zLiUzQyUyRnAlM0UlM0MlMkZkaXYlM0UlM0NkaXYlMjBjbGFzcyUzRCUyMmNvbnRlbnRfX2dkcHJMZWdhbCUyMiUzRSUzQ3AlM0VXZSUyMHVzZSUyME1haWxjaGltcCUyMGFzJTIwb3VyJTIwbWFya2V0aW5nJTIwcGxhdGZvcm0uJTIwQnklMjBjbGlja2luZyUyMGJlbG93JTIwdG8lMjBzdWJzY3JpYmUlMkMlMjB5b3UlMjBhY2tub3dsZWRnZSUyMHRoYXQlMjB5b3VyJTIwaW5mb3JtYXRpb24lMjB3aWxsJTIwYmUlMjB0cmFuc2ZlcnJlZCUyMHRvJTIwTWFpbGNoaW1wJTIwZm9yJTIwcHJvY2Vzc2luZy4lMjAlM0NhJTIwaHJlZiUzRCUyMmh0dHBzJTNBJTJGJTJGbWFpbGNoaW1wLmNvbSUyRmxlZ2FsJTJGdGVybXMlMjIlM0VMZWFybiUyMG1vcmUlM0MlMkZhJTNFJTIwYWJvdXQlMjBNYWlsY2hpbXAlMjdzJTIwcHJpdmFjeSUyMHByYWN0aWNlcy4lM0MlMkZwJTNFJTNDJTJGZGl2JTNFJTNDJTJGZGl2JTNFJTBBJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTIwJTNDZGl2JTIwaWQlM0QlMjJtY2UtcmVzcG9uc2VzJTIyJTIwY2xhc3MlM0QlMjJjbGVhciUyMiUzRSUwQSUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUyMCUzQ2RpdiUyMGNsYXNzJTNEJTIycmVzcG9uc2UlMjIlMjBpZCUzRCUyMm1jZS1lcnJvci1yZXNwb25zZSUyMiUyMHN0eWxlJTNEJTIyZGlzcGxheSUzQSUyMG5vbmUlM0IlMjIlM0UlM0MlMkZkaXYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0NkaXYlMjBjbGFzcyUzRCUyMnJlc3BvbnNlJTIyJTIwaWQlM0QlMjJtY2Utc3VjY2Vzcy1yZXNwb25zZSUyMiUyMHN0eWxlJTNEJTIyZGlzcGxheSUzQSUyMG5vbmUlM0IlMjIlM0UlM0MlMkZkaXYlM0UlMEElMjAlMjAlMjAlMjAlMjAlMjAlMjAlMjAlM0MlMkZkaXYlM0UlM0NkaXYlMjBhcmlhLWhpZGRlbiUzRCUyMnRydWUlMjIlMjBzdHlsZSUzRCUyMnBvc2l0aW9uJTNBJTIwYWJzb2x1dGUlM0IlMjBsZWZ0JTNBJTIwLTUwMDBweCUzQiUyMiUzRSUzQ2lucHV0JTIwdHlwZSUzRCUyMnRleHQlMjIlMjBuYW1lJTNEJTIyYl9mNDI5M2JkY2M3NTAxYWQ5ZDAzMmZmYTkzXzliZTI4MjJmZDklMjIlMjB0YWJpbmRleCUzRCUyMi0xJTIyJTIwdmFsdWUlM0QlMjIlMjIlM0UlM0MlMkZkaXYlM0UlM0NkaXYlMjBjbGFzcyUzRCUyMmNsZWFyJTIyJTNFJTNDaW5wdXQlMjB0eXBlJTNEJTIyc3VibWl0JTIyJTIwbmFtZSUzRCUyMnN1YnNjcmliZSUyMiUyMGlkJTNEJTIybWMtZW1iZWRkZWQtc3Vic2NyaWJlJTIyJTIwY2xhc3MlM0QlMjJidXR0b24lMjIlMjB2YWx1ZSUzRCUyMlN1YnNjcmliZSUyMiUzRSUzQyUyRmRpdiUzRSUwQSUyMCUyMCUyMCUyMCUzQyUyRmRpdiUzRSUwQSUzQyUyRmZvcm0lM0UlMEElM0MlMkZkaXYlM0UlMEElM0NzY3JpcHQlMjB0eXBlJTNEJTIydGV4dCUyRmphdmFzY3JpcHQlMjIlMjBzcmMlM0QlMjIlMkYlMkZzMy5hbWF6b25hd3MuY29tJTJGZG93bmxvYWRzLm1haWxjaGltcC5jb20lMkZqcyUyRm1jLXZhbGlkYXRlLmpzJTIyJTNFJTNDJTJGc2NyaXB0JTNFJTNDc2NyaXB0JTIwdHlwZSUzRCUyMnRleHQlMkZqYXZhc2NyaXB0JTIyJTNFJTI4ZnVuY3Rpb24lMjglMjQlMjklMjAlN0J3aW5kb3cuZm5hbWVzJTIwJTNEJTIwbmV3JTIwQXJyYXklMjglMjklM0IlMjB3aW5kb3cuZnR5cGVzJTIwJTNEJTIwbmV3JTIwQXJyYXklMjglMjklM0JmbmFtZXMlNUIwJTVEJTNEJTI3RU1BSUwlMjclM0JmdHlwZXMlNUIwJTVEJTNEJTI3ZW1haWwlMjclM0JmbmFtZXMlNUIxJTVEJTNEJTI3Rk5BTUUlMjclM0JmdHlwZXMlNUIxJTVEJTNEJTI3dGV4dCUyNyUzQmZuYW1lcyU1QjIlNUQlM0QlMjdMTkFNRSUyNyUzQmZ0eXBlcyU1QjIlNUQlM0QlMjd0ZXh0JTI3JTNCZm5hbWVzJTVCMyU1RCUzRCUyN0FERFJFU1MlMjclM0JmdHlwZXMlNUIzJTVEJTNEJTI3YWRkcmVzcyUyNyUzQmZuYW1lcyU1QjQlNUQlM0QlMjdQSE9ORSUyNyUzQmZ0eXBlcyU1QjQlNUQlM0QlMjdwaG9uZSUyNyUzQiU3RCUyOGpRdWVyeSUyOSUyOSUzQnZhciUyMCUyNG1jaiUyMCUzRCUyMGpRdWVyeS5ub0NvbmZsaWN0JTI4dHJ1ZSUyOSUzQiUzQyUyRnNjcmlwdCUzRSUzQyUyRmRpdiUzRSUwQQ=="
+   },
+   {
+    "type": "p",
+    "text": "Como tratamos os seus dados? Conheça a nossa Política de Privacidade e proteção de dados."
+   }
+  ]
+ },
+ {
+  "slug": "sem-search-engine-marketing",
+  "legacyPath": "/sem-search-engine-marketing/",
+  "title": "SEM – Search Engine Marketing",
+  "updated": "2014-03-30",
+  "words": 169,
+  "body": [
+   {
+    "type": "p",
+    "text": "Your Website on top."
+   },
+   {
+    "type": "p",
+    "text": "Search Engine Marketing services (SEM) is the use of marketing techniques and resources to promote the visibility of websites in Search Engines. SEM may include optimizing your site, submitting your site to directories, getting your site indexed by search engines, managing pay-per-click campaigns, writing and distributing optimized press releases and articles, using blogs and RSS, marketing via an affiliate program, driving traffic via social networks and much more."
+   },
+   {
+    "type": "h3",
+    "text": "Off-Page"
+   },
+   {
+    "type": "p",
+    "text": "Search Engine Marketing works primarily outside the website, using techniques and resources as paid ads, indexing, e-mail marketing campaigns, social networks, among others."
+   },
+   {
+    "type": "h3",
+    "text": "Gestão de Anúncios Patrocinados – Google Adwords"
+   },
+   {
+    "type": "p",
+    "text": "JellyCode is a Google Engage partner that delivers strong skills and experience on Search Engine Marketing strategies. With the right search engine marketing plan, you can help put your Web site where the people can see it. Most people don’t go past the first few results of a search engine query simply because there are too many options that prevent them from looking further."
+   },
+   {
+    "type": "h2",
+    "text": "Web Marketing"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "SEO Analytics",
+     "Search Engine Optimization"
+    ]
+   }
+  ]
+ }
+]

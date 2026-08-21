@@ -192,6 +192,19 @@ async function asDataUri(publicPath) {
   return `data:${type};base64,${buffer.toString("base64")}`;
 }
 
+/**
+ * O next/image serve por /_next/image?url=…: num instantâneo isso apontaria para
+ * o localhost. Reescrevemos para o URL original da imagem.
+ */
+function unwrapNextImages(html) {
+  return html
+    .replace(/srcSet="[^"]*"|srcset="[^"]*"/g, "")
+    .replace(/(src|href)="\/_next\/image\?url=([^"&]+)[^"]*"/g, (match, attr, encoded) => {
+      const decoded = decodeURIComponent(encoded);
+      return `${attr}="${decoded.startsWith("/") ? BASE + decoded : decoded}"`;
+    });
+}
+
 async function inlineAssets(text) {
   const references = [...new Set([...text.matchAll(/["'(](\/(?:fonts|media|brand)\/[^"')]+)["')]/g)].map((m) => m[1]))];
   for (const reference of references) {
@@ -221,7 +234,7 @@ for (const page of pages) {
   let body = html.match(/<body[^>]*>([\s\S]*)<\/body>/)[1];
   body = body.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<template[\s\S]*?<\/template>/g, "");
   body = body.replace(/href="(\/[^"]*)"/g, (match, href) => `href="${routes[href] ?? "#" + page.key}"`);
-  sections.push({ ...page, body: await inlineAssets(body) });
+  sections.push({ ...page, body: await inlineAssets(unwrapNextImages(body)) });
 }
 
 // Estados interativos: abre-os no browser e guarda o DOM resultante.
@@ -237,7 +250,7 @@ for (const capture of captures) {
   body = body.replace(/<script[\s\S]*?<\/script>/g, "");
   body = body.replace(/class="fixed inset-0 z-\d+/g, 'class="relative z-0 min-h-[86vh]');
   body = body.replace(/href="(\/[^"]*)"/g, (match, href) => `href="${routes[href] ?? "#" + capture.key}"`);
-  sections.push({ ...capture, body: await inlineAssets(body) });
+  sections.push({ ...capture, body: await inlineAssets(unwrapNextImages(body)) });
 }
 await browser.close();
 

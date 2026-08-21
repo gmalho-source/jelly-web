@@ -205,13 +205,27 @@ componente se ver a funcionar. Para entrar a filmagem real:
   Taxonomias (as 467 páginas de tag do site atual) ficam fora por decisão.
 - JSON-LD: `Organization` na homepage e `Article` em cada artigo.
 
-## Conteúdo
+## Conteúdo migrado
 
-Nomes da equipa, títulos, datas e categorias dos artigos e as notícias vêm do
-jelly.pt público. Os **corpos dos artigos estão marcados `draft: true`** e a
-página mostra um selo "Rascunho — conteúdo a migrar": é texto de estrutura, não
-texto final da Jelly. Cargos da equipa (exceto CEO), fotografias e os números
-dos casos entram por validação com a Jelly e com cada cliente.
+| Comando | O que faz |
+|---|---|
+| `npm run migrate` | API do WordPress → `src/content/generated/{posts,pages}.json`. **179 artigos** com corpo em blocos (parágrafos, títulos, listas, citações, imagens), autor, data, categoria, tempo de leitura e capa; 44 páginas |
+| `npm run import content-import/*.xml` | Exports WXR → `projects.json` (**64 projetos**: cliente, ano, disciplinas, capa) e `client-logos.json` (**63 logos** em 4 galerias, 38 na de Clientes) |
+| `npm run redirects` | Sitemaps do site atual → `src/lib/redirects.generated.json`. **764 redirecionamentos** 301, ligados no `next.config.ts` |
+
+O que a migração **não** trouxe, e é trabalho de conteúdo, não de código:
+
+- **Narrativa dos projetos.** O export do portfolio vem sem texto — as histórias
+  viviam no construtor de páginas, não no conteúdo. Os 64 projetos entram como
+  **arquivo visual** (cliente, ano, disciplinas, capa) em `/projetos`, e os casos
+  escolhidos passam para `src/content/projects.ts` com narrativa e número.
+- **Números dos casos.** Os valores em `projects.ts` continuam exemplificativos até
+  serem validados com cada cliente.
+- **Tradução.** Os artigos migrados são PT (o site atual traduz por camada). O
+  índice EN mostra-os como estão até haver orçamento de tradução.
+
+Imagens: os URLs apontam para `www.jelly.pt` (autorizado em `next.config.ts`) até
+subirem para o CDN do CMS na fase do Sanity.
 
 ## Falta fazer
 

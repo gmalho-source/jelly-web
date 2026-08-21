@@ -3,20 +3,30 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { getNextProject, getProject, getProjects } from "@/lib/cms";
+import Image from "next/image";
+import { getArchivedProject, getArchivedProjects, getNextProject, getProject, getProjects } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
 
 type Params = { locale: Locale; slug: string };
 
 export async function generateStaticParams() {
-  const projects = await getProjects();
-  return projects.map((project) => ({ slug: project.slug }));
+  const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
+  return [...projects, ...archive].map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const project = await getProject(slug);
-  if (!project) return {};
+  if (!project) {
+    const archived = await getArchivedProject(slug);
+    return archived
+      ? {
+          title: `${archived.client} — ${archived.disciplines.join(", ")}`,
+          description: archived.summary || `${archived.client}: ${archived.disciplines.join(", ")}.`,
+          alternates: alternates({ pathname: "/projetos/[slug]", params: { slug } }, locale),
+        }
+      : {};
+  }
   return {
     title: `${project.client} — ${project.title[locale]}`,
     description: project.summary[locale],
@@ -29,9 +39,75 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   setRequestLocale(locale);
 
   const project = await getProject(slug);
-  if (!project) notFound();
+  const archived = project ? null : await getArchivedProject(slug);
+  if (!project && !archived) notFound();
+  
 
   const t = await getTranslations("work");
+
+  // Projeto de arquivo: mostramos o que existe — cliente, ano, disciplinas e
+  // imagens — sem inventar narrativa nem número.
+  if (archived) {
+    return (
+      <article className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
+        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
+          <div>
+            <span className="eyebrow">{locale === "pt" ? "Arquivo" : "Archive"}</span>
+            <h1 className="mt-5 text-display">{archived.client}</h1>
+          </div>
+          <dl className="text-sm">
+            <div className="flex justify-between gap-4 border-b border-paper-2 py-2.5">
+              <dt className="text-mute">{t("year")}</dt>
+              <dd className="tabular-nums">{archived.year}</dd>
+            </div>
+            <div className="flex justify-between gap-4 border-b border-paper-2 py-2.5">
+              <dt className="text-mute">{t("disciplines")}</dt>
+              <dd className="text-right">{archived.disciplines.join(", ")}</dd>
+            </div>
+          </dl>
+        </div>
+
+        {archived.cover?.src ? (
+          <Image
+            src={archived.cover.src}
+            alt={archived.cover.alt || archived.client}
+            width={1600}
+            height={900}
+            priority
+            sizes="(max-width: 1200px) 100vw, 1140px"
+            className="mt-10 w-full rounded-[20px] object-cover"
+          />
+        ) : null}
+
+        {archived.summary ? <p className="subtitle mt-10 max-w-[62ch]">{archived.summary}</p> : null}
+
+        {archived.images.length ? (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {archived.images.slice(0, 4).map((src) => (
+              <Image key={src} src={src} alt="" width={800} height={600} sizes="(max-width: 640px) 100vw, 560px" className="w-full rounded-[20px] object-cover" />
+            ))}
+          </div>
+        ) : null}
+
+        <div className="mt-12 flex flex-wrap items-end justify-between gap-6 border-t border-ink pt-8">
+          <p className="subtitle max-w-[48ch]">
+            {locale === "pt"
+              ? "Este projeto está no arquivo: guardámos o trabalho, não a história. Queres saber o que fizemos aqui?"
+              : "This project sits in the archive: we kept the work, not the story. Want to know what we did here?"}
+          </p>
+          <Link href="/contactos" className="btn btn-hero">
+            {locale === "pt" ? "Falar connosco" : "Get in touch"} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+
+        <Link href="/projetos" className="mt-10 inline-block text-sm font-semibold text-red">
+          ← {t("back")}
+        </Link>
+      </article>
+    );
+  }
+  if (!project) notFound();
+
   const next = await getNextProject(slug);
   const facts = [
     { term: t("client"), value: project.client },
