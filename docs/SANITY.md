@@ -82,11 +82,17 @@ Todas as leituras do CMS levam a etiqueta `cms` e vivem 300 segundos em cache.
 `POST /api/revalidate` invalida essa etiqueta e o site relê o Sanity no pedido
 seguinte.
 
-No Sanity: **API → Webhooks → Create webhook**, URL
-`https://<host>/api/revalidate`, método `POST`, trigger em create/update/delete,
-projeção vazia (o corpo não é usado) e o cabeçalho
-`Authorization: Bearer <SANITY_REVALIDATE_SECRET>`. O mesmo valor tem de estar
-nas variáveis de ambiente do projeto.
+O webhook está criado no projeto (`revalidar o site`, dataset `production`) a
+apontar para `/api/revalidate`. O segredo vai na query string porque os webhooks
+criados pela API de gestão não permitem cabeçalhos.
+
+Se preferires o cabeçalho — e é preferível, porque o segredo deixa de ficar
+escrito nos logs de pedidos — cria o webhook à mão em **Manage → API →
+Webhooks**: URL `https://<host>/api/revalidate`, método `POST`, trigger em
+create/update/delete, projeção vazia (o corpo não é usado) e o cabeçalho
+`Authorization: Bearer <SANITY_REVALIDATE_SECRET>`. A rota aceita as duas
+formas, com o cabeçalho a ganhar. O mesmo valor tem de estar nas variáveis de
+ambiente do projeto.
 
 ```bash
 curl -i -X POST https://<host>/api/revalidate -H "Authorization: Bearer $SANITY_REVALIDATE_SECRET"

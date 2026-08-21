@@ -19,7 +19,15 @@ function authorized(request: Request): boolean {
   if (!secret) return false;
 
   const header = request.headers.get("authorization") ?? "";
-  const provided = header.startsWith("Bearer ") ? header.slice(7) : (request.headers.get("x-jelly-secret") ?? "");
+  // Cabeçalho primeiro. A query string existe porque os webhooks antigos do
+  // Sanity (os que a API de gestão cria) não deixam definir cabeçalhos — um
+  // webhook criado à mão no Studio usa o Authorization e é preferível, porque o
+  // segredo não fica escrito nos logs de pedidos.
+  const provided =
+    (header.startsWith("Bearer ") ? header.slice(7) : request.headers.get("x-jelly-secret")) ??
+    new URL(request.url).searchParams.get("secret") ??
+    "";
+
   const expected = Buffer.from(secret);
   const given = Buffer.from(provided);
   // Comparação de tempo constante, e sem revelar o comprimento do segredo.
