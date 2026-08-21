@@ -8,5 +8,5 @@ export default defineCliConfig({
   // e para não haver duas pessoas a publicar em sítios diferentes.
   // `jelly.sanity.studio` já pertence a outro projeto — o espaço de nomes é
   // global a todo o Sanity.
-  studioHost: "jelly-web",
+  studioHost: "jellypt",
 });

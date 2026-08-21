@@ -67,7 +67,7 @@ npm install
 npm i -D sanity @sanity/vision   # dependências só do Studio
 
 npm run studio                   # http://localhost:3333
-npm run studio:deploy            # publica em jelly-web.sanity.studio
+npm run studio:deploy            # publica em jellypt.sanity.studio
 ```
 
 O endereço do Studio está fixado no `sanity.cli.ts` (`studioHost`), para o
