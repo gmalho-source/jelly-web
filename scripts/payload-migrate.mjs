@@ -120,7 +120,11 @@ async function upload(payload, url, alt) {
     file: { name, data: buffer, mimetype: `image/${path.extname(name).slice(1) || "jpeg"}`, size: buffer.byteLength },
   });
   cache[url] = created.id;
-  if (created.filename) fileIndex[url] = created.filename;
+  // O índice guarda o nome do ficheiro tal como ficou em media/ na primeira
+  // corrida: é esse que se lê do disco. Corridas seguintes não o reescrevem,
+  // senão o nome passava a ser o do armazenamento remoto e perdia-se a cópia
+  // local.
+  if (created.filename && !fileIndex[url]) fileIndex[url] = created.filename;
   uploaded += 1;
   if (uploaded % 10 === 0) {
     saveCache();
