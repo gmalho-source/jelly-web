@@ -134,10 +134,13 @@ apontado no mesmo sítio, que faz um build novo em vez de revalidar.
 ## O que está no dataset
 
 Carregado a 21 de agosto de 2026 (`ov3ljxah` / `production`): 179 artigos e 17
-categorias, 59 projetos de arquivo, 5 casos escritos, 4 serviços, 8 páginas com
-100 textos, 38 clientes, 21 pessoas, 6 marcos, 6 entradas de newsroom e 4
-galerias com 63 logos. **291 imagens** migradas para o CDN do Sanity — o site
-deixou de depender do jelly.pt para as servir.
+categorias, 59 projetos de arquivo — **58 com a narrativa do caso** —, 5 casos
+escritos, 4 serviços, 8 páginas com 100 textos, 38 clientes, 21 pessoas, 6
+marcos, 6 entradas de newsroom e 4 galerias com 63 logos. **463 imagens**
+migradas para o CDN do Sanity: nenhuma página do site novo depende do jelly.pt
+para servir imagens.
+
+Os vídeos são a exceção: 34 ficheiros, 546 MB, continuam a servir do jelly.pt.
 
 Três logos de 2018 ficaram de fora: os URLs no export estão corrompidos
 (`/jelly/jelly/jelly/jelly/…`) e já não existem no site antigo, nem com o
