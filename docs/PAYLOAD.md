@@ -66,11 +66,42 @@ logos, 21 pessoas, 6 marcos e 6 entradas de newsroom — mais **462 imagens**,
 buscadas onde estiverem e carregadas como ficheiros do Payload.
 
 É idempotente: procura por slug antes de criar, e as imagens já carregadas ficam
-registadas em `content-import/payload-media.json`. Aceita `--dry-run`,
+registadas em `content-import/payload-media.<base>.json` — um registo por base de
+dados, porque são ids dela; partilhá-lo entre a Postgres local e a Neon apontava
+o conteúdo para media que não existe do outro lado. Aceita `--dry-run`,
 `--only=pages,posts,projects,house`, `--limit=N` e `--skip-images`.
+
+As imagens vêm do disco quando uma corrida anterior já as trouxe:
+`content-import/payload-files.json` diz qual é o ficheiro de cada endereço de
+origem e o script lê de `media/`. É o que faz a segunda corrida — a que enche a
+Neon — não depender do jelly.pt nem de nenhum CDN antigo.
 
 Três logos de 2018 ficam de fora: os URLs no export estão corrompidos
 (`/jelly/jelly/jelly/jelly/…`) e já não existem no site antigo.
+
+## Pôr em produção
+
+Pela ordem, porque cada passo depende do anterior:
+
+1. **Neon** — criar a base e copiar a *connection string* com `?sslmode=require`.
+   O Payload cria as tabelas sozinho no primeiro arranque.
+2. **Blob da Vercel** — criar a store no projeto e copiar o
+   `BLOB_READ_WRITE_TOKEN`. Sem ela os uploads no painel falham: o serverless
+   não tem disco.
+3. **Variáveis na Vercel** — `DATABASE_URL`, `PAYLOAD_SECRET`,
+   `BLOB_READ_WRITE_TOKEN`, `REVALIDATE_SECRET` nos três ambientes. Cuidado com
+   variáveis vazias: contam como definidas e já rebentaram um deploy
+   ([`DEPLOY.md`](DEPLOY.md)).
+4. **Migração** — correr `npm run payload:migrate` com o `DATABASE_URL` da Neon
+   **e o `BLOB_READ_WRITE_TOKEN`** no ambiente. Corre da máquina, contra a base
+   remota, sem deploy pelo meio; sem o token do Blob as imagens ficavam no disco
+   local e a produção não as encontrava.
+5. **Primeiro utilizador** — abrir `/admin` no domínio e criar a conta. É o
+   primeiro arranque que abre esse ecrã; depois disso, só por convite.
+6. **Confirmar** — as imagens de uma página passam a servir do Blob
+   (`*.public.blob.vercel-storage.com`) em vez de `www.jelly.pt`: é o sinal de
+   que a leitura já vem do Payload. Em local, sem Blob, o endereço é
+   `/api/media/file/…`.
 
 ## Variáveis
 
