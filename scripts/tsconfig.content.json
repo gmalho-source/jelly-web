@@ -9,5 +9,5 @@
     "skipLibCheck": true,
     "paths": { "@/*": ["../src/*"] }
   },
-  "include": ["../src/content/editorial.ts", "../src/content/projects.ts", "../src/content/site.ts", "../src/content/types.ts", "../sanity/schemas/page.ts"]
+  "include": ["../src/content/editorial.ts", "../src/content/projects.ts", "../src/content/site.ts", "../src/content/types.ts"]
 }

@@ -15,5 +15,12 @@ public/fonts/trials/*.otf
 # Exports do WordPress: despejo do site antigo, não fonte de verdade
 content-import/*.xml
 
-# Compilação temporária do conteúdo para o seed do Sanity
+# Compilação temporária do conteúdo para a migração do Payload
 .cache/
+
+# Ficheiros carregados no painel em desenvolvimento (em produção vão para o Blob)
+media/
+
+# Registo de ids do Payload: um por base de dados, nunca partilhado
+content-import/payload-media.*.json
+content-import/payload-media.json

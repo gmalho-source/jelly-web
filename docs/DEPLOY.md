@@ -71,9 +71,10 @@ correspondentes funcionarem.
 | `RESEND_API_KEY` | runtime | O link não é enviado: fica no log do servidor |
 | `BILLING_FROM_EMAIL` | runtime | `pagamentos@jelly.pt` |
 | `NEXT_PUBLIC_MONDAY_FORM_URL` | build | A área de faturação mostra o aviso em vez do formulário |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | build | O site serve o conteúdo local de `src/content` |
-| `NEXT_PUBLIC_SANITY_DATASET` | build | `production` |
-| `SANITY_API_READ_TOKEN` | build | Só necessário para ler rascunhos |
+| `DATABASE_URL` (Postgres, Neon) | build + runtime | O site serve o conteúdo local de `src/content` e o painel `/admin` não abre |
+| `PAYLOAD_SECRET` | runtime | As sessões do painel não são assinadas: o login falha |
+| `BLOB_READ_WRITE_TOKEN` | runtime | Uploads no painel falham em produção (não há disco persistente) |
+| `REVALIDATE_SECRET` | runtime | `POST /api/revalidate` responde 404; a purga automática ao gravar continua a funcionar |
 
 ## Staging não é indexável
 

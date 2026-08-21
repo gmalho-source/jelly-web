@@ -2,7 +2,7 @@ import type { Project } from "./types";
 
 /**
  * Conteúdo local, a servir de seed e de fallback.
- * Quando o Sanity estiver ligado (NEXT_PUBLIC_SANITY_PROJECT_ID), passa a vir de lá.
+ * Quando o painel estiver ligado (DATABASE_URL), passa a vir de lá.
  * Os números têm de ser validados com o cliente antes de publicar.
  */
 export const projects: Project[] = [

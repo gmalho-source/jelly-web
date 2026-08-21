@@ -148,6 +148,28 @@ const userById = new Map(users.map((user) => [user.id, user.name]));
 const categoryById = new Map(categories.map((category) => [category.id, category]));
 
 console.log("· artigos");
+/**
+ * Resumo de um artigo. O `excerpt.rendered` do WordPress vem com os shortcodes
+ * do construtor lá dentro na maioria dos artigos antigos — o que ia direto para
+ * o índice do blog. Limpa-se, e se sobrar ruído usa-se o primeiro parágrafo do
+ * corpo, cortado numa fronteira de palavra.
+ */
+function summarize(raw, body) {
+  const clean = (value = "") =>
+    value
+      .replace(/\[\/?[a-z0-9_]+[^\]]*\]/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  const candidate = clean(raw);
+  const usable = candidate.length >= 60 && !/^[”"'\s]*$/.test(candidate) ? candidate : "";
+  const fallback = clean(body.find((block) => block.type === "p")?.text ?? "");
+  const text = usable || fallback;
+  if (text.length <= 220) return text;
+  const cut = text.slice(0, 220);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
 const rawPosts = await all("/posts", { _fields: "id,slug,link,date,modified,title,excerpt,content,author,categories,featured_media" });
 console.log(`  ${rawPosts.length} artigos`);
 
@@ -176,7 +198,7 @@ for (const post of rawPosts) {
     updated: post.modified?.slice(0, 10),
     lang: "pt",
     title: decode(post.title?.rendered),
-    excerpt: decode(post.excerpt?.rendered),
+    excerpt: summarize(decode(post.excerpt?.rendered), body),
     author: userById.get(post.author) ?? "Equipa Jelly",
     category: categoryById.get(post.categories?.[0])?.name ?? "Jelly",
     categorySlug: categoryById.get(post.categories?.[0])?.slug ?? "jelly",

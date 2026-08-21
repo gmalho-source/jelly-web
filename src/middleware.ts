@@ -30,6 +30,9 @@ export default function middleware(request: NextRequest) {
 
   if (pathname.startsWith("/api")) return NextResponse.next();
 
+  // O painel do Payload não tem árvore de línguas: passa ao lado do next-intl.
+  if (pathname.startsWith("/admin")) return NextResponse.next();
+
   // A proposta visual vive fora das duas árvores de língua: é um ecrã para ver,
   // não uma página do site.
   if (pathname.startsWith("/proposta")) return NextResponse.next();

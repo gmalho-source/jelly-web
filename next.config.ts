@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next/withPayload";
 import createNextIntlPlugin from "next-intl/plugin";
 import generatedRedirects from "./src/lib/redirects.generated.json";
 
@@ -8,8 +9,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "cdn.sanity.io" },
-      // Imagens migradas: servem do site antigo até subirem para o CDN do CMS.
+      // Ficheiros do painel, no Blob da Vercel.
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // Imagens ainda por migrar do site antigo.
       { protocol: "https", hostname: "www.jelly.pt" },
     ],
   },
@@ -33,4 +35,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default withPayload(withNextIntl(nextConfig));

@@ -1,6 +1,7 @@
 {
   "name": "jelly-web",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
@@ -14,21 +15,27 @@
     "redirects": "node scripts/build-redirects.mjs",
     "import": "node scripts/import-wordpress-xml.mjs",
     "preflight": "npm run typecheck && npm run lint && npm run build",
-    "sanity:seed": "node scripts/sanity-seed.mjs",
-    "studio": "sanity dev",
-    "studio:deploy": "sanity deploy"
+    "payload:migrate": "tsx scripts/payload-migrate.mjs",
+    "payload:types": "payload generate:types",
+    "payload:importmap": "payload generate:importmap"
   },
   "dependencies": {
-    "@sanity/client": "^7.13.0",
+    "@payloadcms/db-postgres": "^3.88.0",
+    "@payloadcms/email-resend": "^3.88.0",
+    "@payloadcms/next": "^3.88.0",
+    "@payloadcms/richtext-lexical": "^3.88.0",
+    "@payloadcms/storage-vercel-blob": "^3.88.0",
+    "graphql": "^16.14.2",
     "jose": "^6.1.0",
     "next": "^16.3.1",
     "next-intl": "^4.13.7",
+    "payload": "^3.88.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "resend": "^6.2.0"
+    "resend": "^6.2.0",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
-    "@sanity/vision": "^6.10.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.0",
@@ -37,16 +44,12 @@
     "eslint-config-next": "^16.3.1",
     "node-html-parser": "^9.0.1",
     "playwright": "^1.56.1",
-    "sanity": "^6.10.1",
-    "styled-components": "^6.5.3",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "wawoff2": "^2.0.1"
   },
   "engines": {
     "node": "22.x"
-  },
-  "overrides": {
-    "@sanity/sdk-react": "2.19.0"
   }
 }

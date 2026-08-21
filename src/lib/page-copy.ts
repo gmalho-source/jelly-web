@@ -1,10 +1,14 @@
 import { cache } from "react";
-import { fetchPageCopy } from "@/lib/sanity/content";
-import { PAGE_KEYS } from "../../sanity/schemas/page";
+import { fetchPageCopy } from "@/lib/payload/content";
+
 import type { Locale } from "@/i18n/routing";
 
-/** Só estas páginas são editáveis no Studio. A navegação e o footer não. */
-const editable = new Set(PAGE_KEYS.map((page) => page.slug));
+/**
+ * Só estas páginas são editáveis no painel: a navegação, o footer e a área de
+ * faturação ficam em código, porque são interface e não conteúdo.
+ */
+export const EDITABLE_PAGES = ["home", "about", "services", "work", "clients", "blog", "newsroom", "contact"] as const;
+const editable = new Set<string>(EDITABLE_PAGES);
 
 type Messages = Record<string, unknown>;
 

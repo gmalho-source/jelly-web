@@ -22,8 +22,9 @@ servidor, o que basta para desenvolver.
 | `npm run lint` | ESLint (config Next) |
 | `npm run preflight` | `typecheck` + `lint` + `build`, o que a CI faria. Correr antes de cada push |
 | `npm run preview` | Regenera `docs/preview/index.html` a partir do servidor local |
-| `npm run studio` | Studio do Sanity em local (pede `npm i -D sanity @sanity/vision`) |
-| `npm run sanity:seed` | Carrega o conteúdo do repositório para o Sanity (`--dry-run` para ensaiar) |
+| `npm run payload:migrate` | Carrega o conteúdo do repositório para o Payload (`--dry-run` para ensaiar) |
+| `npm run payload:types` | Regenera `src/payload/types.ts` a partir das coleções |
+| `npm run payload:importmap` | Regenera o import map do painel depois de mexer nos campos |
 
 ## Stack
 
@@ -31,10 +32,10 @@ servidor, o que basta para desenvolver.
   arrancámos na versão estável atual
 - **Tailwind 4** com os tokens do design system em `src/app/globals.css`
 - **next-intl** para PT/EN, com slugs traduzidos (`/projetos` ↔ `/en/work`)
-- **Sanity** como CMS, atrás de `src/lib/cms.ts`, com o conteúdo local do
+- **Payload 3** como CMS, dentro da própria aplicação (painel em `/admin`,
+  Postgres na Neon), atrás de `src/lib/cms.ts`, com o conteúdo local do
   repositório como rede de segurança
 - **jose** para assinar magic links e sessões; **Resend** para o email
-- **Sanity** entra na fase 2 pela camada `src/lib/cms.ts` (hoje serve conteúdo local)
 - Alojamento previsto: Vercel, com os dois domínios (`www.jelly.pt` e `billing.jelly.pt`)
   a apontar para o mesmo projeto
 
@@ -63,10 +64,10 @@ src/
 │   ├── robots.ts
 │   └── globals.css             # tokens de cor, tipografia e escala
 ├── components/                 # marca, fontes, header, footer
-├── content/                    # conteúdo local versionado (seed do Sanity)
+├── content/                    # conteúdo local versionado (seed do Payload)
 ├── i18n/                       # routing, request, navigation
 ├── lib/billing/                # auth, sessão, allowlist, email, rate limit
-├── lib/cms.ts                  # camada de conteúdo (local hoje, Sanity depois)
+├── lib/cms.ts                  # camada de conteúdo (Payload, com fallback local)
 ├── lib/seo.ts                  # canónicos, hreflang e JSON-LD
 ├── lib/hosts.ts                # que host é billing
 └── middleware.ts               # host routing + i18n
@@ -99,7 +100,7 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
   que o uso único e o rate limit resistam a várias instâncias. As duas funções
   mantêm a assinatura.
 - `src/lib/billing/providers.ts` lê `BILLING_ALLOWED_EMAILS`: ligar ao board de
-  prestadores do Monday (ou ao Sanity) como fonte de verdade.
+  prestadores do Monday (ou a uma coleção do Payload) como fonte de verdade.
 - DNS de `billing.jelly.pt` para a Vercel e domínio adicionado ao projeto.
 
 ## Documentos de decisão
@@ -250,26 +251,23 @@ O que a migração **não** trouxe, e é trabalho de conteúdo, não de código:
 - **Tradução.** Os artigos migrados são PT (o site atual traduz por camada). O
   índice EN mostra-os como estão até haver orçamento de tradução.
 
-Imagens: os URLs apontam para `www.jelly.pt` (autorizado em `next.config.ts`) até
-subirem para o CDN do CMS na fase do Sanity.
+Imagens: o `npm run payload:migrate` sobe as capas e as imagens dos casos para o
+Payload (Blob da Vercel em produção). Sem base de dados, o conteúdo local ainda
+aponta para `www.jelly.pt`, autorizado em `next.config.ts`.
 
 ## CMS e deploy
 
-- **Sanity** — modelo, seed e o que falta: [`docs/SANITY.md`](docs/SANITY.md).
-  A copy das páginas (herói, leads, títulos, CTAs — 100 textos em 8 páginas) é
-  editável no Studio e sobrepõe-se a `src/messages/*.json`. A navegação, o
-  footer e a headline do herói ficam em código.
-  O `src/lib/cms.ts` lê do Sanity quando `NEXT_PUBLIC_SANITY_PROJECT_ID` existe
-  e cai no conteúdo local em `src/content` sempre que não existe, a coleção está
-  vazia ou a consulta falha — coleção a coleção, sem o site ficar em branco.
+- **Payload** — modelo, migração e o que falta: [`docs/PAYLOAD.md`](docs/PAYLOAD.md).
+  O painel vive em `/admin`, no mesmo deploy do site, e o `src/lib/cms.ts` lê
+  pela API local quando `DATABASE_URL` existe — caindo no conteúdo local do
+  repositório quando não existe, quando uma coleção está vazia ou quando a
+  leitura falha.
 - **Vercel** — o que está fixado no `vercel.json`, as causas prováveis de um
   deploy vermelho e a tabela de variáveis: [`docs/DEPLOY.md`](docs/DEPLOY.md).
-  O build passa sem nenhuma variável definida, confirmado a partir de um
-  checkout limpo.
 
 ## Falta fazer
 
-Webhook de revalidação do Sanity, páginas de carreiras e legais, paginação do
+Páginas de carreiras e legais, paginação do
 blog, tradução EN dos artigos migrados, consolidação do portfolio de
 `jellycode.pt`, e a filmagem real do reel.
 

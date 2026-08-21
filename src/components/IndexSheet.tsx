@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { JellyWordmark } from "./JellyLogo";
 
 export type SheetTile = { label: string; kind: string; href: string; image?: string; tone?: string };
 
@@ -107,9 +108,10 @@ export function IndexSheet({
       <div className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
         <Link
           href={homeHref}
-          className="pointer-events-auto rounded-full bg-ink/80 px-4 py-2 font-display text-xl leading-none tracking-[-0.02em] text-paper backdrop-blur-md"
+          aria-label="Jelly"
+          className="pointer-events-auto grid h-10 place-items-center rounded-full bg-ink/80 px-4 backdrop-blur-md"
         >
-          Jelly
+          <JellyWordmark className="w-[52px] text-paper" />
         </Link>
         <Link
           href={contactHref}

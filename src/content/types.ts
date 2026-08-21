@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 
-/** Texto traduzido. Espelha o campo localizado que o Sanity vai devolver. */
+/** Texto traduzido. Espelha o par { pt, en } que o painel devolve. */
 export type Localized = Record<Locale, string>;
 
 export type Kpi = { value: string; label: Localized };

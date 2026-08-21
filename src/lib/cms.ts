@@ -6,7 +6,6 @@ import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { clients, milestones, services, team } from "@/content/site";
 import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
-import { env } from "@/lib/env";
 import {
   fetchArchivedProjects,
   fetchClients,
@@ -17,17 +16,18 @@ import {
   fetchProjects,
   fetchServices,
   fetchTeam,
-} from "@/lib/sanity/content";
+} from "@/lib/payload/content";
+import { payloadConfigured } from "@/lib/payload/client";
 
 /**
  * Camada de conteúdo — a única porta entre as páginas e a origem dos dados.
  *
- * Com NEXT_PUBLIC_SANITY_PROJECT_ID definido, lê do Sanity; sem ele (ou com uma
- * coleção ainda vazia, ou com o CMS em baixo) devolve o conteúdo local
- * versionado em src/content. A troca é coleção a coleção, para a migração ir
- * entrando por partes sem nunca deixar o site sem conteúdo.
+ * Com DATABASE_URL definido, lê do Payload pela API local, sem rede pelo meio;
+ * sem ele, ou com uma coleção vazia, ou com a leitura a falhar, devolve o
+ * conteúdo local versionado em src/content. A troca é coleção a coleção, o que
+ * deixa o site de pé mesmo a meio de uma migração.
  */
-export const sanityConfigured = Boolean(env(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID));
+export const cmsConfigured = payloadConfigured;
 
 const localProjects = [...projects].sort((a, b) => a.order - b.order);
 

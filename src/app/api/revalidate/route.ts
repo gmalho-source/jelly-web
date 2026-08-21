@@ -1,28 +1,21 @@
 import { timingSafeEqual } from "node:crypto";
-import { revalidateTag } from "next/cache";
-import { CMS_TAG } from "@/lib/sanity/client";
+import { revalidatePath } from "next/cache";
 import { env } from "@/lib/env";
 
 /**
- * Webhook do Sanity. Publicar no Studio invalida a etiqueta do conteúdo e o
- * site relê o CMS no pedido seguinte — sem esperar pelos 300 segundos de cache
- * nem por um deploy novo.
+ * Purga manual do site. O painel já revalida sozinho o que muda (ver
+ * src/payload/hooks/revalidate.ts); esta rota existe para os casos em que se
+ * quer forçar tudo — uma migração, uma mudança de estrutura.
  *
- * No Sanity: API → Webhooks → URL desta rota, método POST, e o segredo em
- * `Authorization: Bearer <SANITY_REVALIDATE_SECRET>`. Dataset e trigger em
- * create/update/delete, projeção vazia — não usamos o corpo do pedido.
+ *   curl -X POST https://<host>/api/revalidate -H "Authorization: Bearer $SEGREDO"
  */
 export const dynamic = "force-dynamic";
 
 function authorized(request: Request): boolean {
-  const secret = env(process.env.SANITY_REVALIDATE_SECRET);
+  const secret = env(process.env.REVALIDATE_SECRET);
   if (!secret) return false;
 
   const header = request.headers.get("authorization") ?? "";
-  // Cabeçalho primeiro. A query string existe porque os webhooks antigos do
-  // Sanity (os que a API de gestão cria) não deixam definir cabeçalhos — um
-  // webhook criado à mão no Studio usa o Authorization e é preferível, porque o
-  // segredo não fica escrito nos logs de pedidos.
   const provided =
     (header.startsWith("Bearer ") ? header.slice(7) : request.headers.get("x-jelly-secret")) ??
     new URL(request.url).searchParams.get("secret") ??
@@ -35,14 +28,15 @@ function authorized(request: Request): boolean {
 }
 
 export async function POST(request: Request) {
-  if (!env(process.env.SANITY_REVALIDATE_SECRET)) {
-    return Response.json({ ok: false, error: "SANITY_REVALIDATE_SECRET não está definido." }, { status: 503 });
+  if (!env(process.env.REVALIDATE_SECRET)) {
+    return Response.json({ ok: false, error: "REVALIDATE_SECRET não está definido." }, { status: 503 });
   }
   if (!authorized(request)) {
     return Response.json({ ok: false }, { status: 401 });
   }
 
-  // "max" no Next 16: expira tudo o que leva esta etiqueta, não só o que está velho.
-  revalidateTag(CMS_TAG, "max");
-  return Response.json({ ok: true, revalidated: CMS_TAG });
+  // "layout" apanha tudo o que vive debaixo da raiz de cada língua.
+  revalidatePath("/", "layout");
+  revalidatePath("/en", "layout");
+  return Response.json({ ok: true, revalidated: "site" });
 }
