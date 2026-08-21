@@ -118,11 +118,11 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
   lilás `#c3abff`, chartreuse `#dce277` (um por superfície, nunca dois); ink `#151719`
   e slate `#2a384a` para texto e superfícies escuras; paper `#f4f6f8` como fundo.
   Cor plana — **sem gradientes, sem grão**.
-- **Tipografia** (decisão da Jelly, agosto de 2026 — inverte o brand book):
-  **Poppins 600 assina os títulos**, apertada (−3% a −4,5% de tracking);
-  **Jubilat** (hoje servida por Bree Serif, SIL OFL, até a licença Darden Studio estar
-  ativa) passa a **subtítulos** (utilitário `subtitle`) e a **títulos de conteúdo
-  editorial** — blog e newsroom (utilitário `editorial`). Eyebrows em Poppins 600, 12 px,
+- **Tipografia** (decisão da Jelly, agosto de 2026): a serifada volta aos títulos, e é a
+  **Bree Serif** pelo nome — não como substituta da Jubilat. Peso único 400, tracking
+  −2%, entrelinha 0,98 no display. **Poppins** fica em corpo, interface e **subtítulos**
+  (utilitário `subtitle`, peso 300), para contrastar com a serifada. Blog e newsroom usam a
+  mesma serifada nos títulos (utilitário `editorial`). Eyebrows em Poppins 600, 12 px,
   caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2 (345 KB no total).
 - **Forma** — botões 8 px (nunca pílula), cartões 20 px sem borda com sombra `sm`,
   painéis de herói 32 px, pílulas só para tags e filtros.
@@ -150,11 +150,11 @@ desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre pa
 - **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
   prestadores.
 
-### Escolha de tipografia em curso
+### Escolha da sans em curso
 
-A Poppins está cansada. `npm run preview` gera um comparador ao vivo em
-`docs/preview/index.html`: uma barra que troca a fonte de títulos e interface em todo o
-site. A Jubilat mantém-se no editorial em qualquer das opções.
+Os títulos estão fixos em Bree Serif. O que falta decidir é a **sans de corpo e
+interface** — a Poppins está cansada. `npm run preview` gera um comparador ao vivo em
+`docs/preview/index.html`: uma barra que troca só a sans em todo o site.
 
 | No comparador | Licença |
 |---|---|
@@ -167,8 +167,8 @@ As duas comerciais **não podem ser embutidas** num instantâneo publicado — d
 ficheiros viola a licença de teste. O comparador deteta-as automaticamente quando existirem
 localmente, e nunca as inclui no HTML publicado.
 
-Feita a escolha: muda-se `--font-display` e `--font-sans` em `src/app/globals.css` e
-convertem-se as faces para WOFF2 em `public/fonts/` (o projeto já traz `wawoff2`).
+Feita a escolha: muda-se `--font-sans` em `src/app/globals.css` e convertem-se as faces
+para WOFF2 em `public/fonts/` (o projeto já traz `wawoff2`).
 
 ## Reel do herói
 

@@ -248,7 +248,7 @@ for (const font of FONTS) {
     continue;
   }
   fontCss += faces;
-  fontCss += `:root[data-font="${font.key}"]{--font-display:"${font.family}",system-ui,sans-serif;--font-sans:"${font.family}",system-ui,sans-serif}\n`;
+  fontCss += `:root[data-font="${font.key}"]{--font-sans:"${font.family}",system-ui,sans-serif}\n`;
   available.push(font);
 }
 
@@ -285,7 +285,7 @@ ${fontCss}
 </style>
 <div class="pv-chrome">
 <div class="pv-bar"><strong>Novo jelly.pt</strong><nav>${nav}</nav><em>Instantâneo estático do código — os formulários não submetem</em></div>
-<div class="pv-fonts"><span>Tipografia dos títulos e da interface</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>A Jubilat mantém-se no editorial</em></div>
+<div class="pv-fonts"><span>Sans de corpo e interface</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>Títulos em Bree Serif nas cinco opções</em></div>
 </div>
 ${bodies}
 <script>

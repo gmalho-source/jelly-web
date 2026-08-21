@@ -236,7 +236,7 @@ export function SiteNav({
                   }}
                   placeholder={copy.searchPlaceholder}
                   autoComplete="off"
-                  className="mt-3 w-full border-b border-white/20 bg-transparent pb-4 text-3xl font-semibold tracking-[-0.035em] text-paper outline-none placeholder:text-white/25 lg:text-5xl"
+                  className="mt-3 w-full border-b border-white/20 bg-transparent pb-4 font-display text-3xl tracking-[-0.02em] text-paper outline-none placeholder:text-white/25 lg:text-5xl"
                 />
                 <ul className="mt-6 min-h-0 flex-1 overflow-y-auto">
                   {results.map((item, index) => (
@@ -268,7 +268,7 @@ export function SiteNav({
                       onFocus={() => setHovered(index)}
                       onClick={() => setPanel(null)}
                       style={{ animationDelay: `${index * 34}ms` }}
-                      className={`nav-rise group flex items-baseline gap-4 text-4xl font-semibold leading-[0.95] tracking-[-0.045em] transition-opacity duration-200 ease-out sm:text-5xl lg:text-[68px] ${
+                      className={`nav-rise group flex items-baseline gap-4 font-display text-4xl leading-[1.02] tracking-[-0.02em] transition-opacity duration-200 ease-out sm:text-5xl lg:text-[64px] ${
                         hovered === index ? "text-paper" : "text-paper/35"
                       }`}
                     >

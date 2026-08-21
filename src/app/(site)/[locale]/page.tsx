@@ -47,7 +47,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 Estratégia
                 <span
                   aria-hidden="true"
-                  className="absolute inset-x-[-2%] top-[52%] h-[6px] -rotate-[1.2deg] bg-red lg:h-[10px]"
+                  className="absolute inset-x-[-2%] top-[54%] h-[5px] -rotate-[1.2deg] bg-red lg:h-[8px]"
                 />
               </span>
               <br />

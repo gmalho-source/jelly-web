@@ -8,7 +8,7 @@
    estiver, troca-se apenas o @font-face de "Jubilat" abaixo.
    ═══════════════════════════════════════════════════════════════ */
 
-@font-face { font-family:"Jubilat"; font-weight:400; font-style:normal; font-display:swap;
+@font-face { font-family:"Bree Serif"; font-weight:400; font-style:normal; font-display:swap;
   src:url("/fonts/BreeSerif-Regular.woff2") format("woff2"); }
 @font-face { font-family:"Poppins"; font-weight:300; font-style:normal; font-display:swap;
   src:url("/fonts/Poppins-Light.woff2") format("woff2"); }
@@ -37,10 +37,10 @@
   --color-paper-3: #d6dbe1;
   --color-mute: #8a93a0;
 
-  /* Tipografia — decisão da Jelly (ago 2026): Poppins assina os títulos,
-     Jubilat passa a subtítulos e a títulos de conteúdo editorial. */
-  --font-display: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-editorial: "Jubilat", "Bree Serif", Georgia, serif;
+  /* Tipografia — decisão da Jelly (ago 2026): a serifada volta aos títulos,
+     agora Bree Serif pelo nome. Poppins fica em corpo, interface e subtítulos. */
+  --font-display: "Bree Serif", Georgia, "Times New Roman", serif;
+  --font-editorial: "Bree Serif", Georgia, "Times New Roman", serif;
   --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Escala de terça maior (12 → 112) */
@@ -57,12 +57,14 @@
   --text-6xl: 112px;
 
   /* Display fluido do herói */
-  --text-display: clamp(40px, 7.4vw, 104px);
-  --text-display--line-height: 0.92;
-  --text-display--letter-spacing: -0.045em;
-  --text-chapter: clamp(28px, 4.2vw, 52px);
-  --text-chapter--line-height: 0.98;
-  --text-chapter--letter-spacing: -0.035em;
+  /* Bree Serif tem um só peso e é opticamente cheia: menos tracking negativo
+     e um pouco mais de entrelinha do que a versão em Poppins. */
+  --text-display: clamp(38px, 7vw, 98px);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.022em;
+  --text-chapter: clamp(27px, 4vw, 48px);
+  --text-chapter--line-height: 1.04;
+  --text-chapter--letter-spacing: -0.018em;
 
   /* Forma */
   --radius-xs: 4px;
@@ -97,9 +99,9 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.06;
     text-wrap: balance;
   }
   p { line-height: 1.6; text-wrap: pretty; }
@@ -161,19 +163,20 @@
   .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 }
 
-/* Jubilat: subtítulos e títulos de conteúdo editorial (blog e newsroom). */
+/* Títulos de conteúdo editorial (blog e newsroom): a mesma serifada. */
 @utility editorial {
   font-family: var(--font-editorial);
   font-weight: 400;
   letter-spacing: -0.02em;
 }
 
-/* Subtítulo: a frase calma debaixo da afirmação. */
+/* Subtítulo: a frase calma debaixo da afirmação, em Poppins para contrastar
+   com a serifada do título. */
 @utility subtitle {
-  font-family: var(--font-editorial);
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-weight: 300;
   font-size: var(--text-lg);
-  line-height: 1.5;
-  letter-spacing: -0.01em;
+  line-height: 1.55;
+  letter-spacing: 0;
   color: var(--color-slate);
 }

@@ -42,7 +42,7 @@ export function WorkIndex({ rows }: { rows: WorkRow[] }) {
               active !== null && active !== index ? "lg:opacity-40" : ""
             }`}
           >
-            <span className="text-2xl font-semibold tracking-[-0.035em] transition-colors duration-200 group-hover:text-red lg:text-[34px]">
+            <span className="font-display text-2xl tracking-[-0.02em] transition-colors duration-200 group-hover:text-red lg:text-[34px]">
               {row.client}
             </span>
             <span className="hidden text-sm text-mute sm:block">{row.discipline}</span>
@@ -57,7 +57,7 @@ export function WorkIndex({ rows }: { rows: WorkRow[] }) {
             <div className={`flex aspect-[4/5] flex-col justify-between rounded-[20px] p-6 ${tones[shown.tone]}`}>
               <span className="text-xs font-semibold uppercase tracking-[0.08em] opacity-70">{shown.discipline}</span>
               <div>
-                <span className="block text-5xl font-semibold tracking-[-0.04em] tabular-nums">{shown.value}</span>
+                <span className="block font-display text-5xl tracking-[-0.02em] tabular-nums">{shown.value}</span>
                 <span className="editorial mt-2 block text-lg leading-snug">{shown.label}</span>
               </div>
             </div>
