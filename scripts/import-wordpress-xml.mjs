@@ -140,6 +140,13 @@ function paragraphs(html, max = 6) {
  * títulos curtos contam ("3D motion" é uma secção, não ruído) e há texto solto
  * sem <p>, separado por linhas em branco — era o WordPress a fechá-lo depois.
  */
+/**
+ * Nem tudo o que o construtor marcou como título é um título: há projetos
+ * escritos inteiros em títulos, parágrafos incluídos. Decide-se pela forma do
+ * texto — curto, poucas palavras e sem frase feita.
+ */
+const looksLikeHeading = (value) => value.length <= 60 && value.split(/\s+/).length <= 9 && !/[.:;!?]\s+\S/.test(value);
+
 function richBlocks(html) {
   const root = parse(html ?? "");
   const out = [];
@@ -159,7 +166,10 @@ function richBlocks(html) {
     }
     if (/^h[1-6]$/.test(name)) {
       const text = clean(node.innerHTML);
-      if (text) out.push({ type: name === "h1" || name === "h2" ? "h2" : "h3", text });
+      if (text) {
+        const level = name === "h1" || name === "h2" ? "h2" : "h3";
+        out.push(looksLikeHeading(text) ? { type: level, text } : { type: "p", text });
+      }
       continue;
     }
     if (name === "ul" || name === "ol") {
@@ -193,12 +203,6 @@ function story(extra, attachments) {
     return asset?.src ? { src: asset.src, alt: asset.alt || undefined } : undefined;
   };
   const attribute = (raw, name) => raw.match(new RegExp(`${name}="([^"]*)"`))?.[1];
-  /**
-   * Nem tudo o que o construtor marcou como título é um título: há projetos
-   * inteiros escritos em `nectar_responsive_text`, parágrafos incluídos. Decide
-   * pela forma do texto — curto e sem frase feita é título, o resto é corpo.
-   */
-  const looksLikeHeading = (value) => value.length <= 60 && value.split(/\s+/).length <= 9 && !/[.:;!?]\s+\S/.test(value);
   const heading = (text, level = "h2") => {
     const value = clean(text);
     if (!value) return;

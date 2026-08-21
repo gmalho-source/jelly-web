@@ -102,11 +102,11 @@
   "body": [],
   "story": [
    {
-    "type": "h3",
+    "type": "p",
     "text": "A Jelly é a agência digital do Cetelem em Portugal, responsável por toda a produção criativa da comunicação digital da marca. Do conceito à execução, desenvolvemos os conteúdos que sustentam a presença online do Cetelem — desde campanhas de performance e redes sociais até peças de display, email marketing e landing pages."
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "Um trabalho que exige rigor, consistência e uma compreensão profunda de um setor altamente regulado, onde a clareza da mensagem é tão importante quanto a sua capacidade de converter."
    },
    {
@@ -167,7 +167,7 @@
   "body": [],
   "story": [
    {
-    "type": "h2",
+    "type": "p",
     "text": "Rebranding . Digital Marketing Strategy . Website"
    },
    {
@@ -971,7 +971,7 @@
     "text": "de vídeos para atração de talento, sob o mote \"Queres ser um Architect of Change?\"."
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "Produção de diversos vídeos com colaboradores, que testemunham a experiência magnífica que é trabalhar na Logicalis."
    },
    {
@@ -1167,7 +1167,7 @@
     "alt": "Logo Clinica da Farmacia"
    },
    {
-    "type": "h2",
+    "type": "p",
     "text": "Quando o melhor de dois mundos se junta e proporciona uma oferta integrada de saúde e bem-estar."
    },
    {
@@ -1740,7 +1740,7 @@
     "text": "Unii manufactures cosmetic products with natural and organic ingredients, to which they add the holistic and traditional wisdom and the performance of science, to promote the health and beauty of the body."
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "Production of performance marketing videos to atract leads and generate online sales."
    }
   ],
@@ -1772,7 +1772,7 @@
     "portrait": false
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "Desenvolvimento de website e-commerce, com personalizador de roupa Decathlon."
    },
    {
@@ -2767,7 +2767,7 @@
   "body": [],
   "story": [
    {
-    "type": "h3",
+    "type": "p",
     "text": "Branding, design and e-commerce website development for Top Brands"
    },
    {
@@ -3027,11 +3027,11 @@
     "text": "Multimedia"
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "A Play Planet é maioritariamente conhecida por levar divertimento e alegria às crianças, através do seu design criativo e construções sólidas de mobiliário para espaços lúdicos, que se podem visitar nos principais shoppings em Portugal, aplicações urbanas e parques municipais, entre outras soluções para outros tipos de aplicação."
    },
    {
-    "type": "h3",
+    "type": "p",
     "text": "Há empresas que marcam a diferença desde o primeiro dia, afirmando-se através da criatividade, excelência e diferenciação. A Play Planet é uma delas."
    },
    {
@@ -4697,7 +4697,7 @@
   "body": [],
   "story": [
    {
-    "type": "h2",
+    "type": "p",
     "text": "Design, desenvolvimento e manutenção de website + plataforma para gestão de arrendamento local."
    },
    {
