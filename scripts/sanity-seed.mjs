@@ -46,6 +46,10 @@ const client = projectId && token
   ? createClient({ projectId, dataset, apiVersion: "2026-08-01", token, useCdn: false })
   : null;
 
+/** O jelly.pt responde melhor a um pedido que se parece com um browser. */
+const BROWSER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36";
+
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 
 /** O conteúdo escrito à mão vive em TypeScript: compila-se para JS e importa-se. */
@@ -89,18 +93,31 @@ async function uploadImage(url, { alt, caption } = {}) {
   if (!url || skipImages || !client) return undefined;
   let assetId = assetCache[url];
   if (!assetId) {
-    const response = await fetch(url);
-    if (!response.ok) {
-      skippedImages.push(`${response.status} ${url}`);
-      return undefined;
+    /**
+     * O site antigo devolve páginas de erro com estado 200 quando lhe pedimos
+     * muitas imagens de seguida — é a proteção a limitar o ritmo, não a imagem
+     * a faltar. Confirma-se sempre o tipo antes de enviar (uma página HTML já
+     * derrubou a migração a meio) e espera-se entre tentativas.
+     */
+    let buffer;
+    let lastReason = "";
+    for (const wait of [0, 2000, 6000, 15000]) {
+      if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
+      const response = await fetch(url, { headers: { "user-agent": BROWSER_AGENT, accept: "image/*,*/*" } });
+      if (!response.ok) {
+        lastReason = String(response.status);
+        continue;
+      }
+      const contentType = response.headers.get("content-type") ?? "";
+      const body = Buffer.from(await response.arrayBuffer());
+      if (contentType.startsWith("image/") && body.byteLength >= 1024) {
+        buffer = body;
+        break;
+      }
+      lastReason = `${contentType || "sem tipo"} (${body.byteLength} bytes)`;
     }
-    // O site antigo devolve páginas de erro com estado 200. Uma delas chegou ao
-    // Sanity como imagem e derrubou a migração inteira a meio: agora confirma-se
-    // o tipo antes de enviar, e uma imagem má custa uma imagem, não a corrida.
-    const contentType = response.headers.get("content-type") ?? "";
-    const buffer = Buffer.from(await response.arrayBuffer());
-    if (!contentType.startsWith("image/") || buffer.byteLength < 1024) {
-      skippedImages.push(`${contentType || "sem tipo"} (${buffer.byteLength} bytes) ${url}`);
+    if (!buffer) {
+      skippedImages.push(`${lastReason} ${url}`);
       return undefined;
     }
     try {
