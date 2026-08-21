@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Chapter } from "@/components/Chapter";
 import { Marquee } from "@/components/Marquee";
+import { ProjectRail, type RailProject } from "@/components/ProjectRail";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -49,7 +50,17 @@ export default async function HomePage({
     ]);
 
   const withCover = archive.filter((project) => project.cover?.src);
-  const featured = withCover.slice(0, 9);
+  // Do mais recente para o mais antigo; o carrossel escolhe ao acaso deste lote.
+  const recent = [...withCover].sort((a, b) => b.date.localeCompare(a.date));
+  const featured = recent.slice(0, 9);
+  const rail: RailProject[] = recent.slice(0, 24).map((project) => ({
+    slug: project.slug,
+    client: project.client,
+    year: project.year,
+    subtitle: project.subtitle,
+    disciplines: project.disciplines,
+    cover: project.cover!.src,
+  }));
   const covers = withCover.slice(0, 22).map((project) => project.cover!.src);
   const since = milestones[0]?.year ?? "2010";
   const years = new Date().getFullYear() - Number(since);
@@ -217,38 +228,7 @@ export default async function HomePage({
           </div>
         </div>
 
-        <div className="mt-14 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 sm:px-8 [scrollbar-width:thin]">
-          {featured.map((project) => (
-            <Link
-              key={project.slug}
-              href={{
-                pathname: "/projetos/[slug]",
-                params: { slug: project.slug },
-              }}
-              className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] lg:w-[32vw]"
-            >
-              <span className="block overflow-hidden">
-                <Image
-                  src={project.cover!.src}
-                  alt={project.client}
-                  width={1200}
-                  height={880}
-                  sizes="(max-width: 640px) 80vw, (max-width: 1024px) 46vw, 32vw"
-                  className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
-                />
-              </span>
-              <span className="mt-4 flex items-baseline justify-between gap-4 border-t border-line pt-3">
-                <span className="font-display text-2xl">{project.client}</span>
-                <span className="text-xs tabular-nums text-fg-soft">
-                  {project.year}
-                </span>
-              </span>
-              <span className="mt-1 block text-sm text-fg-soft">
-                {project.subtitle || project.disciplines.join(" · ")}
-              </span>
-            </Link>
-          ))}
-        </div>
+        <ProjectRail projects={rail} show={9} archiveLabel={t("workArchive")} />
 
         <div className="mt-16">
           <Marquee images={covers} />

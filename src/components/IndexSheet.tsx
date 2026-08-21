@@ -151,7 +151,7 @@ export function IndexSheet({
         <Link
           href={homeHref}
           aria-label="Jelly"
-          className="pointer-events-auto grid h-10 place-items-center rounded-full bg-ink/80 px-4 backdrop-blur-md"
+          className="pointer-events-auto grid h-11 place-items-center rounded-full bg-red px-4 transition-colors duration-200 hover:bg-red-deep"
         >
           <JellyWordmark className="w-[68px] text-paper" />
         </Link>
