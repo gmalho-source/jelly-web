@@ -6,3 +6,8 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Fontes comerciais em teste: licenciadas ao utilizador, não ao repositório
+public/fonts/trials/*.woff2
+public/fonts/trials/*.ttf
+public/fonts/trials/*.otf

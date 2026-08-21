@@ -104,35 +104,75 @@ const routes = {
 };
 
 /**
- * Candidatas a substituir a Poppins nos títulos e na interface. Todas com
- * licença aberta e self-hostáveis. A Jubilat mantém-se no editorial.
+ * Candidatas a substituir a Poppins nos títulos e na interface.
+ *
+ * - `google` e `fontshare`: licença aberta (OFL / Fontshare), self-hostáveis e
+ *   embutíveis neste instantâneo.
+ * - `local`: fontes comerciais que só entram se os ficheiros de teste estiverem
+ *   em public/fonts/trials/ (ver LEIA-ME.md). Não vão para o repositório nem são
+ *   publicadas — a licença de teste não o permite.
  */
 const FONTS = [
-  { key: "poppins", label: "Poppins (atual)", family: "Poppins", google: "Poppins:wght@400;600" },
-  { key: "instrument", label: "Instrument Sans", family: "Instrument Sans", google: "Instrument+Sans:wght@400;600" },
-  { key: "schibsted", label: "Schibsted Grotesk", family: "Schibsted Grotesk", google: "Schibsted+Grotesk:wght@400;600" },
-  { key: "geist", label: "Geist", family: "Geist", google: "Geist:wght@400;600" },
-  { key: "bricolage", label: "Bricolage Grotesque", family: "Bricolage Grotesque", google: "Bricolage+Grotesque:wght@400;600" },
+  { key: "poppins", label: "Poppins (atual)", family: "Poppins", source: "google", spec: "Poppins:wght@400;600" },
+  { key: "general", label: "General Sans ≈ PP Neue Montreal", family: "General Sans", source: "fontshare", spec: "general-sans@400,600" },
+  { key: "switzer", label: "Switzer ≈ Söhne", family: "Switzer", source: "fontshare", spec: "switzer@400,600" },
+  { key: "neue-montreal", label: "PP Neue Montreal (teste)", family: "PP Neue Montreal", source: "local", files: { 400: "neue-montreal-400.woff2", 600: "neue-montreal-600.woff2" } },
+  { key: "sohne", label: "Söhne (teste)", family: "Sohne", source: "local", files: { 400: "sohne-400.woff2", 600: "sohne-600.woff2" } },
 ];
 
 const UA_MODERN =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36";
 
+async function embed(url) {
+  const absolute = url.startsWith("//") ? `https:${url}` : url;
+  const buffer = Buffer.from(await (await fetch(absolute, { headers: { "user-agent": UA_MODERN } })).arrayBuffer());
+  return `data:font/woff2;base64,${buffer.toString("base64")}`;
+}
+
 /** Só o subconjunto latino, embutido em data URI. */
-async function fontFaces(spec) {
-  const response = await fetch(`https://fonts.googleapis.com/css2?family=${spec}&display=swap`, {
-    headers: { "user-agent": UA_MODERN },
-  });
-  const css = await response.text();
+async function googleFaces(spec) {
+  const css = await (
+    await fetch(`https://fonts.googleapis.com/css2?family=${spec}&display=swap`, { headers: { "user-agent": UA_MODERN } })
+  ).text();
   const blocks = css.split("@font-face").slice(1).map((block) => "@font-face" + block.split("}")[0] + "}");
   const latin = blocks.filter((block) => /U\+0000-00FF/.test(block));
-  const chosen = latin.length ? latin : blocks.slice(0, 2);
   let out = "";
-  for (const block of chosen) {
+  for (const block of (latin.length ? latin : blocks.slice(0, 2))) {
     const url = block.match(/url\((https:[^)]+)\)/)?.[1];
+    if (url) out += block.replace(url, await embed(url)) + "\n";
+  }
+  return out;
+}
+
+/** Fontshare (Indian Type Foundry): licença livre, inclusive comercial. */
+async function fontshareFaces(spec) {
+  const css = await (
+    await fetch(`https://api.fontshare.com/v2/css?f%5B%5D=${encodeURIComponent(spec)}&display=swap`, {
+      headers: { "user-agent": UA_MODERN },
+    })
+  ).text();
+  const blocks = css.split("@font-face").slice(1).map((block) => "@font-face" + block.split("}")[0] + "}");
+  let out = "";
+  for (const block of blocks) {
+    const url = block.match(/url\('([^']+\.woff2)'\)/)?.[1];
     if (!url) continue;
-    const buffer = Buffer.from(await (await fetch(url, { headers: { "user-agent": UA_MODERN } })).arrayBuffer());
-    out += block.replace(url, `data:font/woff2;base64,${buffer.toString("base64")}`) + "\n";
+    const weight = block.match(/font-weight:\s*(\d+)/)?.[1] ?? "400";
+    out += `@font-face{font-family:'${block.match(/font-family:\s*'([^']+)'/)?.[1]}';font-weight:${weight};font-display:swap;src:url(${await embed(url)}) format('woff2')}\n`;
+  }
+  return out;
+}
+
+/** Ficheiros de teste locais, quando existirem. */
+async function localFaces(font) {
+  let out = "";
+  for (const [weight, file] of Object.entries(font.files)) {
+    const full = path.join(process.cwd(), "public", "fonts", "trials", file);
+    try {
+      const buffer = await readFile(full);
+      out += `@font-face{font-family:'${font.family}';font-weight:${weight};font-display:swap;src:url(data:font/woff2;base64,${buffer.toString("base64")}) format('woff2')}\n`;
+    } catch {
+      return null;
+    }
   }
   return out;
 }
@@ -197,9 +237,19 @@ await browser.close();
 
 // Tipografia candidata: faces embutidas + override por data-font.
 let fontCss = "";
+const available = [];
 for (const font of FONTS) {
-  fontCss += await fontFaces(font.google);
+  let faces = null;
+  if (font.source === "google") faces = await googleFaces(font.spec);
+  if (font.source === "fontshare") faces = await fontshareFaces(font.spec);
+  if (font.source === "local") faces = await localFaces(font);
+  if (!faces) {
+    console.warn(`· ${font.label}: sem ficheiros em public/fonts/trials/ — fica de fora`);
+    continue;
+  }
+  fontCss += faces;
   fontCss += `:root[data-font="${font.key}"]{--font-display:"${font.family}",system-ui,sans-serif;--font-sans:"${font.family}",system-ui,sans-serif}\n`;
+  available.push(font);
 }
 
 css = await inlineAssets(css);
@@ -235,7 +285,7 @@ ${fontCss}
 </style>
 <div class="pv-chrome">
 <div class="pv-bar"><strong>Novo jelly.pt</strong><nav>${nav}</nav><em>Instantâneo estático do código — os formulários não submetem</em></div>
-<div class="pv-fonts"><span>Tipografia dos títulos e da interface</span>${FONTS.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>A Jubilat mantém-se no editorial</em></div>
+<div class="pv-fonts"><span>Tipografia dos títulos e da interface</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<em>A Jubilat mantém-se no editorial</em></div>
 </div>
 ${bodies}
 <script>

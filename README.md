@@ -154,10 +154,21 @@ desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre pa
 
 A Poppins está cansada. `npm run preview` gera um comparador ao vivo em
 `docs/preview/index.html`: uma barra que troca a fonte de títulos e interface em todo o
-site — Poppins, Instrument Sans, Schibsted Grotesk, Geist e Bricolage Grotesque, todas com
-licença aberta e self-hostáveis. A Jubilat mantém-se no editorial em qualquer das opções.
-Quando a escolha estiver feita, muda-se `--font-display` e `--font-sans` em
-`src/app/globals.css` e converte-se a família para WOFF2 em `public/fonts/`.
+site. A Jubilat mantém-se no editorial em qualquer das opções.
+
+| No comparador | Licença |
+|---|---|
+| Poppins (atual) | OFL |
+| **General Sans** — aproximação livre à **PP Neue Montreal** | Fontshare, livre inclusive comercial |
+| **Switzer** — aproximação livre à **Söhne** | Fontshare, livre inclusive comercial |
+| PP Neue Montreal, Söhne | Comerciais: entram no comparador quando os ficheiros de teste estiverem em `public/fonts/trials/` (ver `LEIA-ME.md` lá dentro) |
+
+As duas comerciais **não podem ser embutidas** num instantâneo publicado — distribuir os
+ficheiros viola a licença de teste. O comparador deteta-as automaticamente quando existirem
+localmente, e nunca as inclui no HTML publicado.
+
+Feita a escolha: muda-se `--font-display` e `--font-sans` em `src/app/globals.css` e
+convertem-se as faces para WOFF2 em `public/fonts/` (o projeto já traz `wawoff2`).
 
 ## Reel do herói
 
