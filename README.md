@@ -142,30 +142,36 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
 
 ## Navegação
 
-Não há barra de menu. Há uma **ilha-índice** (`src/components/SiteNav.tsx`), ancorada ao
-fundo ao centro nas duas larguras — onde chega ao polegar, e onde não tapa a leitura.
+Não há menu. Há um **índice em folha de contacto** (`src/components/IndexSheet.tsx`):
+o gatilho no canto superior direito abre o site todo em imagem — projetos, serviços,
+artigos, páginas — e a partir daí **escrever é navegar**. Cada tecla filtra a folha,
+as setas andam nela, o Enter entra, Esc fecha, ⌘K abre de qualquer sítio.
 
-Fechada é uma barra estreita em ink: wordmark, uma **pílula vermelha com a página onde
-estás**, e um `+`. O gatilho é também um mostrador — é a ideia que faz esta navegação
-funcionar, e é do Burocratik, de quem a copiámos com gosto.
+- **Mosaicos com imagem real** vinda do CMS; onde não há imagem, cor plana da marca.
+  O rótulo fica **debaixo** da imagem, com o tipo de conteúdo à direita.
+- O mosaico ativo leva **barra vermelha**, e o contador diz "44 de 44" à medida que
+  se filtra.
+- A barra fixa do topo tem a marca à esquerda e "começar um projeto" à direita, em
+  **pastilhas** — atravessa secções escuras, claras e vermelhas e tem de se ler em
+  todas.
+- O rodapé mantém o **mapa do site em texto**, para quem não tem JavaScript e para o
+  Google. A folha é um atalho, não a única porta.
+- **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente
+  aos prestadores.
 
-Aberta **cresce no mesmo lugar** até um cartão de 620 px. Não é um painel em ecrã inteiro:
-a página continua visível em volta, e ninguém perde o sítio onde estava.
+## Superfícies
 
-- **Linhas de 78 px com miniatura**: capa de projeto e capa de artigo vindas do CMS, e um
-  retângulo de cor plana da marca onde não há imagem (uma imagem que falha cai para essa
-  cor, em vez de deixar um buraco branco). O nome em Bree Serif a 24 px — é aqui que
-  deixamos de parecer o original, que é todo sans.
-- **Segundo nível dentro da linha do pai**, em pastilhas à direita: Serviços mostra os
-  quatro pilares, Projetos mostra dois casos. Não abre outro painel; não há terceiro nível.
-- **A linha da página atual está apagada, marcada "estás aqui" e não é um link** — não se
-  navega para onde já se está.
-- **Procura no topo do cartão**, com ⌘K a abrir e a focar. Setas e Enter percorrem os
-  resultados: páginas, serviços, os 59 projetos e os 179 artigos. Numa casa com este
-  volume, procurar é navegação principal.
-- Esc fecha e devolve o foco ao `+`, seguir um link fecha, e o `aria-expanded` acompanha.
-- **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
-  prestadores.
+O documento é **escuro por omissão** e cada secção escolhe a sua superfície com uma
+classe: `surface-ink`, `surface-paper`, `surface-red`, `surface-slate` ou
+`surface-accent-lavender`. A classe muda o fundo, o texto, o texto silenciado, os
+fios e a cor de acento ao mesmo tempo — é isto que dá o ritmo ink → paper → vermelho
+sem duplicar componentes.
+
+Os componentes usam `text-fg`, `text-fg-soft`, `border-line` e `text-accent` em vez de
+cores fixas. Um cartão branco dentro de uma secção escura traz o seu próprio contexto
+(a utilidade `card` redefine as variáveis), e o `btn-ghost`, o `subtitle` e o `reading`
+seguem a superfície onde estão. Há um teste de contraste em cada página para isto não
+regredir: mede a luminância de cada texto contra o fundo real e falha abaixo de 45.
 
 ### Porque é a Bree Serif nos títulos e a Lora só no corpo
 

@@ -17,7 +17,7 @@ function youtubeId(url: string): string | undefined {
  * corpo, medida curta, cor plana, cartões de 20 px. Sem texto por cima de
  * imagem e sem gradiente, que o design system não usa.
  */
-export function CaseStory({ blocks, client }: { blocks: Block[]; client: string }) {
+export function CaseStory({ blocks, client, poster }: { blocks: Block[]; client: string; poster?: string }) {
   if (!blocks.length) return null;
 
   return (
@@ -67,7 +67,7 @@ export function CaseStory({ blocks, client }: { blocks: Block[]; client: string 
                 className="w-full rounded-[20px] object-cover"
                 sizes="(max-width: 1100px) 100vw, 1000px"
               />
-              {block.caption ? <figcaption className="mt-3 text-sm text-mute">{block.caption}</figcaption> : null}
+              {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
             </figure>
           );
         }
@@ -96,7 +96,9 @@ export function CaseStory({ blocks, client }: { blocks: Block[]; client: string 
         if (block.type === "video") {
           return (
             <div key={index} className="mt-10">
-              <CaseVideo mp4={block.mp4} webm={block.webm} poster={block.poster} portrait={block.portrait} label={client} />
+              {/* Sem primeiro fotograma, um vídeo é um retângulo negro à espera:
+                  usa-se a capa do projeto até haver poster próprio. */}
+              <CaseVideo mp4={block.mp4} webm={block.webm} poster={block.poster ?? poster} portrait={block.portrait} label={client} />
             </div>
           );
         }

@@ -23,7 +23,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
   const [clients, projects, logos] = await Promise.all([getClients(), getProjects(), getClientLogos()]);
 
   return (
-    <>
+    <div className="surface-paper">
       <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
           <div>
@@ -59,10 +59,10 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
           const inSector = clients.filter((client) => client.sector === sector);
           if (!inSector.length) return null;
           return (
-            <div key={sector} className="border-t border-paper-3 py-8 first:border-ink">
+            <div key={sector} className="border-t border-line py-8 first:border-line">
               <div className="flex items-baseline justify-between gap-4">
                 <h2 className="eyebrow">{t(`sectors.${sector}`)}</h2>
-                <span className="text-sm tabular-nums text-mute">
+                <span className="text-sm tabular-nums text-fg-soft">
                   {inSector.length} {t("count")}
                 </span>
               </div>
@@ -78,7 +78,7 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
         })}
       </section>
 
-      <section className="bg-ink py-16 text-paper lg:py-20">
+      <section className="surface-ink py-16 lg:py-20">
         <div className="mx-auto grid max-w-[1200px] items-end gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between">
           <div>
             <span className="eyebrow text-chartreuse">{t("longTerm")}</span>
@@ -89,6 +89,6 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }

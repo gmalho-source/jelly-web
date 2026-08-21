@@ -50,18 +50,18 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   };
 
   return (
-    <article className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
+    <article className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
         {/* Marginália: autor, data, tempo de leitura. */}
-        <aside className="flex flex-col gap-1 text-sm text-mute">
-          <span className="text-ink">{post.author}</span>
+        <aside className="flex flex-col gap-1 text-sm text-fg-soft">
+          <span className="text-fg">{post.author}</span>
           <span>{formatter.format(new Date(post.date))}</span>
           <span>
             {post.readingMinutes} {t("minutes")}
           </span>
           {post.draft && !post.blocks?.length ? (
-            <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-ink">
+            <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fg">
               {t("draft")}
             </span>
           ) : null}
@@ -70,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
         <div>
           <span className="eyebrow">{post.category[locale]}</span>
           <h1 className="editorial mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
-          <hr className="mt-8 border-ink" />
+          <hr className="mt-8 border-line" />
 
           {post.cover?.src ? (
             <Image
@@ -105,10 +105,10 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             )}
           </div>
 
-          <div className="mt-12 grid gap-4 border-t border-paper-3 pt-8 sm:grid-cols-3">
+          <div className="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
             {related.map((item) => (
               <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: item.slug } }}>
-                <span className="eyebrow text-mute">{t("related")}</span>
+                <span className="eyebrow text-fg-soft">{t("related")}</span>
                 <h3 className="editorial mt-2 text-lg hover:text-red">{item.title[locale]}</h3>
               </Link>
             ))}

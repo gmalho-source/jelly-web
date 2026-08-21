@@ -58,7 +58,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const next = project ? await getNextProject(slug) : null;
 
   return (
-    <article className="mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
+    <article className="surface-ink mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
       <header className="grid items-end gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
         <div>
           {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
@@ -67,8 +67,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         {facts.length ? (
           <dl className="text-[13px]">
             {facts.map((fact) => (
-              <div key={fact.term} className="flex justify-between gap-4 border-b border-paper-2 py-2.5">
-                <dt className="text-mute">{fact.term}</dt>
+              <div key={fact.term} className="flex justify-between gap-4 border-b border-line py-2.5">
+                <dt className="text-fg-soft">{fact.term}</dt>
                 <dd className="text-right">{fact.value}</dd>
               </div>
             ))}
@@ -91,31 +91,31 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       ) : null}
 
       {kpis.length ? (
-        <dl className="mt-12 grid grid-cols-1 border-t border-ink sm:grid-cols-3">
+        <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-3">
           {kpis.map((kpi) => (
-            <div key={kpi.value} className="border-b border-paper-2 py-6 pr-5 sm:border-b-0 sm:border-r sm:last:border-r-0">
+            <div key={kpi.value} className="border-b border-line py-6 pr-5 sm:border-b-0 sm:border-r sm:last:border-r-0">
               <dt className="font-display text-4xl leading-none tabular-nums tracking-tight text-red lg:text-[50px]">{kpi.value}</dt>
-              <dd className="mt-2 text-[13px] text-mute">{kpi.label[locale]}</dd>
+              <dd className="mt-2 text-[13px] text-fg-soft">{kpi.label[locale]}</dd>
             </div>
           ))}
         </dl>
       ) : null}
 
-      <CaseStory blocks={story} client={client} />
+      <CaseStory blocks={story} client={client} poster={cover} />
 
       {project?.quote ? (
-        <blockquote className="mt-16 border-t border-ink pt-8">
+        <blockquote className="mt-16 border-t border-line pt-8">
           <p className="max-w-[34ch] font-display text-2xl leading-snug tracking-[-0.02em] lg:text-[38px]">
             “{project.quote.text[locale]}”
           </p>
-          <footer className="eyebrow mt-4 text-mute">
+          <footer className="eyebrow mt-4 text-fg-soft">
             {project.quote.author} · {project.quote.role[locale]}
           </footer>
         </blockquote>
       ) : null}
 
       {!story.length ? (
-        <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-ink pt-8">
+        <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8">
           <p className="subtitle max-w-[48ch]">
             {locale === "pt"
               ? "Deste projeto guardámos o trabalho, não a história. Queres saber o que fizemos aqui?"
@@ -127,7 +127,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </div>
       ) : null}
 
-      <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-paper-2 pt-5">
+      <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5">
         <Link href="/projetos" className="text-sm font-semibold text-red">
           ← {t("back")}
         </Link>
@@ -136,7 +136,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             href={{ pathname: "/projetos/[slug]", params: { slug: next.slug } }}
             className="flex items-center gap-2 text-sm font-semibold text-red"
           >
-            <span className="eyebrow text-mute">{t("next")}</span>
+            <span className="eyebrow text-fg-soft">{t("next")}</span>
             <span aria-hidden="true" className="block h-px w-8 bg-red" />
             {next.client}
           </Link>

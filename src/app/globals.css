@@ -87,6 +87,16 @@
   --shadow-lg: 0 24px 60px rgba(21, 23, 25, 0.14);
   --shadow-red: 0 12px 32px rgba(221, 54, 74, 0.32);
 
+  /* Superfície: cada secção escolhe a sua, e o texto, os fios e o silenciado
+     acompanham. É o que permite alternar ink, paper e vermelho por secção sem
+     reescrever cor a cor. */
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 65%, transparent);
+  --color-line: var(--color-paper-3);
+  /* Acento: vermelho em todas as superfícies menos na vermelha, onde passa a
+     ink — vermelho sobre vermelho não se lê. */
+  --color-accent: var(--color-red);
+
   /* Movimento: uma curva, três durações */
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
   --duration-fast: 120ms;
@@ -97,8 +107,14 @@
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
   body {
-    background: var(--color-paper);
-    color: var(--color-ink);
+    /* O documento é escuro por omissão: as secções claras pedem-se com
+       surface-paper. Sem isto, uma página sem superfície ficava com texto
+       escuro sobre fundo escuro. */
+    background: var(--color-ink);
+    --color-fg: var(--color-paper);
+    --color-fg-soft: color-mix(in oklab, var(--color-paper) 62%, transparent);
+    --color-line: color-mix(in oklab, var(--color-paper) 16%, transparent);
+    color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: var(--text-base);
     line-height: 1.45;
@@ -117,6 +133,54 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
+}
+
+/* ── Superfícies ─────────────────────────────────────────────────
+   Uma classe por secção. O fundo, o texto, o texto silenciado e os fios
+   mudam juntos — é isto que faz o ritmo ink → paper → vermelho sem
+   duplicar componentes. */
+@utility surface-ink {
+  background: var(--color-ink);
+  --color-fg: var(--color-paper);
+  --color-fg-soft: color-mix(in oklab, var(--color-paper) 62%, transparent);
+  --color-line: color-mix(in oklab, var(--color-paper) 16%, transparent);
+  color: var(--color-fg);
+}
+
+@utility surface-slate {
+  background: var(--color-slate);
+  --color-fg: var(--color-paper);
+  --color-fg-soft: color-mix(in oklab, var(--color-paper) 66%, transparent);
+  --color-line: color-mix(in oklab, var(--color-paper) 20%, transparent);
+  color: var(--color-fg);
+}
+
+@utility surface-paper {
+  background: var(--color-paper);
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 62%, transparent);
+  --color-line: var(--color-paper-3);
+  color: var(--color-fg);
+  --outline-color: var(--color-ink);
+}
+
+@utility surface-red {
+  background: var(--color-red);
+  --color-accent: var(--color-ink);
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 70%, transparent);
+  --color-line: color-mix(in oklab, var(--color-ink) 22%, transparent);
+  color: var(--color-fg);
+  --outline-color: var(--color-ink);
+}
+
+@utility surface-accent-* {
+  background: --value(--color- *);
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 65%, transparent);
+  --color-line: color-mix(in oklab, var(--color-ink) 22%, transparent);
+  color: var(--color-fg);
+  --outline-color: var(--color-ink);
 }
 
 /* Tipo em contorno: uma palavra vazada no meio de uma frase cheia. Barato de
@@ -216,13 +280,20 @@
 }
 @utility btn-ghost {
   background: transparent;
-  color: var(--color-ink);
-  box-shadow: inset 0 0 0 1px var(--color-paper-3);
+  /* Segue a superfície: um botão de contorno em ink sobre ink é invisível. */
+  color: var(--color-fg);
+  box-shadow: inset 0 0 0 1px var(--color-line);
 }
 
 /* Cartão: branco, raio 20, sombra sm, sem borda. */
 @utility card {
   background: #fff;
+  /* Um cartão branco dentro de uma secção escura tem de trazer as suas cores,
+     senão herda texto claro sobre fundo claro. */
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 62%, transparent);
+  --color-line: var(--color-paper-3);
+  color: var(--color-fg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--duration-base) var(--ease-out),
@@ -250,7 +321,8 @@
   font-size: 1.125rem;
   line-height: 1.78;
   letter-spacing: 0;
-  color: var(--color-slate);
+  /* O corpo do artigo segue a superfície onde está. */
+  color: color-mix(in oklab, var(--color-fg) 88%, transparent);
 }
 
 /* Subtítulo: a frase calma debaixo da afirmação, em Poppins para contrastar
@@ -261,5 +333,6 @@
   font-size: var(--text-lg);
   line-height: 1.55;
   letter-spacing: 0;
-  color: var(--color-slate);
+  /* Segue a superfície: slate sobre ink não se lê. */
+  color: var(--color-fg-soft);
 }

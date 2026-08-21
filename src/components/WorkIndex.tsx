@@ -15,9 +15,9 @@ export type WorkRow = {
 const tones: Record<WorkRow["tone"], string> = {
   slate: "bg-slate text-paper",
   red: "bg-red text-white",
-  lavender: "bg-lavender text-ink",
-  chartreuse: "bg-chartreuse text-ink",
-  coral: "bg-coral text-ink",
+  lavender: "bg-lavender text-fg",
+  chartreuse: "bg-chartreuse text-fg",
+  coral: "bg-coral text-fg",
 };
 
 /**
@@ -31,21 +31,21 @@ export function WorkIndex({ rows }: { rows: WorkRow[] }) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-12">
-      <div className="border-t border-ink" onMouseLeave={() => setActive(null)}>
+      <div className="border-t border-line" onMouseLeave={() => setActive(null)}>
         {rows.map((row, index) => (
           <Link
             key={row.href}
             href={row.href}
             onMouseEnter={() => setActive(index)}
             onFocus={() => setActive(index)}
-            className={`group grid grid-cols-[minmax(0,1fr)_84px] items-baseline gap-4 border-b border-paper-2 py-5 transition-[padding,opacity] duration-200 ease-out hover:pl-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_96px] ${
+            className={`group grid grid-cols-[minmax(0,1fr)_84px] items-baseline gap-4 border-b border-line py-5 transition-[padding,opacity] duration-200 ease-out hover:pl-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_96px] ${
               active !== null && active !== index ? "lg:opacity-40" : ""
             }`}
           >
             <span className="font-display text-2xl tracking-[-0.02em] transition-colors duration-200 group-hover:text-red lg:text-[34px]">
               {row.client}
             </span>
-            <span className="hidden text-sm text-mute sm:block">{row.discipline}</span>
+            <span className="hidden text-sm text-fg-soft sm:block">{row.discipline}</span>
             <span className="text-right text-lg font-semibold tabular-nums text-red">{row.value}</span>
           </Link>
         ))}
@@ -62,8 +62,8 @@ export function WorkIndex({ rows }: { rows: WorkRow[] }) {
               </div>
             </div>
           ) : (
-            <div className="flex aspect-[4/5] items-end rounded-[20px] border border-dashed border-paper-3 p-6">
-              <span className="editorial text-lg text-mute">Passa o rato numa linha.</span>
+            <div className="flex aspect-[4/5] items-end rounded-[20px] border border-dashed border-line p-6">
+              <span className="editorial text-lg text-fg-soft">Passa o rato numa linha.</span>
             </div>
           )}
         </div>

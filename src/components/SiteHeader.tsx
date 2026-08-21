@@ -1,115 +1,67 @@
 import { getTranslations } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getArchivedProjects, getPosts, getProjects, getServices } from "@/lib/cms";
-import { SiteNav, type NavEntry, type PaletteItem } from "./SiteNav";
+import { getArchivedProjects, getPosts, getServices } from "@/lib/cms";
+import { IndexSheet, type SheetTile } from "./IndexSheet";
 
-/** Monta o índice no servidor; a interação vive no SiteNav. */
+const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
+
+/**
+ * Não há menu: há um índice em folha de contacto. Este componente monta os
+ * mosaicos no servidor — páginas, serviços, projetos com capa e artigos — e a
+ * interação vive no IndexSheet.
+ */
 export async function SiteHeader({ locale }: { locale: Locale }) {
-  const [nav, home] = await Promise.all([
-    getTranslations({ locale, namespace: "nav" }),
-    getTranslations({ locale, namespace: "home" }),
-  ]);
-  const [projects, services, posts, archive] = await Promise.all([
-    getProjects(),
-    getServices(),
-    getPosts(),
-    getArchivedProjects(),
-  ]);
+  const nav = await getTranslations({ locale, namespace: "nav" });
+  const [services, posts, archive] = await Promise.all([getServices(), getPosts(), getArchivedProjects()]);
+  const pt = locale === "pt";
 
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
+  const withCover = archive.filter((project) => project.cover?.src);
 
-  // As miniaturas do menu vêm do conteúdo: capa de projeto e capa de artigo.
-  // Onde não há imagem, a linha leva uma cor plana da marca.
-  const projectCover = archive.find((project) => project.cover?.src)?.cover ?? undefined;
-  const postCover = posts.find((post) => post.cover?.src)?.cover ?? undefined;
-
-  const entries: NavEntry[] = [
-    { key: "sobre", label: nav("about"), href: url("/sobre"), tone: "red" },
-    {
-      key: "servicos",
-      label: nav("services"),
-      href: url("/servicos"),
-      tone: "lavender",
-      children: services.map((service) => ({
-        label: service.link[locale] || service.name[locale],
-        href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
-      })),
-    },
-    {
-      key: "projetos",
-      label: nav("work"),
-      href: url("/projetos"),
-      tone: "chartreuse",
-      thumb: projectCover?.src ? { src: projectCover.src } : undefined,
-      children: projects.slice(0, 2).map((project) => ({
-        label: project.client,
-        href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
-      })),
-    },
-    { key: "clientes", label: nav("clients"), href: url("/clientes"), tone: "coral" },
-    {
-      key: "blog",
-      label: nav("blog"),
-      href: url("/blog"),
-      tone: "slate",
-      thumb: postCover?.src ? { src: postCover.src } : undefined,
-    },
-    { key: "newsroom", label: nav("newsroom"), href: url("/newsroom"), tone: "slate" },
-    { key: "contactos", label: locale === "pt" ? "Contactos" : "Contact", href: url("/contactos"), tone: "red" },
-  ];
-
-  const palette: PaletteItem[] = [
-    ...entries.map((entry) => ({ label: entry.label, hint: locale === "pt" ? "página" : "page", href: entry.href, group: "Jelly" })),
-    ...services.map((service) => ({
+  const tiles: SheetTile[] = [
+    { label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },
+    ...services.map((service, index) => ({
       label: service.name[locale],
-      hint: locale === "pt" ? "serviço" : "service",
+      kind: pt ? "serviço" : "service",
       href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
-      group: nav("services"),
+      tone: tones[index % tones.length],
     })),
-    ...projects.map((project) => ({
+    ...withCover.slice(0, 24).map((project) => ({
       label: project.client,
-      hint: project.year,
+      kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
       href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
-      group: nav("work"),
+      image: project.cover!.src,
     })),
-    ...archive.map((project) => ({
-      label: project.client,
-      hint: project.disciplines[0] ?? project.year,
-      href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
-      group: nav("work"),
-    })),
-    ...posts.map((post) => ({
+    ...posts.slice(0, 12).map((post) => ({
       label: post.title[locale],
-      hint: post.category[locale],
+      kind: pt ? "artigo" : "article",
       href: url({ pathname: "/blog/[slug]", params: { slug: post.slug } }),
-      group: nav("blog"),
+      image: post.cover?.src,
+      tone: "bg-slate",
     })),
+    { label: nav("clients"), kind: pt ? "página" : "page", href: url("/clientes"), tone: "bg-coral" },
+    { label: nav("blog"), kind: pt ? "página" : "page", href: url("/blog"), tone: "bg-slate" },
+    { label: nav("newsroom"), kind: pt ? "página" : "page", href: url("/newsroom"), tone: "bg-slate" },
+    { label: nav("contact"), kind: pt ? "página" : "page", href: url("/contactos"), tone: "bg-red" },
   ];
 
   const other = routing.locales.find((candidate) => candidate !== locale) ?? routing.defaultLocale;
 
   return (
-    <SiteNav
-      entries={entries}
-      palette={palette}
-      contactHref={url("/contactos")}
+    <IndexSheet
+      tiles={tiles}
       homeHref={url("/")}
+      contactHref={url("/contactos")}
       languageHref={getPathname({ href: "/", locale: other })}
-      social={[
-        { label: "LinkedIn", href: "https://www.linkedin.com/company/jellypt/" },
-        { label: "Instagram", href: "https://www.instagram.com/jelly.pt/" },
-      ]}
       copy={{
-        menu: locale === "pt" ? "Navegação" : "Navigation",
-        open: locale === "pt" ? "Abrir o índice do site" : "Open the site index",
-        close: locale === "pt" ? "Fechar o índice" : "Close the index",
-        contact: nav("contact"),
-        signature: home("signature"),
-        here: locale === "pt" ? "estás aqui" : "you are here",
-        searchLabel: locale === "pt" ? "Procurar em todo o site" : "Search the whole site",
-        searchPlaceholder: locale === "pt" ? "Cliente, serviço, artigo…" : "Client, service, article…",
-        empty: locale === "pt" ? "Sem resultados. Tenta outro termo." : "No results. Try another term.",
+        index: pt ? "Índice" : "Index",
+        placeholder: pt ? "escreve para encontrar — cliente, serviço, artigo" : "type to find — client, service, article",
+        filterLabel: pt ? "Filtrar o índice" : "Filter the index",
+        empty: pt ? "Nada com esse nome. Apaga uma letra." : "Nothing by that name. Delete a letter.",
+        of: pt ? "de" : "of",
+        close: pt ? "Fechar o índice" : "Close the index",
+        contact: pt ? "Começar um projeto" : "Start a project",
         language: other === "en" ? "English" : "Português",
       }}
     />

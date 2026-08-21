@@ -6,6 +6,19 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 export type SheetTile = { label: string; kind: string; href: string; image?: string; tone?: string };
 
+export type SheetCopy = {
+  /** Rótulo do gatilho e título do diálogo. */
+  index: string;
+  placeholder: string;
+  filterLabel: string;
+  empty: string;
+  of: string;
+  close: string;
+  contact: string;
+  /** Nome da outra língua. Ausente na proposta, presente no site. */
+  language?: string;
+};
+
 function normalize(value: string) {
   return value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 }
@@ -21,7 +34,19 @@ function normalize(value: string) {
  * O rodapé da página continua a ter o mapa do site em texto, para quem não tem
  * JavaScript e para o Google.
  */
-export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
+export function IndexSheet({
+  tiles,
+  copy,
+  homeHref,
+  contactHref,
+  languageHref,
+}: {
+  tiles: SheetTile[];
+  copy: SheetCopy;
+  homeHref: string;
+  contactHref: string;
+  languageHref?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
@@ -77,6 +102,23 @@ export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
 
   return (
     <>
+      {/* Pastilhas em vez de texto solto: a barra atravessa secções escuras,
+          claras e vermelhas, e tem de se ler em todas. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
+        <Link
+          href={homeHref}
+          className="pointer-events-auto rounded-full bg-ink/80 px-4 py-2 font-display text-xl leading-none tracking-[-0.02em] text-paper backdrop-blur-md"
+        >
+          Jelly
+        </Link>
+        <Link
+          href={contactHref}
+          className="pointer-events-auto mr-[136px] hidden rounded-full bg-ink/80 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red sm:block"
+        >
+          {copy.contact}
+        </Link>
+      </div>
+
       <button
         ref={trigger}
         type="button"
@@ -88,7 +130,7 @@ export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
         }}
         className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-paper/10 px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8"
       >
-        <span className="eyebrow text-current">Índice</span>
+        <span className="eyebrow text-current">{copy.index}</span>
         <span aria-hidden="true" className="grid grid-cols-3 gap-[3px]">
           {Array.from({ length: 9 }).map((_, index) => (
             <span key={index} className="block h-[3px] w-[3px] rounded-full bg-current" />
@@ -97,7 +139,7 @@ export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
       </button>
 
       {open ? (
-        <div id="folha" role="dialog" aria-modal="true" aria-label="Índice do site" className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl">
+        <div id="folha" role="dialog" aria-modal="true" aria-label={copy.index} className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl">
           <div className="flex items-center gap-4 border-b border-paper/15 px-5 py-4 sm:px-8">
             <span aria-hidden="true" className="text-red">
               /
@@ -106,12 +148,19 @@ export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
               ref={input}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="escreve para encontrar — cliente, serviço, artigo"
-              aria-label="Filtrar o índice"
+              placeholder={copy.placeholder}
+              aria-label={copy.filterLabel}
               className="min-w-0 flex-1 bg-transparent py-1 font-display text-xl text-paper outline-none placeholder:font-sans placeholder:text-base placeholder:font-light placeholder:text-paper/35 sm:text-2xl"
             />
-            <span className="hidden text-xs text-paper/40 sm:block">{results.length} de {tiles.length}</span>
-            <button type="button" onClick={close} aria-label="Fechar o índice" className="text-sm text-paper/60 hover:text-paper">
+            <span className="hidden text-xs text-paper/40 sm:block">
+              {results.length} {copy.of} {tiles.length}
+            </span>
+            {languageHref && copy.language ? (
+              <Link href={languageHref} onClick={() => setOpen(false)} className="text-xs text-paper/50 hover:text-paper">
+                {copy.language}
+              </Link>
+            ) : null}
+            <button type="button" onClick={close} aria-label={copy.close} className="text-sm text-paper/60 hover:text-paper">
               esc
             </button>
           </div>
@@ -150,7 +199,7 @@ export function IndexSheet({ tiles }: { tiles: SheetTile[] }) {
             ))}
             {!results.length ? (
               <p className="col-span-full bg-ink px-5 py-16 text-center text-paper/50">
-                Nada com esse nome. Apaga uma letra.
+                {copy.empty}
               </p>
             ) : null}
           </div>

@@ -26,7 +26,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   ];
 
   return (
-    <>
+    <div className="surface-paper">
       <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
           <div>
@@ -39,14 +39,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           {stats.map((stat) => (
             <div key={stat.label} className="bg-paper py-6 pr-6">
               <dt className="font-display text-4xl leading-none tabular-nums text-red">{stat.value}</dt>
-              <dd className="mt-2 text-sm text-mute">{stat.label}</dd>
+              <dd className="mt-2 text-sm text-fg-soft">{stat.label}</dd>
             </div>
           ))}
         </dl>
       </section>
 
       {/* Manifesto em bloco ink: um momento de impacto, uma só mensagem. */}
-      <section className="bg-ink py-16 text-paper lg:py-24">
+      <section className="surface-ink py-16 lg:py-24">
         <div className="mx-auto grid max-w-[1200px] items-end gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
           <div>
             <span className="eyebrow text-chartreuse">{t("manifestoEyebrow")}</span>
@@ -59,14 +59,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       {/* Linha do tempo: a sequência é informação, por isso o ano manda. */}
       <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
         <h2 className="eyebrow">{t("timeline")}</h2>
-        <ol className="mt-6 border-t border-ink">
+        <ol className="mt-6 border-t border-line">
           {milestones.map((milestone) => (
             <li
               key={milestone.year}
-              className="grid grid-cols-[70px_minmax(0,1fr)] items-baseline gap-5 border-b border-paper-2 py-5 sm:grid-cols-[120px_minmax(0,1fr)]"
+              className="grid grid-cols-[70px_minmax(0,1fr)] items-baseline gap-5 border-b border-line py-5 sm:grid-cols-[120px_minmax(0,1fr)]"
             >
               <span className="font-display text-xl tabular-nums text-red">{milestone.year}</span>
-              <p className="max-w-[60ch] text-md text-slate">{locale === "pt" ? milestone.pt : milestone.en}</p>
+              <p className="max-w-[60ch] text-md text-fg-soft">{locale === "pt" ? milestone.pt : milestone.en}</p>
             </li>
           ))}
         </ol>
@@ -76,9 +76,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="text-chapter">{t("team")}</h2>
-          <span className="text-sm text-mute">{t("teamNote")}</span>
+          <span className="text-sm text-fg-soft">{t("teamNote")}</span>
         </div>
-        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-paper-3 pt-6">
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6">
           {team.map((member) => (
             <li key={member.name} className="font-display text-lg lg:text-xl">
               {member.name}
@@ -92,11 +92,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="card p-8">
             <h3 className="text-xl">{t("method")}</h3>
-            <p className="mt-3 text-sm text-slate">{t("methodBody")}</p>
+            <p className="mt-3 text-sm text-fg-soft">{t("methodBody")}</p>
           </div>
           <div className="card p-8">
             <h3 className="text-xl">{t("careers")}</h3>
-            <p className="mt-3 text-sm text-slate">{t("careersBody")}</p>
+            <p className="mt-3 text-sm text-fg-soft">{t("careersBody")}</p>
           </div>
           <Link href="/projetos" className="card flex flex-col justify-between bg-chartreuse p-8 shadow-none">
             <h3 className="text-xl">{projects.length + 63} projetos desde 2010</h3>
@@ -104,6 +104,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 }

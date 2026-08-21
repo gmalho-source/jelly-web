@@ -87,7 +87,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
                 className="w-full rounded-[20px] object-cover"
                 sizes="(max-width: 900px) 100vw, 720px"
               />
-              {block.caption ? <figcaption className="mt-3 text-sm text-mute">{block.caption}</figcaption> : null}
+              {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
             </figure>
           );
         }

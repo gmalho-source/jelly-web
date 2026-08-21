@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { IndexSheet, type SheetTile } from "@/components/proposta/IndexSheet";
-import { Marquee } from "@/components/proposta/Marquee";
+import { IndexSheet, type SheetTile } from "@/components/IndexSheet";
+import { Marquee } from "@/components/Marquee";
 import { getArchivedProjects, getClientLogos, getMilestones, getPosts, getServices, getTeam } from "@/lib/cms";
 
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
@@ -59,26 +59,22 @@ export default async function Proposta() {
 
   return (
     <>
-      <IndexSheet tiles={tiles} />
+      <IndexSheet
+        tiles={tiles}
+        homeHref="/"
+        contactHref="/contactos"
+        copy={{
+          index: "Índice",
+          placeholder: "escreve para encontrar — cliente, serviço, artigo",
+          filterLabel: "Filtrar o índice",
+          empty: "Nada com esse nome. Apaga uma letra.",
+          of: "de",
+          close: "Fechar o índice",
+          contact: "Começar um projeto",
+        }}
+      />
 
       {/* ── Barra: marca à esquerda, ação à direita ── */}
-      {/* Pastilhas em vez de texto solto: a barra atravessa secções escuras,
-          claras e vermelhas, e tem de se ler em todas. */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
-        <Link
-          href="/"
-          className="pointer-events-auto rounded-full bg-ink/80 px-4 py-2 font-display text-xl leading-none tracking-[-0.02em] text-paper backdrop-blur-md"
-        >
-          Jelly
-        </Link>
-        <Link
-          href="/contactos"
-          className="pointer-events-auto mr-[136px] hidden rounded-full bg-ink/80 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red sm:block"
-        >
-          Começar um projeto
-        </Link>
-      </div>
-
       {/* ── 00 Herói ── */}
       <header className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-24">
         <div className="mx-auto grid w-full max-w-[1600px] flex-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,52%)_minmax(0,44%)] lg:gap-12">

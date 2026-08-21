@@ -43,7 +43,7 @@ export async function SiteFooter() {
       <div className="relative mx-auto grid max-w-[1200px] grid-cols-2 gap-8 px-5 py-16 sm:px-8 lg:grid-cols-4">
         {columns.map((column) => (
           <div key={column.title}>
-            <h4 className="eyebrow mb-4 text-mute">{column.title}</h4>
+            <h4 className="eyebrow mb-4 text-fg-soft">{column.title}</h4>
             <ul className="flex flex-col gap-1.5">
               {column.items.map((item) => (
                 <li key={item.label}>
@@ -56,7 +56,7 @@ export async function SiteFooter() {
           </div>
         ))}
         <div>
-          <h4 className="eyebrow mb-4 text-mute">{footer("contactCol")}</h4>
+          <h4 className="eyebrow mb-4 text-fg-soft">{footer("contactCol")}</h4>
           <ul className="flex flex-col gap-1.5 text-sm text-paper/80">
             <li>geral@jelly.pt</li>
             <li>
@@ -66,7 +66,7 @@ export async function SiteFooter() {
             </li>
           </ul>
         </div>
-        <div className="col-span-2 mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-sm text-mute lg:col-span-4">
+        <div className="col-span-2 mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-sm text-fg-soft lg:col-span-4">
           <span>Rua Dom João V, 29C · Lisboa · Jelly 2010—2026</span>
           <span className="font-display text-lg text-paper">
             be the <span className="text-red">change</span>

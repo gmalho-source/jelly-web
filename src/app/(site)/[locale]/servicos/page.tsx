@@ -19,7 +19,7 @@ export default async function ServicesIndexPage({ params }: { params: Promise<{ 
   const services = await getServices();
 
   return (
-    <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
+    <section className="surface-ink mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
       <span className="eyebrow">{t("servicesLabel")}</span>
       <h1 className="mt-5 max-w-[24ch] text-display">{t("servicesTitle")}</h1>
       <div className="mt-14 grid gap-4 sm:grid-cols-2">
@@ -32,7 +32,7 @@ export default async function ServicesIndexPage({ params }: { params: Promise<{ 
               className={`card flex min-h-[240px] flex-col gap-3 p-8 ${accent ? "bg-lavender shadow-none" : ""}`}
             >
               <h2 className="text-chapter">{service.name[locale]}</h2>
-              <p className="max-w-[46ch] text-md text-slate">{service.claim[locale]}</p>
+              <p className="max-w-[46ch] text-md text-fg-soft">{service.claim[locale]}</p>
               <span className={`mt-auto text-sm font-semibold ${accent ? "text-red-deep" : "text-red"}`}>
                 {service.link[locale]} →
               </span>

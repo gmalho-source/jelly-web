@@ -8,8 +8,8 @@ export function Ticker({ items }: { items: string[] }) {
   const line = [...items, ...items];
 
   return (
-    <div className="overflow-hidden border-y border-ink bg-chartreuse py-3">
-      <div className="ticker flex w-max gap-10 whitespace-nowrap text-sm font-semibold uppercase tracking-[0.08em] text-ink">
+    <div className="overflow-hidden border-y border-line bg-chartreuse py-3">
+      <div className="ticker flex w-max gap-10 whitespace-nowrap text-sm font-semibold uppercase tracking-[0.08em] text-fg">
         {line.map((item, index) => (
           <span key={`${item}-${index}`} className="flex items-center gap-10">
             {item}

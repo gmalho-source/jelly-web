@@ -20,8 +20,8 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
   const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
 
   return (
-    <section className="grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
-      <p className="eyebrow text-mute">
+    <section className="surface-ink grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
+      <p className="eyebrow text-fg-soft">
         {t("title")}
         <br />
         <span className="text-red">
@@ -31,17 +31,17 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
       <div>
         <h1 className="text-chapter">{t("title")}</h1>
         <p className="subtitle mt-4 max-w-[52ch]">{t("lead")}</p>
-        <div className="mt-10 border-t border-paper-3-strong">
+        <div className="mt-10 border-t border-line-strong">
           {projects.map((project) => (
             <Link
               key={project.slug}
               href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-              className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-paper-3 py-4 transition-[padding,background] duration-300 hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
+              className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-line py-4 transition-[padding,background] duration-300 hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
             >
               <span className="font-display text-xl tracking-tight transition-colors group-hover:text-red lg:text-[28px]">
                 {project.client}
               </span>
-              <span className="hidden text-[13px] text-mute sm:block">{project.title[locale]}</span>
+              <span className="hidden text-[13px] text-fg-soft sm:block">{project.title[locale]}</span>
               <span className="text-right font-display tabular-nums text-red lg:text-lg">
                 {project.headline.value}
               </span>
@@ -52,9 +52,9 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
         {/* Arquivo: 64 projetos do portfolio antigo. Cliente, ano, disciplinas e
             capa — sem narrativa, que o export não trazia. */}
         <div className="mt-16">
-          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
             <h2 className="eyebrow">{locale === "pt" ? "Arquivo" : "Archive"}</h2>
-            <span className="text-sm tabular-nums text-mute">
+            <span className="text-sm tabular-nums text-fg-soft">
               {archive.length} {locale === "pt" ? "projetos" : "projects"} · 2016—2026
             </span>
           </div>
@@ -66,7 +66,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
                   className="card group flex h-full flex-col overflow-hidden"
                 >
                   {project.cover?.src ? (
-                    <div className="aspect-[4/3] overflow-hidden bg-paper-2">
+                    <div className="aspect-[4/3] overflow-hidden bg-line">
                       <Image
                         src={project.cover.src}
                         alt={project.cover.alt || project.client}
@@ -83,8 +83,8 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
                   )}
                   <div className="flex flex-1 flex-col gap-1 p-5">
                     <h3 className="text-lg transition-colors duration-200 group-hover:text-red">{project.client}</h3>
-                    <span className="text-sm text-mute">{project.disciplines.slice(0, 3).join(" · ")}</span>
-                    <span className="mt-auto pt-3 text-sm tabular-nums text-mute">{project.year}</span>
+                    <span className="text-sm text-fg-soft">{project.disciplines.slice(0, 3).join(" · ")}</span>
+                    <span className="mt-auto pt-3 text-sm tabular-nums text-fg-soft">{project.year}</span>
                   </div>
                 </Link>
               </li>
