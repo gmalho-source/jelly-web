@@ -193,17 +193,37 @@ function story(extra, attachments) {
     return asset?.src ? { src: asset.src, alt: asset.alt || undefined } : undefined;
   };
   const attribute = (raw, name) => raw.match(new RegExp(`${name}="([^"]*)"`))?.[1];
+  /**
+   * Nem tudo o que o construtor marcou como título é um título: há projetos
+   * inteiros escritos em `nectar_responsive_text`, parágrafos incluídos. Decide
+   * pela forma do texto — curto e sem frase feita é título, o resto é corpo.
+   */
+  const looksLikeHeading = (value) => value.length <= 60 && value.split(/\s+/).length <= 9 && !/[.:;!?]\s+\S/.test(value);
   const heading = (text, level = "h2") => {
     const value = clean(text);
-    if (value) blocks.push({ type: level, text: value });
+    if (!value) return;
+    if (looksLikeHeading(value)) blocks.push({ type: level, text: value });
+    else blocks.push({ type: "p", text: value });
   };
   const media = (src) => (src?.startsWith("/") ? `https://www.jelly.pt${encodeURI(src)}` : src || undefined);
+
+  /**
+   * As secções de media fixa embrulham outros blocos: se ficassem no padrão
+   * principal, o conteúdo de dentro — títulos e parágrafos — desaparecia com
+   * elas. Achata-se primeiro, guardando a imagem que a secção mostrava.
+   */
+  const flat = extra
+    .replace(/\[nectar_sticky_media_section([^\]]*)\]/g, (_, attrs) => {
+      const reference = attrs.match(/image="(\d+)"/)?.[1];
+      return reference ? `[image_with_animation image_url="${reference}"]` : "";
+    })
+    .replace(/\[\/nectar_sticky_media_section\]/g, "");
 
   // Um passo por shortcode que interessa, na ordem em que aparecem na página.
   const pattern =
     /\[(vc_column_text|vc_custom_heading|split_line_heading|nectar_responsive_text|image_with_animation|vc_gallery|nectar_video_player_self_hosted|nectar_video_lightbox|vc_video|nectar_cta|nectar_btn)([^\]]*)\](?:([\s\S]*?)\[\/\1\])?/g;
 
-  for (const match of extra.matchAll(pattern)) {
+  for (const match of flat.matchAll(pattern)) {
     const [, name, raw, inner] = match;
     if (name === "vc_column_text") {
       blocks.push(...richBlocks(inner));
