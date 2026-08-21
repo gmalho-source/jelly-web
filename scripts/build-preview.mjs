@@ -235,7 +235,7 @@ for (const capture of captures) {
   let body = await page.evaluate(() => document.querySelector("[role=dialog]")?.outerHTML ?? document.body.innerHTML);
   await page.close();
   body = body.replace(/<script[\s\S]*?<\/script>/g, "");
-  body = body.replace(/class="fixed inset-0 z-50/g, 'class="relative z-0 min-h-[86vh]');
+  body = body.replace(/class="fixed inset-0 z-\d+/g, 'class="relative z-0 min-h-[86vh]');
   body = body.replace(/href="(\/[^"]*)"/g, (match, href) => `href="${routes[href] ?? "#" + capture.key}"`);
   sections.push({ ...capture, body: await inlineAssets(body) });
 }
@@ -300,7 +300,7 @@ ${fontCss}
 </style>
 <div class="pv-chrome">
 <div class="pv-bar"><strong>Novo jelly.pt</strong><nav>${nav}</nav><em>Instantâneo estático do código — os formulários não submetem</em></div>
-<div class="pv-fonts"><span>Serifada dos títulos</span>${titlesAvailable.map((f, i) => `<button type="button" data-t="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<span style="margin-left:18px">Sans de corpo</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}</div>
+<div class="pv-fonts"><span>Decidido: Bree Serif nos títulos · Lora no corpo dos artigos · Poppins no resto. Para revisão: títulos</span>${titlesAvailable.map((f, i) => `<button type="button" data-t="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}<span style="margin-left:18px">sans</span>${available.map((f, i) => `<button type="button" data-f="${f.key}"${i === 0 ? ' class="on"' : ""}>${f.label}</button>`).join("")}</div>
 </div>
 ${bodies}
 <script>

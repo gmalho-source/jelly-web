@@ -70,18 +70,20 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <h1 className="editorial mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
           <hr className="mt-8 border-ink" />
 
-          <div className="mt-8 max-w-[64ch]">
+          {/* Corpo em Lora: leitura longa, itálico verdadeiro, capitular na
+              mesma família para a coluna ler como um só bloco. */}
+          <div className="mt-8 max-w-[66ch]">
             {post.body?.length ? (
               post.body.map((paragraph, index) => (
                 <p
                   key={index}
-                  className={`text-md leading-[1.72] text-slate ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-editorial first-letter:text-[3.1em] first-letter:leading-[0.82] first-letter:text-red" : "mt-5"}`}
+                  className={`reading ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
                 >
                   {paragraph[locale]}
                 </p>
               ))
             ) : (
-              <p className="text-md leading-[1.72] text-slate">{post.excerpt[locale]}</p>
+              <p className="reading">{post.excerpt[locale]}</p>
             )}
           </div>
 

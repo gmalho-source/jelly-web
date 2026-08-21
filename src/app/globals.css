@@ -10,6 +10,11 @@
 
 @font-face { font-family:"Bree Serif"; font-weight:400; font-style:normal; font-display:swap;
   src:url("/fonts/BreeSerif-Regular.woff2") format("woff2"); }
+/* Lora variável (400–700 + itálico verdadeiro): só o corpo dos artigos. */
+@font-face { font-family:"Lora"; font-weight:400 700; font-style:normal; font-display:swap;
+  src:url("/fonts/Lora-Variable.woff2") format("woff2-variations"); }
+@font-face { font-family:"Lora"; font-weight:400 700; font-style:italic; font-display:swap;
+  src:url("/fonts/Lora-Italic-Variable.woff2") format("woff2-variations"); }
 @font-face { font-family:"Poppins"; font-weight:300; font-style:normal; font-display:swap;
   src:url("/fonts/Poppins-Light.woff2") format("woff2"); }
 @font-face { font-family:"Poppins"; font-weight:400; font-style:normal; font-display:swap;
@@ -41,6 +46,8 @@
      agora Bree Serif pelo nome. Poppins fica em corpo, interface e subtítulos. */
   --font-display: "Bree Serif", Georgia, "Times New Roman", serif;
   --font-editorial: "Bree Serif", Georgia, "Times New Roman", serif;
+  /* Leitura longa: corpo dos artigos, onde o itálico é preciso. */
+  --font-reading: "Lora", Georgia, "Times New Roman", serif;
   --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Escala de terça maior (12 → 112) */
@@ -168,6 +175,16 @@
   font-family: var(--font-editorial);
   font-weight: 400;
   letter-spacing: -0.02em;
+}
+
+/* Corpo de artigo: Lora, com itálico verdadeiro e números old-style. */
+@utility reading {
+  font-family: var(--font-reading);
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.78;
+  letter-spacing: 0;
+  color: var(--color-slate);
 }
 
 /* Subtítulo: a frase calma debaixo da afirmação, em Poppins para contrastar

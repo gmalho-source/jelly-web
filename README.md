@@ -118,12 +118,16 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
   lilás `#c3abff`, chartreuse `#dce277` (um por superfície, nunca dois); ink `#151719`
   e slate `#2a384a` para texto e superfícies escuras; paper `#f4f6f8` como fundo.
   Cor plana — **sem gradientes, sem grão**.
-- **Tipografia** (decisão da Jelly, agosto de 2026): a serifada volta aos títulos, e é a
-  **Bree Serif** pelo nome — não como substituta da Jubilat. Peso único 400, tracking
-  −2%, entrelinha 0,98 no display. **Poppins** fica em corpo, interface e **subtítulos**
-  (utilitário `subtitle`, peso 300), para contrastar com a serifada. Blog e newsroom usam a
-  mesma serifada nos títulos (utilitário `editorial`). Eyebrows em Poppins 600, 12 px,
-  caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2 (345 KB no total).
+- **Tipografia** (decisão fechada, agosto de 2026) — três famílias, três papéis:
+
+  | Papel | Fonte | Onde |
+  |---|---|---|
+  | Títulos | **Bree Serif** 400 | Todo o site, incluindo blog, newsroom e as entradas do índice em ecrã inteiro (`--font-display`, `--font-editorial`) |
+  | Corpo dos artigos | **Lora** variável 400–700 + itálico verdadeiro | Só dentro do corpo de artigo, utilitário `reading` (`--font-reading`) |
+  | Corpo, interface, subtítulos | **Poppins** 300–600 | Tudo o resto (`--font-sans`; subtítulos a 300) |
+
+  Eyebrows em Poppins 600, 12 px, caixa alta, +0,08em, vermelho. Tudo self-hosted em WOFF2:
+  412 KB no total, dos quais a Lora só carrega nas páginas de artigo.
 - **Forma** — botões 8 px (nunca pílula), cartões 20 px sem borda com sombra `sm`,
   painéis de herói 32 px, pílulas só para tags e filtros.
 - **Movimento** — uma curva (`cubic-bezier(.22,.61,.36,1)`), três durações (120/200/360 ms),
@@ -150,41 +154,25 @@ desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre pa
 - **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
   prestadores.
 
-### Serifada dos títulos: Bree Serif
+### Porque é a Bree Serif nos títulos e a Lora só no corpo
 
-Escolhida a Bree Serif e não a Lora. Motivo: a Bree é uma slab de peso cheio e aguenta o
-herói a 98 px ao lado do vermelho #dd364a; a Lora é uma serifada de leitura, afina nos
-títulos grandes e fica dominada pelo risco. A Bree está também na mesma família de ideias
-da Jubilat do brand book — a Lora seria outra categoria.
+A Bree é uma slab de peso cheio: aguenta o herói a 98 px ao lado do vermelho #dd364a e está
+na mesma família de ideias da Jubilat do brand book. A Lora, a esse tamanho, afina e fica
+dominada pelo risco — mas é a melhor das duas onde se lê durante sete minutos, porque tem
+**itálico verdadeiro** e eixo de peso.
 
-Limitação a conhecer: a Bree Serif **não tem itálico nem outros pesos**. Por isso:
+Limitação da Bree, que condiciona o código: **um só peso, sem itálico**. Por isso todos os
+títulos ficam a 400 (nunca `font-semibold` sobre a serifada, que sintetiza bold), e a
+citação do cliente na página de caso é redonda — o itálico ali era sintético.
 
-- todos os títulos ficam a 400 (nunca `font-semibold` sobre a serifada, que sintetiza bold);
-- onde havia itálico — a citação do cliente na página de caso — passou a redondo. Se a
-  Jelly quiser itálico verdadeiro em citações, entra a Lora **só** nesse papel, ou usa-se a
-  Poppins itálica.
+O comparador do instantâneo mantém as opções para revisão: primeira fila troca a serifada
+dos títulos, segunda troca a sans. O corpo dos artigos fica sempre em Lora.
 
-O comparador do instantâneo mantém as duas serifadas para revisão a qualquer momento.
-
-### Escolha da sans em curso
-
-Os títulos estão fixos em Bree Serif. O que falta decidir é a **sans de corpo e
-interface** — a Poppins está cansada. `npm run preview` gera um comparador ao vivo em
-`docs/preview/index.html`: uma barra que troca só a sans em todo o site.
-
-| No comparador | Licença |
-|---|---|
-| Poppins (atual) | OFL |
-| **General Sans** — aproximação livre à **PP Neue Montreal** | Fontshare, livre inclusive comercial |
-| **Switzer** — aproximação livre à **Söhne** | Fontshare, livre inclusive comercial |
-| PP Neue Montreal, Söhne | Comerciais: entram no comparador quando os ficheiros de teste estiverem em `public/fonts/trials/` (ver `LEIA-ME.md` lá dentro) |
-
-As duas comerciais **não podem ser embutidas** num instantâneo publicado — distribuir os
-ficheiros viola a licença de teste. O comparador deteta-as automaticamente quando existirem
-localmente, e nunca as inclui no HTML publicado.
-
-Feita a escolha: muda-se `--font-sans` em `src/app/globals.css` e convertem-se as faces
-para WOFF2 em `public/fonts/` (o projeto já traz `wawoff2`).
+Se algum dia a sans mudar, é uma linha: `--font-sans` em `src/app/globals.css`, mais a
+conversão das faces para WOFF2 em `public/fonts/` (o projeto traz `wawoff2`). As candidatas
+que ficaram no comparador — General Sans (≈ PP Neue Montreal) e Switzer (≈ Söhne), ambas
+Fontshare, livres inclusive comercialmente — continuam disponíveis. As comerciais
+verdadeiras entram quando houver ficheiros em `public/fonts/trials/`.
 
 ## Reel do herói
 
