@@ -1,52 +1,62 @@
 import { getTranslations } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getPosts, getProjects, getServices } from "@/lib/cms";
+import { getArchivedProjects, getPosts, getProjects, getServices } from "@/lib/cms";
 import { SiteNav, type NavEntry, type PaletteItem } from "./SiteNav";
 
-/** Monta os dados do índice no servidor; a interação vive no SiteNav. */
+/** Monta o índice no servidor; a interação vive no SiteNav. */
 export async function SiteHeader({ locale }: { locale: Locale }) {
-  const [nav, home, work, blogT, newsroom] = await Promise.all([
+  const [nav, home] = await Promise.all([
     getTranslations({ locale, namespace: "nav" }),
     getTranslations({ locale, namespace: "home" }),
-    getTranslations({ locale, namespace: "work" }),
-    getTranslations({ locale, namespace: "blog" }),
-    getTranslations({ locale, namespace: "newsroom" }),
   ]);
-  const [projects, services, posts] = await Promise.all([getProjects(), getServices(), getPosts()]);
+  const [projects, services, posts, archive] = await Promise.all([
+    getProjects(),
+    getServices(),
+    getPosts(),
+    getArchivedProjects(),
+  ]);
 
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
 
+  // As miniaturas do menu vêm do conteúdo: capa de projeto e capa de artigo.
+  // Onde não há imagem, a linha leva uma cor plana da marca.
+  const projectCover = archive.find((project) => project.cover?.src)?.cover ?? undefined;
+  const postCover = posts.find((post) => post.cover?.src)?.cover ?? undefined;
+
   const entries: NavEntry[] = [
-    { key: "sobre", label: nav("about"), href: url("/sobre"), context: home("eyebrow"), tone: "red" },
+    { key: "sobre", label: nav("about"), href: url("/sobre"), tone: "red" },
     {
       key: "servicos",
       label: nav("services"),
       href: url("/servicos"),
-      context: home("servicesTitle"),
       tone: "lavender",
       children: services.map((service) => ({
-        label: service.name[locale],
+        label: service.link[locale] || service.name[locale],
         href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
-        hint: service.claim[locale],
       })),
     },
     {
       key: "projetos",
       label: nav("work"),
       href: url("/projetos"),
-      context: work("lead"),
       tone: "chartreuse",
-      children: projects.slice(0, 5).map((project) => ({
+      thumb: projectCover?.src ? { src: projectCover.src } : undefined,
+      children: projects.slice(0, 2).map((project) => ({
         label: project.client,
         href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
-        hint: `${project.headline.value} · ${project.headline.label[locale]}`,
       })),
     },
-    { key: "clientes", label: nav("clients"), href: url("/clientes"), context: home("clientsLabel"), tone: "coral" },
-    { key: "blog", label: nav("blog"), href: url("/blog"), context: blogT("lead"), tone: "slate" },
-    { key: "newsroom", label: nav("newsroom"), href: url("/newsroom"), context: newsroom("lead"), tone: "slate" },
-    { key: "contactos", label: nav("contact"), href: url("/contactos"), context: home("lead"), tone: "red" },
+    { key: "clientes", label: nav("clients"), href: url("/clientes"), tone: "coral" },
+    {
+      key: "blog",
+      label: nav("blog"),
+      href: url("/blog"),
+      tone: "slate",
+      thumb: postCover?.src ? { src: postCover.src } : undefined,
+    },
+    { key: "newsroom", label: nav("newsroom"), href: url("/newsroom"), tone: "slate" },
+    { key: "contactos", label: locale === "pt" ? "Contactos" : "Contact", href: url("/contactos"), tone: "red" },
   ];
 
   const palette: PaletteItem[] = [
@@ -59,7 +69,13 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     })),
     ...projects.map((project) => ({
       label: project.client,
-      hint: project.headline.value,
+      hint: project.year,
+      href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
+      group: nav("work"),
+    })),
+    ...archive.map((project) => ({
+      label: project.client,
+      hint: project.disciplines[0] ?? project.year,
       href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
       group: nav("work"),
     })),
@@ -80,13 +96,17 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       contactHref={url("/contactos")}
       homeHref={url("/")}
       languageHref={getPathname({ href: "/", locale: other })}
+      social={[
+        { label: "LinkedIn", href: "https://www.linkedin.com/company/jellypt/" },
+        { label: "Instagram", href: "https://www.instagram.com/jelly.pt/" },
+      ]}
       copy={{
-        more: locale === "pt" ? "Tudo" : "All",
         menu: locale === "pt" ? "Navegação" : "Navigation",
-        everything: locale === "pt" ? "Todo o site, num ecrã." : "The whole site, on one screen.",
-        close: locale === "pt" ? "Fechar" : "Close",
+        open: locale === "pt" ? "Abrir o índice do site" : "Open the site index",
+        close: locale === "pt" ? "Fechar o índice" : "Close the index",
         contact: nav("contact"),
-        searchHint: locale === "pt" ? "Procurar" : "Search",
+        signature: home("signature"),
+        here: locale === "pt" ? "estás aqui" : "you are here",
         searchLabel: locale === "pt" ? "Procurar em todo o site" : "Search the whole site",
         searchPlaceholder: locale === "pt" ? "Cliente, serviço, artigo…" : "Client, service, article…",
         empty: locale === "pt" ? "Sem resultados. Tenta outro termo." : "No results. Try another term.",

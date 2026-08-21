@@ -142,20 +142,28 @@ para tokens Tailwind em `src/app/globals.css`. Ver `docs/design-system/NOTA.md`.
 
 ## Navegação
 
-Não há barra de menu. Há uma **ilha flutuante** (`src/components/SiteNav.tsx`): no topo em
-desktop, ancorada ao fundo em mobile, onde chega ao polegar. Vidro leve sobre paper, raio
-20 px, sombra `md`. Ao primeiro scroll encolhe e a marca passa a monograma.
+Não há barra de menu. Há uma **ilha-índice** (`src/components/SiteNav.tsx`), ancorada ao
+fundo ao centro nas duas larguras — onde chega ao polegar, e onde não tapa a leitura.
 
-- **Entradas com submenu** (Serviços, Projetos) e **Tudo** abrem um **painel em ecrã
-  inteiro** sobre ink: entradas a 68 px, as inativas a 35% de opacidade, seta vermelha na
-  ativa, entrada em cascata de 34 ms por item. A ilha fica visível por cima do painel, com
-  a entrada ativa marcada — quem abre nunca perde o sítio onde está.
-- **Painel de contexto** em cor plana à direita, que muda com o hover: em Serviços mostra a
-  promessa do pilar, em Projetos o número do caso.
-- **Procura ⌘K**: paleta sobre todo o site — páginas, serviços, projetos e artigos — com
-  setas e Enter. Numa casa com 68 projetos e 179 artigos, procurar é navegação principal.
-- Esc fecha, o foco volta ao botão que abriu, o scroll do documento fica bloqueado, e o
-  `aria-expanded` acompanha cada gatilho.
+Fechada é uma barra estreita em ink: wordmark, uma **pílula vermelha com a página onde
+estás**, e um `+`. O gatilho é também um mostrador — é a ideia que faz esta navegação
+funcionar, e é do Burocratik, de quem a copiámos com gosto.
+
+Aberta **cresce no mesmo lugar** até um cartão de 620 px. Não é um painel em ecrã inteiro:
+a página continua visível em volta, e ninguém perde o sítio onde estava.
+
+- **Linhas de 78 px com miniatura**: capa de projeto e capa de artigo vindas do CMS, e um
+  retângulo de cor plana da marca onde não há imagem (uma imagem que falha cai para essa
+  cor, em vez de deixar um buraco branco). O nome em Bree Serif a 24 px — é aqui que
+  deixamos de parecer o original, que é todo sans.
+- **Segundo nível dentro da linha do pai**, em pastilhas à direita: Serviços mostra os
+  quatro pilares, Projetos mostra dois casos. Não abre outro painel; não há terceiro nível.
+- **A linha da página atual está apagada, marcada "estás aqui" e não é um link** — não se
+  navega para onde já se está.
+- **Procura no topo do cartão**, com ⌘K a abrir e a focar. Setas e Enter percorrem os
+  resultados: páginas, serviços, os 59 projetos e os 179 artigos. Numa casa com este
+  volume, procurar é navegação principal.
+- Esc fecha e devolve o foco ao `+`, seguir um link fecha, e o `aria-expanded` acompanha.
 - **billing.jelly.pt não aparece em sítio nenhum do site** — é comunicado diretamente aos
   prestadores.
 

@@ -1,48 +1,57 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { JellyMonogram, JellyWordmark } from "./JellyLogo";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { JellyWordmark } from "./JellyLogo";
 
-export type NavChild = { label: string; href: string; hint?: string };
+export type NavChild = { label: string; href: string };
 
 export type NavEntry = {
   key: string;
   label: string;
   href: string;
-  /** Linha de contexto do painel em ecrã inteiro. */
-  context?: string;
-  children?: NavChild[];
+  /** Miniatura real quando o conteúdo tem imagem; cor plana quando não tem. */
+  thumb?: { src: string; alt?: string };
   tone?: "red" | "lavender" | "chartreuse" | "coral" | "slate";
+  /** Segundo nível, dentro da linha do pai. Não abre nada. */
+  children?: NavChild[];
 };
 
 export type PaletteItem = { label: string; hint: string; href: string; group: string };
 
 type Copy = {
-  more: string;
+  menu: string;
+  open: string;
   close: string;
   contact: string;
-  menu: string;
-  searchHint: string;
+  signature: string;
   searchLabel: string;
   searchPlaceholder: string;
   empty: string;
   language: string;
-  everything: string;
+  here: string;
 };
 
 const tones: Record<NonNullable<NavEntry["tone"]>, string> = {
-  red: "bg-red text-white",
-  lavender: "bg-lavender text-ink",
-  chartreuse: "bg-chartreuse text-ink",
-  coral: "bg-coral text-ink",
-  slate: "bg-slate text-paper",
+  red: "bg-red",
+  lavender: "bg-lavender",
+  chartreuse: "bg-chartreuse",
+  coral: "bg-coral",
+  slate: "bg-slate",
 };
 
 function normalize(value: string) {
   return value.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 }
 
+/**
+ * Ilha-índice: a barra no fundo diz onde estás e, ao abrir, cresce no mesmo
+ * lugar até um cartão com o site todo — linha a linha, com miniatura. Não tapa
+ * a página: o conteúdo continua visível em volta, que é o que separa isto de um
+ * menu em ecrã inteiro.
+ */
 export function SiteNav({
   entries,
   palette,
@@ -50,6 +59,7 @@ export function SiteNav({
   languageHref,
   contactHref,
   homeHref,
+  social,
 }: {
   entries: NavEntry[];
   palette: PaletteItem[];
@@ -57,270 +67,253 @@ export function SiteNav({
   languageHref: string;
   contactHref: string;
   homeHref: string;
+  social: { label: string; href: string }[];
 }) {
-  /** Chave do painel aberto: uma entrada com filhos, "tudo" ou "procura". */
-  const [panel, setPanel] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
-  const [hovered, setHovered] = useState(0);
-  const [compact, setCompact] = useState(false);
-  const trigger = useRef<HTMLElement | null>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
 
-  const quick = entries.filter((entry) => entry.children?.length);
-  const rest = entries.filter((entry) => !entry.children?.length);
-  const open = panel !== null;
-  const searching = panel === "procura";
-  const current = entries.find((entry) => entry.key === panel);
-  const items: NavChild[] =
-    panel === "tudo" ? entries.map((entry) => ({ label: entry.label, href: entry.href })) : (current?.children ?? []);
+  /** A entrada onde estamos: a mais específica que casa com o caminho. */
+  const current = useMemo(() => {
+    const matches = entries.filter((entry) => pathname === entry.href || pathname.startsWith(`${entry.href}/`));
+    return matches.sort((a, b) => b.href.length - a.href.length)[0];
+  }, [entries, pathname]);
 
   const results = query.trim()
-    ? palette.filter((item) => normalize(`${item.label} ${item.hint} ${item.group}`).includes(normalize(query.trim()))).slice(0, 8)
+    ? palette.filter((item) => normalize(`${item.label} ${item.hint} ${item.group}`).includes(normalize(query.trim()))).slice(0, 7)
     : [];
+  // O cursor é derivado: muda a procura, muda o número de resultados, e o
+  // índice acompanha sem precisar de ser reposto por um efeito.
+  const active = results.length ? ((cursor % results.length) + results.length) % results.length : 0;
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setPanel("procura");
+        setOpen(true);
+        // O cartão abre com a procura pronta a escrever.
+        requestAnimationFrame(() => input.current?.focus());
       }
-      if (event.key === "Escape") setPanel(null);
+      if (event.key === "Escape") close();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // A ilha encolhe depois do primeiro scroll: fica só o monograma.
-  useEffect(() => {
-    function onScroll() {
-      setCompact(window.scrollY > 48);
-    }
-    // Diferido para o próximo frame: cobre quem chega a meio da página.
-    const frame = requestAnimationFrame(onScroll);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.documentElement.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (searching) input.current?.focus();
-    if (!open) trigger.current?.focus({ preventScroll: true });
-  }, [panel, open, searching]);
-
-  function toggle(key: string, event?: React.MouseEvent<HTMLButtonElement>) {
-    if (event) trigger.current = event.currentTarget;
-    setPanel((value) => (value === key ? null : key));
+  /** Fechar é sempre um gesto: clique no +, Esc, ou seguir um link. */
+  function close(returnFocus = true) {
+    setOpen(false);
     setQuery("");
-    setHovered(0);
+    setCursor(0);
+    if (returnFocus) trigger.current?.focus({ preventScroll: true });
   }
 
-  const pill =
-    "rounded-full px-3.5 py-2 text-sm font-medium transition-colors duration-200 ease-out hover:bg-ink/5";
+  function onSearchKey(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (!results.length) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setCursor((value) => (value + 1) % results.length);
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setCursor((value) => (value - 1 + results.length) % results.length);
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      window.location.assign(results[active].href);
+    }
+  }
 
   return (
-    <>
-      {/* ── Ilha: flutua no topo em desktop, ancora em baixo no mobile ── */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 sm:bottom-auto sm:top-4">
-        <nav
-          aria-label={copy.menu}
-          className={`pointer-events-auto flex max-w-full items-center gap-1 rounded-[20px] border border-paper-3/70 bg-paper/80 shadow-md backdrop-blur-xl backdrop-saturate-150 transition-[padding] duration-200 ease-out ${
-            compact ? "p-1.5" : "p-2"
-          }`}
-        >
-          <Link
-            href={homeHref}
-            aria-label="Jelly"
-            className="grid h-9 place-items-center rounded-full px-3 transition-colors duration-200 hover:bg-ink/5"
-          >
-            {compact ? (
-              <JellyMonogram className="w-[13px] text-red" />
-            ) : (
-              <JellyWordmark className="w-[58px] text-red" />
-            )}
-          </Link>
-
-          <span aria-hidden="true" className="mx-1 hidden h-6 w-px bg-paper-3 sm:block" />
-
-          {quick.map((entry) => (
-            <button
-              key={entry.key}
-              type="button"
-              aria-expanded={panel === entry.key}
-              onClick={(event) => toggle(entry.key, event)}
-              className={`${pill} hidden items-center gap-1.5 sm:flex ${panel === entry.key ? "bg-ink text-paper hover:bg-ink" : "text-ink"}`}
-            >
-              {entry.label}
-              <span aria-hidden="true" className="text-[10px] text-red">
-                ●
-              </span>
-            </button>
-          ))}
-
-          {rest.slice(0, 2).map((entry) => (
-            <Link key={entry.key} href={entry.href} className={`${pill} hidden text-ink lg:block`}>
-              {entry.label}
-            </Link>
-          ))}
-
-          <button
-            type="button"
-            aria-expanded={panel === "tudo"}
-            onClick={(event) => toggle("tudo", event)}
-            className={`${pill} ${panel === "tudo" ? "bg-ink text-paper hover:bg-ink" : "text-ink"}`}
-          >
-            {copy.more}
-          </button>
-
-          <button
-            type="button"
-            aria-label={copy.searchLabel}
-            aria-expanded={searching}
-            onClick={(event) => toggle("procura", event)}
-            className={`${pill} flex items-center gap-2 ${searching ? "bg-ink text-paper hover:bg-ink" : "text-slate"}`}
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-            <kbd className="hidden font-sans text-xs text-mute sm:inline">⌘K</kbd>
-          </button>
-
-          <Link href={contactHref} className="ml-1 hidden rounded-full bg-red px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-red-deep sm:block">
-            {copy.contact}
-          </Link>
-        </nav>
-      </div>
-
-      {/* ── Painel em ecrã inteiro: impacto no tipo, calma no resto ── */}
-      {open ? (
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 print:hidden">
+      <div className="pointer-events-auto w-full max-w-[620px]">
+        {/* ── Cartão: cresce a partir da barra, ancorado no mesmo sítio ── */}
         <div
+          id="nav-card"
           role="dialog"
-          aria-modal="true"
-          aria-label={current?.label ?? copy.everything}
-          className="fixed inset-0 z-40 bg-ink text-paper"
+          aria-modal="false"
+          aria-label={copy.menu}
+          hidden={!open}
+          className="mb-2 max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[20px] bg-ink text-paper shadow-lg [scrollbar-width:thin]"
         >
-          <div className="mx-auto flex h-full max-w-[1200px] flex-col px-5 pb-8 pt-24 sm:px-8 sm:pt-28">
-            {searching ? (
-              <div className="flex min-h-0 flex-1 flex-col">
-                <label htmlFor="nav-search" className="eyebrow text-chartreuse">
-                  {copy.searchLabel}
-                </label>
-                <input
-                  ref={input}
-                  id="nav-search"
-                  value={query}
-                  onChange={(event) => {
-                    setQuery(event.target.value);
-                    setCursor(0);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === "ArrowDown") {
-                      event.preventDefault();
-                      setCursor((value) => Math.min(value + 1, Math.max(results.length - 1, 0)));
-                    }
-                    if (event.key === "ArrowUp") {
-                      event.preventDefault();
-                      setCursor((value) => Math.max(value - 1, 0));
-                    }
-                    if (event.key === "Enter" && results[cursor]) window.location.assign(results[cursor].href);
-                  }}
-                  placeholder={copy.searchPlaceholder}
-                  autoComplete="off"
-                  className="mt-3 w-full border-b border-white/20 bg-transparent pb-4 font-display text-3xl tracking-[-0.02em] text-paper outline-none placeholder:text-white/25 lg:text-5xl"
-                />
-                <ul className="mt-6 min-h-0 flex-1 overflow-y-auto">
-                  {results.map((item, index) => (
-                    <li key={item.href + item.label}>
-                      <Link
-                        href={item.href}
-                        onMouseEnter={() => setCursor(index)}
-                        className={`flex items-baseline justify-between gap-6 border-b border-white/10 px-2 py-4 transition-colors duration-200 ${index === cursor ? "bg-white/5 text-paper" : "text-paper/70"}`}
-                      >
-                        <span className="text-lg font-medium">{item.label}</span>
-                        <span className="text-sm text-mute">
-                          {item.group} · {item.hint}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                  {query.trim() && !results.length ? <li className="px-2 py-4 text-paper/60">{copy.empty}</li> : null}
-                </ul>
-              </div>
-            ) : (
-              <div className="grid min-h-0 flex-1 gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,34%)] lg:justify-between">
-                <div className="flex min-h-0 flex-col justify-center gap-1 overflow-y-auto">
-                  {current?.context ? <p className="eyebrow mb-6 text-chartreuse">{current.label}</p> : null}
-                  {items.map((item, index) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onMouseEnter={() => setHovered(index)}
-                      onFocus={() => setHovered(index)}
-                      onClick={() => setPanel(null)}
-                      style={{ animationDelay: `${index * 34}ms` }}
-                      className={`nav-rise group flex items-baseline gap-4 font-display text-4xl leading-[1.02] tracking-[-0.02em] transition-opacity duration-200 ease-out sm:text-5xl lg:text-[64px] ${
-                        hovered === index ? "text-paper" : "text-paper/35"
-                      }`}
-                    >
-                      <span aria-hidden="true" className={`text-red transition-opacity duration-200 ${hovered === index ? "opacity-100" : "opacity-0"}`}>
-                        →
-                      </span>
-                      {item.label}
-                    </Link>
-                  ))}
-                  {current ? (
-                    <Link href={current.href} onClick={() => setPanel(null)} className="mt-8 w-fit text-sm font-semibold text-chartreuse hover:underline">
-                      {current.label} →
-                    </Link>
-                  ) : null}
-                </div>
-
-                <aside className="flex flex-col justify-end gap-4 pb-2">
-                  <div className={`flex min-h-[170px] flex-col justify-between rounded-[20px] p-6 ${tones[current?.tone ?? "slate"]}`}>
-                    <p className="editorial max-w-[26ch] text-lg leading-snug">{current?.context ?? copy.everything}</p>
-                    {items[hovered]?.hint ? <p className="mt-4 text-sm font-semibold">{items[hovered].hint}</p> : null}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-paper/70">
-                    <Link href={languageHref} className="hover:text-red">
-                      {copy.language}
-                    </Link>
-                    <a href="mailto:geral@jelly.pt" className="hover:text-red">
-                      geral@jelly.pt
-                    </a>
-                    <button type="button" onClick={() => setPanel("procura")} className="hover:text-red">
-                      {copy.searchHint} ⌘K
-                    </button>
-                  </div>
-                </aside>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={() => setPanel(null)}
-              className="mt-6 w-fit rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-red hover:text-white"
+          <div className="flex items-start justify-between gap-4 p-5">
+            <Link href={homeHref} aria-label="Jelly" onClick={() => close(false)} className="block">
+              <JellyWordmark className="w-[64px] text-paper" />
+              <span className="subtitle mt-3 block max-w-[18ch] text-[15px] text-paper/60">{copy.signature}</span>
+            </Link>
+            <Link
+              href={contactHref}
+              onClick={() => close(false)}
+              className="shrink-0 rounded-full bg-red px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-red-deep"
             >
-              {copy.close} ×
-            </button>
+              {copy.contact}
+            </Link>
           </div>
 
-          <style>{`
-            .nav-rise { animation: nav-rise 260ms cubic-bezier(.22,.61,.36,1) both; }
-            @keyframes nav-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-            @media (prefers-reduced-motion: reduce) { .nav-rise { animation: none; } }
-          `}</style>
+          <div className="border-t border-paper/10 px-5 py-3">
+            <input
+              ref={input}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={onSearchKey}
+              aria-label={copy.searchLabel}
+              placeholder={copy.searchPlaceholder}
+              className="w-full bg-transparent py-1 text-[15px] text-paper outline-none placeholder:text-paper/35"
+            />
+          </div>
+
+          {query.trim() ? (
+            <ul className="border-t border-paper/10">
+              {results.length ? (
+                results.map((item, index) => (
+                  <li key={item.href + item.label}>
+                    <Link
+                      href={item.href}
+                      onMouseEnter={() => setCursor(index)}
+                      onClick={() => close(false)}
+                      className={`flex items-baseline justify-between gap-4 px-5 py-3 transition-colors duration-120 ${
+                        index === active ? "bg-white/10" : "hover:bg-white/5"
+                      }`}
+                    >
+                      <span className="font-display text-lg">{item.label}</span>
+                      <span className="text-xs text-paper/45">{item.hint}</span>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className="px-5 py-4 text-sm text-paper/50">{copy.empty}</li>
+              )}
+            </ul>
+          ) : (
+            <ul className="border-t border-paper/10">
+              {entries.map((entry, index) => {
+                const here = current?.key === entry.key;
+                return (
+                  <li
+                    key={entry.key}
+                    className="nav-rise border-b border-paper/10 last:border-b-0"
+                    style={{ animationDelay: `${index * 34}ms` }}
+                  >
+                    <div className={`flex items-center gap-4 pr-4 ${here ? "" : "transition-colors duration-200 hover:bg-white/5"}`}>
+                      {/* A linha onde já estamos não é um link: não se navega para onde se está. */}
+                      {here ? (
+                        <span aria-current="page" className="flex flex-1 items-center gap-4 py-3 pl-5 text-paper/40">
+                          <Thumb entry={entry} dim />
+                          <span className="font-display text-2xl">{entry.label}</span>
+                          <span className="eyebrow ml-1 text-paper/30">{copy.here}</span>
+                        </span>
+                      ) : (
+                        <Link href={entry.href} onClick={() => close(false)} className="flex flex-1 items-center gap-4 py-3 pl-5">
+                          <Thumb entry={entry} />
+                          <span className="font-display text-2xl">{entry.label}</span>
+                        </Link>
+                      )}
+
+                      {entry.children?.length ? (
+                        <span className="hidden shrink-0 items-center gap-1.5 sm:flex">
+                          {entry.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={() => close(false)}
+                              className="rounded-full border border-paper/20 px-3 py-1 text-xs text-paper/70 transition-colors duration-200 hover:border-paper/50 hover:text-paper"
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </span>
+                      ) : null}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-paper/10 px-5 py-4 text-xs text-paper/50">
+            <span className="flex gap-3">
+              {social.map((item) => (
+                <a key={item.href} href={item.href} target="_blank" rel="noreferrer noopener" className="hover:text-paper">
+                  {item.label}
+                </a>
+              ))}
+            </span>
+            <span className="flex items-center gap-3">
+              <Link href={languageHref} onClick={() => close(false)} className="hover:text-paper">
+                {copy.language}
+              </Link>
+              <kbd className="rounded border border-paper/20 px-1.5 py-0.5 font-sans text-[11px]">⌘K</kbd>
+            </span>
+          </div>
         </div>
-      ) : null}
-    </>
+
+        {/* ── Barra: monograma, onde estás, e o botão que abre ── */}
+        <nav
+          aria-label={copy.menu}
+          className="flex items-center gap-2 rounded-[20px] bg-ink px-3 py-2 text-paper shadow-md"
+        >
+          <Link href={homeHref} aria-label="Jelly" className="grid h-8 place-items-center pl-1 pr-2">
+            <JellyWordmark className="w-[46px] text-paper" />
+          </Link>
+          <span className="min-w-0 flex-1">
+            <span className="inline-block max-w-full truncate rounded-full bg-red px-3 py-1 text-sm font-semibold text-white">
+              {current?.label ?? copy.menu}
+            </span>
+          </span>
+          <button
+            ref={trigger}
+            type="button"
+            aria-expanded={open}
+            aria-controls="nav-card"
+            aria-label={open ? copy.close : copy.open}
+            onClick={() => (open ? close() : setOpen(true))}
+            className="grid h-8 w-8 place-items-center rounded-full text-paper transition-colors duration-200 hover:bg-white/10"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="text-current">
+              <path d="M2 8h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path
+                d="M8 2v12"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                className={`origin-center transition-transform duration-200 ease-out ${open ? "scale-y-0" : ""}`}
+              />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+/** Miniatura da linha: imagem real quando existe, cor plana da marca quando não. */
+function Thumb({ entry, dim }: { entry: NavEntry; dim?: boolean }) {
+  const [broken, setBroken] = useState(false);
+
+  if (entry.thumb?.src && !broken) {
+    return (
+      <Image
+        src={entry.thumb.src}
+        alt=""
+        width={192}
+        height={128}
+        sizes="96px"
+        // Uma imagem que não carrega deixa a linha com um buraco branco: cai
+        // para a cor da secção, que é o que a linha teria sem imagem.
+        onError={() => setBroken(true)}
+        className={`h-[52px] w-[78px] shrink-0 rounded-[10px] object-cover ${dim ? "opacity-40" : ""}`}
+      />
+    );
+  }
+  // Sem imagem, a linha leva um retângulo de cor plana. Nada dentro: um
+  // monograma a 11 px não se lê, e a cor já identifica a secção.
+  return (
+    <span
+      aria-hidden="true"
+      className={`h-[52px] w-[78px] shrink-0 rounded-[10px] ${tones[entry.tone ?? "slate"]} ${dim ? "opacity-40" : ""}`}
+    />
   );
 }
