@@ -22,4 +22,15 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
       - run: npm run typecheck
       - run: npm run lint
+      # O painel do Payload carrega os componentes pelo mapa de importações. Um
+      # campo ou plugin novo sem o mapa regenerado responde 500 no /api do
+      # painel — já aconteceu, com o upload direto para o Blob.
+      - name: mapa de importações do painel está atualizado
+        run: |
+          npm run payload:importmap
+          git diff --exit-code -- "src/app/(payload)/admin/importMap.js"
+        env:
+          DATABASE_URL: postgresql://ci@localhost:5432/ci
+          PAYLOAD_SECRET: ci
+          BLOB_READ_WRITE_TOKEN: vercel_blob_rw_ci_ci
       - run: npm run build

@@ -68,6 +68,11 @@ npm run payload:importmap # regenera o mapa de componentes do painel
 
 O primeiro utilizador cria-se no próprio `/admin`, no primeiro arranque.
 
+**Mexer em campos ou plugins obriga a regenerar o mapa de importações.** O painel
+carrega os seus componentes por esse ficheiro; sem ele atualizado, o `/api` do
+painel responde 500 com um módulo em falta e a interface fica meia morta — foi o
+que aconteceu ao ligar o upload direto para o Blob. A CI passou a verificá-lo.
+
 ## Migração
 
 `scripts/payload-migrate.mjs` leva tudo: as 8 páginas de copy, 179 artigos e 17
