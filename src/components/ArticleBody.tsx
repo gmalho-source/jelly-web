@@ -79,12 +79,14 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
         if (block.type === "image" && block.src) {
           return (
             <figure key={index} className="my-10">
+              {/* As medidas vêm da imagem: cortar uma infografia a 16:9 é
+                  perder metade do que ela diz. */}
               <Image
                 src={block.src}
                 alt={block.alt ?? ""}
-                width={1200}
-                height={675}
-                className="w-full rounded-[20px] object-cover"
+                width={block.width ?? 1200}
+                height={block.height ?? 675}
+                className="h-auto w-full rounded-[20px]"
                 sizes="(max-width: 900px) 100vw, 720px"
               />
               {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}

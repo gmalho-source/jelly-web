@@ -19,7 +19,8 @@
     "payload:types": "payload generate:types",
     "payload:importmap": "payload generate:importmap",
     "media:optimize": "tsx scripts/optimize-media.mjs",
-    "translate": "tsx scripts/translate.mjs"
+    "translate": "tsx scripts/translate.mjs",
+    "posts:images": "tsx scripts/repair-post-images.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -54,7 +54,8 @@ function fromLexical(root: unknown): Block[] {
       if (items.length) blocks.push({ type: "list", ordered: node.listType === "number" || undefined, items });
     } else if (type === "upload") {
       const media = image((node.value ?? null) as MediaDoc);
-      if (media) blocks.push({ type: "image", src: media.src, alt: media.alt });
+      // Com as medidas reais, uma infografia alta não é cortada a 16:9.
+      if (media) blocks.push({ type: "image", src: media.src, alt: media.alt, width: media.width, height: media.height });
     } else {
       const value = plain(node);
       if (value) blocks.push({ type: "p", text: value });

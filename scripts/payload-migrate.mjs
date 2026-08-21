@@ -153,8 +153,21 @@ async function upsert(payload, collection, where, data) {
 const localized = (pt, en) => ({ pt: pt ?? "", en: en ?? "" });
 
 /** Texto simples → Lexical, que é o formato do editor. */
+/**
+ * Nó de imagem do Lexical. O `value` é o id da media: o editor mostra-a e o
+ * site desenha-a — 155 imagens no meio dos artigos ficavam de fora porque este
+ * ramo não existia e caíam no ramo dos parágrafos, como parágrafos vazios.
+ */
+function uploadNode(mediaId) {
+  return { type: "upload", version: 3, relationTo: "media", value: mediaId, fields: null, format: "" };
+}
+
 function lexical(paragraphs) {
   const children = paragraphs.map((block) => {
+    if (block.type === "image") {
+      // A imagem tem de estar carregada antes: quem chama resolve o id.
+      return block.mediaId ? uploadNode(block.mediaId) : null;
+    }
     if (block.type === "h2" || block.type === "h3") {
       return {
         type: "heading",
@@ -190,7 +203,23 @@ function lexical(paragraphs) {
       children: [{ type: "text", text: block.text ?? "", version: 1, format: 0, detail: 0, mode: "normal", style: "" }],
     };
   });
-  return { root: { type: "root", version: 1, format: "", indent: 0, direction: "ltr", children } };
+  return {
+    root: { type: "root", version: 1, format: "", indent: 0, direction: "ltr", children: children.filter(Boolean) },
+  };
+}
+
+/** Carrega as imagens que aparecem no meio do texto e devolve os blocos com o id. */
+async function withMedia(payload, blocks, alt) {
+  const resolved = [];
+  for (const block of blocks) {
+    if (block.type !== "image") {
+      resolved.push(block);
+      continue;
+    }
+    const mediaId = await upload(payload, block.src, block.alt || alt);
+    if (mediaId) resolved.push({ ...block, mediaId });
+  }
+  return resolved;
 }
 
 /** Blocos da narrativa de um caso, no formato do Payload. */
@@ -318,7 +347,7 @@ async function migratePosts(payload) {
         category: categories.get(post.categorySlug),
         excerpt: localized(post.excerpt, ""),
         cover: await upload(payload, post.cover?.src, post.cover?.alt),
-        body: lexical(post.body ?? []),
+        body: lexical(await withMedia(payload, post.body ?? [], post.title)),
         _status: "published",
       },
     );

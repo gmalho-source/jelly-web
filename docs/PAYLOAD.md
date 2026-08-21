@@ -171,6 +171,18 @@ repositório e corrê-las no build.
 | `REVALIDATE_SECRET` | Purga manual do site |
 | `RESEND_API_KEY` | Recuperação de senha do painel. Sem ela, o email vai para o log |
 
+## Imagens dentro dos artigos
+
+O export do WordPress trouxe 155 imagens no meio do texto, em 56 artigos, mas o
+conversor para Lexical não tinha ramo para elas e cada uma virou um parágrafo
+vazio. Já tem, e `npm run posts:images` repõe as que ficaram por trás: carrega a
+imagem, troca o parágrafo vazio por um nó de upload, e faz o mesmo no corpo em
+inglês na mesma posição — as duas árvores nasceram da mesma lista de blocos, por
+isso o índice serve as duas. É idempotente e aceita `--dry-run` e `--limit=`.
+
+No site as imagens do corpo são desenhadas com as medidas reais, não recortadas
+a 16:9: metade delas são infografias e um recorte perdia o que dizem.
+
 ## Tradução automática dos artigos
 
 Os 179 artigos vieram do WordPress em português e o site em inglês servia o

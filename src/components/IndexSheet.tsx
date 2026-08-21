@@ -153,7 +153,7 @@ export function IndexSheet({
           aria-label="Jelly"
           className="pointer-events-auto grid h-10 place-items-center rounded-full bg-ink/80 px-4 backdrop-blur-md"
         >
-          <JellyWordmark className="w-[52px] text-paper" />
+          <JellyWordmark className="w-[68px] text-paper" />
         </Link>
         <Link
           href={contactHref}
