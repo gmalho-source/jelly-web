@@ -94,7 +94,7 @@ O seed é idempotente: o `_id` de cada documento vem do slug e escreve-se com
 URLs do `www.jelly.pt` — depois do seed, o site deixa de depender do site antigo
 para as servir.
 
-Para alojar o Studio: `npm run studio:deploy` (fica em `jelly.sanity.studio`).
+Para alojar o Studio: `npm run studio:deploy` (fica em `jellypt.sanity.studio`).
 
 ## Publicar sem esperar por um deploy
 
