@@ -28,6 +28,7 @@
     "resend": "^6.2.0"
   },
   "devDependencies": {
+    "@sanity/vision": "^6.10.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.0",
@@ -36,11 +37,16 @@
     "eslint-config-next": "^16.3.1",
     "node-html-parser": "^9.0.1",
     "playwright": "^1.56.1",
+    "sanity": "^6.10.1",
+    "styled-components": "^6.5.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "wawoff2": "^2.0.1"
   },
   "engines": {
     "node": "22.x"
+  },
+  "overrides": {
+    "@sanity/sdk-react": "2.19.0"
   }
 }

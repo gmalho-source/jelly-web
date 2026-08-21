@@ -64,11 +64,18 @@ o login.
 git clone https://github.com/gmalho-source/jelly-web.git
 cd jelly-web
 npm install
-npm i -D sanity @sanity/vision   # dependências só do Studio
 
 npm run studio                   # http://localhost:3333
 npm run studio:deploy            # publica em jellypt.sanity.studio
 ```
+
+O `sanity`, o `@sanity/vision` e o `styled-components` são dependências de
+desenvolvimento do repositório: o `npm install` traz tudo e não há passo
+extra. O `styled-components` é peer do Sanity e sem ele a CLI recusa arrancar
+com *"Declared dependency `styled-components` is not installed"*.
+
+**Não corras `sanity init` nem `npm create sanity`.** Esses assistentes servem
+para criar configuração de zero e escrevem por cima do que já está aqui.
 
 O endereço do Studio está fixado no `sanity.cli.ts` (`studioHost`), para o
 `deploy` não perguntar e não haver duas pessoas a publicar em sítios
@@ -135,6 +142,18 @@ deixou de depender do jelly.pt para as servir.
 Três logos de 2018 ficaram de fora: os URLs no export estão corrompidos
 (`/jelly/jelly/jelly/jelly/…`) e já não existem no site antigo, nem com o
 caminho limpo. São da galeria "Google", não da parede de clientes.
+
+## O `@sanity/sdk-react` está fixado na 2.19.0
+
+O `package.json` tem um `overrides` a prendê-lo. A versão 2.20.0, que o
+`sanity@6.10.1` traz por omissão, publica **JSX não compilado** no seu próprio
+`dist/index.js`, e o bundler do Studio não compila JSX dentro de
+`node_modules` — o `sanity build` (e portanto o `studio:deploy`) morre com
+`[PARSE_ERROR] Unexpected JSX expression`. O `sanity dev` funciona nas duas,
+o que torna a avaria fácil de descobrir tarde.
+
+Quando o Sanity corrigir o empacotamento, tira-se o `overrides` e confirma-se
+com `npx sanity build`.
 
 ## Falta
 
