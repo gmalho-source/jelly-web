@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import * as neonServerless from "@neondatabase/serverless";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { resendAdapter } from "@payloadcms/email-resend";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
@@ -15,6 +16,15 @@ import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./s
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
 const resendKey = process.env.RESEND_API_KEY;
+const databaseUrl = process.env.DATABASE_URL?.trim() ?? "";
+
+/**
+ * Na Neon fala-se pelo driver serverless, que usa WebSocket em 443: liga mais
+ * depressa a frio, não esgota o número de ligações quando há muitas funções ao
+ * mesmo tempo, e passa em redes onde a 5432 não sai. A interface é a do `pg`, o
+ * que deixa o adaptador igual. Fora da Neon — Postgres local — usa-se o `pg`.
+ */
+const onNeon = /\.neon\.tech(?::|\/|$)/.test(new URL(databaseUrl || "postgresql://localhost").hostname);
 
 export default buildConfig({
   admin: {
@@ -25,7 +35,10 @@ export default buildConfig({
   collections: [Pages, Posts, Categories, Projects, Services, NewsItems, Clients, Logos, TeamMembers, Milestones, Media, Users],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
-  db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URL ?? "" } }),
+  db: postgresAdapter({
+    pool: { connectionString: databaseUrl },
+    ...(onNeon ? { pg: neonServerless as unknown as Parameters<typeof postgresAdapter>[0]["pg"] } : {}),
+  }),
   typescript: { outputFile: path.resolve(dirname, "src/payload/types.ts") },
   // Os ficheiros vivem no Blob da Vercel: não há disco persistente no serverless.
   // Sem token, ficam no disco local, o que serve para desenvolver.
