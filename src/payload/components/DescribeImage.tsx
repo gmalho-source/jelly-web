@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, toast, useDocumentInfo, useForm } from "@payloadcms/ui";
+import { toast, useDocumentInfo, useField } from "@payloadcms/ui";
 import { useState } from "react";
 
 /**
@@ -8,10 +8,15 @@ import { useState } from "react";
  * põe-na nos campos. Não grava — quem edita lê, corrige e publica. Um texto
  * alternativo errado é pior do que nenhum, por isso a última palavra é de quem
  * está a escrever.
+ *
+ * Escreve nos campos pelo `useField`, que é o que o painel dá aos componentes
+ * de campo. Uma versão anterior usava o `useForm`, que precisa do contexto do
+ * formulário e não existe em todos os ecrãs onde o painel desenha um campo.
  */
 export function DescribeImage() {
   const { id } = useDocumentInfo();
-  const { dispatchFields } = useForm();
+  const alt = useField<string>({ path: "alt" });
+  const caption = useField<string>({ path: "caption" });
   const [busy, setBusy] = useState(false);
 
   if (!id) {
@@ -26,12 +31,16 @@ export function DescribeImage() {
     setBusy(true);
     try {
       const response = await fetch(`/api/media/${id}/descrever`, { method: "POST", credentials: "include" });
-      const body = await response.json();
+      const body = (await response.json()) as { alt?: string; caption?: string; error?: string };
       if (!response.ok) throw new Error(body?.error ?? `erro ${response.status}`);
 
-      if (body.alt) dispatchFields({ type: "UPDATE", path: "alt", value: body.alt });
-      if (body.caption) dispatchFields({ type: "UPDATE", path: "caption", value: body.caption });
-      toast.success(body.caption ? "Texto alternativo e legenda escritos. Confirma antes de gravar." : "Texto alternativo escrito. Confirma antes de gravar.");
+      if (body.alt) alt.setValue(body.alt);
+      if (body.caption) caption.setValue(body.caption);
+      toast.success(
+        body.caption
+          ? "Texto alternativo e legenda escritos. Confirma antes de gravar."
+          : "Texto alternativo escrito. Confirma antes de gravar.",
+      );
     } catch (error) {
       toast.error(`Não deu: ${error instanceof Error ? error.message : "erro desconhecido"}`);
     } finally {
@@ -40,11 +49,13 @@ export function DescribeImage() {
   };
 
   return (
-    <div style={{ margin: "0.4rem 0 0" }}>
-      <Button buttonStyle="secondary" size="small" disabled={busy} onClick={describe}>
-        {busy ? "A olhar para a imagem…" : "Escrever com IA"}
-      </Button>
-      <span style={{ color: "var(--theme-elevation-500)", fontSize: "0.75rem", marginLeft: "0.6rem" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", margin: "0.4rem 0 0" }}>
+      <button type="button" className="btn btn--style-secondary btn--size-small" disabled={busy} onClick={describe}>
+        <span className="btn__content">
+          <span className="btn__label">{busy ? "A olhar para a imagem…" : "Escrever com IA"}</span>
+        </span>
+      </button>
+      <span style={{ color: "var(--theme-elevation-500)", fontSize: "0.75rem" }}>
         Escreve uma proposta a partir da imagem. Revê antes de gravar.
       </span>
     </div>

@@ -101,7 +101,9 @@ export default async function Proposta() {
       <header className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-24">
         <div className="mx-auto grid w-full max-w-[1600px] flex-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,52%)_minmax(0,44%)] lg:gap-12">
           <h1 className="font-display text-[clamp(50px,8.6vw,132px)] leading-[0.9] tracking-[-0.035em]">
-            <span className="relative inline-block">
+            {/* A palavra riscada sai do branco: já não é o que somos, e a cor
+                diz isso antes de o risco o dizer. */}
+            <span className="relative inline-block text-fg-soft">
               Estratégia
               <span
                 aria-hidden="true"
