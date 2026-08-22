@@ -55,6 +55,7 @@ export const services: Service[] = [
   },
   {
     slug: "inteligencia-artificial",
+    slugEn: "artificial-intelligence",
     name: { pt: "Inteligência artificial", en: "Artificial intelligence" },
     claim: {
       pt: "Da consultoria à implementação de agentes e automação que ficam a correr sozinhos na tua operação.",
@@ -82,6 +83,7 @@ export const services: Service[] = [
   },
   {
     slug: "tecnologia",
+    slugEn: "technology",
     name: { pt: "Tecnologia", en: "Technology" },
     claim: {
       pt: "Websites, e-commerce, CRM e CDP a ligar marketing, vendas e operações.",

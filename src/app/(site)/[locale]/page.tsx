@@ -17,6 +17,7 @@ import {
   getServices,
   getTeam,
 } from "@/lib/cms";
+import { slugFor } from "@/lib/slugs";
 import { alternates, organizationJsonLd } from "@/lib/seo";
 
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
@@ -56,7 +57,8 @@ export default async function HomePage({
   const recent = [...withCover].sort((a, b) => b.date.localeCompare(a.date));
   const featured = recent.slice(0, 9);
   const rail: RailProject[] = recent.slice(0, 24).map((project) => ({
-    slug: project.slug,
+    // O carrossel corre no browser e já recebe o endereço desta língua.
+    slug: slugFor(project, locale),
     client: project.client,
     year: project.year,
     subtitle: project.subtitle,
@@ -270,7 +272,7 @@ export default async function HomePage({
               key={service.slug}
               href={{
                 pathname: "/servicos/[slug]",
-                params: { slug: service.slug },
+                params: { slug: slugFor(service, locale) },
               }}
               className="group relative block overflow-hidden border-b border-line"
             >
@@ -369,7 +371,7 @@ export default async function HomePage({
                 <Link
                   href={{
                     pathname: "/blog/[slug]",
-                    params: { slug: post.slug },
+                    params: { slug: slugFor(post, locale) },
                   }}
                   className="group grid items-baseline gap-2 py-6 lg:grid-cols-[240px_minmax(0,1fr)_40px]"
                 >

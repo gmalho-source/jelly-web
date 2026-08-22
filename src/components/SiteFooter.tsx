@@ -2,12 +2,26 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { legalPages } from "@/content/legal";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { getServices } from "@/lib/cms";
+import { slugFor } from "@/lib/slugs";
 import { JellyWordmark } from "./JellyLogo";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
 export async function SiteFooter() {
-  const [nav, footer, locale] = await Promise.all([getTranslations("nav"), getTranslations("footer"), getLocale()]);
+  const [nav, footer, locale, services] = await Promise.all([
+    getTranslations("nav"),
+    getTranslations("footer"),
+    getLocale(),
+    getServices(),
+  ]);
   const lingua = locale as Locale;
+
+  // Os quatro serviços do rodapé vêm do painel, não escritos aqui: é de lá que
+  // sai o slug de cada língua.
+  const servico = (slug: string) => {
+    const encontrado = services.find((item) => item.slug === slug);
+    return { pathname: "/servicos/[slug]" as const, params: { slug: encontrado ? slugFor(encontrado, lingua) : slug } };
+  };
 
   const columns = [
     {
@@ -21,10 +35,10 @@ export async function SiteFooter() {
     {
       title: nav("services"),
       items: [
-        { label: footer("branding"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "branding" } } },
-        { label: footer("marketing"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "marketing" } } },
-        { label: footer("ai"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "inteligencia-artificial" } } },
-        { label: footer("tech"), href: { pathname: "/servicos/[slug]" as const, params: { slug: "tecnologia" } } },
+        { label: footer("branding"), href: servico("branding") },
+        { label: footer("marketing"), href: servico("marketing") },
+        { label: footer("ai"), href: servico("inteligencia-artificial") },
+        { label: footer("tech"), href: servico("tecnologia") },
       ],
     },
     {

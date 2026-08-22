@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
-import { locale, slugField } from "../fields";
+import { locale, slugEnField, slugField } from "../fields";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
 
@@ -45,6 +45,7 @@ export const Posts: CollectionConfig = {
       ],
     },
     slugField,
+    slugEnField,
     {
       type: "row",
       fields: [

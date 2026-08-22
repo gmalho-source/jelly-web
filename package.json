@@ -26,7 +26,8 @@
     "posts:audit": "tsx scripts/audit-post-images.mjs",
     "posts:lexical": "tsx scripts/fix-lexical.mjs",
     "posts:check": "tsx scripts/check-lexical.mjs",
-    "media:titles": "tsx scripts/media-titles.mjs"
+    "media:titles": "tsx scripts/media-titles.mjs",
+    "slugs:en": "tsx scripts/slugs-en.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import Image from "next/image";
 import { CaseStory } from "@/components/CaseStory";
 import { getArchivedProject, getArchivedProjects, getNextProject, getProject, getProjects } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 
 type Params = { locale: Locale; slug: string };
 
-export async function generateStaticParams() {
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  const locale = params.locale as Locale;
   const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
-  return [...projects, ...archive].map((project) => ({ slug: project.slug }));
+  return [...projects, ...archive].map((project) => ({ slug: slugFor(project, locale) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -23,7 +25,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const title = project ? `${project.client} — ${project.title[locale]}` : `${archived!.client} — ${archived!.subtitle || archived!.disciplines.join(", ")}`;
   const description = project?.summary[locale] || archived?.summary || `${archived?.client}: ${archived?.disciplines.join(", ")}.`;
 
-  return { title, description, alternates: alternates({ pathname: "/projetos/[slug]", params: { slug } }, locale) };
+  const peca = project ?? archived!;
+  return {
+    title,
+    description,
+    alternates: alternates(
+      (candidate) => ({ pathname: "/projetos/[slug]" as const, params: { slug: slugFor(peca, candidate) } }),
+      locale,
+    ),
+  };
 }
 
 export default async function ProjectPage({ params }: { params: Promise<Params> }) {
@@ -35,6 +45,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   // uma só, e usa o que existir.
   const [project, archived] = await Promise.all([getProject(slug), getArchivedProject(slug)]);
   if (!project && !archived) notFound();
+
+  // Chegou pelo endereço da outra língua: serve-se o certo, com 308.
+  const canonico = slugFor(project ?? archived!, locale);
+  if (canonico !== slug) {
+    permanentRedirect(getPathname({ href: { pathname: "/projetos/[slug]", params: { slug: canonico } }, locale }));
+  }
 
   const t = await getTranslations("work");
 
@@ -133,7 +149,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </Link>
         {next ? (
           <Link
-            href={{ pathname: "/projetos/[slug]", params: { slug: next.slug } }}
+            href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(next, locale) } }}
             className="flex items-center gap-2 text-sm font-semibold text-red"
           >
             <span className="eyebrow text-fg-soft">{t("next")}</span>

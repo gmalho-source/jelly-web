@@ -228,6 +228,10 @@ export interface Post {
    * Entra no URL. Mudar isto parte links que já existem.
    */
   slug: string;
+  /**
+   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
+   */
+  slugEn?: string | null;
   date: string;
   author?: string | null;
   readingMinutes?: number | null;
@@ -305,6 +309,10 @@ export interface Project {
    * Entra no URL. Mudar isto parte links que já existem.
    */
   slug: string;
+  /**
+   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
+   */
+  slugEn?: string | null;
   year?: string | null;
   date?: string | null;
   order?: number | null;
@@ -431,6 +439,10 @@ export interface Service {
    * Entra no URL. Mudar isto parte links que já existem.
    */
   slug: string;
+  /**
+   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
+   */
+  slugEn?: string | null;
   order?: number | null;
   claim?: {
     pt?: string | null;
@@ -745,6 +757,7 @@ export interface PostsSelect<T extends boolean = true> {
   titlePt?: T;
   titleEn?: T;
   slug?: T;
+  slugEn?: T;
   date?: T;
   author?: T;
   readingMinutes?: T;
@@ -782,6 +795,7 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   client?: T;
   slug?: T;
+  slugEn?: T;
   year?: T;
   date?: T;
   order?: T;
@@ -913,6 +927,7 @@ export interface ServicesSelect<T extends boolean = true> {
   namePt?: T;
   nameEn?: T;
   slug?: T;
+  slugEn?: T;
   order?: T;
   claim?:
     | T

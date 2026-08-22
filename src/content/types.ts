@@ -7,6 +7,8 @@ export type Kpi = { value: string; label: Localized };
 
 export type Project = {
   slug: string;
+  /** Endereço em inglês. Vazio, o inglês usa o português. */
+  slugEn?: string;
   client: string;
   year: string;
   order: number;
@@ -25,6 +27,8 @@ export type Phase = { name: Localized; body: Localized };
 
 export type Service = {
   slug: string;
+  /** Endereço em inglês. Vazio, o inglês usa o português. */
+  slugEn?: string;
   name: Localized;
   claim: Localized;
   link: Localized;
@@ -42,6 +46,8 @@ export type TeamMember = { name: string; role?: Localized };
 
 export type Post = {
   slug: string;
+  /** Endereço em inglês. Vazio, o inglês usa o português. */
+  slugEn?: string;
   date: string;
   category: Localized;
   author: string;
@@ -71,6 +77,8 @@ export type NewsItem = {
   outlet?: string;
   /** Artigo do blog, quando a notícia tem um. */
   postSlug?: string;
+  /** O mesmo artigo, no endereço inglês. */
+  postSlugEn?: string;
   /** Endereço de fora, quando não há artigo. */
   link?: string;
 };

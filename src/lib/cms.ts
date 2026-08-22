@@ -7,6 +7,7 @@ import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { clients, milestones, services, team } from "@/content/site";
 import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
+import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
   fetchPageCopy,
@@ -57,13 +58,13 @@ export const getProjects = fromStore("projects", async (): Promise<Project[]> =>
 });
 
 export async function getProject(slug: string): Promise<Project | undefined> {
-  const all = await getProjects();
-  return all.find((project) => project.slug === slug);
+  return findBySlug(await getProjects(), slug);
 }
 
 export async function getNextProject(slug: string): Promise<Project> {
   const all = await getProjects();
-  const index = all.findIndex((project) => project.slug === slug);
+  const atual = findBySlug(all, slug);
+  const index = atual ? all.indexOf(atual) : -1;
   return all[(index + 1) % all.length];
 }
 
@@ -72,8 +73,7 @@ export const getServices = fromStore("services", async () => fetchServices(servi
 export const getClients = fromStore("clients", async () => fetchClients(clients));
 
 export async function getService(slug: string) {
-  const all = await getServices();
-  return all.find((service) => service.slug === slug);
+  return findBySlug(await getServices(), slug);
 }
 
 export async function getProjectsBySlugs(slugs: string[] = []) {
@@ -130,15 +130,14 @@ export const getPosts = fromStore("posts", async (): Promise<Post[]> => {
 });
 
 export async function getPost(slug: string): Promise<Post | undefined> {
-  const all = await getPosts();
-  return all.find((post) => post.slug === slug);
+  return findBySlug(await getPosts(), slug);
 }
 
 export async function getRelatedPosts(slug: string, limit = 3): Promise<Post[]> {
   const all = await getPosts();
-  const current = all.find((post) => post.slug === slug);
-  const sameCategory = all.filter((post) => post.slug !== slug && post.category.pt === current?.category.pt);
-  const rest = all.filter((post) => post.slug !== slug && post.category.pt !== current?.category.pt);
+  const current = findBySlug(all, slug);
+  const sameCategory = all.filter((post) => post !== current && post.category.pt === current?.category.pt);
+  const rest = all.filter((post) => post !== current && post.category.pt !== current?.category.pt);
   return [...sameCategory, ...rest].slice(0, limit);
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { ArticleBody } from "@/components/ArticleBody";
@@ -8,12 +8,15 @@ import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPosts, getRelatedPosts } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 
 type Params = { locale: Locale; slug: string };
 
-export async function generateStaticParams() {
+/** Uma árvore por língua: o inglês leva o slug inglês onde ele existe. */
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  const locale = params.locale as Locale;
   const posts = await getPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  return posts.map((post) => ({ slug: slugFor(post, locale) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -23,7 +26,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: post.title[locale],
     description: post.excerpt[locale],
-    alternates: alternates({ pathname: "/blog/[slug]", params: { slug } }, locale),
+    alternates: alternates(
+      (candidate) => ({ pathname: "/blog/[slug]" as const, params: { slug: slugFor(post, candidate) } }),
+      locale,
+    ),
     openGraph: { type: "article", publishedTime: post.date, authors: [post.author] },
   };
 }
@@ -34,6 +40,13 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
 
   const post = await getPost(slug);
   if (!post) notFound();
+
+  // Chegou pelo endereço da outra língua: serve-se o certo, com 308, para não
+  // haver duas páginas com o mesmo artigo.
+  const canonico = slugFor(post, locale);
+  if (canonico !== slug) {
+    permanentRedirect(getPathname({ href: { pathname: "/blog/[slug]", params: { slug: canonico } }, locale }));
+  }
 
   const t = await getTranslations("blog");
   const nav = await getTranslations("nav");
@@ -121,7 +134,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
 
           <div className="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
             {related.map((item) => (
-              <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: item.slug } }}>
+              <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: slugFor(item, locale) } }}>
                 <span className="eyebrow text-fg-soft">{t("related")}</span>
                 <h3 className="editorial mt-2 text-lg hover:text-red">{item.title[locale]}</h3>
               </Link>

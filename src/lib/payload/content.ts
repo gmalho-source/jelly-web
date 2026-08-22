@@ -117,6 +117,7 @@ export function fetchPosts(fallback: Post[]) {
       const category = raw.category as Doc | number | null;
       return {
         slug: text(raw.slug),
+        slugEn: text(raw.slugEn) || undefined,
         date: text(raw.date).slice(0, 10),
         author: text(raw.author) || "Jelly",
         readingMinutes: typeof raw.readingMinutes === "number" ? raw.readingMinutes : 4,
@@ -153,6 +154,7 @@ export function fetchProjects(fallback: Project[]) {
       const disciplines = ((raw.disciplines as string[] | null) ?? []).join(", ");
       return {
         slug: text(raw.slug),
+        slugEn: text(raw.slugEn) || undefined,
         client: text(raw.client),
         year: text(raw.year),
         order: typeof raw.order === "number" ? raw.order : 100,
@@ -198,6 +200,7 @@ export function fetchServices(fallback: Service[]) {
     const { docs } = await payload.find({ collection: "services", sort: "order", ...all });
     return (docs as unknown as Doc[]).map((raw): Service => ({
       slug: text(raw.slug),
+      slugEn: text(raw.slugEn) || undefined,
       name: { pt: text(raw.namePt), en: text(raw.nameEn) || text(raw.namePt) },
       claim: localized(raw.claim),
       link: localized(raw.link, text(raw.namePt)),
@@ -248,6 +251,7 @@ export function fetchNews(fallback: NewsItem[]) {
         summary: localized(raw.summary),
         outlet: text(raw.outlet) || undefined,
         postSlug: post && typeof post === "object" ? text((post as Doc).slug) || undefined : undefined,
+        postSlugEn: post && typeof post === "object" ? text((post as Doc).slugEn) || undefined : undefined,
         link: text(raw.link) || undefined,
       };
     });

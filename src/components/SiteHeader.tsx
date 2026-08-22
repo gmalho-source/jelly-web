@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { getArchivedProjects, getPosts, getServices } from "@/lib/cms";
+import { slugFor } from "@/lib/slugs";
 import { IndexSheet, type SheetTile } from "./IndexSheet";
 
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
@@ -28,19 +29,19 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     ...services.map((service, index) => ({
       label: service.name[locale],
       kind: pt ? "serviço" : "service",
-      href: url({ pathname: "/servicos/[slug]", params: { slug: service.slug } }),
+      href: url({ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }),
       tone: tones[index % tones.length],
     })),
     ...withCover.slice(0, 12).map((project) => ({
       label: project.client,
       kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
-      href: url({ pathname: "/projetos/[slug]", params: { slug: project.slug } }),
+      href: url({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }),
       image: project.cover!.src,
     })),
     ...posts.slice(0, 12).map((post) => ({
       label: post.title[locale],
       kind: pt ? "artigo" : "article",
-      href: url({ pathname: "/blog/[slug]", params: { slug: post.slug } }),
+      href: url({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }),
       image: post.cover?.src,
       tone: "bg-slate",
     })),

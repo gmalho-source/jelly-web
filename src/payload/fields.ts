@@ -32,6 +32,24 @@ export const slugField: Field = {
   admin: { description: "Entra no URL. Mudar isto parte links que já existem." },
 };
 
+/**
+ * Slug em inglês. Vazio, o site em inglês usa o português — é o que faz sentido
+ * num nome de cliente, que não se traduz. Num artigo, um endereço em português
+ * numa página em inglês afasta quem procura em inglês, e é essa a razão de
+ * existir este campo.
+ */
+export const slugEnField: Field = {
+  name: "slugEn",
+  label: "Slug (EN)",
+  type: "text",
+  unique: true,
+  index: true,
+  admin: {
+    description: "Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.",
+    position: "sidebar",
+  },
+};
+
 export function kpiField(name: string, label: string, many = false): Field {
   const fields: Field[] = [
     { name: "value", label: "Valor", type: "text", admin: { description: "Como sai para o ecrã: +38%, 2,4x, 11 dias." } },

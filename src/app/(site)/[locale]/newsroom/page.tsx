@@ -91,7 +91,7 @@ export default async function NewsroomPage({
                 key={item.slug}
                 href={{
                   pathname: "/blog/[slug]",
-                  params: { slug: item.postSlug },
+                  params: { slug: locale === "en" && item.postSlugEn ? item.postSlugEn : item.postSlug },
                 }}
                 className={`${linha} row-flip group hover:pl-3`}
               >

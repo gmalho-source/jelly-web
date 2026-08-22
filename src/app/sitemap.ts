@@ -1,23 +1,31 @@
 import type { MetadataRoute } from "next";
 import { getPathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 import { getPosts, getProjects, getServices } from "@/lib/cms";
 import { SITE_URL } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 
 /** Só conteúdo. Taxonomias e páginas de sistema ficam fora, por decisão. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [projects, services, posts] = await Promise.all([getProjects(), getServices(), getPosts()]);
 
+  type Href = Parameters<typeof getPathname>[0]["href"];
+
   const entries: MetadataRoute.Sitemap = [];
-  const add = (href: Parameters<typeof getPathname>[0]["href"], priority: number, lastModified?: string) => {
+  // O endereço pode mudar de língua para língua: um artigo tem slug inglês.
+  const add = (href: Href | ((locale: Locale) => Href), priority: number, lastModified?: string) => {
+    const para = (locale: Locale) => (typeof href === "function" ? href(locale) : href);
     for (const locale of routing.locales) {
       entries.push({
-        url: SITE_URL + getPathname({ href, locale }),
+        url: SITE_URL + getPathname({ href: para(locale), locale }),
         priority,
         lastModified,
         alternates: {
           languages: Object.fromEntries(
-            routing.locales.map((other) => [other === "pt" ? "pt-PT" : "en", SITE_URL + getPathname({ href, locale: other })]),
+            routing.locales.map((other) => [
+              other === "pt" ? "pt-PT" : "en",
+              SITE_URL + getPathname({ href: para(other), locale: other }),
+            ]),
           ),
         },
       });
@@ -31,9 +39,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   add("/blog", 0.7);
   add("/newsroom", 0.6);
   add("/contactos", 0.6);
-  for (const service of services) add({ pathname: "/servicos/[slug]", params: { slug: service.slug } }, 0.9);
-  for (const project of projects) add({ pathname: "/projetos/[slug]", params: { slug: project.slug } }, 0.7);
-  for (const post of posts) add({ pathname: "/blog/[slug]", params: { slug: post.slug } }, 0.5, post.date);
+  for (const service of services) {
+    add((locale) => ({ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }), 0.9);
+  }
+  for (const project of projects) {
+    add((locale) => ({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }), 0.7);
+  }
+  for (const post of posts) {
+    add((locale) => ({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }), 0.5, post.date);
+  }
 
   return entries;
 }

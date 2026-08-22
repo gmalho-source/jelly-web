@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getServices } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -28,7 +29,7 @@ export default async function ServicesIndexPage({ params }: { params: Promise<{ 
           return (
             <Link
               key={service.slug}
-              href={{ pathname: "/servicos/[slug]", params: { slug: service.slug } }}
+              href={{ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }}
               className={`card flex min-h-[240px] flex-col gap-3 p-8 ${accent ? "bg-lavender shadow-none" : ""}`}
             >
               <h2 className="text-chapter">{service.name[locale]}</h2>

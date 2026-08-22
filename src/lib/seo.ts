@@ -16,21 +16,33 @@ export const isIndexable = SITE_URL === PRODUCTION_URL;
 
 type Href = Parameters<typeof getPathname>[0]["href"];
 
+/** O endereço pode mudar de língua para língua: o slug de um artigo muda. */
+type HrefPorLingua = Href | ((locale: Locale) => Href);
+
+const resolve = (href: HrefPorLingua, locale: Locale) => (typeof href === "function" ? href(locale) : href);
+
 /**
  * Canónico e hreflang para as duas árvores. Uma página sem isto é uma página
  * que o Google não sabe emparelhar — foi um dos defeitos do site antigo.
+ *
+ * Quando o slug é traduzido, passa-se uma função em vez de um endereço: o
+ * hreflang tem de apontar para o endereço inglês da peça, não para o português
+ * dentro da árvore inglesa.
  */
-export function alternates(href: Href, locale: Locale) {
+export function alternates(href: HrefPorLingua, locale: Locale) {
   const languages = Object.fromEntries(
     routing.locales.map((candidate) => [
       candidate === "pt" ? "pt-PT" : "en",
-      SITE_URL + getPathname({ href, locale: candidate }),
+      SITE_URL + getPathname({ href: resolve(href, candidate), locale: candidate }),
     ]),
   );
 
   return {
-    canonical: SITE_URL + getPathname({ href, locale }),
-    languages: { ...languages, "x-default": SITE_URL + getPathname({ href, locale: routing.defaultLocale }) },
+    canonical: SITE_URL + getPathname({ href: resolve(href, locale), locale }),
+    languages: {
+      ...languages,
+      "x-default": SITE_URL + getPathname({ href: resolve(href, routing.defaultLocale), locale: routing.defaultLocale }),
+    },
   };
 }
 

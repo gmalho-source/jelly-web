@@ -1,6 +1,6 @@
 import type { Block, CollectionConfig } from "payload";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
-import { kpiField, locale, slugField } from "../fields";
+import { kpiField, locale, slugEnField, slugField } from "../fields";
 
 const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/projetos/${doc.slug ?? ""}`];
 const servicePaths = (doc: Record<string, unknown>) => ["/", "/servicos", `/servicos/${doc.slug ?? ""}`];
@@ -66,6 +66,7 @@ export const Projects: CollectionConfig = {
   fields: [
     { name: "client", label: "Cliente", type: "text", required: true },
     slugField,
+    slugEnField,
     {
       type: "row",
       fields: [
@@ -120,6 +121,7 @@ export const Services: CollectionConfig = {
       ],
     },
     slugField,
+    slugEnField,
     { name: "order", label: "Ordem", type: "number", defaultValue: 100 },
     locale("claim", "Claim", { long: true }),
     locale("link", "Nome curto"),

@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 import Image from "next/image";
 import { getArchivedProjects, getProjects } from "@/lib/cms";
 
@@ -35,7 +36,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
           {projects.map((project) => (
             <Link
               key={project.slug}
-              href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+              href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
               className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
             >
               <span className="font-display text-xl tracking-tight transition-colors group-hover:text-red lg:text-[28px]">
@@ -62,7 +63,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
             {archive.map((project) => (
               <li key={project.slug}>
                 <Link
-                  href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+                  href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
                   className="card group flex h-full flex-col overflow-hidden"
                 >
                   {project.cover?.src ? (

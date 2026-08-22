@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
+import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 
 type Params = { locale: Locale; slug: string };
 
-export async function generateStaticParams() {
+export async function generateStaticParams({ params }: { params: { locale: string } }) {
+  const locale = params.locale as Locale;
   const services = await getServices();
-  return services.map((service) => ({ slug: service.slug }));
+  return services.map((service) => ({ slug: slugFor(service, locale) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -20,7 +22,10 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return {
     title: service.name[locale],
     description: service.claim[locale],
-    alternates: alternates({ pathname: "/servicos/[slug]", params: { slug } }, locale),
+    alternates: alternates(
+      (candidate) => ({ pathname: "/servicos/[slug]" as const, params: { slug: slugFor(service, candidate) } }),
+      locale,
+    ),
   };
 }
 
@@ -30,6 +35,12 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
 
   const service = await getService(slug);
   if (!service) notFound();
+
+  // Chegou pelo endereço da outra língua: serve-se o certo, com 308.
+  const canonico = slugFor(service, locale);
+  if (canonico !== slug) {
+    permanentRedirect(getPathname({ href: { pathname: "/servicos/[slug]", params: { slug: canonico } }, locale }));
+  }
 
   const t = await getTranslations("services");
   const [cases, all] = await Promise.all([getProjectsBySlugs(service.caseSlugs), getServices()]);
@@ -104,7 +115,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             {cases.map((project) => (
               <Link
                 key={project.slug}
-                href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
+                href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
                 className="group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
               >
                 <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
@@ -124,7 +135,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           {others.map((item) => (
             <Link
               key={item.slug}
-              href={{ pathname: "/servicos/[slug]", params: { slug: item.slug } }}
+              href={{ pathname: "/servicos/[slug]", params: { slug: slugFor(item, locale) } }}
               className="card flex flex-col gap-2 p-6"
             >
               <h3 className="text-xl">{item.name[locale]}</h3>

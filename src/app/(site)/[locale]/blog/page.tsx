@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
+import { slugFor } from "@/lib/slugs";
 import { getPosts } from "@/lib/cms";
 
 export async function generateMetadata({
@@ -48,7 +49,7 @@ export default async function BlogIndexPage({
       </div>
 
       <Link
-        href={{ pathname: "/blog/[slug]", params: { slug: featured.slug } }}
+        href={{ pathname: "/blog/[slug]", params: { slug: slugFor(featured, locale) } }}
         className="card mt-14 grid gap-6 p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,34%)]"
       >
         <div>
@@ -90,7 +91,7 @@ export default async function BlogIndexPage({
       {latest.map((post) => (
         <Link
           key={post.slug}
-          href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
+          href={{ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }}
           className="group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 row-flip hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px]"
         >
           {/* A miniatura é a mesma imagem do artigo: o índice deixa de ser uma
