@@ -77,7 +77,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   ];
 
   return (
-    <article className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
+    <article className="sheet-in surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumbs items={crumbs} />
       <div className="mt-8 grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">

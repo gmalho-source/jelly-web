@@ -419,6 +419,26 @@
   .logo-in { animation: none; }
 }
 
+/* ── A folha a entrar ───────────────────────────────────────────────────────
+   Ao abrir um artigo, a folha sobe até ao seu lugar. Sobe depressa, passa uns
+   cinco pixels do sítio e assenta — é essa passagem curta que dá o peso; sem
+   ela a folha parece colada. Meio segundo, e só transformação: a opacidade
+   ficaria a esconder o título justamente no instante em que o browser mede o
+   maior elemento pintado, e uma folha inteira a mudar de opacidade é trabalho
+   que não se ganha.
+
+   Quem pediu menos movimento vê a folha já no lugar — o bloco de
+   prefers-reduced-motion acima corta a duração. */
+@keyframes sheet-in {
+  from { transform: translate3d(0, 54px, 0); }
+  55% { transform: translate3d(0, -6px, 0); }
+  to { transform: none; }
+}
+
+.sheet-in {
+  animation: sheet-in 460ms var(--ease-out) both;
+}
+
 /* ── Palavras que se substituem ─────────────────────────────────────────────
    No gatilho do índice, em vez de uma palavra fixa passam as disciplinas da
    casa. Cada uma acende, fica, e desfaz-se em desfoque enquanto a seguinte se
