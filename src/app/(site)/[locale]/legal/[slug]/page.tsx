@@ -87,15 +87,15 @@ export default async function LegalPage({ params }: { params: Promise<Params> })
           <hr className="mt-8 border-line" />
           <div className="mt-8">
             {page.iubenda ? (
-              <IubendaPolicy href={page.iubenda} label={page.title[locale]} />
+              <IubendaPolicy href={page.iubenda[locale]} label={page.title[locale]} />
             ) : (
               <ArticleBody blocks={page.blocks[locale]} />
             )}
           </div>
           <p className="mt-12 border-t border-line pt-6 text-sm text-fg-soft">
             {t("questions")}{" "}
-            <a href="mailto:geral@jelly.pt" className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
-              geral@jelly.pt
+            <a href="mailto:hello@jelly.pt" className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
+              hello@jelly.pt
             </a>
             .
           </p>

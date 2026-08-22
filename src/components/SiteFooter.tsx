@@ -75,10 +75,14 @@ export async function SiteFooter() {
         <div>
           <h4 className="eyebrow mb-4 text-fg-soft">{footer("contactCol")}</h4>
           <ul className="flex flex-col gap-1.5 text-sm text-paper/80">
-            <li>geral@jelly.pt</li>
+            <li>
+              <a href="mailto:hello@jelly.pt" className="text-paper/80 transition-colors duration-200 hover:text-red">
+                hello@jelly.pt
+              </a>
+            </li>
             <li>
               <Link href="/contactos" className="text-paper/80 transition-colors duration-200 hover:text-red">
-                {footer("book")}
+                {nav("contact")}
               </Link>
             </li>
           </ul>

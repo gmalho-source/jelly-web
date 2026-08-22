@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
-    from: envOr(process.env.BILLING_FROM_EMAIL, "Jelly <geral@jelly.pt>"),
-    to: envOr(process.env.CONTACT_TO_EMAIL, "geral@jelly.pt"),
+    from: envOr(process.env.BILLING_FROM_EMAIL, "Jelly <hello@jelly.pt>"),
+    to: envOr(process.env.CONTACT_TO_EMAIL, "hello@jelly.pt"),
     replyTo: email,
     subject: `Briefing de ${name}${company ? ` (${company})` : ""}`,
     text,

@@ -85,7 +85,6 @@
     "tech": "Tecnologia",
     "workCol": "Trabalho",
     "contactCol": "Contacto",
-    "book": "Marcar 30 minutos",
     "complaints": "Livro de Reclamações"
   },
   "billing": {
@@ -175,7 +174,7 @@
   "newsroom": {
     "eyebrow": "Newsroom",
     "title": "O que se passa na Jelly.",
-    "lead": "Notícias, eventos e presença na imprensa. Para assessoria, fala com geral@jelly.pt.",
+    "lead": "Notícias, eventos e presença na imprensa. Para assessoria, fala com hello@jelly.pt.",
     "kinds": {
       "noticia": "Notícia",
       "evento": "Evento",
@@ -189,7 +188,7 @@
   "contact": {
     "eyebrow": "Contactos",
     "title": "Diz-nos o que precisa de mudar.",
-    "lead": "Quatro campos. Se preferires falar, a agenda do CEO está aberta.",
+    "lead": "Quatro campos: onde está o problema e o que já tentaste.",
     "name": "Nome",
     "company": "Empresa",
     "email": "Email",
@@ -198,10 +197,8 @@
     "submit": "Enviar briefing",
     "sending": "A enviar…",
     "sent": "Recebido. Respondemos em 24 horas úteis.",
-    "error": "Não foi possível enviar. Tenta outra vez ou escreve para geral@jelly.pt.",
+    "error": "Não foi possível enviar. Tenta outra vez ou escreve para hello@jelly.pt.",
     "invalid": "Preenche o nome, um email válido e o que precisas.",
-    "book": "Ou marca 30 minutos",
-    "bookBody": "Agenda aberta do Gonçalo Malho Rodrigues, CEO. Sem intermediários.",
     "office": "Escritório",
     "careers": "Trabalhar na Jelly",
     "providers": "Prestadores",

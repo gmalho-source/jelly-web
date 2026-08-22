@@ -44,20 +44,13 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
         <div className="flex flex-col gap-8">
           <div>
-            <h2 className="text-xl">{t("book")}</h2>
-            <p className="mt-2 text-sm text-fg-soft">{t("bookBody")}</p>
-            <a href="https://jelly.pt/calendar-gmalho" className="mt-3 inline-block text-sm font-semibold text-red">
-              jelly.pt/calendar-gmalho →
-            </a>
-          </div>
-          <div className="border-t border-line pt-6">
             <h2 className="eyebrow text-fg-soft">{t("office")}</h2>
             <p className="mt-2 text-md text-fg-soft">
               Rua Dom João V, 29C
               <br />
               1250-091 Lisboa
               <br />
-              geral@jelly.pt
+              hello@jelly.pt
             </p>
           </div>
           <div className="border-t border-line pt-6">

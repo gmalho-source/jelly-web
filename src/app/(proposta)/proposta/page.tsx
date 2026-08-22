@@ -378,10 +378,10 @@ export default async function Proposta() {
           E se…?
         </p>
         <a
-          href="mailto:geral@jelly.pt"
+          href="mailto:hello@jelly.pt"
           className="mt-10 flex items-center justify-between gap-6 border-y border-paper/20 py-8 font-display text-[clamp(28px,5vw,68px)] tracking-[-0.02em] transition-colors duration-200 hover:text-red"
         >
-          geral@jelly.pt
+          hello@jelly.pt
           <span aria-hidden="true">↗</span>
         </a>
 

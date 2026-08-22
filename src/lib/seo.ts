@@ -55,7 +55,7 @@ export function organizationJsonLd() {
     url: SITE_URL,
     slogan: "be the change",
     foundingDate: "2010",
-    email: "geral@jelly.pt",
+    email: "hello@jelly.pt",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rua Dom João V, 29C",

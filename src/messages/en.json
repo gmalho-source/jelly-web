@@ -85,7 +85,6 @@
     "tech": "Technology",
     "workCol": "Work",
     "contactCol": "Contact",
-    "book": "Book 30 minutes",
     "complaints": "Complaints book"
   },
   "billing": {
@@ -175,7 +174,7 @@
   "newsroom": {
     "eyebrow": "Newsroom",
     "title": "What is happening at Jelly.",
-    "lead": "News, events and press coverage. For press enquiries, write to geral@jelly.pt.",
+    "lead": "News, events and press coverage. For press enquiries, write to hello@jelly.pt.",
     "kinds": {
       "noticia": "News",
       "evento": "Event",
@@ -189,7 +188,7 @@
   "contact": {
     "eyebrow": "Contact",
     "title": "Tell us what needs to change.",
-    "lead": "Four fields. If you would rather talk, the CEO's calendar is open.",
+    "lead": "Four fields: where the problem is and what you have already tried.",
     "name": "Name",
     "company": "Company",
     "email": "Email",
@@ -198,10 +197,8 @@
     "submit": "Send briefing",
     "sending": "Sending…",
     "sent": "Got it. We reply within one business day.",
-    "error": "We could not send it. Try again or write to geral@jelly.pt.",
+    "error": "We could not send it. Try again or write to hello@jelly.pt.",
     "invalid": "Fill in your name, a valid email and what you need.",
-    "book": "Or book 30 minutes",
-    "bookBody": "Open calendar of Gonçalo Malho Rodrigues, CEO. No gatekeepers.",
     "office": "Office",
     "careers": "Working at Jelly",
     "providers": "Providers",

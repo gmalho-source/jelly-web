@@ -13,18 +13,19 @@ export type LegalPage = {
   updated: string;
   blocks: { pt: Block[]; en: Block[] };
   /**
-   * Endereço da política na Iubenda. Quando existe, é ela que a página mostra:
-   * o texto é gerado e mantido lá, e ter duas versões da mesma política — uma
-   * nossa e uma deles — era pedir para elas discordarem uma da outra.
+   * Endereço da política na Iubenda, um por língua. Quando existe, é ela que a
+   * página mostra: o texto é gerado e mantido lá, e ter duas versões da mesma
+   * política — uma nossa e uma deles — era pedir para elas discordarem uma da
+   * outra. As duas línguas têm políticas separadas lá, com ids diferentes.
    */
-  iubenda?: string;
+  iubenda?: { pt: string; en: string };
 };
 
 /** Nota que abre as páginas cujo texto só existe em português. */
 const soPortugues: Block[] = [
   {
     type: "p",
-    text: "This policy refers to Portuguese law and is published in Portuguese only. The Portuguese text below prevails; write to geral@jelly.pt if you need help reading it.",
+    text: "This policy refers to Portuguese law and is published in Portuguese only. The Portuguese text below prevails; write to hello@jelly.pt if you need help reading it.",
   },
 ];
 
@@ -44,7 +45,10 @@ export const legalPages: LegalPage[] = [
       en: "What this site collects, what for, who processes it and how to have it deleted.",
     },
     updated: "2026-08-22",
-    iubenda: "https://www.iubenda.com/privacy-policy/36055654",
+    iubenda: {
+      pt: "https://www.iubenda.com/privacy-policy/36055654",
+      en: "https://www.iubenda.com/privacy-policy/25966282",
+    },
     blocks: { pt: [], en: [] },
   },
   {
@@ -55,7 +59,10 @@ export const legalPages: LegalPage[] = [
       en: "Which cookies this site uses, what for, and how to refuse them.",
     },
     updated: "2026-08-22",
-    iubenda: "https://www.iubenda.com/privacy-policy/36055654/cookie-policy",
+    iubenda: {
+      pt: "https://www.iubenda.com/privacy-policy/36055654/cookie-policy",
+      en: "https://www.iubenda.com/privacy-policy/25966282/cookie-policy",
+    },
     blocks: { pt: [], en: [] },
   },
   {

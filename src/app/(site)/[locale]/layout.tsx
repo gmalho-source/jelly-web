@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { CookieConsent } from "@/components/CookieConsent";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { routing, type Locale } from "@/i18n/routing";
@@ -55,6 +56,8 @@ export default async function SiteLayout({
       <head>
         <link rel="preload" href="/fonts/BreeSerif-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Depois das letras, que são pedidos, e antes de tudo o que executa. */}
+        <CookieConsent locale={locale} />
       </head>
       <body>
         <NextIntlClientProvider>

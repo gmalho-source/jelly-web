@@ -407,10 +407,10 @@ export default async function HomePage({
             {t("nextTitle")}
           </p>
           <a
-            href="mailto:geral@jelly.pt"
+            href="mailto:hello@jelly.pt"
             className="mt-10 flex items-center justify-between gap-6 border-y border-line py-8 font-display text-[clamp(26px,4.6vw,62px)] tracking-[-0.02em] transition-colors duration-200 hover:text-red"
           >
-            geral@jelly.pt
+            hello@jelly.pt
             <span aria-hidden="true">↗</span>
           </a>
           <Link
