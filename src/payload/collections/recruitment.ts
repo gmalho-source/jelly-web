@@ -543,8 +543,8 @@ export const Applications: CollectionConfig = {
                   label: "Apagar em",
                   type: "date",
                   admin: {
-                    readOnly: true,
-                    description: "Doze meses para as espontâneas, seis meses depois de a vaga fechar. Um trabalho diário apaga o que passou desta data.",
+                    description:
+                      "Doze meses a contar da candidatura, e um trabalho diário apaga o que passou desta data. Editável de propósito: se houver razão para guardar mais tempo, quem decide é uma pessoa — e a razão escreve-se na nota da decisão.",
                   },
                 },
               ],
