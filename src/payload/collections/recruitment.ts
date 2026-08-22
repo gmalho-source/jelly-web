@@ -1,5 +1,6 @@
 import type { Access, CollectionConfig } from "payload";
 import { locale, slugEnField, slugField } from "../fields";
+import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
 import { scoreApplication, setRetention } from "../hooks/rating";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 
@@ -290,6 +291,12 @@ export const Applications: CollectionConfig = {
     hidden: ({ user }) => !temPerfil(user as ComPerfis, "recrutamento"),
   },
   hooks: { beforeChange: [setRetention, scoreApplication] },
+  endpoints: [
+    // O rascunho do email, e o envio. São dois passos de propósito: uma
+    // rejeição enviada por engano ao mudar um menu não se desfaz.
+    { path: "/:id/email", method: "get", handler: candidateEmailDraft },
+    { path: "/:id/email", method: "post", handler: sendCandidateEmail },
+  ],
   access: {
     read: recruiterOnly,
     update: recruiterOnly,
@@ -406,10 +413,14 @@ export const Applications: CollectionConfig = {
               options: [
                 { label: "Nova", value: "nova" },
                 { label: "Em avaliação", value: "em_avaliacao" },
+                { label: "Entrevista", value: "entrevista" },
                 { label: "Aprovado", value: "aprovado" },
                 { label: "Rejeitado", value: "rejeitado" },
               ],
-              admin: { description: "Mudar o estado prepara o email para o candidato. Nada sai sem alguém o mandar sair." },
+              admin: {
+                description: "Mudar o estado prepara o email para o candidato. Nada sai sem alguém carregar em enviar.",
+                components: { afterInput: ["@/payload/components/CandidateEmail#CandidateEmail"] },
+              },
             },
             {
               name: "evaluations",
@@ -514,9 +525,12 @@ export const Applications: CollectionConfig = {
               type: "array",
               admin: { readOnly: true },
               fields: [
-                { name: "kind", label: "Qual", type: "text" },
+                { name: "kind", label: "Estado comunicado", type: "text" },
                 { name: "sentAt", label: "Quando", type: "date" },
+                { name: "sentBy", label: "Por quem", type: "relationship", relationTo: "users" },
+                { name: "to", label: "Para", type: "text" },
                 { name: "subject", label: "Assunto", type: "text" },
+                { name: "body", label: "Texto enviado", type: "textarea" },
               ],
             },
           ],

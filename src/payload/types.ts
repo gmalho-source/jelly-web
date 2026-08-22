@@ -854,9 +854,9 @@ export interface Application {
       }[]
     | null;
   /**
-   * Mudar o estado prepara o email para o candidato. Nada sai sem alguém o mandar sair.
+   * Mudar o estado prepara o email para o candidato. Nada sai sem alguém carregar em enviar.
    */
-  status?: ('nova' | 'em_avaliacao' | 'aprovado' | 'rejeitado') | null;
+  status?: ('nova' | 'em_avaliacao' | 'entrevista' | 'aprovado' | 'rejeitado') | null;
   evaluations?:
     | {
         interviewer?: (number | null) | User;
@@ -921,7 +921,10 @@ export interface Application {
     | {
         kind?: string | null;
         sentAt?: string | null;
+        sentBy?: (number | null) | User;
+        to?: string | null;
         subject?: string | null;
+        body?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -1712,7 +1715,10 @@ export interface ApplicationsSelect<T extends boolean = true> {
     | {
         kind?: T;
         sentAt?: T;
+        sentBy?: T;
+        to?: T;
         subject?: T;
+        body?: T;
         id?: T;
       };
   updatedAt?: T;
