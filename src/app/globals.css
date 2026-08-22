@@ -147,6 +147,15 @@
   color: var(--color-fg);
 }
 
+/* Sobre imagem: o texto passa a claro sem pintar fundo nenhum — quem escurece
+   é o degradê por cima da fotografia. */
+@utility surface-cover {
+  --color-fg: var(--color-paper);
+  --color-fg-soft: color-mix(in oklab, var(--color-paper) 72%, transparent);
+  --color-line: color-mix(in oklab, var(--color-paper) 28%, transparent);
+  color: var(--color-fg);
+}
+
 @utility surface-slate {
   background: var(--color-slate);
   --color-fg: var(--color-paper);
