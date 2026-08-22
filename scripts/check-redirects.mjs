@@ -60,13 +60,24 @@ let ok = 0;
 for (const pathname of escolhidos) {
   try {
     const response = await fetch(`${BASE}${pathname}`, { redirect: "manual", headers: { "user-agent": UA } });
-    if (response.status >= 300 && response.status < 400) {
+
+    if (response.status === 200) {
       ok += 1;
-    } else if (response.status === 200) {
-      ok += 1;
-    } else {
-      falhas.push(`${response.status} ${pathname}`);
+      continue;
     }
+
+    if (response.status >= 300 && response.status < 400) {
+      // Não basta redirecionar: o destino tem de existir. Cinco redirecionamentos
+      // apontavam para páginas legais que ainda não estavam feitas, e uma
+      // verificação que só olha para o 301 dava-os por bons.
+      const destino = new URL(response.headers.get("location") ?? "/", BASE);
+      const final = await fetch(destino, { redirect: "follow", headers: { "user-agent": UA } });
+      if (final.ok) ok += 1;
+      else falhas.push(`${response.status} → ${final.status} ${pathname} → ${destino.pathname}`);
+      continue;
+    }
+
+    falhas.push(`${response.status} ${pathname}`);
   } catch (error) {
     falhas.push(`erro ${pathname}: ${error.message}`);
   }
