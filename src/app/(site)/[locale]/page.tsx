@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Chapter } from "@/components/Chapter";
 import { Marquee } from "@/components/Marquee";
+import { LogoWall, type WallLogo } from "@/components/LogoWall";
 import { ProjectRail, type RailProject } from "@/components/ProjectRail";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -274,22 +275,10 @@ export default async function HomePage({
         <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8">
           <p className="eyebrow text-fg-soft">{t("clientsWall")}</p>
           {/* Uma marca precisa de campo à volta para se ler: cada logo tem a
-              sua célula, separada por um fio, e ocupa-a. A parede inteira vive
-              na página de clientes — aqui mostram-se as primeiras. */}
-          <div className="mt-8 grid grid-cols-2 gap-px bg-line sm:grid-cols-4 lg:grid-cols-6">
-            {logos.slice(0, 24).map((logo) => (
-              <span key={logo.src} className="grid aspect-[5/2] place-items-center bg-paper px-4">
-                <Image
-                  src={logo.src}
-                  alt={logo.name}
-                  width={260}
-                  height={104}
-                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 24vw, 15vw"
-                  className="max-h-[56px] w-auto max-w-full object-contain opacity-85 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
-                />
-              </span>
-            ))}
-          </div>
+              sua célula, separada por um fio, e ocupa-a. A grelha fica quieta e
+              as marcas rodam — as sessenta passam em três voltas. */}
+          <LogoWall logos={logos as WallLogo[]} perPage={24} />
+
           {logos.length > 24 ? (
             <Link
               href="/clientes"

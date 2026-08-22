@@ -144,7 +144,7 @@ export const Clients: CollectionConfig = {
       label: "Setor",
       type: "select",
       required: true,
-      options: ["financeiro", "retalho", "industria", "servicos", "lazer", "tecnologia"],
+      options: ["financeiro", "saude", "bebidas", "consumo", "retalho", "industria", "construcao", "servicos", "arte", "eventos", "lazer", "tecnologia"],
     },
     { name: "logo", label: "Logo", type: "upload", relationTo: "media" },
     { name: "gallery", label: "Parede", type: "text", admin: { description: "Nome da galeria a que pertence." } },

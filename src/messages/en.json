@@ -142,9 +142,15 @@
     "lead": "We work with brands that want results, not visibility. Some for more than ten years.",
     "sectors": {
       "financeiro": "Finance and insurance",
-      "retalho": "Retail and consumer",
+      "saude": "Health and aesthetics",
+      "bebidas": "Drinks and spirits",
+      "consumo": "Consumer products",
+      "retalho": "Retail",
       "industria": "Industry",
-      "servicos": "Services and health",
+      "construcao": "Architecture and construction",
+      "servicos": "Services",
+      "arte": "Art and collecting",
+      "eventos": "Events and venues",
       "lazer": "Travel and leisure",
       "tecnologia": "Technology"
     },

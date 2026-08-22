@@ -392,3 +392,20 @@
   --color-line: color-mix(in oklab, var(--color-ink) 14%, transparent);
   color: var(--color-fg);
 }
+
+/* ── Marcas a entrar na parede ──────────────────────────────────────────────
+   Cada célula desfaz-se e refaz-se com um atraso próprio, dado pelo
+   componente: o bloco muda em onda em vez de piscar todo de uma vez. Quem
+   pediu menos movimento vê a marca aparecer feita. */
+@keyframes logo-in {
+  from { opacity: 0; transform: scale(0.94); filter: blur(3px); }
+  to { opacity: 0.85; transform: none; filter: none; }
+}
+
+.logo-in {
+  animation: logo-in 700ms ease-out backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-in { animation: none; }
+}

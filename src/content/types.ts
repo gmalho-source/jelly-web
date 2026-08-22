@@ -36,7 +36,7 @@ export type Service = {
   accent?: "lavender" | "chartreuse" | "coral";
 };
 
-export type Client = { name: string; sector: "financeiro" | "retalho" | "industria" | "servicos" | "lazer" | "tecnologia" };
+export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "consumo" | "retalho" | "industria" | "construcao" | "servicos" | "arte" | "eventos" | "lazer" | "tecnologia" };
 
 export type TeamMember = { name: string; role?: Localized };
 

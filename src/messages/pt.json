@@ -142,9 +142,15 @@
     "lead": "Trabalhamos com marcas que querem resultados, não visibilidade. Algumas há mais de dez anos.",
     "sectors": {
       "financeiro": "Financeiro e seguros",
-      "retalho": "Retalho e consumo",
+      "saude": "Saúde e estética",
+      "bebidas": "Bebidas e espirituosas",
+      "consumo": "Produtos de consumo",
+      "retalho": "Retalho",
       "industria": "Indústria",
-      "servicos": "Serviços e saúde",
+      "construcao": "Arquitetura e construção",
+      "servicos": "Serviços",
+      "arte": "Arte e coleccionismo",
+      "eventos": "Eventos e espaços",
       "lazer": "Turismo e lazer",
       "tecnologia": "Tecnologia"
     },

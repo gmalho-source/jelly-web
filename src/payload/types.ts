@@ -500,7 +500,19 @@ export interface News {
 export interface Client {
   id: number;
   name: string;
-  sector: 'financeiro' | 'retalho' | 'industria' | 'servicos' | 'lazer' | 'tecnologia';
+  sector:
+    | 'financeiro'
+    | 'saude'
+    | 'bebidas'
+    | 'consumo'
+    | 'retalho'
+    | 'industria'
+    | 'construcao'
+    | 'servicos'
+    | 'arte'
+    | 'eventos'
+    | 'lazer'
+    | 'tecnologia';
   logo?: (number | null) | Media;
   /**
    * Nome da galeria a que pertence.

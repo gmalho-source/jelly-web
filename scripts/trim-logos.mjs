@@ -12,6 +12,8 @@
  *
  * Idempotente: uma imagem que já não tenha moldura a cortar fica como está.
  */
+import fs from "node:fs";
+import path from "node:path";
 import { getPayload } from "payload";
 import sharp from "sharp";
 import config from "../payload.config.ts";
@@ -41,9 +43,16 @@ let falhados = 0;
 
 for (const image of [...imagens.values()].slice(0, limit)) {
   try {
-    const response = await fetch(image.url);
-    if (!response.ok) throw new Error(`a imagem respondeu ${response.status}`);
-    const original = Buffer.from(await response.arrayBuffer());
+    // Em produção o endereço é do Blob; em desenvolvimento é relativo e o
+    // ficheiro está no disco, onde não há servidor a que pedir.
+    let original;
+    if (image.url.startsWith("http")) {
+      const response = await fetch(image.url);
+      if (!response.ok) throw new Error(`a imagem respondeu ${response.status}`);
+      original = Buffer.from(await response.arrayBuffer());
+    } else {
+      original = fs.readFileSync(path.join(process.cwd(), "media", image.filename));
+    }
 
     const cortada = await sharp(original)
       .trim({ background: "#00000000", threshold: 5 })
