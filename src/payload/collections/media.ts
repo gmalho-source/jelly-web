@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { describeImage } from "../endpoints/describe-image";
 
 /** Imagens. O texto alternativo é obrigatório — não é decoração. */
 export const Media: CollectionConfig = {
@@ -18,8 +19,17 @@ export const Media: CollectionConfig = {
       { name: "wide", width: 1920 },
     ],
   },
+  // O Claude escreve a proposta de texto alternativo; o endpoint só responde a
+  // quem tem sessão no painel.
+  endpoints: [{ path: "/:id/descrever", method: "post", handler: describeImage }],
   fields: [
-    { name: "alt", label: "Texto alternativo", type: "text", required: true },
+    {
+      name: "alt",
+      label: "Texto alternativo",
+      type: "text",
+      required: true,
+      admin: { components: { afterInput: ["@/payload/components/DescribeImage#DescribeImage"] } },
+    },
     { name: "caption", label: "Legenda", type: "text" },
     { name: "legacyUrl", label: "Endereço de origem", type: "text", admin: { readOnly: true, description: "De onde a imagem foi migrada." } },
   ],

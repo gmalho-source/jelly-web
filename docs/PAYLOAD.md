@@ -183,6 +183,27 @@ isso o índice serve as duas. É idempotente e aceita `--dry-run` e `--limit=`.
 No site as imagens do corpo são desenhadas com as medidas reais, não recortadas
 a 16:9: metade delas são infografias e um recorte perdia o que dizem.
 
+## Escrever o texto alternativo com IA
+
+No painel, cada imagem tem um botão **"Escrever com IA"** debaixo do texto
+alternativo. Olha para a imagem e propõe duas coisas: o texto alternativo (para
+quem não a vê) e a legenda (para quem a vê). Preenche os campos e **não grava** —
+um texto alternativo errado é pior do que nenhum, por isso a última palavra é de
+quem está a escrever.
+
+Como funciona: `POST /api/media/:id/descrever`, um endpoint da coleção que só
+responde a quem tem sessão no painel. A imagem vai nos bytes, encolhida para
+1200 px — o custo da visão cresce com os pixels e a descrição não melhora — e não
+por endereço, o que faz isto funcionar também com ficheiros locais em
+desenvolvimento. Cerca de 2200 tokens de entrada por imagem, ou seja um cêntimo.
+
+Precisa da `ANTHROPIC_API_KEY` no ambiente. Sem ela o botão responde que falta a
+chave, e o resto do painel continua igual.
+
+O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo move
+o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
+visível de uma imagem é a legenda.
+
 ## Tradução automática dos artigos
 
 Os 179 artigos vieram do WordPress em português e o site em inglês servia o
