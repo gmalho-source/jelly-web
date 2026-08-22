@@ -69,7 +69,7 @@ export function SignInForm({ copy }: { copy: Copy }) {
           }}
           aria-invalid={state === "invalid"}
           aria-describedby={state === "idle" || state === "sending" ? undefined : "sign-in-message"}
-          className="rounded-[4px] border border-paper-3 bg-white px-3.5 py-2.5 text-sm shadow-xs outline-none transition-colors duration-200 focus:border-red"
+          className="rounded-[4px] border border-paper-3 bg-white px-3.5 py-2.5 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red"
           placeholder="nome@empresa.pt"
         />
       </div>

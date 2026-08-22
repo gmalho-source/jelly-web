@@ -54,7 +54,10 @@ export function ContactForm({ copy }: { copy: Copy }) {
     );
   }
 
-  const field = "rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm shadow-xs outline-none transition-colors duration-200 focus:border-red";
+  // A caixa é branca mas herdava o texto da superfície escura: escrevia-se
+  // branco sobre branco. A cor do texto e do sugerido são desta caixa, não da
+  // secção onde ela está.
+  const field = "rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
 
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>

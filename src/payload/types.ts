@@ -77,6 +77,7 @@ export interface Config {
     logos: Logo;
     team: Team;
     milestones: Milestone;
+    messages: Message;
     departments: Department;
     'job-functions': JobFunction;
     jobs: Job;
@@ -101,6 +102,7 @@ export interface Config {
     logos: LogosSelect<false> | LogosSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
+    messages: MessagesSelect<false> | MessagesSelect<true>;
     departments: DepartmentsSelect<false> | DepartmentsSelect<true>;
     'job-functions': JobFunctionsSelect<false> | JobFunctionsSelect<true>;
     jobs: JobsSelect<false> | JobsSelect<true>;
@@ -667,6 +669,27 @@ export interface Milestone {
   createdAt: string;
 }
 /**
+ * Os briefings que entram pela página de contactos.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages".
+ */
+export interface Message {
+  id: number;
+  name: string;
+  company?: string | null;
+  email: string;
+  message?: string | null;
+  status?: ('nova' | 'respondida' | 'arquivada') | null;
+  locale?: string | null;
+  /**
+   * Para quem responde: o que ficou combinado.
+   */
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1054,6 +1077,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'milestones';
         value: number | Milestone;
+      } | null)
+    | ({
+        relationTo: 'messages';
+        value: number | Message;
       } | null)
     | ({
         relationTo: 'departments';
@@ -1529,6 +1556,21 @@ export interface MilestonesSelect<T extends boolean = true> {
         pt?: T;
         en?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "messages_select".
+ */
+export interface MessagesSelect<T extends boolean = true> {
+  name?: T;
+  company?: T;
+  email?: T;
+  message?: T;
+  status?: T;
+  locale?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -12,6 +12,7 @@ import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
 import { Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
 import { Documents } from "./src/payload/collections/documents";
+import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
 
@@ -45,6 +46,7 @@ export default buildConfig({
     Logos,
     TeamMembers,
     Milestones,
+    Messages,
     Departments,
     JobFunctions,
     Jobs,
