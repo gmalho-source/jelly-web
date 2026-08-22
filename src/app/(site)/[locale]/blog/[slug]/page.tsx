@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import Image from "next/image";
 import { ArticleBody } from "@/components/ArticleBody";
-import { CoverHeader } from "@/components/CoverHeader";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPosts, getRelatedPosts } from "@/lib/cms";
@@ -76,54 +77,62 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   ];
 
   return (
-    <article>
+    <article className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      {/* A capa é o cenário, não uma ilustração ao lado: ocupa o ecrã, escurece
-          por degradê, e o título assenta em cima dela. */}
-      <CoverHeader
-        image={post.cover}
-        crumbs={crumbs}
-        title={post.title[locale]}
-        meta={
-          <>
-            <span className="text-fg">{post.author}</span>
-            <span>{formatter.format(new Date(post.date))}</span>
-            <span>
-              {post.readingMinutes} {t("minutes")}
-            </span>
-          </>
-        }
-      />
-
-      <div className="surface-paper">
-        <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
+      <Breadcrumbs items={crumbs} />
+      <div className="mt-8 grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
+        {/* Marginália: autor, data, tempo de leitura. */}
+        <aside className="flex flex-col gap-1 text-sm text-fg-soft">
+          <span className="text-fg">{post.author}</span>
+          <span>{formatter.format(new Date(post.date))}</span>
+          <span>
+            {post.readingMinutes} {t("minutes")}
+          </span>
           {post.draft && !post.blocks?.length ? (
-            <span className="mb-8 inline-block rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fg">
+            <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fg">
               {t("draft")}
             </span>
+          ) : null}
+        </aside>
+
+        <div>
+          <h1 className="editorial max-w-[26ch] text-display">{post.title[locale]}</h1>
+          <hr className="mt-8 border-line" />
+
+          {post.cover?.src ? (
+            <Image
+              src={post.cover.src}
+              alt={post.cover.alt ?? ""}
+              width={post.cover.width ?? 1200}
+              height={post.cover.height ?? 675}
+              priority
+              sizes="(max-width: 1200px) 100vw, 1040px"
+              className="mt-8 w-full rounded-[20px] object-cover"
+            />
           ) : null}
 
           {/* Corpo em Lora: leitura longa, itálico verdadeiro, capitular na
               mesma família para a coluna ler como um só bloco. */}
-          {body?.length ? (
-            <ArticleBody blocks={body} />
-          ) : post.body?.length ? (
-            <div className="max-w-[66ch]">
-              {post.body.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className={`reading ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
-                >
-                  {paragraph[locale]}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <p className="reading max-w-[66ch]">{post.excerpt[locale]}</p>
-          )}
+          <div className="mt-8">
+            {body?.length ? (
+              <ArticleBody blocks={body} />
+            ) : post.body?.length ? (
+              <div className="max-w-[66ch]">
+                {post.body.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className={`reading ${index === 0 ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
+                  >
+                    {paragraph[locale]}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="reading max-w-[66ch]">{post.excerpt[locale]}</p>
+            )}
+          </div>
 
-          <div className="mt-16 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
+          <div className="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
             {related.map((item) => (
               <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: slugFor(item, locale) } }}>
                 <span className="eyebrow text-fg-soft">{t("related")}</span>
