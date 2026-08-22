@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { describeImage } from "../endpoints/describe-image";
+import { describeImage, describeUpload } from "../endpoints/describe-image";
 
 /** Imagens. O texto alternativo é obrigatório — não é decoração. */
 export const Media: CollectionConfig = {
@@ -24,7 +24,12 @@ export const Media: CollectionConfig = {
   },
   // O Claude escreve a proposta de texto alternativo; o endpoint só responde a
   // quem tem sessão no painel.
-  endpoints: [{ path: "/:id/descrever", method: "post", handler: describeImage }],
+  endpoints: [
+    // Uma para a imagem já gravada, outra para a que ainda está a ser escolhida:
+    // a ajuda serve na altura em que se escreve, não só depois de gravar.
+    { path: "/:id/descrever", method: "post", handler: describeImage },
+    { path: "/descrever", method: "post", handler: describeUpload },
+  ],
   fields: [
     {
       name: "title",

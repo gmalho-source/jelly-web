@@ -12,6 +12,12 @@ export type LegalPage = {
   /** Data da última revisão, mostrada ao leitor: uma política sem data não vale nada. */
   updated: string;
   blocks: { pt: Block[]; en: Block[] };
+  /**
+   * Endereço da política na Iubenda. Quando existe, é ela que a página mostra:
+   * o texto é gerado e mantido lá, e ter duas versões da mesma política — uma
+   * nossa e uma deles — era pedir para elas discordarem uma da outra.
+   */
+  iubenda?: string;
 };
 
 /** Nota que abre as páginas cujo texto só existe em português. */
@@ -25,10 +31,9 @@ const soPortugues: Block[] = [
 /**
  * As páginas legais. O texto da RAL e da política de utilização responsável vem
  * do site antigo sem uma palavra mudada — tem valor jurídico e não é matéria
- * para reescrever. A privacidade e os cookies são novos, porque as do site
- * antigo eram um serviço externo embutido e não havia texto para migrar: estes
- * descrevem o que este site faz de facto, e devem ser lidos por quem trata do
- * RGPD antes do lançamento.
+ * para reescrever. A privacidade e os cookies vêm da Iubenda, que é onde a casa
+ * as mantém: a página traz o texto de lá em vez de guardar uma segunda versão
+ * aqui.
  */
 export const legalPages: LegalPage[] = [
   {
@@ -39,157 +44,19 @@ export const legalPages: LegalPage[] = [
       en: "What this site collects, what for, who processes it and how to have it deleted.",
     },
     updated: "2026-08-22",
-    blocks: {
-      pt: [
-        { type: "h2", text: "Quem trata os dados" },
-        {
-          type: "p",
-          text: "JELLY – Digital Agency, Unip. Lda., com sede em Sintra, Portugal. Para qualquer questão sobre dados pessoais, escreva para geral@jelly.pt.",
-        },
-        { type: "h2", text: "O que recolhemos, e porquê" },
-        {
-          type: "list",
-          items: [
-            "Formulário de contacto: nome, email, empresa e a mensagem que escreve. Servem para responder ao seu pedido, e é o único fim.",
-            "Área de faturação de prestadores: o endereço de email, para lhe enviar um link de acesso e reconhecer a sua sessão.",
-            "Registos do servidor: endereço IP, página pedida e hora, guardados pelo alojamento para segurança e diagnóstico.",
-          ],
-        },
-        {
-          type: "p",
-          text: "Não vendemos dados, não os usamos para publicidade, e não criamos perfis de quem visita o site.",
-        },
-        { type: "h2", text: "Com que fundamento" },
-        {
-          type: "p",
-          text: "Responder a um contacto que nos dirigiu é interesse legítimo e, na prática, é o que o próprio pedido pressupõe. A área de faturação existe para cumprir a relação contratual com prestadores. Os registos do servidor assentam no interesse legítimo de manter o serviço seguro.",
-        },
-        { type: "h2", text: "Quem mais lhes toca" },
-        {
-          type: "p",
-          text: "Trabalhamos com fornecedores que tratam dados por nossa conta e apenas para os fins acima: Vercel (alojamento do site), Neon (base de dados, na União Europeia), Resend (envio de email) e Monday.com (gestão dos pedidos que chegam pelo formulário). Nenhum deles usa estes dados para outra coisa.",
-        },
-        { type: "h2", text: "Quanto tempo ficam" },
-        {
-          type: "p",
-          text: "Os pedidos de contacto ficam enquanto a conversa fizer sentido e, no máximo, dois anos depois do último contacto. As sessões da área de faturação expiram em minutos. Os registos do servidor são apagados pelo alojamento em dias.",
-        },
-        { type: "h2", text: "Os seus direitos" },
-        {
-          type: "p",
-          text: "Pode pedir para ver, corrigir, apagar ou exportar os seus dados, e opor-se ao tratamento. Basta escrever para geral@jelly.pt: respondemos no prazo de um mês. Se achar que não tratámos bem o assunto, pode reclamar junto da Comissão Nacional de Proteção de Dados (cnpd.pt).",
-        },
-        { type: "h2", text: "Alterações" },
-        {
-          type: "p",
-          text: "Quando esta política mudar, muda também a data no topo desta página. Não guardamos versões anteriores em segredo: pode pedi-las.",
-        },
-      ],
-      en: [
-        { type: "h2", text: "Who processes your data" },
-        {
-          type: "p",
-          text: "JELLY – Digital Agency, Unip. Lda., based in Sintra, Portugal. For anything about personal data, write to geral@jelly.pt.",
-        },
-        { type: "h2", text: "What we collect, and why" },
-        {
-          type: "list",
-          items: [
-            "Contact form: your name, email, company and message. Used to answer you, and nothing else.",
-            "Suppliers' billing area: your email address, to send you an access link and recognise your session.",
-            "Server logs: IP address, page requested and time, kept by the host for security and diagnostics.",
-          ],
-        },
-        {
-          type: "p",
-          text: "We do not sell data, do not use it for advertising, and do not profile visitors.",
-        },
-        { type: "h2", text: "On what basis" },
-        {
-          type: "p",
-          text: "Answering an enquiry you sent us is a legitimate interest — and, in practice, what your message asks for. The billing area exists to serve our contracts with suppliers. Server logs rest on the legitimate interest of keeping the service secure.",
-        },
-        { type: "h2", text: "Who else handles it" },
-        {
-          type: "p",
-          text: "We work with processors acting on our behalf and only for the purposes above: Vercel (hosting), Neon (database, in the European Union), Resend (email delivery) and Monday.com (handling enquiries from the form). None of them uses this data for anything else.",
-        },
-        { type: "h2", text: "How long we keep it" },
-        {
-          type: "p",
-          text: "Enquiries are kept while the conversation is live and at most two years after the last contact. Billing sessions expire in minutes. Server logs are deleted by the host within days.",
-        },
-        { type: "h2", text: "Your rights" },
-        {
-          type: "p",
-          text: "You can ask to see, correct, delete or export your data, and object to processing. Write to geral@jelly.pt and we answer within one month. If you believe we handled it badly, you may complain to the Portuguese data protection authority (cnpd.pt).",
-        },
-        { type: "h2", text: "Changes" },
-        {
-          type: "p",
-          text: "When this policy changes, so does the date at the top of this page. Previous versions are not secret: ask and we send them.",
-        },
-      ],
-    },
+    iubenda: "https://www.iubenda.com/privacy-policy/36055654",
+    blocks: { pt: [], en: [] },
   },
   {
     slug: "politica-de-cookies",
     title: { pt: "Política de Cookies", en: "Cookie Policy" },
     lead: {
-      pt: "Este site usa o mínimo: nenhum cookie de publicidade, nenhum de estatística.",
-      en: "This site uses the minimum: no advertising cookies, no analytics cookies.",
+      pt: "Que cookies este site usa, para quê, e como os pode recusar.",
+      en: "Which cookies this site uses, what for, and how to refuse them.",
     },
     updated: "2026-08-22",
-    blocks: {
-      pt: [
-        { type: "h2", text: "O que guardamos no seu browser" },
-        {
-          type: "list",
-          items: [
-            "A língua que escolheu, para o site abrir na mesma da próxima vez.",
-            "Na área de faturação de prestadores, um cookie de sessão que o mantém autenticado enquanto lá está. Termina quando sai.",
-          ],
-        },
-        {
-          type: "p",
-          text: "É tudo. Não há cookies de publicidade, de redes sociais nem de estatística — e por isso não lhe pedimos consentimento: os cookies estritamente necessários dispensam-no.",
-        },
-        { type: "h2", text: "Se isto mudar" },
-        {
-          type: "p",
-          text: "Se um dia passarmos a medir visitas, essa medição não arranca sem lhe perguntarmos primeiro, e esta página passa a listar o que faz cada cookie, quem o põe e quanto tempo dura.",
-        },
-        { type: "h2", text: "Como apagar" },
-        {
-          type: "p",
-          text: "Qualquer browser permite ver e apagar os cookies de um site nas suas preferências de privacidade. Apagar o da língua só faz o site voltar a abrir em português; apagar o da faturação termina a sessão.",
-        },
-      ],
-      en: [
-        { type: "h2", text: "What we keep in your browser" },
-        {
-          type: "list",
-          items: [
-            "The language you chose, so the site opens in it next time.",
-            "In the suppliers' billing area, a session cookie that keeps you signed in while you are there. It ends when you leave.",
-          ],
-        },
-        {
-          type: "p",
-          text: "That is all. There are no advertising, social or analytics cookies — which is why we do not ask for consent: strictly necessary cookies do not require it.",
-        },
-        { type: "h2", text: "If this changes" },
-        {
-          type: "p",
-          text: "If we ever start measuring visits, that measurement will not begin without asking you first, and this page will list what each cookie does, who sets it and how long it lasts.",
-        },
-        { type: "h2", text: "How to delete them" },
-        {
-          type: "p",
-          text: "Every browser lets you see and delete a site's cookies in its privacy settings. Deleting the language one only makes the site open in Portuguese again; deleting the billing one ends the session.",
-        },
-      ],
-    },
+    iubenda: "https://www.iubenda.com/privacy-policy/36055654/cookie-policy",
+    blocks: { pt: [], en: [] },
   },
   {
     slug: "resolucao-de-litigios",

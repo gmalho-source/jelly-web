@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArticleBody } from "@/components/ArticleBody";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { IubendaPolicy } from "@/components/IubendaPolicy";
 import { getLegalPage, legalPages } from "@/content/legal";
 import { Link, getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
@@ -52,11 +53,15 @@ export default async function LegalPage({ params }: { params: Promise<Params> })
       <div className="mt-8 grid gap-8 lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-14">
         {/* A data da última revisão e as outras páginas legais, à mão. */}
         <aside className="flex flex-col gap-4 text-sm text-fg-soft">
-          <span>
-            {t("updated")}
-            <br />
-            <span className="text-fg">{formatter.format(new Date(page.updated))}</span>
-          </span>
+          {/* Numa política da Iubenda a data vem no texto deles: duas datas na
+              mesma página acabariam por discordar. */}
+          {page.iubenda ? null : (
+            <span>
+              {t("updated")}
+              <br />
+              <span className="text-fg">{formatter.format(new Date(page.updated))}</span>
+            </span>
+          )}
           <nav className="flex flex-col gap-1 border-t border-line pt-4">
             {legalPages.map((other) =>
               other.slug === page.slug ? (
@@ -81,7 +86,11 @@ export default async function LegalPage({ params }: { params: Promise<Params> })
           <p className="subtitle mt-4 max-w-[58ch]">{page.lead[locale]}</p>
           <hr className="mt-8 border-line" />
           <div className="mt-8">
-            <ArticleBody blocks={page.blocks[locale]} />
+            {page.iubenda ? (
+              <IubendaPolicy href={page.iubenda} label={page.title[locale]} />
+            ) : (
+              <ArticleBody blocks={page.blocks[locale]} />
+            )}
           </div>
           <p className="mt-12 border-t border-line pt-6 text-sm text-fg-soft">
             {t("questions")}{" "}

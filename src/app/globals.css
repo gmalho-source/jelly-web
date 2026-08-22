@@ -419,6 +419,83 @@
   .logo-in { animation: none; }
 }
 
+/* ── Política embutida da Iubenda ───────────────────────────────────────────
+   O texto vem de fora, com a marcação deles, e tem de ler-se como o resto do
+   site. Só se afinam as tags que eles usam — não se lhes toca na estrutura,
+   que pode mudar sem aviso. O título deles esconde-se porque a página já tem o
+   seu; se um dia mudarem a marcação, o pior que acontece é aparecerem dois. */
+.iub-policy {
+  max-width: 72ch;
+
+  /* O título do documento deles sai: a página já tem o seu. Na privacidade é um
+     h1, na dos cookies é o primeiro h2 do conteúdo — daí os dois seletores, e
+     ambos precisos: se um dia mudarem a marcação, o pior que acontece é
+     aparecerem dois títulos, não desaparecer uma secção. */
+  & h1 { display: none; }
+  & .iub_content > h2:first-child { display: none; }
+
+  & h2 {
+    margin-top: 2.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-chapter);
+    line-height: 1.04;
+    letter-spacing: -0.018em;
+  }
+
+  & h3, & h4 {
+    margin-top: 1.75rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  & p, & li, & td, & th, & dd, & dt {
+    font-family: var(--font-reading);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  & p { margin-top: 1rem; }
+
+  & ul, & ol {
+    margin-top: 1rem;
+    padding-inline-start: 1.25rem;
+    list-style: disc;
+  }
+
+  & ol { list-style: decimal; }
+  & li { margin-top: 0.4rem; }
+
+  & a {
+    color: var(--color-red);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  & strong, & b { font-weight: 600; }
+
+  /* As tabelas de cookies são largas: rolam dentro do seu espaço em vez de
+     esticarem a página. */
+  & table {
+    display: block;
+    overflow-x: auto;
+    margin-top: 1.25rem;
+    border-collapse: collapse;
+  }
+
+  & td, & th {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-line);
+    text-align: start;
+  }
+
+  /* A ligação que fica antes de o guião deles correr. */
+  & > a.iubenda-embed {
+    color: var(--color-red);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
 /* ── A folha a entrar ───────────────────────────────────────────────────────
    Ao abrir um artigo, a folha sobe até ao seu lugar. Sobe depressa, passa uns
    cinco pixels do sítio e assenta — é essa passagem curta que dá o peso; sem
