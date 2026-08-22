@@ -28,7 +28,9 @@ export const Media: CollectionConfig = {
       label: "Texto alternativo",
       type: "text",
       required: true,
-      admin: { components: { afterInput: ["@/payload/components/DescribeImage#DescribeImage"] } },
+      // TEMPORÁRIO: o botão de IA está desligado enquanto se confirma se é ele
+      // que deixa o painel em branco. O endpoint fica de pé.
+      // admin: { components: { afterInput: ["@/payload/components/DescribeImage#DescribeImage"] } },
     },
     { name: "caption", label: "Legenda", type: "text" },
     { name: "legacyUrl", label: "Endereço de origem", type: "text", admin: { readOnly: true, description: "De onde a imagem foi migrada." } },
