@@ -92,7 +92,7 @@ export default async function Proposta() {
           empty: "Nada com esse nome. Apaga uma letra.",
           of: "de",
           close: "Fechar o índice",
-          contact: "Começar um projeto",
+          contact: "Start The Change",
         }}
       />
 

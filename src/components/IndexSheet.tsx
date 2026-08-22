@@ -147,17 +147,22 @@ export function IndexSheet({
     <>
       {/* Pastilhas em vez de texto solto: a barra atravessa secções escuras,
           claras e vermelhas, e tem de se ler em todas. */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5">
-        <Link
-          href={homeHref}
-          aria-label="Jelly"
-          className="pointer-events-auto grid h-11 place-items-center rounded-full bg-red px-4 transition-colors duration-200 hover:bg-red-deep"
-        >
-          <JellyWordmark className="w-[68px] text-paper" />
-        </Link>
+      {/* O logo é uma etiqueta: quadrado, encostado ao topo, sem margem por
+          cima — como a etiqueta cosida na gola de uma peça de roupa. */}
+      <Link
+        href={homeHref}
+        aria-label="Jelly"
+        className="fixed left-5 top-0 z-40 grid h-[88px] w-[88px] place-items-center bg-red transition-colors duration-200 hover:bg-red-deep sm:left-8"
+      >
+        <JellyWordmark className="w-[68px] text-paper" />
+      </Link>
+
+      {/* A altura da barra é a da etiqueta: é o que põe o botão do meio à
+          mesma altura do logo e do índice. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 h-[88px] px-5 sm:px-8">
         <Link
           href={contactHref}
-          className="pointer-events-auto mr-[136px] hidden rounded-full bg-ink/80 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red sm:block"
+          className="pointer-events-auto absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink/80 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red sm:block"
         >
           {copy.contact}
         </Link>
