@@ -42,7 +42,10 @@ export const scoreApplication: CollectionBeforeChangeHook = async ({ data, req }
   const fichas = (data.evaluations ?? []) as Ficha[];
   if (!Array.isArray(fichas) || !fichas.length) return { ...data, rating: null, spread: null };
 
-  const referencia = data.department ?? data.function;
+  // O departamento pode vir em lista: os pesos são os do primeiro, que é o que
+  // a pessoa marcou primeiro.
+  const departamento = Array.isArray(data.department) ? data.department[0] : data.department;
+  const referencia = departamento ?? data.function;
   let pesos = PADRAO;
 
   if (referencia) {
@@ -50,11 +53,11 @@ export const scoreApplication: CollectionBeforeChangeHook = async ({ data, req }
     try {
       // Pela função chega-se ao departamento: a vaga escolhe a função, e é o
       // departamento que diz o que conta mais.
-      const departamento = data.department
+      const encontrado = departamento
         ? await req.payload.findByID({ collection: "departments", id: String(id), depth: 0 })
         : ((await req.payload.findByID({ collection: "job-functions", id: String(id), depth: 1 })) as { department?: { weights?: typeof PADRAO } })
             .department;
-      const encontrados = (departamento as { weights?: typeof PADRAO } | undefined)?.weights;
+      const encontrados = (encontrado as { weights?: typeof PADRAO } | undefined)?.weights;
       if (encontrados) pesos = { ...PADRAO, ...encontrados };
     } catch {
       // Sem departamento legível, valem os pesos por omissão: mais vale uma

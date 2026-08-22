@@ -834,7 +834,14 @@ export interface Application {
    */
   job?: (number | null) | Job;
   function?: (number | null) | JobFunction;
-  department?: (number | null) | Department;
+  /**
+   * Quem se candidata espontaneamente pode marcar mais do que uma área.
+   */
+  department?: (number | Department)[] | null;
+  /**
+   * Uso interno, para saudações («Caro», «Cara»). Não se pergunta no formulário de candidatura — vem de quem escreve, ou do histórico.
+   */
+  gender?: ('feminino' | 'masculino' | 'outro' | 'nao-diz') | null;
   experienceYears?: ('nenhuma' | 'menos-de-um' | 'um-dois' | 'tres-cinco' | 'mais-de-cinco') | null;
   contractWanted?: ('contrato' | 'estagio' | 'freelancer') | null;
   cv?: (number | null) | Document;
@@ -911,6 +918,10 @@ export interface Application {
    * Porque é que se decidiu assim. Fica no processo.
    */
   decisionNote?: string | null;
+  /**
+   * O registo do Gravity Forms de onde esta candidatura veio. É o que impede importar duas vezes.
+   */
+  legacyId?: string | null;
   consentAt?: string | null;
   source?: string | null;
   /**
@@ -1670,6 +1681,7 @@ export interface ApplicationsSelect<T extends boolean = true> {
   job?: T;
   function?: T;
   department?: T;
+  gender?: T;
   experienceYears?: T;
   contractWanted?: T;
   cv?: T;
@@ -1707,6 +1719,7 @@ export interface ApplicationsSelect<T extends boolean = true> {
   rating?: T;
   spread?: T;
   decisionNote?: T;
+  legacyId?: T;
   consentAt?: T;
   source?: T;
   retentionUntil?: T;

@@ -564,6 +564,63 @@
   }
 }
 
+/* Qual das duas pílulas se vê: a página de contactos deixa uma marca no
+   documento, e o `:has` faz o resto. Sem javascript, e sem o desencontro de
+   hidratação que dava decidir isto no cliente. */
+body:has([data-pagina="contactos"]) .pilula-convite { display: none; }
+body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
+
+/* ── A pílula da página de contactos ─────────────────────────────────────────
+   Respiração e uma rede a acender por trás. Tudo em opacidade e em traço: nada
+   aqui obriga o browser a recalcular a página, o que importa porque a barra do
+   topo está fixa por cima de tudo e sobrevive a todo o scroll. */
+@keyframes pill-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes neural-pulse {
+  0% { stroke-dashoffset: 46; opacity: 0; }
+  20% { opacity: 0.9; }
+  70% { opacity: 0.25; }
+  100% { stroke-dashoffset: -46; opacity: 0; }
+}
+
+@keyframes neural-node {
+  0%, 100% { opacity: 0.18; r: 1.6; }
+  50% { opacity: 0.85; r: 2.6; }
+}
+
+.pill-breathe {
+  animation: pill-breathe 4.5s var(--ease-out) infinite;
+}
+
+.neural-malha {
+  stroke: var(--color-red);
+  stroke-width: 0.75;
+  opacity: 0.16;
+}
+
+.neural-fio {
+  stroke: var(--color-red);
+  stroke-width: 1;
+  stroke-dasharray: 6 40;
+  opacity: 0;
+  animation: neural-pulse 3.6s linear infinite;
+}
+
+.neural-no {
+  fill: var(--color-red);
+  opacity: 0.2;
+  animation: neural-node 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-breathe { animation: none; }
+  .neural-fio { animation: none; opacity: 0; }
+  .neural-no { animation: none; opacity: 0.25; }
+}
+
 /* ── A folha a entrar ───────────────────────────────────────────────────────
    Ao abrir um artigo, a folha sobe até ao seu lugar. Sobe depressa, passa uns
    cinco pixels do sítio e assenta — é essa passagem curta que dá o peso; sem

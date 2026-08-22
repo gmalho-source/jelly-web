@@ -66,8 +66,9 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
         empty: pt ? "Nada com esse nome. Apague uma letra." : "Nothing by that name. Delete a letter.",
         of: pt ? "de" : "of",
         close: pt ? "Fechar o índice" : "Close the index",
-        // A mesma nas duas línguas: é assinatura de marca, não copy corrente.
+        // As duas nas mesmas línguas: são assinatura de marca, não copy corrente.
         contact: "Start The Change",
+        arrived: "The Change is about to start",
         language: other === "en" ? "English" : "Português",
       }}
     />

@@ -17,7 +17,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const t = await getTranslations("contact");
 
   return (
-    <section className="surface-ink mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
+    <section data-pagina="contactos" className="surface-ink mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
       <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
         <div>
           <span className="eyebrow">{t("eyebrow")}</span>

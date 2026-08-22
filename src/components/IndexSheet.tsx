@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChangePill } from "./ChangePill";
 import { JellyWordmark } from "./JellyLogo";
 
 export type SheetTile = {
@@ -24,6 +25,8 @@ export type SheetCopy = {
   of: string;
   close: string;
   contact: string;
+  /** O que a pílula diz quando já se está na página de contactos. */
+  arrived?: string;
   /** Nome da outra língua. Ausente na proposta, presente no site. */
   language?: string;
 };
@@ -169,12 +172,23 @@ export function IndexSheet({
       {/* A altura da barra é a da etiqueta: é o que põe o botão do meio à
           mesma altura do logo e do índice. */}
       <div className="pointer-events-none fixed inset-x-0 top-0 z-30 h-[88px] px-5 sm:px-8">
-        <Link
-          href={contactHref}
-          className="pointer-events-auto absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink/80 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red sm:block"
-        >
-          {copy.contact}
-        </Link>
+        {/* Na página de contactos já se chegou: a pílula deixa de ser um convite
+            e passa a assinalar presença. As duas estão no documento e é o CSS
+            que escolhe, a partir de uma marca que a página de contactos deixa —
+            decidir isto no cliente com o `usePathname` dava um desencontro na
+            hidratação, porque nas páginas geradas de véspera o caminho ainda não
+            se conhece. */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 sm:block">
+          <Link
+            href={contactHref}
+            className="pilula-convite pointer-events-auto inline-flex rounded-full bg-ink/80 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red"
+          >
+            {copy.contact}
+          </Link>
+          <div className="pilula-chegada hidden">
+            <ChangePill label={copy.arrived ?? copy.contact} />
+          </div>
+        </div>
       </div>
 
       <button

@@ -345,8 +345,30 @@ export const Applications: CollectionConfig = {
               type: "row",
               fields: [
                 { name: "function", label: "Função pretendida", type: "relationship", relationTo: "job-functions" },
-                { name: "department", label: "Departamento", type: "relationship", relationTo: "departments" },
+                {
+                  name: "department",
+                  label: "Departamentos",
+                  type: "relationship",
+                  relationTo: "departments",
+                  hasMany: true,
+                  admin: { description: "Quem se candidata espontaneamente pode marcar mais do que uma área." },
+                },
               ],
+            },
+            {
+              name: "gender",
+              label: "Género",
+              type: "select",
+              options: [
+                { label: "Feminino", value: "feminino" },
+                { label: "Masculino", value: "masculino" },
+                { label: "Outro", value: "outro" },
+                { label: "Prefere não dizer", value: "nao-diz" },
+              ],
+              admin: {
+                description:
+                  "Uso interno, para saudações («Caro», «Cara»). Não se pergunta no formulário de candidatura — vem de quem escreve, ou do histórico.",
+              },
             },
             {
               type: "row",
@@ -506,6 +528,14 @@ export const Applications: CollectionConfig = {
             {
               type: "row",
               fields: [
+                {
+                  name: "legacyId",
+                  label: "Id no site antigo",
+                  type: "text",
+                  index: true,
+                  unique: true,
+                  admin: { readOnly: true, description: "O registo do Gravity Forms de onde esta candidatura veio. É o que impede importar duas vezes." },
+                },
                 { name: "consentAt", label: "Consentimento em", type: "date", admin: { readOnly: true } },
                 { name: "source", label: "Origem", type: "text", admin: { readOnly: true } },
                 {

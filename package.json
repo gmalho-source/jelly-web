@@ -29,7 +29,8 @@
     "media:titles": "tsx scripts/media-titles.mjs",
     "slugs:en": "tsx scripts/slugs-en.mjs",
     "copy:contacts": "tsx scripts/copy-fix-contacts.mjs",
-    "video:prep": "node scripts/video-prep.mjs"
+    "video:prep": "node scripts/video-prep.mjs",
+    "applications:import": "tsx scripts/import-applications.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -54,8 +55,10 @@
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
+    "csv-parse": "^7.0.2",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.3.1",
+    "https-proxy-agent": "^9.1.0",
     "node-html-parser": "^9.0.1",
     "playwright": "^1.56.1",
     "tailwindcss": "^4.3.3",
