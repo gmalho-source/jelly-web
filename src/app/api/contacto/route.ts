@@ -140,5 +140,8 @@ export async function POST(request: NextRequest) {
   const recibo = await enviaEmail({ from: de, to: email, replyTo: paraCasa, ...confirmacao });
   if (!recibo.ok) console.error(`[contacto] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
 
-  return NextResponse.json({ ok: true });
+  // O `via` diz por onde saiu — brevo, resend, ou o log de desenvolvimento. Não
+  // é segredo nenhum e poupa uma ida aos registos do servidor quando alguém
+  // pergunta se o email saiu.
+  return NextResponse.json({ ok: true, via: aviso.via, recibo: recibo.via });
 }
