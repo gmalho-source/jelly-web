@@ -149,6 +149,18 @@ recodifica-os (aceita `--dry-run`, `--min-kb=`, `--limit=`, `--quality=` e
 `--max-side=`). Não é o visitante que ganha — ele já recebia a versão
 otimizada — é o armazenamento e o tempo do primeiro recorte de cada imagem.
 
+O mesmo guião acerta outra coisa, e esta era pior: os guiões de importação
+declaravam o tipo de conteúdo a partir da extensão (`image/${extensão}`), o que
+dá `image/jpg` — que não é um tipo real. O Payload não reconhecia a imagem, não
+lhe tirava as medidas nem a passava pelo sharp: **520 das 1009** ficaram sem
+largura nem altura, e o site desenhava-as todas a 16:9. O tipo passa a vir de
+`scripts/media-files.mjs`, do nome e do que o sharp lê, e as que já estavam
+voltam a subir pelo Payload para ganhar as medidas.
+
+`npm run media:titles` dá título às imagens no painel — do WordPress quando
+existe, senão do nome do ficheiro. Sem ele a lista mostrava
+`256513_441780705844923_804263503_o-150x150.webp`.
+
 ## O mapa de componentes gera-se com o ambiente de produção
 
 O painel manteve-se **em branco** durante horas por causa disto, e a lição vale
@@ -195,15 +207,47 @@ repositório e corrê-las no build.
 
 ## Imagens dentro dos artigos
 
-O export do WordPress trouxe 155 imagens no meio do texto, em 56 artigos, mas o
-conversor para Lexical não tinha ramo para elas e cada uma virou um parágrafo
-vazio. Já tem, e `npm run posts:images` repõe as que ficaram por trás: carrega a
-imagem, troca o parágrafo vazio por um nó de upload, e faz o mesmo no corpo em
-inglês na mesma posição — as duas árvores nasceram da mesma lista de blocos, por
-isso o índice serve as duas. É idempotente e aceita `--dry-run` e `--limit=`.
+Isto deu três voltas antes de estar certo, e vale escrever porquê.
+
+O tema do site antigo esconde o endereço da imagem em três sítios diferentes: no
+`src` põe um SVG de 1x1 em base64, nas imagens do construtor de páginas põe o
+endereço em `data-nectar-img-src`, e a API do WordPress devolve esses blocos como
+shortcodes, sem imagem nenhuma. Quem lê só o `src`, ou só a API, encontra zero. A
+página desenhada é a única fonte que tem tudo — e é o que o
+`npm run posts:audit` lê. Sem `--fix` faz o levantamento; com `--fix` repõe, e
+aceita `--slug=` e `--limit=`. Cada imagem entra depois do parágrafo que a
+precedia no original, no corpo português e no inglês.
+
+Estado: **179 artigos, 160 com todas as imagens, 19 sem imagens no original.**
+
+O `npm run posts:images` é a versão anterior, que lê o export em vez da página.
 
 No site as imagens do corpo são desenhadas com as medidas reais, não recortadas
-a 16:9: metade delas são infografias e um recorte perdia o que dizem.
+a 16:9: metade delas são infografias e um recorte perdia o que dizem. Quando as
+medidas não são conhecidas, o browser descobre-as — inventar uma proporção
+esticava a imagem.
+
+## Um nó do Lexical escrito à mão precisa de tudo
+
+O editor mostrava o artigo e logo o deixava vazio, com **«Minified Lexical error
+#117»**. A mensagem verdadeira é `Invalid indent value`: os nós que os guiões de
+importação escreviam traziam só o essencial (`type`, `version`, `children`), e o
+Lexical, ao ler um nó de elemento, chama `setIndent(serializedNode.indent)` — que
+o item de lista recusa quando não é número. Engolia o ramo e o que vinha depois
+desaparecia, imagens incluídas.
+
+Por isso os nós saem todos de `scripts/lexical-nodes.mjs`, com o que o editor
+espera: `indent`, `format` e `direction` nos elementos, `start` na lista, e na
+imagem um `id` próprio (é o id **do nó**, não da imagem: o nó tem campos seus) e
+`fields` como objecto.
+
+Duas ferramentas ficam para trás como rede:
+
+- `npm run posts:lexical` acerta o que já está gravado (foram 16 845 nós em 179
+  artigos);
+- `npm run posts:check` lê todos os corpos com o mesmo motor do editor e acusa
+  qualquer um que dê erro ou perca conteúdo. Correr depois de qualquer guião que
+  escreva no corpo dos artigos — gravar nunca se queixa, só a leitura.
 
 ## Escrever o texto alternativo com IA
 
@@ -252,8 +296,25 @@ gastos e a conta em dólares. A tradução é uma **primeira versão para revis�
 não uma publicação: fica nos campos ingleses, visível no painel, e quem revê
 corrige por cima.
 
+## Endereços ingleses
+
+O título inglês já existia, mas o endereço continuava português:
+`/en/blog/como-usar-trafego-pago-…` numa página em inglês. Cada artigo e cada
+serviço tem agora um campo **Slug (EN)**, e `npm run slugs:en` escreve o que
+falta a partir do título inglês (aceita `--dry-run`). Onde os dois slugs seriam
+iguais o campo fica vazio, e o inglês usa o português — o nome de um cliente não
+se traduz, e por isso os projetos ficaram sem ele.
+
+O slug português não muda: é a identidade da peça, está nos links de fora e nos
+redirecionamentos do site antigo. Cada árvore gera os seus endereços, e a página
+serve os dois — quem chega pelo da outra língua leva **308** para o certo, não um
+404 nem uma segunda página com o mesmo texto. O canónico, o hreflang e o sitemap
+apontam para o endereço da língua respetiva.
+
 ## Falta
 
 - **Vídeos**: 34 ficheiros, 546 MB, continuam a servir do jelly.pt. Precisam de
   re-codificação antes do lançamento.
-- **Tradução EN** dos 179 artigos migrados.
+- **Números dos casos**: `numbersValidated` está falso em todos — os KPIs só vão
+  para o ecrã depois de validados com o cliente.
+- **Revisão jurídica** do texto da privacidade e dos cookies.
