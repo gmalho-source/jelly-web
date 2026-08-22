@@ -19,6 +19,7 @@ import path from "node:path";
 import { parse } from "node-html-parser";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import { uploadNode } from "./lexical-nodes.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
 const args = process.argv.slice(2);
@@ -112,15 +113,6 @@ const payload = await getPayload({ config });
 const where = onlySlug ? { slug: { equals: onlySlug } } : {};
 const { docs } = await payload.find({ collection: "posts", where, limit: 0, depth: 0, sort: "-date" });
 
-const uploadNode = (mediaId) => ({
-  type: "upload",
-  version: 3,
-  relationTo: "media",
-  value: mediaId,
-  fields: null,
-  format: "",
-});
-
 const vazio = (node) =>
   !node ||
   (node.type === "paragraph" &&
@@ -206,10 +198,12 @@ for (const doc of docs.slice(0, limit)) {
       continue;
     }
     if (jaLa.has(String(id))) continue;
-    const node = uploadNode(id);
     for (const arvore of [body, bodyEn]) {
       const filhos = arvore?.root?.children;
       if (!filhos) continue;
+      // Um nó por corpo: cada nó do Lexical tem o seu id, e as duas versões do
+      // artigo são documentos diferentes.
+      const node = uploadNode(id);
       if (vazio(filhos[item.at])) filhos[item.at] = node;
       else if (vazio(filhos[item.at - 1])) filhos[item.at - 1] = node;
       else filhos.splice(item.at, 0, node);

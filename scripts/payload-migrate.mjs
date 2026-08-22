@@ -20,6 +20,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import {
+  headingNode,
+  listItemNode,
+  listNode,
+  paragraphNode,
+  quoteNode,
+  rootNode,
+  textNode,
+  uploadNode,
+} from "./lexical-nodes.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -153,59 +163,21 @@ async function upsert(payload, collection, where, data) {
 const localized = (pt, en) => ({ pt: pt ?? "", en: en ?? "" });
 
 /** Texto simples → Lexical, que é o formato do editor. */
-/**
- * Nó de imagem do Lexical. O `value` é o id da media: o editor mostra-a e o
- * site desenha-a — 155 imagens no meio dos artigos ficavam de fora porque este
- * ramo não existia e caíam no ramo dos parágrafos, como parágrafos vazios.
- */
-function uploadNode(mediaId) {
-  return { type: "upload", version: 3, relationTo: "media", value: mediaId, fields: null, format: "" };
-}
-
 function lexical(paragraphs) {
   const children = paragraphs.map((block) => {
-    if (block.type === "image") {
-      // A imagem tem de estar carregada antes: quem chama resolve o id.
-      return block.mediaId ? uploadNode(block.mediaId) : null;
-    }
-    if (block.type === "h2" || block.type === "h3") {
-      return {
-        type: "heading",
-        tag: block.type,
-        version: 1,
-        children: [{ type: "text", text: block.text, version: 1, format: 0, detail: 0, mode: "normal", style: "" }],
-      };
-    }
+    // A imagem tem de estar carregada antes: quem chama resolve o id.
+    if (block.type === "image") return block.mediaId ? uploadNode(block.mediaId) : null;
+    if (block.type === "h2" || block.type === "h3") return headingNode(block.type, [textNode(block.text)]);
     if (block.type === "list") {
-      return {
-        type: "list",
-        listType: block.ordered ? "number" : "bullet",
-        tag: block.ordered ? "ol" : "ul",
-        version: 1,
-        children: block.items.map((item, index) => ({
-          type: "listitem",
-          value: index + 1,
-          version: 1,
-          children: [{ type: "text", text: item, version: 1, format: 0, detail: 0, mode: "normal", style: "" }],
-        })),
-      };
+      return listNode(
+        block.ordered,
+        block.items.map((item, index) => listItemNode(index + 1, [textNode(item)])),
+      );
     }
-    if (block.type === "quote") {
-      return {
-        type: "quote",
-        version: 1,
-        children: [{ type: "text", text: block.text, version: 1, format: 0, detail: 0, mode: "normal", style: "" }],
-      };
-    }
-    return {
-      type: "paragraph",
-      version: 1,
-      children: [{ type: "text", text: block.text ?? "", version: 1, format: 0, detail: 0, mode: "normal", style: "" }],
-    };
+    if (block.type === "quote") return quoteNode([textNode(block.text)]);
+    return paragraphNode([textNode(block.text ?? "")]);
   });
-  return {
-    root: { type: "root", version: 1, format: "", indent: 0, direction: "ltr", children: children.filter(Boolean) },
-  };
+  return rootNode(children.filter(Boolean));
 }
 
 /** Carrega as imagens que aparecem no meio do texto e devolve os blocos com o id. */

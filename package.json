@@ -23,7 +23,9 @@
     "posts:images": "tsx scripts/repair-post-images.mjs",
     "redirects:check": "node scripts/check-redirects.mjs",
     "logos:trim": "tsx scripts/trim-logos.mjs",
-    "posts:audit": "tsx scripts/audit-post-images.mjs"
+    "posts:audit": "tsx scripts/audit-post-images.mjs",
+    "posts:lexical": "tsx scripts/fix-lexical.mjs",
+    "posts:check": "tsx scripts/check-lexical.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

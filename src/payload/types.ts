@@ -168,6 +168,10 @@ export interface Page {
  */
 export interface Media {
   id: number;
+  /**
+   * Como esta imagem se chama no painel. Não vai para o site.
+   */
+  title?: string | null;
   alt: string;
   caption?: string | null;
   /**
@@ -1047,6 +1051,7 @@ export interface MilestonesSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  title?: T;
   alt?: T;
   caption?: T;
   legacyUrl?: T;

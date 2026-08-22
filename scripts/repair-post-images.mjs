@@ -24,6 +24,7 @@ import path from "node:path";
 import { parse } from "node-html-parser";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import { uploadNode } from "./lexical-nodes.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
 const args = process.argv.slice(2);
@@ -92,15 +93,6 @@ const payload = await getPayload({ config });
 
 const where = onlySlug ? { slug: { equals: onlySlug } } : {};
 const { docs } = await payload.find({ collection: "posts", where, limit: 0, depth: 0, sort: "-date" });
-
-const uploadNode = (mediaId) => ({
-  type: "upload",
-  version: 3,
-  relationTo: "media",
-  value: mediaId,
-  fields: null,
-  format: "",
-});
 
 const vazio = (node) =>
   !node ||
@@ -178,9 +170,9 @@ for (const doc of docs) {
 
   // De trás para a frente: inserir à frente não desloca o que falta inserir.
   for (const item of [...plano].sort((a, b) => b.at - a.at)) {
-    let node;
+    let id;
     try {
-      node = uploadNode(await media(item.src, item.alt));
+      id = await media(item.src, item.alt);
     } catch (error) {
       console.log(`  ! ${error.message}`);
       continue;
@@ -188,6 +180,8 @@ for (const doc of docs) {
     for (const tree of [body, bodyEn]) {
       const list = tree?.root?.children;
       if (!list) continue;
+      // Um nó por corpo: cada nó do Lexical tem o seu id.
+      const node = uploadNode(id);
       // Onde a imagem estava, o parser antigo deixou um parágrafo vazio.
       if (vazio(list[item.at])) list[item.at] = node;
       else if (vazio(list[item.at - 1])) list[item.at - 1] = node;
