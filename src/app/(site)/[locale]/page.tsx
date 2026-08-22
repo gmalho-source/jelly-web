@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type React from "react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Chapter } from "@/components/Chapter";
@@ -107,7 +108,7 @@ export default async function HomePage({
               {/* Empilhadas no mesmo enquadramento: com mais do que uma, o CSS
                   troca-as em fundido, sem javascript e sem salto de layout. */}
               <div
-                className="relative aspect-square overflow-hidden"
+                className="drift-hero relative aspect-square overflow-hidden"
                 data-hero-count={heroImages.length}
               >
                 {heroImages.map((photo, index) => (
@@ -195,12 +196,32 @@ export default async function HomePage({
       {/* ── 01 Posição ── */}
       <section className="surface-paper">
         <div className="mx-auto flex min-h-[80svh] max-w-[1600px] flex-col justify-center px-5 py-24 sm:px-8">
-          <Chapter label={t("chapters.position")} number="01" />
-          <p className="mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]">
+          {/* Entra por partes, de cima para baixo: a numeração, a frase, e a
+              linha do fim. O atraso de cada uma é a sua janela de entrada. */}
+          <div
+            className="rise"
+            style={{ "--rise-from": "2%", "--rise-to": "24%" } as React.CSSProperties}
+          >
+            <Chapter label={t("chapters.position")} number="01" />
+          </div>
+          <p
+            className="rise mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]"
+            style={
+              { "--rise-from": "6%", "--rise-to": "30%" } as React.CSSProperties
+            }
+          >
             {t("positionStatement")}{" "}
             <span className="text-red">{t("positionEmphasis")}</span>
           </p>
-          <div className="mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6">
+          <div
+            className="rise mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6"
+            style={
+              {
+                "--rise-from": "12%",
+                "--rise-to": "36%",
+              } as React.CSSProperties
+            }
+          >
             <p className="text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft">
               {t("positionFoot")}
             </p>
@@ -295,7 +316,7 @@ export default async function HomePage({
 
       {/* ── 04 A diferença: vermelho cheio, números reais ── */}
       <section className="surface-red relative overflow-hidden">
-        <span aria-hidden="true" className="ghost-word text-center">
+        <span aria-hidden="true" className="ghost-word drift-up text-center">
           AÇÃO
         </span>
         <div className="relative mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
@@ -304,8 +325,14 @@ export default async function HomePage({
             {t("differenceStatement")}
           </p>
           <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-line pt-8 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label}>
+            {stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className="rise"
+                style={
+                  { "--rise-from": `${4 + index * 4}%` } as React.CSSProperties
+                }
+              >
                 <dt className="font-display text-[clamp(38px,5vw,72px)] leading-none tabular-nums">
                   {stat.value}
                 </dt>

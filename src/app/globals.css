@@ -409,3 +409,56 @@
 @media (prefers-reduced-motion: reduce) {
   .logo-in { animation: none; }
 }
+
+/* ── Entradas e profundidade ────────────────────────────────────────────────
+   Movimento ligado ao scroll, feito pelo browser: sem javascript, sem ouvir o
+   scroll, sem trabalho na linha principal. Onde a animação ligada ao scroll
+   não existe, o conteúdo aparece desenhado — a decoração falta, o conteúdo
+   não. E quem pediu menos movimento nunca vê nada disto. */
+@keyframes rise-in {
+  from { opacity: 0; transform: translate3d(0, 34px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes drift-up {
+  from { transform: translate3d(0, 5%, 0); }
+  to { transform: translate3d(0, -5%, 0); }
+}
+
+@keyframes drift-down {
+  from { transform: translate3d(0, -4%, 0); }
+  to { transform: translate3d(0, 4%, 0); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Sobe e acende à entrada. O escalonamento é a janela de cada elemento:
+       cada um começa um pouco mais tarde do que o de cima. */
+    .rise {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry var(--rise-from, 4%) cover var(--rise-to, 26%);
+    }
+
+    /* Profundidade: o que está atrás anda menos do que o que está à frente. */
+    .drift-up,
+    .drift-down {
+      animation-timeline: view();
+      animation-range: cover;
+      will-change: transform;
+    }
+
+    .drift-up { animation: drift-up linear both; }
+    .drift-down { animation: drift-down linear both; }
+
+    /* O herói já está no ecrã quando a página abre, por isso a sua janela de
+       entrada não tem para onde progredir: quem manda aqui é o scroll da
+       página, no primeiro ecrã. */
+    .drift-hero {
+      animation: drift-down linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+      will-change: transform;
+    }
+  }
+}
