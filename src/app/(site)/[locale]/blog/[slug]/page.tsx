@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { ArticleBody } from "@/components/ArticleBody";
-import { Link } from "@/i18n/navigation";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPosts, getRelatedPosts } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
@@ -35,6 +36,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   if (!post) notFound();
 
   const t = await getTranslations("blog");
+  const nav = await getTranslations("nav");
   const related = await getRelatedPosts(slug);
   const formatter = new Intl.DateTimeFormat(locale === "pt" ? "pt-PT" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
 
@@ -53,10 +55,19 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
     inLanguage: locale === "pt" ? "pt-PT" : "en",
   };
 
+  // O caminho até aqui: casa, índice do blog, e a categoria do artigo. O título
+  // não entra — é onde o leitor está, e ocuparia duas linhas.
+  const crumbs = [
+    { label: nav("home"), href: "/" as const, path: locale === "pt" ? "/" : "/en" },
+    { label: nav("blog"), href: "/blog" as const, path: getPathname({ href: "/blog", locale }) },
+    { label: post.category[locale] },
+  ];
+
   return (
     <article className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <div className="grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
+      <Breadcrumbs items={crumbs} />
+      <div className="mt-8 grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
         {/* Marginália: autor, data, tempo de leitura. */}
         <aside className="flex flex-col gap-1 text-sm text-fg-soft">
           <span className="text-fg">{post.author}</span>
@@ -72,8 +83,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
         </aside>
 
         <div>
-          <span className="eyebrow">{post.category[locale]}</span>
-          <h1 className="editorial mt-4 max-w-[26ch] text-display">{post.title[locale]}</h1>
+          <h1 className="editorial max-w-[26ch] text-display">{post.title[locale]}</h1>
           <hr className="mt-8 border-line" />
 
           {post.cover?.src ? (

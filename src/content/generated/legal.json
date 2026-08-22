@@ -1,0 +1,256 @@
+{
+ "politica-de-privacidade-2": {
+  "titulo": "Política de Privacidade",
+  "atualizado": "2023-01-17",
+  "blocos": [
+   {
+    "type": "h2",
+    "text": "Política de Privacidade"
+   }
+  ]
+ },
+ "politica-de-utilizacao-responsavel-pur": {
+  "titulo": "POLÍTICA DE UTILIZAÇÃO RESPONSÁVEL (PUR)",
+  "atualizado": "2022-02-06",
+  "blocos": [
+   {
+    "type": "p",
+    "text": "A JELLY – Digital Agency, Unip. Lda. opera no mercado nacional desde 2011 na área do design e desenvolvimento web, prestando como complemento da sua atividade, o serviço de alojamento de websites em servidores próprios, em data center nacional."
+   },
+   {
+    "type": "p",
+    "text": "A PUR definida pela JELLY aplica-se aos serviços de alojamento partilhado, alojamento dedicado, servidores virtuais, servidores cloud e housing de servidores."
+   },
+   {
+    "type": "p",
+    "text": "Esta Política de Utilização Responsável destina-se a proteger os sistemas e serviços da JELLY e de todos os seus clientes de modo a garantir que a disponibilidade de ambos é a desejada para total satisfação e proteção dos mesmos."
+   },
+   {
+    "type": "h3",
+    "text": "Segurança de redes e sistemas"
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido aos utilizadores a violação ou tentativa de violação de qualquer sistema que componha a infraestrutura da JELLY nomeadamente os seus sistemas de segurança."
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido o seguinte tipo de ações:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Entrada ou tentativa de entrada em servidores sem autorização.",
+     "Uso de cracking, brute-force ou ataques de dicionário para acessos não autorizados.",
+     "Deteção automática de serviços em servidores (Port scan).",
+     "Pesquisa não autorizada de vulnerabilidades em servidores, serviços e redes.",
+     "É expressamente proibida a falsificação de dados com o intuito de iludir e induzir em erro os recetores dos dados. Estão incluídas sem se limitarem a isso:"
+    ]
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Alterações de endereços IP (IP Spoofing).",
+     "Alterações de endereços ARP (ARP Spoofing).",
+     "Alterações dos cabeçalhos das mensagens de correio electrónico."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Não é permitido ao utilizador interferir intencionalmente no bom funcionamento de servidores, serviços ou redes."
+   },
+   {
+    "type": "p",
+    "text": "Nestes casos incluem-se:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Ação de sobrecarga, que visem prejudicar o normal funcionamento de serviços (Denial of Service).",
+     "Envio em massa de pacotes (Flooding).",
+     "Quaisquer tipo de tentativas de bloquear ou perturbar serviço, servidores ou redes."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Conteúdos"
+   },
+   {
+    "type": "p",
+    "text": "Os utilizadores do serviço de alojamento disponibilizado pela JELLY são os únicos responsáveis pelos conteúdos alojados nos nossos servidores, devendo por isso gerir de forma segura os dados de acesso aos mesmos e garantindo que respeitam as regras abaixo referidas."
+   },
+   {
+    "type": "p",
+    "text": "Não são permitidos quer em alojamentos partilhados ou dedicados:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Conteúdos que violem os direitos de autor.",
+     "Conteúdos que contenham pedofilia.",
+     "Conteúdos que incitem à prática de atos criminosos.",
+     "Conteúdos que incitem à violência.",
+     "Conteúdos que sejam considerados ilegais.",
+     "Conteúdos que sejam ofensivos ou discriminatórios com base em religião, sexo ou raça.",
+     "Conteúdos que iludam o cliente a julgar tratar-se de outro site (Phishing).",
+     "Vírus, Trojans, Malware ou qualquer outro software prejudicial aos utilizadores que visitem esses websites.",
+     "A partilha e/ou facilitação de troca de software ou informação protegida por direitos de autor.",
+     "Software que permita a utilização dos servidores como Open Relay ou Open Proxy.",
+     "Software sem o devido licenciamento.",
+     "Software desactualizado ou com falhas conhecidas que possibilitem a sua exploração para tomar controlo do servidor.",
+     "A instalação de Proxies ou NAT.",
+     "A instalação de anonimizadores."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Alojamento partilhado"
+   },
+   {
+    "type": "p",
+    "text": "Por se tratar de um serviço em que os servidores utilizados são partilhados com mais utilizadores, não é permitido no alojamento partilhado qualquer uso de CPU, disco ou memória que possa causar um impacto negativo na performance ou qualidade do serviço do alojamento dos outros utilizadores."
+   },
+   {
+    "type": "p",
+    "text": "Assim sendo não é permitido no serviço de alojamento partilhado:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Uso do CPU acima dos 25% durante mais de 90 segundos.",
+     "Utilização de mais de 100.000 ficheiros na conta de alojamento.",
+     "A utilização do alojamento partilhado como dispositivo de backup.",
+     "Utilização do serviço de alojamento para partilha de ficheiros.",
+     "A criação de Cron Jobs com intervalos inferiores a 15 minutos.",
+     "A instalação de software de peer-to-peer.",
+     "O uso de web spiders ou indexers.",
+     "Exceder o limite de 500 emails/hora."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Correio electrónico e política anti-spam"
+   },
+   {
+    "type": "p",
+    "text": "O uso abusivo de correio eletrónico causa transtornos e prejuízos à infraestrutura da JELLY, assim como aos restantes utilizadores e terceiros, direta e indiretamente, ao pôr em causa o normal funcionamento dos sistemas e do suporte ao serviço."
+   },
+   {
+    "type": "p",
+    "text": "A JELLY considera como SPAM todo e qualquer email enviado com intuito comercial e não solicitado pelo destinatário. Em adição ao anterior exposto, qualquer email que possa causar impacto negativo na infraestrutura da JELLY ou colocar IPs do nosso espaço de endereçamento em listas negras será também considerado SPAM."
+   },
+   {
+    "type": "p",
+    "text": "Como tal não é permitido:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Envio de SPAM.",
+     "Envio de email para as denominadas SPAMTRAPS.",
+     "Envio massivo de correio electrónico comercial ou pessoal não solicitado.",
+     "Envio massivo de correio electrónico comercial ou pessoal não solicitado, na qual os destinatários estão todos em BCC (undisclosed recipients)",
+     "Envio de emails a quem tenha expressamente solicitado o seu cancelamento.",
+     "Utilização dos nossos servidores como SMTP “Open Proxy” ou “Open Relay”.",
+     "Alojamento de páginas que forneçam serviços de SPAM.",
+     "Alojamento de páginas anunciadas através de SPAM enviado de outras redes (“spamvertising”).",
+     "Qualquer ação que coloque o espaço de endereçamento IP da JELLY em listas negras."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Sempre que se verifique uma das situações acimas referidas a JELLY reserva-se no direito de suspender de imediato o serviço de alojamento sem direito a reativação ou a quaisquer reembolsos."
+   },
+   {
+    "type": "h3",
+    "text": "Atribuição de IP"
+   },
+   {
+    "type": "p",
+    "text": "A JELLY possui o seu próprio espaço de endereçamento e atribui a cada servidor um endereço IP não sendo permitido:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "A utilização de outros IPs que não os atribuídos.",
+     "A utilização de IPs de outros servidores."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Intervenções"
+   },
+   {
+    "type": "p",
+    "text": "Sempre que forem detectados atos abusivos e for necessária a intervenção da JELLY para resolver estas situações, a JELLY pode, sem qualquer consulta prévia do cliente, optar por:"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "Avisar o cliente por email ou telefone, concedendo-lhe um prazo de 24 horas para parar com o abuso ou a violação da atual PUR.",
+     "Efetuar a necessária intervenção para resolução imediata do problema, sendo ao cliente causador do mesmo faturada a intervenção técnica com base no valor hora atual descriminado no site.",
+     "Suspender de imediato o serviço, sem aviso prévio, caso a gravidade da situação o justifique."
+    ]
+   },
+   {
+    "type": "h3",
+    "text": "Considerações gerais"
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "A JELLY reserva-se o direito de cancelar definitivamente ou suspender temporariamente qualquer serviço de alojamento (alojamento partilhado, alojamento dedicado, servidores virtuais, servidores cloud e housing de servidores) sem qualquer devolução do período não utilizado se esta PUR for violada.",
+     "A JELLY reserva-se o direito de suspender qualquer serviço se este causar degradação na nossa infraestrutura ou no serviço prestado a outros clientes.",
+     "A JELLY reserva-se o direito de rever as suas políticas e esta PUR, a qualquer momento e sem aviso prévio, podendo a versão actualizada ser consultada no nosso site.",
+     "A JELLY não poderá ser considerada responsável por qualquer prejuízo causado pelo cancelamento do site ou serviço se esta PUR for violada."
+    ]
+   }
+  ]
+ },
+ "entidades-resolucao-alternativa-litigios": {
+  "titulo": "Entidades de Resolução Alternativa de Litígios",
+  "atualizado": "2020-03-10",
+  "blocos": [
+   {
+    "type": "h3",
+    "text": "INFORMAÇÃO AO CONSUMIDOR"
+   },
+   {
+    "type": "p",
+    "text": "No cumprimento do dever de informação e de acordo com o definido no artigo 18.º, n. º1, da Lei 144/2015, de 8 de setembro, informa-se os clientes que para dirimir qualquer conflito proveniente da nossa prestação de serviços, e que apesar de não estarmos vinculados a uma ERAL por adesão ou imposição legal, os nossos clientes poderão aceder ao sítio eletrónico infra para verificar a lista das entidades de RAL existentes e efetuar a livre escolha."
+   },
+   {
+    "type": "p",
+    "text": "Lista das Entidades de Resolução Alternativa de Litígios existentes nos diversos Estados-Membros da União Europeia, elaborada pela Comissão Europeia."
+   },
+   {
+    "type": "list",
+    "ordered": true,
+    "items": [
+     "CNIACC – Centro Nacional de Informação e Arbitragem de Conflitos de Consumo Tel.: 213 847 484; E-mail: cniacc@unl.pt",
+     "CIMAAL – Centro de Informação, Mediação e Arbitragem de Conflitos de Consumo do Algarve Tel.: 289 823 135; E-mail: cimaal@mail.telepac.pt",
+     "Centro de Arbitragem de Conflitos de Consumo do Distrito de Coimbra Tel.: 239 821 690/289. E-mail: geral@centrodearbitragemdecoimbra.com",
+     "Centro de Arbitragem de Conflitos de Consumo de Lisboa Tel.: 218 807 000 / 218807030. E-mail: juridico@centroarbitragemlisboa.pt; director@centroarbitragemlisboa.pt",
+     "Centro de Informação de Consumo e Arbitragem do Porto Tel.: 225 508 349 / 225 029 791; E-mail: cicap@mail.telepac.pt",
+     "Centro de Arbitragem de Conflitos de Consumo do Vale do Ave/Tribunal Arbitral Tel.: 253 422 410; E-mail: triave@gmail.com",
+     "Centro de Informação, Mediação e Arbitragem de Consumo (Tribunal Arbitral de Consumo) Tel.: 253 617 604; E-mail: geral@ciab.pt",
+     "Centro de Arbitragem de Conflitos de Consumo da Região Autónoma da Madeira Morada: Rua Direita, 27 – 1º Andar, 9050-405 Funchal; E-mail: centroarbitragem.sras@govmadeira.pt",
+     "Centro de Informação, Mediação, Provedoria e Arbitragem de Seguros Lisboa Tel.: 213 827 700; E-mail: geral@cimpas.pt. Web: www.cimpas.pt."
+    ]
+   },
+   {
+    "type": "p",
+    "text": "Para mais informações consulte o Portal do Consumidor em www.consumidor.pt , para análise daquelas ou de outras entidades disponíveis, em permanente atualização. Sintra, 20 de Março de 2016"
+   }
+  ]
+ }
+}

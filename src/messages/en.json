@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Home",
     "about": "About",
     "services": "Services",
     "work": "Work",
@@ -84,7 +85,8 @@
     "tech": "Technology",
     "workCol": "Work",
     "contactCol": "Contact",
-    "book": "Book 30 minutes"
+    "book": "Book 30 minutes",
+    "complaints": "Complaints book"
   },
   "billing": {
     "area": "Providers area",
@@ -205,5 +207,10 @@
     "providers": "Providers",
     "providersBody": "Already working with Jelly? Invoice submission lives at",
     "reply": "Reply within one business day"
+  },
+  "legal": {
+    "updated": "Last revised",
+    "questions": "Questions about this page?",
+    "title": "Legal"
   }
 }

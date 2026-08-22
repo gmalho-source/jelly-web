@@ -489,6 +489,13 @@ export interface News {
     pt?: string | null;
     en?: string | null;
   };
+  /**
+   * Se a notícia tem artigo no site, é para lá que a linha leva.
+   */
+  post?: (number | null) | Post;
+  /**
+   * Usado quando não há artigo: notícia na imprensa, inscrição num evento.
+   */
   link?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -971,6 +978,7 @@ export interface NewsSelect<T extends boolean = true> {
         pt?: T;
         en?: T;
       };
+  post?: T;
   link?: T;
   updatedAt?: T;
   createdAt?: T;

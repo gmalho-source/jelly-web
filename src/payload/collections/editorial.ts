@@ -106,6 +106,13 @@ export const NewsItems: CollectionConfig = {
       ],
     },
     locale("summary", "Resumo", { long: true }),
-    { name: "link", label: "Link externo", type: "text" },
+    {
+      name: "post",
+      label: "Artigo do blog",
+      type: "relationship",
+      relationTo: "posts",
+      admin: { description: "Se a notícia tem artigo no site, é para lá que a linha leva." },
+    },
+    { name: "link", label: "Link externo", type: "text", admin: { description: "Usado quando não há artigo: notícia na imprensa, inscrição num evento." } },
   ],
 };

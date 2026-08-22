@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Início",
     "about": "Sobre",
     "services": "Serviços",
     "work": "Projetos",
@@ -84,7 +85,8 @@
     "tech": "Tecnologia",
     "workCol": "Trabalho",
     "contactCol": "Contacto",
-    "book": "Marcar 30 minutos"
+    "book": "Marcar 30 minutos",
+    "complaints": "Livro de Reclamações"
   },
   "billing": {
     "area": "Área de prestadores",
@@ -205,5 +207,10 @@
     "providers": "Prestadores",
     "providersBody": "Já trabalhas com a Jelly? A submissão de faturas está em",
     "reply": "Resposta em 24 horas úteis"
+  },
+  "legal": {
+    "updated": "Última revisão",
+    "questions": "Dúvidas sobre esta página?",
+    "title": "Legal"
   }
 }

@@ -69,6 +69,10 @@ export type NewsItem = {
   title: Localized;
   summary?: Localized;
   outlet?: string;
+  /** Artigo do blog, quando a notícia tem um. */
+  postSlug?: string;
+  /** Endereço de fora, quando não há artigo. */
+  link?: string;
 };
 
 /** Trecho de texto com marcação inline. Vem do Portable Text do CMS. */

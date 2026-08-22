@@ -150,6 +150,8 @@ export const clients: Client[] = [
   { name: "Take1", sector: "tecnologia" },
   { name: "MyChange", sector: "tecnologia" },
   { name: "Faccia", sector: "saude" },
+  { name: "Farmácias Shee", sector: "saude" },
+  { name: "TO BE — by Teresa Branco", sector: "saude" },
   { name: "Stronddo", sector: "arte" },
   { name: "Artbid", sector: "arte" },
   { name: "Louis Bourgon", sector: "bebidas" },

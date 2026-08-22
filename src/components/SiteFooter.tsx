@@ -1,10 +1,13 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { legalPages } from "@/content/legal";
 import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { JellyWordmark } from "./JellyLogo";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
 export async function SiteFooter() {
-  const [nav, footer] = await Promise.all([getTranslations("nav"), getTranslations("footer")]);
+  const [nav, footer, locale] = await Promise.all([getTranslations("nav"), getTranslations("footer"), getLocale()]);
+  const lingua = locale as Locale;
 
   const columns = [
     {
@@ -66,7 +69,29 @@ export async function SiteFooter() {
             </li>
           </ul>
         </div>
-        <div className="col-span-2 mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-sm text-fg-soft lg:col-span-4">
+        {/* Legal e Livro de Reclamações: a lei portuguesa obriga ao segundo, e o
+            primeiro é onde se responde a quem pergunta o que fazemos com dados. */}
+        <div className="col-span-2 mt-8 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-sm text-fg-soft lg:col-span-4">
+          {legalPages.map((page) => (
+            <Link
+              key={page.slug}
+              href={{ pathname: "/legal/[slug]", params: { slug: page.slug } }}
+              className="transition-colors duration-200 hover:text-red"
+            >
+              {page.title[lingua]}
+            </Link>
+          ))}
+          <a
+            href="https://www.livroreclamacoes.pt/inicio"
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors duration-200 hover:text-red"
+          >
+            {footer("complaints")}
+          </a>
+        </div>
+
+        <div className="col-span-2 mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-sm text-fg-soft lg:col-span-4">
           <span>Rua Dom João V, 29C · Lisboa · Jelly 2010—2026</span>
           <span className="font-display text-lg text-paper">
             be the <span className="text-red">change</span>

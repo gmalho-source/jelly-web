@@ -237,15 +237,20 @@ export function fetchMilestones(fallback: Milestone[]) {
 
 export function fetchNews(fallback: NewsItem[]) {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "news", sort: "-date", ...all });
-    return (docs as unknown as Doc[]).map((raw): NewsItem => ({
-      slug: text(raw.slug),
-      date: text(raw.date).slice(0, 10),
-      kind: raw.kind as NewsItem["kind"],
-      title: { pt: text(raw.titlePt), en: text(raw.titleEn) || text(raw.titlePt) },
-      summary: localized(raw.summary),
-      outlet: text(raw.outlet) || undefined,
-    }));
+    const { docs } = await payload.find({ collection: "news", sort: "-date", ...all, depth: 1 });
+    return (docs as unknown as Doc[]).map((raw): NewsItem => {
+      const post = raw.post;
+      return {
+        slug: text(raw.slug),
+        date: text(raw.date).slice(0, 10),
+        kind: raw.kind as NewsItem["kind"],
+        title: { pt: text(raw.titlePt), en: text(raw.titleEn) || text(raw.titlePt) },
+        summary: localized(raw.summary),
+        outlet: text(raw.outlet) || undefined,
+        postSlug: post && typeof post === "object" ? text((post as Doc).slug) || undefined : undefined,
+        link: text(raw.link) || undefined,
+      };
+    });
   }, fallback);
 }
 

@@ -39,14 +39,16 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
         <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
           <ul className="grid grid-cols-2 gap-px bg-paper-3 sm:grid-cols-3 lg:grid-cols-5">
             {logos.map((logo) => (
-              <li key={logo.src} className="flex aspect-[5/3] items-center justify-center bg-white px-6">
+              <li key={logo.src} className="group flex aspect-[5/3] items-center justify-center overflow-hidden bg-white px-6">
                 <Image
                   src={logo.src}
                   alt={logo.name || ""}
                   width={320}
                   height={192}
                   sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
-                  className="max-h-[76px] w-auto max-w-full object-contain opacity-85 transition-opacity duration-200 hover:opacity-100"
+                  // Cresce e acende ao passar o rato: uma parede de logos não
+                  // responde a nada, e este é o único gesto que tem.
+                  className="max-h-[76px] w-auto max-w-full object-contain opacity-85 transition-[transform,opacity] duration-500 ease-out will-change-transform group-hover:scale-[1.12] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               </li>
             ))}
