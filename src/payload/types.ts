@@ -77,7 +77,12 @@ export interface Config {
     logos: Logo;
     team: Team;
     milestones: Milestone;
+    departments: Department;
+    'job-functions': JobFunction;
+    jobs: Job;
+    applications: Application;
     media: Media;
+    documents: Document;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -96,7 +101,12 @@ export interface Config {
     logos: LogosSelect<false> | LogosSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
+    departments: DepartmentsSelect<false> | DepartmentsSelect<true>;
+    'job-functions': JobFunctionsSelect<false> | JobFunctionsSelect<true>;
+    jobs: JobsSelect<false> | JobsSelect<true>;
+    applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    documents: DocumentsSelect<false> | DocumentsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -657,12 +667,297 @@ export interface Milestone {
   createdAt: string;
 }
 /**
+ * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "departments".
+ */
+export interface Department {
+  id: number;
+  namePt: string;
+  nameEn?: string | null;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  order?: number | null;
+  /**
+   * Quanto conta cada dimensão neste departamento, em pontos. A soma não tem de dar 100 — o cálculo normaliza. Num comercial ouvir pesa mais do que numa função técnica; num developer é o contrário.
+   */
+  weights?: {
+    empathy?: number | null;
+    attitude?: number | null;
+    listening?: number | null;
+    experience?: number | null;
+    communication?: number | null;
+    fit?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * A tabela de funções. A vaga escolhe uma daqui, e o título dela pode ser escrito à medida.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-functions".
+ */
+export interface JobFunction {
+  id: number;
+  namePt: string;
+  nameEn?: string | null;
+  department: number | Department;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: number;
+  titlePt: string;
+  titleEn?: string | null;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  /**
+   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
+   */
+  slugEn?: string | null;
+  /**
+   * De onde vem o departamento, e por onde as candidaturas se agrupam.
+   */
+  function: number | JobFunction;
+  status?: ('rascunho' | 'aberta' | 'fechada') | null;
+  contract?: ('contrato' | 'estagio' | 'freelancer') | null;
+  regime?: ('presencial' | 'hibrido' | 'remoto') | null;
+  location?: string | null;
+  seniority?: ('junior' | 'intermedio' | 'senior') | null;
+  /**
+   * Passada a data, a vaga sai da lista sozinha. Deixa vazio para ficar aberta sem prazo.
+   */
+  deadline?: string | null;
+  intro?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  responsibilities?:
+    | {
+        item?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  requirements?:
+    | {
+        item?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  niceToHave?:
+    | {
+        item?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        item?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  closing?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  /**
+   * As perguntas que só fazem sentido nesta vaga — ferramentas, canais, anos na função, valor/hora. Sem nada aqui, o formulário fica só com o essencial e o CV.
+   */
+  questions?:
+    | {
+        type: 'escolha' | 'varias' | 'curto' | 'longo' | 'numero';
+        required?: boolean | null;
+        label?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        /**
+         * Uma linha por opção. Para deixar escrever à parte, acrescenta uma opção «Outra».
+         */
+        options?:
+          | {
+              value?: {
+                pt?: string | null;
+                en?: string | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  legacyPath?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications".
+ */
+export interface Application {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  country?: string | null;
+  portfolio?: string | null;
+  linkedin?: string | null;
+  /**
+   * Vazio quer dizer candidatura espontânea.
+   */
+  job?: (number | null) | Job;
+  function?: (number | null) | JobFunction;
+  department?: (number | null) | Department;
+  experienceYears?: ('nenhuma' | 'menos-de-um' | 'um-dois' | 'tres-cinco' | 'mais-de-cinco') | null;
+  contractWanted?: ('contrato' | 'estagio' | 'freelancer') | null;
+  cv?: (number | null) | Document;
+  letter?: (number | null) | Document;
+  /**
+   * Consentimento separado do da candidatura, como tem de ser.
+   */
+  newsletterOptIn?: boolean | null;
+  /**
+   * As perguntas do formulário, como foram feitas, e o que a pessoa escreveu.
+   */
+  answers?:
+    | {
+        question?: string | null;
+        answer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Mudar o estado prepara o email para o candidato. Nada sai sem alguém o mandar sair.
+   */
+  status?: ('nova' | 'em_avaliacao' | 'aprovado' | 'rejeitado') | null;
+  evaluations?:
+    | {
+        interviewer?: (number | null) | User;
+        date?: string | null;
+        /**
+         * Percebeu o outro lado — do cliente, do colega. 3 reconhece que existe; 5 descreve o que o outro sentia e o que fez com isso.
+         */
+        empathy?: ('1' | '2' | '3' | '4' | '5') | null;
+        empathyNote?: string | null;
+        /**
+         * 3 fez o que lhe pediram; 5 viu o problema, avançou sem ninguém pedir, e assume o que correu mal.
+         */
+        attitude?: ('1' | '2' | '3' | '4' | '5') | null;
+        attitudeNote?: string | null;
+        /**
+         * 3 responde ao que foi perguntado; 5 devolve o que ouviu por outras palavras e pergunta o que falta.
+         */
+        listening?: ('1' | '2' | '3' | '4' | '5') | null;
+        listeningNote?: string | null;
+        /**
+         * Conta o que fez, não onde esteve. 3 dá um exemplo próprio; 5 dá exemplos com números e diz o que faria diferente.
+         */
+        experience?: ('1' | '2' | '3' | '4' | '5') | null;
+        experienceNote?: string | null;
+        /**
+         * 3 explica-se; 5 adapta ao interlocutor e torna simples o que é complexo.
+         */
+        communication?: ('1' | '2' | '3' | '4' | '5') | null;
+        communicationNote?: string | null;
+        /**
+         * A competência específica da função. 3 faz o essencial; 5 está à frente do que a vaga pede.
+         */
+        fit?: ('1' | '2' | '3' | '4' | '5') | null;
+        fitNote?: string | null;
+        /**
+         * Separada da nota de propósito: uma média de 4 pode ainda assim ser um não, e ao contrário também.
+         */
+        recommendation?: ('avancar' | 'reservas' | 'nao') | null;
+        notes?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Média ponderada, de 1 a 5.
+   */
+  rating?: number | null;
+  /**
+   * Diferença entre a ficha mais alta e a mais baixa. Acima de 1,5 vale mais conversar do que somar.
+   */
+  spread?: number | null;
+  /**
+   * Porque é que se decidiu assim. Fica no processo.
+   */
+  decisionNote?: string | null;
+  consentAt?: string | null;
+  source?: string | null;
+  /**
+   * Doze meses para as espontâneas, seis meses depois de a vaga fechar. Um trabalho diário apaga o que passou desta data.
+   */
+  retentionUntil?: string | null;
+  emails?:
+    | {
+        kind?: string | null;
+        sentAt?: string | null;
+        subject?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Administração vê tudo. Recrutamento é o único perfil que vê as candidaturas.
+   */
+  roles?: ('admin' | 'editorial' | 'recrutamento')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -747,8 +1042,28 @@ export interface PayloadLockedDocument {
         value: number | Milestone;
       } | null)
     | ({
+        relationTo: 'departments';
+        value: number | Department;
+      } | null)
+    | ({
+        relationTo: 'job-functions';
+        value: number | JobFunction;
+      } | null)
+    | ({
+        relationTo: 'jobs';
+        value: number | Job;
+      } | null)
+    | ({
+        relationTo: 'applications';
+        value: number | Application;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'documents';
+        value: number | Document;
       } | null)
     | ({
         relationTo: 'users';
@@ -1205,6 +1520,206 @@ export interface MilestonesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "departments_select".
+ */
+export interface DepartmentsSelect<T extends boolean = true> {
+  namePt?: T;
+  nameEn?: T;
+  slug?: T;
+  order?: T;
+  weights?:
+    | T
+    | {
+        empathy?: T;
+        attitude?: T;
+        listening?: T;
+        experience?: T;
+        communication?: T;
+        fit?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-functions_select".
+ */
+export interface JobFunctionsSelect<T extends boolean = true> {
+  namePt?: T;
+  nameEn?: T;
+  department?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs_select".
+ */
+export interface JobsSelect<T extends boolean = true> {
+  titlePt?: T;
+  titleEn?: T;
+  slug?: T;
+  slugEn?: T;
+  function?: T;
+  status?: T;
+  contract?: T;
+  regime?: T;
+  location?: T;
+  seniority?: T;
+  deadline?: T;
+  intro?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  responsibilities?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  requirements?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  niceToHave?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  benefits?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  closing?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  questions?:
+    | T
+    | {
+        type?: T;
+        required?: T;
+        label?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        options?:
+          | T
+          | {
+              value?:
+                | T
+                | {
+                    pt?: T;
+                    en?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  legacyPath?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications_select".
+ */
+export interface ApplicationsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  city?: T;
+  country?: T;
+  portfolio?: T;
+  linkedin?: T;
+  job?: T;
+  function?: T;
+  department?: T;
+  experienceYears?: T;
+  contractWanted?: T;
+  cv?: T;
+  letter?: T;
+  newsletterOptIn?: T;
+  answers?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  status?: T;
+  evaluations?:
+    | T
+    | {
+        interviewer?: T;
+        date?: T;
+        empathy?: T;
+        empathyNote?: T;
+        attitude?: T;
+        attitudeNote?: T;
+        listening?: T;
+        listeningNote?: T;
+        experience?: T;
+        experienceNote?: T;
+        communication?: T;
+        communicationNote?: T;
+        fit?: T;
+        fitNote?: T;
+        recommendation?: T;
+        notes?: T;
+        id?: T;
+      };
+  rating?: T;
+  spread?: T;
+  decisionNote?: T;
+  consentAt?: T;
+  source?: T;
+  retentionUntil?: T;
+  emails?:
+    | T
+    | {
+        kind?: T;
+        sentAt?: T;
+        subject?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
@@ -1260,10 +1775,29 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents_select".
+ */
+export interface DocumentsSelect<T extends boolean = true> {
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

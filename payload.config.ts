@@ -11,6 +11,8 @@ import { Media } from "./src/payload/collections/media";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
 import { Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
+import { Documents } from "./src/payload/collections/documents";
+import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,7 +34,25 @@ export default buildConfig({
     meta: { titleSuffix: " · Jelly" },
     importMap: { baseDir: path.resolve(dirname) },
   },
-  collections: [Pages, Posts, Categories, Projects, Services, NewsItems, Clients, Logos, TeamMembers, Milestones, Media, Users],
+  collections: [
+    Pages,
+    Posts,
+    Categories,
+    Projects,
+    Services,
+    NewsItems,
+    Clients,
+    Logos,
+    TeamMembers,
+    Milestones,
+    Departments,
+    JobFunctions,
+    Jobs,
+    Applications,
+    Media,
+    Documents,
+    Users,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
   db: postgresAdapter({
@@ -53,7 +73,9 @@ export default buildConfig({
           // Sem o controlo de acesso do Payload à frente, os endereços apontam
           // direitos ao CDN do Blob: as imagens deixam de passar por uma função
           // a cada pedido. São capas de projetos, públicas de qualquer maneira.
-          collections: { media: { disablePayloadAccessControl: true } },
+          // As imagens são públicas; os documentos não. Sem esta distinção, um
+          // CV ficava com endereço no CDN, sem sessão pelo meio.
+          collections: { media: { disablePayloadAccessControl: true }, documents: {} },
           token: blobToken,
         }),
       ]
@@ -65,7 +87,7 @@ export default buildConfig({
   ...(resendKey
     ? {
         email: resendAdapter({
-          defaultFromAddress: "geral@jelly.pt",
+          defaultFromAddress: "hello@jelly.pt",
           defaultFromName: "Jelly",
           apiKey: resendKey,
         }),
