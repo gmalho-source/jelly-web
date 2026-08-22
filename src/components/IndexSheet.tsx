@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -26,6 +27,14 @@ export type SheetCopy = {
   /** Nome da outra língua. Ausente na proposta, presente no site. */
   language?: string;
 };
+
+/**
+ * As disciplinas da casa, a passar no gatilho do índice em vez da palavra
+ * «índice». São as mesmas nas duas línguas, por isso não vão para tradução. O
+ * nome do botão para quem usa leitor de ecrã continua a ser «índice»: o que
+ * passa é decoração.
+ */
+const DISCIPLINAS = ["BRANDING", "DIGITAL", "MARKETING", "AI SYSTEMS", "TECHNOLOGY"];
 
 function normalize(value: string) {
   return value
@@ -174,9 +183,20 @@ export function IndexSheet({
         aria-expanded={open}
         aria-controls="folha"
         onClick={openSheet}
+        aria-label={copy.index}
         className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-paper/10 px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8"
       >
-        <span className="eyebrow text-current">{copy.index}</span>
+        <span
+          aria-hidden="true"
+          className="word-cycle eyebrow text-current"
+          style={{ "--word-count": DISCIPLINAS.length } as React.CSSProperties}
+        >
+          {DISCIPLINAS.map((palavra, index) => (
+            <span key={palavra} style={{ "--word-index": index } as React.CSSProperties}>
+              {palavra}
+            </span>
+          ))}
+        </span>
         <span aria-hidden="true" className="grid grid-cols-3 gap-[3px]">
           {Array.from({ length: 9 }).map((_, index) => (
             <span

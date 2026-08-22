@@ -196,29 +196,29 @@ export default async function HomePage({
       {/* ── 01 Posição ── */}
       <section className="surface-paper">
         <div className="mx-auto flex min-h-[80svh] max-w-[1600px] flex-col justify-center px-5 py-24 sm:px-8">
-          {/* Entra por partes, de cima para baixo: a numeração, a frase, e a
+          {/* Acende por partes, de cima para baixo: a numeração, a frase, e a
               linha do fim. O atraso de cada uma é a sua janela de entrada. */}
           <div
-            className="rise"
-            style={{ "--rise-from": "2%", "--rise-to": "24%" } as React.CSSProperties}
+            className="fade"
+            style={{ "--fade-from": "2%", "--fade-to": "24%" } as React.CSSProperties}
           >
             <Chapter label={t("chapters.position")} number="01" />
           </div>
           <p
-            className="rise mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]"
+            className="fade mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]"
             style={
-              { "--rise-from": "6%", "--rise-to": "30%" } as React.CSSProperties
+              { "--fade-from": "6%", "--fade-to": "30%" } as React.CSSProperties
             }
           >
             {t("positionStatement")}{" "}
             <span className="text-red">{t("positionEmphasis")}</span>
           </p>
           <div
-            className="rise mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6"
+            className="fade mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6"
             style={
               {
-                "--rise-from": "12%",
-                "--rise-to": "36%",
+                "--fade-from": "12%",
+                "--fade-to": "36%",
               } as React.CSSProperties
             }
           >
@@ -316,7 +316,7 @@ export default async function HomePage({
 
       {/* ── 04 A diferença: vermelho cheio, números reais ── */}
       <section className="surface-red relative overflow-hidden">
-        <span aria-hidden="true" className="ghost-word drift-up text-center">
+        <span aria-hidden="true" className="ghost-word text-center">
           AÇÃO
         </span>
         <div className="relative mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
@@ -328,9 +328,9 @@ export default async function HomePage({
             {stats.map((stat, index) => (
               <div
                 key={stat.label}
-                className="rise"
+                className="fade"
                 style={
-                  { "--rise-from": `${4 + index * 4}%` } as React.CSSProperties
+                  { "--fade-from": `${4 + index * 4}%` } as React.CSSProperties
                 }
               >
                 <dt className="font-display text-[clamp(38px,5vw,72px)] leading-none tabular-nums">

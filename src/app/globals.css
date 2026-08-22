@@ -410,19 +410,51 @@
   .logo-in { animation: none; }
 }
 
+/* ── Palavras que se substituem ─────────────────────────────────────────────
+   No gatilho do índice, em vez de uma palavra fixa passam as disciplinas da
+   casa. Cada uma acende, fica, e desfaz-se em desfoque enquanto a seguinte se
+   forma no mesmo sítio. Feito só em CSS: são cinco palavras empilhadas na mesma
+   célula da grelha, cada uma com o seu atraso, e nenhuma delas mexe no
+   tamanho do botão — a grelha fica com a largura da palavra mais comprida.
+
+   Quem pediu menos movimento vê a primeira e mais nada. */
+@keyframes word-cycle {
+  0%, 3% { opacity: 0; filter: blur(5px); transform: translateY(0.2em); }
+  7%, 17% { opacity: 1; filter: blur(0); transform: none; }
+  21%, 100% { opacity: 0; filter: blur(5px); transform: translateY(-0.2em); }
+}
+
+@utility word-cycle {
+  display: grid;
+  grid-template-areas: "palavra";
+  align-items: center;
+  justify-items: start;
+
+  & > * {
+    grid-area: palavra;
+    animation: word-cycle calc(var(--word-count, 5) * 2.8s) ease-in-out infinite both;
+    animation-delay: calc(var(--word-index, 0) * 2.8s);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-cycle > * { animation: none; opacity: 0; }
+  .word-cycle > *:first-child { opacity: 1; }
+}
+
 /* ── Entradas e profundidade ────────────────────────────────────────────────
    Movimento ligado ao scroll, feito pelo browser: sem javascript, sem ouvir o
    scroll, sem trabalho na linha principal. Onde a animação ligada ao scroll
    não existe, o conteúdo aparece desenhado — a decoração falta, o conteúdo
-   não. E quem pediu menos movimento nunca vê nada disto. */
-@keyframes rise-in {
-  from { opacity: 0; transform: translate3d(0, 34px, 0); }
-  to { opacity: 1; transform: none; }
-}
+   não. E quem pediu menos movimento nunca vê nada disto.
 
-@keyframes drift-up {
-  from { transform: translate3d(0, 5%, 0); }
-  to { transform: translate3d(0, -5%, 0); }
+   Só opacidade. Uma versão anterior subia o texto ao entrar, e com blocos de
+   letra grande o browser tinha de o voltar a desenhar em cada linha de scroll:
+   o scroll ficava aos saltos. Acender é igualmente vistoso e não custa nada —
+   a opacidade não obriga a redesenhar o texto. */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes drift-down {
@@ -432,24 +464,13 @@
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Sobe e acende à entrada. O escalonamento é a janela de cada elemento:
-       cada um começa um pouco mais tarde do que o de cima. */
-    .rise {
-      animation: rise-in linear both;
+    /* Acende à entrada. O escalonamento é a janela de cada elemento: cada um
+       acaba de acender um pouco mais tarde do que o de cima. */
+    .fade {
+      animation: fade-in linear both;
       animation-timeline: view();
-      animation-range: entry var(--rise-from, 4%) cover var(--rise-to, 26%);
+      animation-range: entry var(--fade-from, 4%) cover var(--fade-to, 26%);
     }
-
-    /* Profundidade: o que está atrás anda menos do que o que está à frente. */
-    .drift-up,
-    .drift-down {
-      animation-timeline: view();
-      animation-range: cover;
-      will-change: transform;
-    }
-
-    .drift-up { animation: drift-up linear both; }
-    .drift-down { animation: drift-down linear both; }
 
     /* O herói já está no ecrã quando a página abre, por isso a sua janela de
        entrada não tem para onde progredir: quem manda aqui é o scroll da
