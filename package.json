@@ -28,7 +28,8 @@
     "posts:check": "tsx scripts/check-lexical.mjs",
     "media:titles": "tsx scripts/media-titles.mjs",
     "slugs:en": "tsx scripts/slugs-en.mjs",
-    "copy:contacts": "tsx scripts/copy-fix-contacts.mjs"
+    "copy:contacts": "tsx scripts/copy-fix-contacts.mjs",
+    "video:prep": "node scripts/video-prep.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

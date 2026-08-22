@@ -480,6 +480,68 @@ export interface Service {
     | null;
   cases?: (number | Project)[] | null;
   accent?: ('lavender' | 'chartreuse' | 'coral') | null;
+  heroTitle?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  /**
+   * Endereço do MP4 no armazenamento. Sem áudio, curto, e leve: um fundo de 7 segundos deve ficar abaixo de 1 MB (npm run video:prep encolhe-o).
+   */
+  heroVideo?: string | null;
+  /**
+   * O que se vê antes de o vídeo começar, e o que fica para quem pediu menos movimento.
+   */
+  heroPoster?: (number | null) | Media;
+  /**
+   * Duas linhas: a afirmação, e a volta que ela dá.
+   */
+  statement?: {
+    first?: {
+      pt?: string | null;
+      en?: string | null;
+    };
+    second?: {
+      pt?: string | null;
+      en?: string | null;
+    };
+  };
+  areas?:
+    | {
+        title?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        body?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  essayTitle?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  essay?:
+    | {
+        body?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  essayImage?: (number | null) | Media;
+  closing?: {
+    question?: {
+      pt?: string | null;
+      en?: string | null;
+    };
+    answer?: {
+      pt?: string | null;
+      en?: string | null;
+    };
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -977,6 +1039,81 @@ export interface ServicesSelect<T extends boolean = true> {
       };
   cases?: T;
   accent?: T;
+  heroTitle?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  heroVideo?: T;
+  heroPoster?: T;
+  statement?:
+    | T
+    | {
+        first?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        second?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+      };
+  areas?:
+    | T
+    | {
+        title?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        body?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  essayTitle?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  essay?:
+    | T
+    | {
+        body?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  essayImage?: T;
+  closing?:
+    | T
+    | {
+        question?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        answer?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }

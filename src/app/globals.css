@@ -496,6 +496,12 @@
   }
 }
 
+/* Vídeo de fundo: quem pediu menos movimento fica com o primeiro fotograma,
+   que está desenhado por baixo. */
+@media (prefers-reduced-motion: reduce) {
+  .video-fundo { display: none; }
+}
+
 /* ── A folha a entrar ───────────────────────────────────────────────────────
    Ao abrir um artigo, a folha sobe até ao seu lugar. Sobe depressa, passa uns
    cinco pixels do sítio e assenta — é essa passagem curta que dá o peso; sem

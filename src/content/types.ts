@@ -38,6 +38,20 @@ export type Service = {
   phases?: Phase[];
   caseSlugs?: string[];
   accent?: "lavender" | "chartreuse" | "coral";
+  /**
+   * A página longa. Tudo opcional: sem isto a página é a curta, com o claim, o
+   * que inclui e as fases. Com isto ganha topo em vídeo, frase de impacto,
+   * áreas e texto — a forma que as páginas de serviço do site antigo tinham.
+   */
+  heroTitle?: Localized;
+  heroVideo?: string;
+  heroPoster?: { src: string; alt?: string; width?: number; height?: number };
+  statement?: { first: Localized; second: Localized };
+  areas?: { title: Localized; body: Localized }[];
+  essayTitle?: Localized;
+  essay?: Localized[];
+  essayImage?: { src: string; alt?: string; width?: number; height?: number };
+  closing?: { question: Localized; answer: Localized };
 };
 
 export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "consumo" | "retalho" | "industria" | "construcao" | "servicos" | "arte" | "eventos" | "lazer" | "tecnologia" };

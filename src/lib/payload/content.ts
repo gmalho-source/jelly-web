@@ -211,6 +211,29 @@ export function fetchServices(fallback: Service[]) {
         .map((item) => (typeof item === "object" && item ? text(item.slug) : ""))
         .filter(Boolean),
       accent: (raw.accent as Service["accent"]) ?? undefined,
+      // A página longa. Cada peça só entra se estiver escrita: uma frase de
+      // impacto meia-feita é pior do que nenhuma.
+      heroTitle: text((raw.heroTitle as Doc)?.pt) ? localized(raw.heroTitle) : undefined,
+      heroVideo: text(raw.heroVideo) || undefined,
+      heroPoster: image(raw.heroPoster as MediaDoc),
+      statement: text(((raw.statement ?? {}) as Doc).first ? ((raw.statement as Doc).first as Doc).pt : "")
+        ? {
+            first: localized((raw.statement as Doc).first),
+            second: localized((raw.statement as Doc).second),
+          }
+        : undefined,
+      areas: ((raw.areas ?? []) as Doc[])
+        .filter((row) => text((row.title as Doc)?.pt))
+        .map((row) => ({ title: localized(row.title), body: localized(row.body) })),
+      essayTitle: text((raw.essayTitle as Doc)?.pt) ? localized(raw.essayTitle) : undefined,
+      essay: ((raw.essay ?? []) as Doc[]).map((row) => localized(row.body)).filter((row) => row.pt),
+      essayImage: image(raw.essayImage as MediaDoc),
+      closing: text(((raw.closing ?? {}) as Doc).question ? ((raw.closing as Doc).question as Doc).pt : "")
+        ? {
+            question: localized((raw.closing as Doc).question),
+            answer: localized((raw.closing as Doc).answer),
+          }
+        : undefined,
     }));
   }, fallback);
 }

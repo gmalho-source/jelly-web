@@ -130,6 +130,53 @@ export const Services: CollectionConfig = {
     { name: "phases", label: "Fases", type: "array", fields: [locale("name", "Nome"), locale("body", "Descrição", { long: true })] },
     { name: "cases", label: "Casos", type: "relationship", relationTo: "projects", hasMany: true },
     { name: "accent", label: "Cor de acento", type: "select", options: ["lavender", "chartreuse", "coral"] },
+
+    /**
+     * Daqui para baixo é a página longa, e é tudo opcional: um serviço sem nada
+     * disto fica com a página curta que já tinha. Foi feito para receber o
+     * conteúdo das páginas do site antigo, que têm vídeo no topo, uma frase de
+     * impacto, as áreas onde a casa ajuda, e um texto de fecho.
+     */
+    {
+      type: "collapsible",
+      label: "Página longa",
+      admin: { initCollapsed: true, description: "Vídeo de topo, frase de impacto, áreas e texto. Tudo opcional." },
+      fields: [
+        locale("heroTitle", "Título de topo", { long: true }),
+        {
+          name: "heroVideo",
+          label: "Vídeo de topo",
+          type: "text",
+          admin: {
+            description:
+              "Endereço do MP4 no armazenamento. Sem áudio, curto, e leve: um fundo de 7 segundos deve ficar abaixo de 1 MB (npm run video:prep encolhe-o).",
+          },
+        },
+        { name: "heroPoster", label: "Primeiro fotograma", type: "upload", relationTo: "media", admin: { description: "O que se vê antes de o vídeo começar, e o que fica para quem pediu menos movimento." } },
+        {
+          name: "statement",
+          label: "Frase de impacto",
+          type: "group",
+          admin: { description: "Duas linhas: a afirmação, e a volta que ela dá." },
+          fields: [locale("first", "Primeira linha", { long: true }), locale("second", "Segunda linha", { long: true })],
+        },
+        {
+          name: "areas",
+          label: "Onde podemos ajudar",
+          type: "array",
+          fields: [locale("title", "Título"), locale("body", "Descrição", { long: true })],
+        },
+        locale("essayTitle", "Título do texto"),
+        { name: "essay", label: "Texto", type: "array", fields: [locale("body", "Parágrafo", { long: true })] },
+        { name: "essayImage", label: "Imagem do texto", type: "upload", relationTo: "media" },
+        {
+          name: "closing",
+          label: "Fecho",
+          type: "group",
+          fields: [locale("question", "Pergunta", { long: true }), locale("answer", "Resposta")],
+        },
+      ],
+    },
   ],
 };
 
