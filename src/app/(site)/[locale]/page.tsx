@@ -273,20 +273,32 @@ export default async function HomePage({
 
         <div className="mx-auto max-w-[1600px] px-5 py-20 sm:px-8">
           <p className="eyebrow text-fg-soft">{t("clientsWall")}</p>
-          <div className="mt-8 grid grid-cols-3 gap-x-8 gap-y-10 sm:grid-cols-5 lg:grid-cols-8">
-            {logos.map((logo) => (
-              <span key={logo.src} className="grid place-items-center">
+          {/* Uma marca precisa de campo à volta para se ler: cada logo tem a
+              sua célula, separada por um fio, e ocupa-a. A parede inteira vive
+              na página de clientes — aqui mostram-se as primeiras. */}
+          <div className="mt-8 grid grid-cols-2 gap-px bg-line sm:grid-cols-4 lg:grid-cols-6">
+            {logos.slice(0, 24).map((logo) => (
+              <span key={logo.src} className="grid aspect-[5/2] place-items-center bg-paper px-4">
                 <Image
                   src={logo.src}
                   alt={logo.name}
-                  width={200}
-                  height={80}
-                  sizes="140px"
-                  className="max-h-[34px] w-auto max-w-full object-contain opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
+                  width={260}
+                  height={104}
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 24vw, 15vw"
+                  className="max-h-[56px] w-auto max-w-full object-contain opacity-85 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0"
                 />
               </span>
             ))}
           </div>
+          {logos.length > 24 ? (
+            <Link
+              href="/clientes"
+              className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft transition-colors hover:text-fg"
+            >
+              {t("clientsAll", { total: logos.length })}
+              <span aria-hidden="true">→</span>
+            </Link>
+          ) : null}
         </div>
       </section>
 

@@ -56,7 +56,8 @@
     "notesTitle": "Escrevemos o que aprendemos.",
     "notesAll": "artigos",
     "nextTitle": "E se…?",
-    "clientsWall": "Confiaram-nos a marca"
+    "clientsWall": "Confiaram-nos a marca",
+    "clientsAll": "Ver as {total} marcas"
   },
   "work": {
     "title": "Índice de trabalho",

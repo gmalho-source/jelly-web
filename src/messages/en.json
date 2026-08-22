@@ -56,7 +56,8 @@
     "notesTitle": "We write what we learn.",
     "notesAll": "articles",
     "nextTitle": "What if…?",
-    "clientsWall": "Trusted us with their brand"
+    "clientsWall": "Trusted us with their brand",
+    "clientsAll": "See all {total} brands"
   },
   "work": {
     "title": "Work index",

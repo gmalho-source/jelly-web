@@ -37,16 +37,16 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
       {/* Parede de logos: os 38 logos reais da galeria do site atual. */}
       {logos.length ? (
         <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
-          <ul className="grid grid-cols-2 gap-px bg-paper-3 sm:grid-cols-4 lg:grid-cols-6">
+          <ul className="grid grid-cols-2 gap-px bg-paper-3 sm:grid-cols-3 lg:grid-cols-5">
             {logos.map((logo) => (
-              <li key={logo.src} className="flex aspect-[3/2] items-center justify-center bg-white p-5">
+              <li key={logo.src} className="flex aspect-[5/3] items-center justify-center bg-white px-6">
                 <Image
                   src={logo.src}
                   alt={logo.name || ""}
-                  width={200}
-                  height={120}
-                  sizes="180px"
-                  className="max-h-[52px] w-auto object-contain opacity-70 transition-opacity duration-200 hover:opacity-100"
+                  width={320}
+                  height={192}
+                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
+                  className="max-h-[76px] w-auto max-w-full object-contain opacity-85 transition-opacity duration-200 hover:opacity-100"
                 />
               </li>
             ))}

@@ -21,7 +21,8 @@
     "media:optimize": "tsx scripts/optimize-media.mjs",
     "translate": "tsx scripts/translate.mjs",
     "posts:images": "tsx scripts/repair-post-images.mjs",
-    "redirects:check": "node scripts/check-redirects.mjs"
+    "redirects:check": "node scripts/check-redirects.mjs",
+    "logos:trim": "tsx scripts/trim-logos.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
