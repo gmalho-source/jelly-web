@@ -25,7 +25,8 @@
     "logos:trim": "tsx scripts/trim-logos.mjs",
     "posts:audit": "tsx scripts/audit-post-images.mjs",
     "posts:lexical": "tsx scripts/fix-lexical.mjs",
-    "posts:check": "tsx scripts/check-lexical.mjs"
+    "posts:check": "tsx scripts/check-lexical.mjs",
+    "media:titles": "tsx scripts/media-titles.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

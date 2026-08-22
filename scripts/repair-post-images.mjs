@@ -24,6 +24,7 @@ import path from "node:path";
 import { parse } from "node-html-parser";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import { mimeFor } from "./media-files.mjs";
 import { uploadNode } from "./lexical-nodes.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
@@ -111,7 +112,7 @@ async function media(src, alt) {
   const created = await payload.create({
     collection: "media",
     data: { alt: alt || name.replace(/[-_]/g, " ").replace(/\.\w+$/, ""), legacyUrl: src },
-    file: { name, data, mimetype: `image/${path.extname(name).slice(1) || "jpeg"}`, size: data.byteLength },
+    file: { name, data, mimetype: mimeFor(name), size: data.byteLength },
   });
   return created.id;
 }

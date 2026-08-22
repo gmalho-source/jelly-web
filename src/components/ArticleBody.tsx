@@ -80,15 +80,23 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
           return (
             <figure key={index} className="my-10">
               {/* As medidas vêm da imagem: cortar uma infografia a 16:9 é
-                  perder metade do que ela diz. */}
-              <Image
-                src={block.src}
-                alt={block.alt ?? ""}
-                width={block.width ?? 1200}
-                height={block.height ?? 675}
-                className="h-auto w-full rounded-[20px]"
-                sizes="(max-width: 900px) 100vw, 720px"
-              />
+                  perder metade do que ela diz. Quando não as sabemos — um SVG,
+                  um ficheiro que o CMS não mediu — vale mais deixar o browser
+                  descobri-las do que inventar uma proporção e esticar a
+                  imagem. */}
+              {block.width && block.height ? (
+                <Image
+                  src={block.src}
+                  alt={block.alt ?? ""}
+                  width={block.width}
+                  height={block.height}
+                  className="h-auto w-full rounded-[20px]"
+                  sizes="(max-width: 900px) 100vw, 720px"
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={block.src} alt={block.alt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px]" />
+              )}
               {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
             </figure>
           );

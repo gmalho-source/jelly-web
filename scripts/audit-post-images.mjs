@@ -19,6 +19,7 @@ import path from "node:path";
 import { parse } from "node-html-parser";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
+import { mimeFor } from "./media-files.mjs";
 import { uploadNode } from "./lexical-nodes.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
@@ -129,7 +130,7 @@ async function media(src, alt, titulo) {
   const criado = await payload.create({
     collection: "media",
     data: { alt: alt || titulo, legacyUrl: src },
-    file: { name: nome, data, mimetype: `image/${path.extname(nome).slice(1) || "jpeg"}`, size: data.byteLength },
+    file: { name: nome, data, mimetype: mimeFor(nome), size: data.byteLength },
   });
   return criado.id;
 }

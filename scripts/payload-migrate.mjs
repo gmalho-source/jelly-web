@@ -30,6 +30,7 @@ import {
   textNode,
   uploadNode,
 } from "./lexical-nodes.mjs";
+import { mimeFor } from "./media-files.mjs";
 import { purgeSite } from "./purge-site.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -128,7 +129,7 @@ async function upload(payload, url, alt) {
   const created = await payload.create({
     collection: "media",
     data: { alt: alt || name.replace(/[-_]/g, " ").replace(/\.\w+$/, ""), legacyUrl: url },
-    file: { name, data: buffer, mimetype: `image/${path.extname(name).slice(1) || "jpeg"}`, size: buffer.byteLength },
+    file: { name, data: buffer, mimetype: mimeFor(name), size: buffer.byteLength },
   });
   cache[url] = created.id;
   // O índice guarda o nome do ficheiro tal como ficou em media/ na primeira
