@@ -149,6 +149,28 @@ recodifica-os (aceita `--dry-run`, `--min-kb=`, `--limit=`, `--quality=` e
 `--max-side=`). Não é o visitante que ganha — ele já recebia a versão
 otimizada — é o armazenamento e o tempo do primeiro recorte de cada imagem.
 
+## O mapa de componentes gera-se com o ambiente de produção
+
+O painel manteve-se **em branco** durante horas por causa disto, e a lição vale
+a pena escrever: o `payload generate:importmap` só recolhe os componentes dos
+plugins que estão **ligados no momento em que corre**. O plugin do Blob liga-se
+quando existe `BLOB_READ_WRITE_TOKEN`; sem ele, o mapa saía sem o
+`VercelBlobClientUploadHandler` que o `clientUploads: true` precisa. Em produção,
+onde o token existe, o painel pedia um componente que o mapa não tinha e
+renderizava **nada** — sem erro na consola, sem pedido falhado, com o servidor a
+mandar o conteúdo todo no fluxo. Nada aponta para a causa.
+
+Portanto: gerar sempre o mapa com as variáveis de produção no ambiente.
+
+```bash
+BLOB_READ_WRITE_TOKEN=… DATABASE_URL=… PAYLOAD_SECRET=… npm run payload:importmap
+```
+
+E ao diagnosticar um painel vazio, o sinal a procurar é este: o HTML do servidor
+traz o conteúdo no fluxo (procura `template-minimal` no fonte da página) mas o
+`<body>` fica com uma dúzia de elementos. Isso é o painel a não conseguir
+resolver um componente, não um erro de javascript.
+
 ## Mudar a estrutura
 
 O Payload acerta as tabelas sozinho quando corre fora de produção — é o que faz
