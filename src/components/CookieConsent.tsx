@@ -67,7 +67,19 @@ export function CookieConsent({ locale }: { locale: Locale }) {
     <>
       <script
         dangerouslySetInnerHTML={{
-          __html: `var _iub = _iub || [];_iub.csConfiguration = ${JSON.stringify(config)};_iub.csLangConfiguration = ${JSON.stringify(porLingua)};`,
+          __html: [
+            "var _iub = _iub || [];",
+            `_iub.csConfiguration = ${JSON.stringify(config)};`,
+            `_iub.csLangConfiguration = ${JSON.stringify(porLingua)};`,
+            // O consentimento não ficava guardado nos endereços .vercel.app e o
+            // banner voltava a aparecer a cada visita. A razão: a Iubenda tira
+            // o domínio do cookie das duas últimas etiquetas do host, o que dá
+            // `.vercel.app` — e vercel.app está na lista de sufixos públicos,
+            // por isso o browser recusa o cookie. Nesses endereços diz-se-lhe
+            // o host inteiro. Em jelly.pt o cálculo dela está certo e isto não
+            // faz nada.
+            'if (/\.vercel\.app$/.test(location.hostname)) { _iub.csConfiguration.localConsentDomain = location.hostname; }',
+          ].join(""),
         }}
       />
       {/* Estes dois são bloqueantes de propósito, e o aviso do eslint fica
