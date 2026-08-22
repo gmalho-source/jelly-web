@@ -418,10 +418,12 @@
    tamanho do botão — a grelha fica com a largura da palavra mais comprida.
 
    Quem pediu menos movimento vê a primeira e mais nada. */
+/* As passagens sobrepõem-se de propósito: uma desfaz-se enquanto a seguinte se
+   forma, e o botão nunca fica vazio. */
 @keyframes word-cycle {
-  0%, 3% { opacity: 0; filter: blur(5px); transform: translateY(0.2em); }
-  7%, 17% { opacity: 1; filter: blur(0); transform: none; }
-  21%, 100% { opacity: 0; filter: blur(5px); transform: translateY(-0.2em); }
+  0% { opacity: 0; filter: blur(5px); transform: translateY(0.2em); }
+  4%, 18% { opacity: 1; filter: blur(0); transform: none; }
+  22%, 100% { opacity: 0; filter: blur(5px); transform: translateY(-0.2em); }
 }
 
 @utility word-cycle {
