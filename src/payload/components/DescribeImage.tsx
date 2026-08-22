@@ -15,6 +15,7 @@ import { useState } from "react";
  */
 export function DescribeImage() {
   const { id } = useDocumentInfo();
+  const title = useField<string>({ path: "title" });
   const alt = useField<string>({ path: "alt" });
   const caption = useField<string>({ path: "caption" });
   const [busy, setBusy] = useState(false);
@@ -31,15 +32,16 @@ export function DescribeImage() {
     setBusy(true);
     try {
       const response = await fetch(`/api/media/${id}/descrever`, { method: "POST", credentials: "include" });
-      const body = (await response.json()) as { alt?: string; caption?: string; error?: string };
+      const body = (await response.json()) as { title?: string; alt?: string; caption?: string; error?: string };
       if (!response.ok) throw new Error(body?.error ?? `erro ${response.status}`);
 
+      if (body.title) title.setValue(body.title);
       if (body.alt) alt.setValue(body.alt);
       if (body.caption) caption.setValue(body.caption);
       toast.success(
         body.caption
-          ? "Texto alternativo e legenda escritos. Confirma antes de gravar."
-          : "Texto alternativo escrito. Confirma antes de gravar.",
+          ? "Título, texto alternativo e legenda escritos. Confirma antes de gravar."
+          : "Título e texto alternativo escritos. Confirma antes de gravar.",
       );
     } catch (error) {
       toast.error(`Não deu: ${error instanceof Error ? error.message : "erro desconhecido"}`);

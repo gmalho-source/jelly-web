@@ -5,6 +5,9 @@ import { describeImage } from "../endpoints/describe-image";
 export const Media: CollectionConfig = {
   slug: "media",
   labels: { singular: "Imagem", plural: "Imagens" },
+  // Sem isto o painel mostra o nome do ficheiro, e um nome vindo do WordPress
+  // (256513_441780705844923_o-150x150.webp) não diz nada a ninguém.
+  admin: { useAsTitle: "title", defaultColumns: ["title", "alt", "filename"] },
   access: { read: () => true },
   upload: {
     mimeTypes: ["image/*"],
@@ -23,6 +26,12 @@ export const Media: CollectionConfig = {
   // quem tem sessão no painel.
   endpoints: [{ path: "/:id/descrever", method: "post", handler: describeImage }],
   fields: [
+    {
+      name: "title",
+      label: "Título",
+      type: "text",
+      admin: { description: "Como esta imagem se chama no painel. Não vai para o site." },
+    },
     {
       name: "alt",
       label: "Texto alternativo",

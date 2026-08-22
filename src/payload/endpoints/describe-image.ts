@@ -15,12 +15,17 @@ Regras do texto alternativo:
 - Se houver texto legível na imagem, transcreve-o entre aspas — é muitas vezes a informação que importa.
 - Se a imagem for um gráfico ou infografia, diz o que ela mostra, não a sua aparência.
 
+Regras do título:
+- Como a imagem se chama para quem a procura no painel: três a seis palavras.
+- Nomeia o que ela é, não o que se vê nela ("Equipa Jelly no escritório", "Gráfico do tráfego pago por canal").
+- Sem ponto final.
+
 Regras da legenda:
 - Serve o leitor que vê a imagem: acrescenta o que a imagem não diz sozinha.
 - Uma frase curta, em português europeu, sem ponto final.
 - Se não houver nada de útil a acrescentar, devolve uma legenda vazia.
 
-Respondes só com JSON: {"alt": "…", "caption": "…"}`;
+Respondes só com JSON: {"title": "…", "alt": "…", "caption": "…"}`;
 
 /**
  * Descreve uma imagem do CMS com o Claude: devolve texto alternativo e legenda
@@ -88,8 +93,9 @@ export const describeImage: PayloadHandler = async (req) => {
       .trim()
       .replace(/^```(?:json)?\s*|\s*```$/g, "");
 
-    const parsed = JSON.parse(text) as { alt?: string; caption?: string };
+    const parsed = JSON.parse(text) as { title?: string; alt?: string; caption?: string };
     return Response.json({
+      title: (parsed.title ?? "").trim(),
       alt: (parsed.alt ?? "").trim(),
       caption: (parsed.caption ?? "").trim(),
       model: response.model,
