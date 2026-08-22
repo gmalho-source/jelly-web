@@ -34,11 +34,23 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             email: t("email"),
             message: t("message"),
             messageHint: t("messageHint"),
+            start: t("start"),
+            startHint: t("startHint"),
+            // As opções vêm da mesma árvore de textos: uma lista de janelas
+            // temporais, não uma promessa de prazo.
+            startOptions: (["um-mes", "dois-tres", "mais-tarde", "nao-sei"] as const).map((valor) => ({
+              value: valor,
+              label: t(`startOptions.${valor}`),
+            })),
+            brief: t("brief"),
+            briefHint: t("briefHint"),
             submit: t("submit"),
             sending: t("sending"),
             sent: t("sent"),
+            sentBody: t("sentBody"),
             error: t("error"),
             invalid: t("invalid"),
+            tooBig: t("tooBig"),
           }}
         />
 

@@ -34,6 +34,24 @@ export const Messages: CollectionConfig = {
       type: "row",
       fields: [
         {
+          name: "start",
+          label: "Quando quer arrancar",
+          type: "select",
+          admin: { readOnly: true },
+          options: [
+            { label: "Dentro de um mês", value: "um-mes" },
+            { label: "Dentro de dois a três meses", value: "dois-tres" },
+            { label: "Mais para a frente", value: "mais-tarde" },
+            { label: "Ainda não sabe", value: "nao-sei" },
+          ],
+        },
+        { name: "brief", label: "Briefing", type: "upload", relationTo: "attachments", admin: { readOnly: true } },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        {
           name: "status",
           label: "Estado",
           type: "select",

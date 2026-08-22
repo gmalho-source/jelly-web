@@ -189,22 +189,34 @@
   "contact": {
     "eyebrow": "Contact",
     "title": "Tell us what needs to change.",
-    "lead": "Four fields: where the problem is and what you have already tried.",
+    "lead": "Tell us where the problem is and what you have already tried.",
     "name": "Name",
-    "company": "Company",
+    "company": "Company or brand",
     "email": "Email",
     "message": "What you need",
     "messageHint": "In two lines: where the problem is and what you have already tried.",
     "submit": "Send briefing",
     "sending": "Sending…",
-    "sent": "Got it. We reply within one business day.",
+    "sent": "The change is about to start, {nome}!",
     "error": "We could not send it. Try again or write to hello@jelly.pt.",
     "invalid": "Fill in your name, a valid email and what you need.",
     "office": "Office",
     "careers": "Working at Jelly",
     "providers": "Providers",
     "providersBody": "Already working with Jelly? Invoice submission lives at",
-    "reply": "Reply within one business day"
+    "reply": "We reply as soon as we can",
+    "start": "When you want to start",
+    "startHint": "Pick a window",
+    "brief": "Briefing (optional)",
+    "briefHint": "PDF, Word, PowerPoint or image, up to 4 MB.",
+    "sentBody": "Someone from our team will get in touch shortly to answer your challenge.",
+    "tooBig": "That file is too large. Up to 4 MB, please.",
+    "startOptions": {
+      "um-mes": "Within a month",
+      "dois-tres": "In two to three months",
+      "mais-tarde": "Further out",
+      "nao-sei": "Not sure yet"
+    }
   },
   "legal": {
     "updated": "Last revised",

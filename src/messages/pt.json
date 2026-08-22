@@ -134,7 +134,7 @@
     "phases": "Como trabalhamos",
     "cases": "Casos com este serviço",
     "cta": "Falar connosco",
-    "ctaLead": "Diga-nos onde quer chegar. Respondemos em 24 horas úteis.",
+    "ctaLead": "Diga-nos onde quer chegar. Respondemos o mais breve possível.",
     "others": "Outras disciplinas",
     "areas": "Onde podemos ajudar"
   },
@@ -189,22 +189,34 @@
   "contact": {
     "eyebrow": "Contactos",
     "title": "Diga-nos o que precisa de mudar.",
-    "lead": "Quatro campos: onde está o problema e o que já tentou.",
+    "lead": "Diga-nos onde está o problema e o que já tentou.",
     "name": "Nome",
-    "company": "Empresa",
+    "company": "Empresa ou marca",
     "email": "Email",
     "message": "O que precisa",
     "messageHint": "Em duas linhas: onde está o problema e o que já tentou.",
     "submit": "Enviar briefing",
     "sending": "A enviar…",
-    "sent": "Recebido. Respondemos em 24 horas úteis.",
+    "sent": "A mudança está prestes a começar, {nome}!",
     "error": "Não foi possível enviar. Tente outra vez ou escreva para hello@jelly.pt.",
     "invalid": "Preencha o nome, um email válido e o que precisa.",
     "office": "Escritório",
     "careers": "Trabalhar na Jelly",
     "providers": "Prestadores",
     "providersBody": "Já trabalha com a Jelly? A submissão de faturas está em",
-    "reply": "Resposta em 24 horas úteis"
+    "reply": "Resposta o mais breve possível",
+    "start": "Quando quer arrancar",
+    "startHint": "Escolha uma altura",
+    "brief": "Briefing (opcional)",
+    "briefHint": "PDF, Word, PowerPoint ou imagem, até 4 MB.",
+    "sentBody": "Um elemento da nossa equipa entrará brevemente em contacto para responder ao seu desafio.",
+    "tooBig": "O ficheiro é grande demais. Até 4 MB, por favor.",
+    "startOptions": {
+      "um-mes": "Dentro de um mês",
+      "dois-tres": "Dentro de dois a três meses",
+      "mais-tarde": "Mais para a frente",
+      "nao-sei": "Ainda não sei"
+    }
   },
   "legal": {
     "updated": "Última revisão",

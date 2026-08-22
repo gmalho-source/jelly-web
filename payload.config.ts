@@ -12,6 +12,7 @@ import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
 import { Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
 import { Documents } from "./src/payload/collections/documents";
+import { Attachments } from "./src/payload/collections/attachments";
 import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
@@ -47,6 +48,7 @@ export default buildConfig({
     TeamMembers,
     Milestones,
     Messages,
+    Attachments,
     Departments,
     JobFunctions,
     Jobs,
@@ -77,7 +79,7 @@ export default buildConfig({
           // a cada pedido. São capas de projetos, públicas de qualquer maneira.
           // As imagens são públicas; os documentos não. Sem esta distinção, um
           // CV ficava com endereço no CDN, sem sessão pelo meio.
-          collections: { media: { disablePayloadAccessControl: true }, documents: {} },
+          collections: { media: { disablePayloadAccessControl: true }, documents: {}, attachments: {} },
           token: blobToken,
         }),
       ]

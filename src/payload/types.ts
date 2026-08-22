@@ -78,6 +78,7 @@ export interface Config {
     team: Team;
     milestones: Milestone;
     messages: Message;
+    attachments: Attachment;
     departments: Department;
     'job-functions': JobFunction;
     jobs: Job;
@@ -103,6 +104,7 @@ export interface Config {
     team: TeamSelect<false> | TeamSelect<true>;
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
+    attachments: AttachmentsSelect<false> | AttachmentsSelect<true>;
     departments: DepartmentsSelect<false> | DepartmentsSelect<true>;
     'job-functions': JobFunctionsSelect<false> | JobFunctionsSelect<true>;
     jobs: JobsSelect<false> | JobsSelect<true>;
@@ -680,6 +682,8 @@ export interface Message {
   company?: string | null;
   email: string;
   message?: string | null;
+  start?: ('um-mes' | 'dois-tres' | 'mais-tarde' | 'nao-sei') | null;
+  brief?: (number | null) | Attachment;
   status?: ('nova' | 'respondida' | 'arquivada') | null;
   locale?: string | null;
   /**
@@ -688,6 +692,25 @@ export interface Message {
   notes?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attachments".
+ */
+export interface Attachment {
+  id: number;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
@@ -948,7 +971,7 @@ export interface Application {
   consentAt?: string | null;
   source?: string | null;
   /**
-   * Doze meses para as espontâneas, seis meses depois de a vaga fechar. Um trabalho diário apaga o que passou desta data.
+   * Doze meses a contar da candidatura, e um trabalho diário apaga o que passou desta data. Editável de propósito: se houver razão para guardar mais tempo, quem decide é uma pessoa — e a razão escreve-se na nota da decisão.
    */
   retentionUntil?: string | null;
   emails?:
@@ -1081,6 +1104,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'messages';
         value: number | Message;
+      } | null)
+    | ({
+        relationTo: 'attachments';
+        value: number | Attachment;
       } | null)
     | ({
         relationTo: 'departments';
@@ -1568,11 +1595,31 @@ export interface MessagesSelect<T extends boolean = true> {
   company?: T;
   email?: T;
   message?: T;
+  start?: T;
+  brief?: T;
   status?: T;
   locale?: T;
   notes?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attachments_select".
+ */
+export interface AttachmentsSelect<T extends boolean = true> {
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
