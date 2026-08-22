@@ -216,6 +216,7 @@ export function fetchServices(fallback: Service[]) {
       heroTitle: text((raw.heroTitle as Doc)?.pt) ? localized(raw.heroTitle) : undefined,
       heroVideo: text(raw.heroVideo) || undefined,
       heroPoster: image(raw.heroPoster as MediaDoc),
+      heroHeight: (raw.heroHeight as Service["heroHeight"]) ?? undefined,
       statement: text(((raw.statement ?? {}) as Doc).first ? ((raw.statement as Doc).first as Doc).pt : "")
         ? {
             first: localized((raw.statement as Doc).first),

@@ -61,9 +61,9 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       languageHref={getPathname({ href: "/", locale: other })}
       copy={{
         index: pt ? "Índice" : "Index",
-        placeholder: pt ? "escreve para encontrar — cliente, serviço, artigo" : "type to find — client, service, article",
+        placeholder: pt ? "escreva para encontrar — cliente, serviço, artigo" : "type to find — client, service, article",
         filterLabel: pt ? "Filtrar o índice" : "Filter the index",
-        empty: pt ? "Nada com esse nome. Apaga uma letra." : "Nothing by that name. Delete a letter.",
+        empty: pt ? "Nada com esse nome. Apague uma letra." : "Nothing by that name. Delete a letter.",
         of: pt ? "de" : "of",
         close: pt ? "Fechar o índice" : "Close the index",
         // A mesma nas duas línguas: é assinatura de marca, não copy corrente.

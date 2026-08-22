@@ -49,7 +49,14 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   const accent = service.accent === "lavender";
 
   const chamada = (
-    <Link href="/contactos" className="btn btn-hero">
+    <Link href="/contactos" className="btn-pill">
+      {t("cta")} <span aria-hidden="true">→</span>
+    </Link>
+  );
+
+  // Em papel a pílula é escura; sobre o vídeo e sobre ink é clara.
+  const chamadaClara = (
+    <Link href="/contactos" className="btn-pill btn-pill-ink">
       {t("cta")} <span aria-hidden="true">→</span>
     </Link>
   );
@@ -65,6 +72,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           claim={service.claim[locale]}
           video={service.heroVideo}
           poster={service.heroPoster}
+          height={service.heroHeight}
           cta={chamada}
         />
       ) : (
@@ -76,7 +84,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             </div>
             <div>
               <p className="subtitle">{service.claim[locale]}</p>
-              <div className="mt-6">{chamada}</div>
+              <div className="mt-6">{chamadaClara}</div>
             </div>
           </div>
         </section>
@@ -85,11 +93,14 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       {/* A frase que dá a volta: primeira linha afirma, segunda vira. */}
       {service.statement ? (
         <section className="surface-red py-16 lg:py-24">
-          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+          {/* Entra por partes: a afirmação, o fio a atravessar, e só depois a
+              volta. Se as duas linhas aparecerem juntas, a volta perde-se. */}
+          <div className="statement-in mx-auto max-w-[1200px] px-5 sm:px-8">
             <p className="max-w-[26ch] font-display text-[clamp(30px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">
               {service.statement.first[locale]}
             </p>
-            <p className="mt-6 max-w-[34ch] font-display text-[clamp(20px,2.6vw,34px)] leading-[1.14] text-fg-soft">
+            <span aria-hidden="true" className="mt-8 block h-px w-full max-w-[420px] bg-ink/30" />
+            <p className="mt-8 max-w-[34ch] font-display text-[clamp(20px,2.6vw,34px)] leading-[1.14] text-fg-soft">
               {service.statement.second[locale]}
             </p>
           </div>

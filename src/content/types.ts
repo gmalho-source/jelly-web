@@ -46,6 +46,7 @@ export type Service = {
   heroTitle?: Localized;
   heroVideo?: string;
   heroPoster?: { src: string; alt?: string; width?: number; height?: number };
+  heroHeight?: "curto" | "medio" | "alto";
   statement?: { first: Localized; second: Localized };
   areas?: { title: Localized; body: Localized }[];
   essayTitle?: Localized;

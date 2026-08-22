@@ -493,6 +493,10 @@ export interface Service {
    */
   heroPoster?: (number | null) | Media;
   /**
+   * Quanto do ecrã ocupa a faixa de topo. Médio é o que se usa; alto é quase o ecrã todo.
+   */
+  heroHeight?: ('curto' | 'medio' | 'alto') | null;
+  /**
    * Duas linhas: a afirmação, e a volta que ela dá.
    */
   statement?: {
@@ -1047,6 +1051,7 @@ export interface ServicesSelect<T extends boolean = true> {
       };
   heroVideo?: T;
   heroPoster?: T;
+  heroHeight?: T;
   statement?:
     | T
     | {

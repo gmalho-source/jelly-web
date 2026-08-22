@@ -30,7 +30,7 @@ export const posts: Post[] = [
         en: "What changed was not creativity. It was the speed of the cycle between hypothesis, test and decision. A team that used to test four campaign variations a month now tests forty, with a statistical read within 48 hours.",
       },
       {
-        pt: "A conclusão prática para quem gere marketing: antes de comprar ferramentas, arruma os dados e define quem decide. A IA amplifica o processo que já existe — incluindo o que está mal.",
+        pt: "A conclusão prática para quem gere marketing: antes de comprar ferramentas, arrume os dados e defina quem decide. A IA amplifica o processo que já existe — incluindo o que está mal.",
         en: "The practical conclusion for anyone running marketing: before buying tools, tidy the data and decide who decides. AI amplifies the process you already have — including the broken parts.",
       },
     ],

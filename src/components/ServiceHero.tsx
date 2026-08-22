@@ -13,12 +13,24 @@ import Image from "next/image";
  * cliente, e isso trocava 400 KB por um topo que só aparece depois do
  * javascript. Não vale a troca.
  */
+/**
+ * Três alturas, escolhidas no painel. As classes são escritas por inteiro
+ * porque o Tailwind lê o código à procura delas: montada em pedaços, a classe
+ * não chegaria à folha de estilo.
+ */
+const ALTURAS = {
+  curto: "min-h-[clamp(260px,42svh,480px)]",
+  medio: "min-h-[clamp(340px,55svh,630px)]",
+  alto: "min-h-[clamp(480px,78svh,900px)]",
+} as const;
+
 export function ServiceHero({
   eyebrow,
   title,
   claim,
   video,
   poster,
+  height = "medio",
   cta,
 }: {
   eyebrow: string;
@@ -26,10 +38,13 @@ export function ServiceHero({
   claim: string;
   video?: string;
   poster?: { src: string; alt?: string };
+  height?: keyof typeof ALTURAS;
   cta: React.ReactNode;
 }) {
   return (
-    <header className="surface-cover relative isolate flex min-h-[clamp(480px,78svh,900px)] flex-col justify-end overflow-hidden bg-ink pb-14 pt-[104px]">
+    <header
+      className={`surface-cover relative isolate flex ${ALTURAS[height]} flex-col justify-end overflow-hidden bg-ink pb-14 pt-[104px]`}
+    >
       {poster?.src ? (
         <Image src={poster.src} alt="" fill priority sizes="100vw" className="-z-30 object-cover" />
       ) : null}

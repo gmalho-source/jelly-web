@@ -137,7 +137,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               ? "Deste projeto guardámos o trabalho, não a história. Queres saber o que fizemos aqui?"
               : "For this project we kept the work, not the story. Want to know what we did here?"}
           </p>
-          <Link href="/contactos" className="btn btn-hero">
+          <Link href="/contactos" className="btn-pill btn-pill-ink">
             {locale === "pt" ? "Falar connosco" : "Get in touch"} <span aria-hidden="true">→</span>
           </Link>
         </div>

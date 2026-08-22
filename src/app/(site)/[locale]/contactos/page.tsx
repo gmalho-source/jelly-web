@@ -55,7 +55,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           </div>
           <div className="border-t border-line pt-6">
             <h2 className="eyebrow text-fg-soft">{t("careers")}</h2>
-            <p className="mt-2 text-md text-fg-soft">iwork@jelly.pt</p>
+            <p className="mt-2 text-md text-fg-soft">talent@jelly.pt</p>
           </div>
           <p className="text-sm text-fg-soft">{t("reply")}</p>
         </div>

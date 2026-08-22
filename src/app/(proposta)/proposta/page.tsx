@@ -87,9 +87,9 @@ export default async function Proposta() {
         contactHref="/contactos"
         copy={{
           index: "Índice",
-          placeholder: "escreve para encontrar — cliente, serviço, artigo",
+          placeholder: "escreva para encontrar — cliente, serviço, artigo",
           filterLabel: "Filtrar o índice",
-          empty: "Nada com esse nome. Apaga uma letra.",
+          empty: "Nada com esse nome. Apague uma letra.",
           of: "de",
           close: "Fechar o índice",
           contact: "Start The Change",

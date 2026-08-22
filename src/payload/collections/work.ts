@@ -154,6 +154,18 @@ export const Services: CollectionConfig = {
         },
         { name: "heroPoster", label: "Primeiro fotograma", type: "upload", relationTo: "media", admin: { description: "O que se vê antes de o vídeo começar, e o que fica para quem pediu menos movimento." } },
         {
+          name: "heroHeight",
+          label: "Altura do topo",
+          type: "select",
+          defaultValue: "medio",
+          options: [
+            { label: "Curto", value: "curto" },
+            { label: "Médio", value: "medio" },
+            { label: "Alto", value: "alto" },
+          ],
+          admin: { description: "Quanto do ecrã ocupa a faixa de topo. Médio é o que se usa; alto é quase o ecrã todo." },
+        },
+        {
           name: "statement",
           label: "Frase de impacto",
           type: "group",

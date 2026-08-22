@@ -287,6 +287,36 @@
 @utility btn-hero {
   box-shadow: var(--shadow-red);
 }
+/* Chamada à acção na linguagem da casa: pílula, versalete, espaçado — o mesmo
+   desenho da barra de topo e do gatilho do índice. O botão vermelho de cantos
+   redondos que estava aqui vinha do site antigo e não pertence a esta gramática.
+   Duas variantes porque a pílula é cheia e precisa de saber sobre que fundo
+   assenta: as superfícies dão o texto, não o fundo. */
+@utility btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 999px;
+  padding: 13px 22px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
+
+  &:hover {
+    background: var(--color-red);
+    color: #fff;
+  }
+}
+
+@utility btn-pill-ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
 @utility btn-ghost {
   background: transparent;
   /* Segue a superfície: um botão de contorno em ink sobre ink é invisível. */
@@ -500,6 +530,38 @@
    que está desenhado por baixo. */
 @media (prefers-reduced-motion: reduce) {
   .video-fundo { display: none; }
+}
+
+/* ── A frase de impacto a entrar ─────────────────────────────────────────────
+   A primeira linha acende; o fio vermelho atravessa por baixo dela; e só
+   depois chega a segunda linha, que é a que dá a volta ao sentido. A ordem é o
+   efeito: se as duas aparecerem juntas, a volta perde-se.
+
+   Opacidade nas linhas — são blocos de letra grande, e mexer-lhes na posição
+   obriga o browser a redesenhá-las a cada linha de scroll. O fio é a única
+   coisa que se move, e move-se em escala, que corre na placa gráfica. */
+@keyframes rule-sweep {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .statement-in > * {
+      animation: fade-in linear both;
+      animation-timeline: view();
+    }
+
+    /* Cada peça tem a sua janela: a afirmação, o fio, a volta. */
+    .statement-in > :nth-child(1) { animation-range: entry 6% cover 22%; }
+    .statement-in > :nth-child(2) {
+      animation: rule-sweep var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 14% cover 32%;
+      transform-origin: left center;
+    }
+    .statement-in > :nth-child(3) { animation-range: entry 24% cover 42%; }
+  }
 }
 
 /* ── A folha a entrar ───────────────────────────────────────────────────────

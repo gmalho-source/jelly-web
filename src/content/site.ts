@@ -58,7 +58,7 @@ export const services: Service[] = [
     slugEn: "artificial-intelligence",
     name: { pt: "Inteligência artificial", en: "Artificial intelligence" },
     claim: {
-      pt: "Da consultoria à implementação de agentes e automação que ficam a correr sozinhos na tua operação.",
+      pt: "Da consultoria à implementação de agentes e automação que ficam a correr sozinhos na sua operação.",
       en: "From consulting to shipping agents and automation that keep running inside your operation.",
     },
     link: { pt: "IA", en: "AI" },
@@ -76,7 +76,7 @@ export const services: Service[] = [
       { name: { pt: "Diagnóstico", en: "Diagnosis" }, body: { pt: "Duas semanas a mapear processos, dados e fricção. Sai uma lista ordenada por retorno.", en: "Two weeks mapping processes, data and friction. Out comes a list ranked by return." } },
       { name: { pt: "Piloto", en: "Pilot" }, body: { pt: "Um caso de uso em produção, com métrica definida à cabeça. Sem comité, sem PowerPoint.", en: "One use case in production, with the metric agreed up front. No committee, no slides." } },
       { name: { pt: "Escala", en: "Scale" }, body: { pt: "Agentes ligados ao CRM, ao catálogo e ao suporte, com custo por tarefa à vista.", en: "Agents connected to CRM, catalogue and support, with cost per task in plain sight." } },
-      { name: { pt: "Autonomia", en: "Autonomy" }, body: { pt: "Formação da tua equipa. O objetivo é deixarmos de ser necessários para operar.", en: "Training your team. The goal is for us to stop being needed to operate it." } },
+      { name: { pt: "Autonomia", en: "Autonomy" }, body: { pt: "Formação da sua equipa. O objetivo é deixarmos de ser necessários para operar.", en: "Training your team. The goal is for us to stop being needed to operate it." } },
     ],
     caseSlugs: ["informa-db", "vorwerk"],
     accent: "lavender",
