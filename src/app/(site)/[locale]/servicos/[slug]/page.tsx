@@ -105,7 +105,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               <Link
                 key={project.slug}
                 href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-                className="group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-line py-4 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
+                className="group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
               >
                 <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
                   {project.client}

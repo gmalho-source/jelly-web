@@ -375,3 +375,20 @@
   .hero-fade { animation: none; }
   .hero-fade:first-child { opacity: 1; }
 }
+
+/* ── Linhas de índice que acendem ───────────────────────────────────────────
+   No hover o fundo passa a claro, e com ele as variáveis da superfície: sem
+   isto o texto continuava a ser o da secção escura — branco sobre branco, que
+   é como estas linhas estavam. Quem usa teclado vê o mesmo no foco. */
+.row-flip {
+  transition: background-color 0.2s ease-out, padding 0.2s ease-out;
+}
+
+.row-flip:hover,
+.row-flip:focus-visible {
+  background: var(--color-paper);
+  --color-fg: var(--color-ink);
+  --color-fg-soft: color-mix(in oklab, var(--color-ink) 62%, transparent);
+  --color-line: color-mix(in oklab, var(--color-ink) 14%, transparent);
+  color: var(--color-fg);
+}

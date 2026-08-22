@@ -91,7 +91,7 @@ export default async function BlogIndexPage({
         <Link
           key={post.slug}
           href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
-          className="group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 transition-[padding,background] duration-200 ease-out hover:bg-white hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px]"
+          className="group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 row-flip hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px]"
         >
           {/* A miniatura é a mesma imagem do artigo: o índice deixa de ser uma
               lista de títulos e passa a mostrar do que fala cada texto. */}
