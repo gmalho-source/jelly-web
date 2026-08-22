@@ -1,5 +1,5 @@
 import type { PayloadHandler } from "payload";
-import { Resend } from "resend";
+import { enviaEmail } from "@/lib/email";
 
 type Candidatura = {
   id: number | string;
@@ -137,25 +137,13 @@ export const sendCandidateEmail: PayloadHandler = async (req) => {
 
   if (!subject || !body) return Response.json({ error: "Falta o assunto ou o texto." }, { status: 400 });
 
-  const chave = process.env.RESEND_API_KEY?.trim();
   const de = process.env.TALENT_FROM_EMAIL?.trim() || "Jelly · Talento <hello@jelly.pt>";
   const responderPara = process.env.TALENT_TO_EMAIL?.trim() || "talent@jelly.pt";
 
-  if (chave) {
-    const { error } = await new Resend(chave).emails.send({
-      from: de,
-      to: doc.email,
-      replyTo: responderPara,
-      subject,
-      text: body,
-    });
-    if (error) {
-      req.payload.logger.error(`email ao candidato ${doc.id}: ${error.message}`);
-      return Response.json({ error: error.message }, { status: 502 });
-    }
-  } else {
-    // Sem chave — em desenvolvimento — escreve-se no log em vez de falhar.
-    req.payload.logger.info(`[talento] para ${doc.email}: ${subject}\n${body}`);
+  const enviadoAgora = await enviaEmail({ from: de, to: doc.email, replyTo: responderPara, subject, text: body });
+  if (!enviadoAgora.ok && enviadoAgora.via !== "log") {
+    req.payload.logger.error(`email ao candidato ${doc.id}: ${enviadoAgora.erro}`);
+    return Response.json({ error: enviadoAgora.erro }, { status: 502 });
   }
 
   const registo = {
@@ -173,5 +161,5 @@ export const sendCandidateEmail: PayloadHandler = async (req) => {
     data: { emails: [...((doc.emails ?? []) as Record<string, unknown>[]), registo] },
   });
 
-  return Response.json({ ok: true, enviadoPara: doc.email, simulado: !chave });
+  return Response.json({ ok: true, enviadoPara: doc.email, simulado: enviadoAgora.via === "log" });
 };

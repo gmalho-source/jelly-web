@@ -1,6 +1,6 @@
-import { Resend } from "resend";
 import { MAGIC_LINK_TTL_SECONDS } from "./auth";
-import { env, envOr } from "@/lib/env";
+import { enviaEmail } from "@/lib/email";
+import { envOr } from "@/lib/env";
 
 const minutes = Math.round(MAGIC_LINK_TTL_SECONDS / 60);
 
@@ -20,21 +20,15 @@ function template(link: string) {
 }
 
 export async function sendMagicLinkEmail(to: string, link: string): Promise<void> {
-  const apiKey = env(process.env.RESEND_API_KEY);
-
-  if (!apiKey) {
-    // Em desenvolvimento nao ha envio: o link fica no log do servidor.
-    console.info(`[billing] magic link para ${to}: ${link}`);
-    return;
-  }
-
-  const resend = new Resend(apiKey);
-  const { error } = await resend.emails.send({
+  const resultado = await enviaEmail({
     from: envOr(process.env.BILLING_FROM_EMAIL, "Jelly <pagamentos@jelly.pt>"),
     to,
-    subject: "O seu link de acesso a area de prestadores",
+    subject: "O seu link de acesso à área de prestadores",
     html: template(link),
   });
 
-  if (error) throw new Error(error.message);
+  // Sem chave, o link fica no log — é o que serve para desenvolver. Com chave e
+  // com erro, quem chamou tem de saber: um link que não chega é uma porta
+  // fechada.
+  if (!resultado.ok && resultado.via !== "log") throw new Error(resultado.erro ?? "email não saiu");
 }

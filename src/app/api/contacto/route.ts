@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getPayload } from "payload";
-import { Resend } from "resend";
 import config from "@/../payload.config";
+import { enviaEmail } from "@/lib/email";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
-import { env, envOr } from "@/lib/env";
+import { envOr } from "@/lib/env";
 
 export const runtime = "nodejs";
 
@@ -104,30 +104,26 @@ export async function POST(request: NextRequest) {
     console.error("[contacto] não gravou a mensagem", error);
   }
 
-  const apiKey = env(process.env.RESEND_API_KEY);
-  if (!apiKey) {
-    console.info(`[contacto] briefing de ${email}\n${text}`);
-    return NextResponse.json({ ok: true });
-  }
+  const de = envOr(process.env.MAIL_FROM, "Jelly <hello@jelly.pt>");
+  const paraCasa = envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt");
 
-  const resend = new Resend(apiKey);
-  const from = envOr(process.env.BILLING_FROM_EMAIL, "Jelly <hello@jelly.pt>");
-
-  const aviso = await resend.emails.send({
-    from,
-    to: envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt"),
+  const aviso = await enviaEmail({
+    from: de,
+    to: paraCasa,
     replyTo: email,
     subject: `Briefing de ${name}${company ? ` (${company})` : ""}`,
     text: `${text}${anexo ? "\n\nVeio com briefing em anexo: está no painel." : ""}\n\nFica também no painel, em Mensagens.`,
   });
 
-  if (aviso.error) {
-    console.error("[contacto] falha ao avisar a casa", aviso.error);
-    return NextResponse.json({ ok: false }, { status: 500 });
+  // Sem chave de email — em desenvolvimento — o texto fica no log e o pedido
+  // conta como aceite. Com chave e com recusa, é outra coisa: o pedido está
+  // gravado mas ninguém foi avisado, e quem submeteu tem de saber que precisa
+  // de insistir por outro caminho.
+  if (!aviso.ok && aviso.via !== "log") {
+    console.error(`[contacto] o aviso à casa não saiu (${aviso.via}): ${aviso.erro}`);
+    return NextResponse.json({ ok: false, erro: "email" }, { status: 502 });
   }
 
-  // A confirmação a quem escreveu. Falhar aqui não invalida o pedido, que já
-  // está gravado e já foi avisado — por isso não devolve erro.
   const confirmacao =
     locale === "en"
       ? {
@@ -139,14 +135,10 @@ export async function POST(request: NextRequest) {
           text: `Olá ${name.split(" ")[0]},\n\nA sua mensagem chegou. Um elemento da nossa equipa entrará brevemente em contacto para responder ao seu desafio.\n\nO que nos enviou:\n\n${message}\n\nSe quiser acrescentar algo, basta responder a este email.\n\nJelly`,
         };
 
-  const recibo = await resend.emails.send({
-    from,
-    to: email,
-    replyTo: envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt"),
-    ...confirmacao,
-  });
-
-  if (recibo.error) console.error("[contacto] falha na confirmação ao remetente", recibo.error);
+  // A confirmação a quem escreveu. Falhar aqui não invalida o pedido, que já
+  // está gravado e já foi avisado — por isso não devolve erro.
+  const recibo = await enviaEmail({ from: de, to: email, replyTo: paraCasa, ...confirmacao });
+  if (!recibo.ok) console.error(`[contacto] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
 
   return NextResponse.json({ ok: true });
 }
