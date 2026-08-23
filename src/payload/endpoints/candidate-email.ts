@@ -137,7 +137,8 @@ export const sendCandidateEmail: PayloadHandler = async (req) => {
 
   if (!subject || !body) return Response.json({ error: "Falta o assunto ou o texto." }, { status: 400 });
 
-  const de = process.env.TALENT_FROM_EMAIL?.trim() || "Jelly · Talento <hello@jelly.pt>";
+  // Como no resto: sem remetente próprio, usa-se o geral.
+  const de = process.env.TALENT_FROM_EMAIL?.trim() || process.env.MAIL_FROM?.trim() || "Jelly · Talento <hello@jelly.pt>";
   const responderPara = process.env.TALENT_TO_EMAIL?.trim() || "talent@jelly.pt";
 
   const enviadoAgora = await enviaEmail({ from: de, to: doc.email, replyTo: responderPara, subject, text: body });

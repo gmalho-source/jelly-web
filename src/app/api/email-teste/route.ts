@@ -50,6 +50,11 @@ export async function GET(request: NextRequest) {
 
   const pedido = request.nextUrl.searchParams.get("ver");
   const email = request.nextUrl.searchParams.get("email");
+  const dominio = request.nextUrl.searchParams.get("dominio");
+
+  // Os registos de DNS que o fornecedor quer para autenticar o domínio. É a
+  // informação que falta a quem tem de os publicar.
+  if (dominio) return NextResponse.json(await pede(`senders/domains/${encodeURIComponent(dominio)}`));
 
   if (email) {
     return NextResponse.json(await pede(`smtp/emails?limit=10&sort=desc&email=${encodeURIComponent(email)}`));
