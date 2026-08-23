@@ -18,8 +18,12 @@ content-import/*.xml
 # Compilação temporária do conteúdo para a migração do Payload
 .cache/
 
-# Ficheiros carregados no painel em desenvolvimento (em produção vão para o Blob)
-media/
+# Ficheiros carregados no painel em desenvolvimento (em produção vão para o Blob).
+# Com barra à frente: só a pasta da raiz. Sem ela, a regra apanhava também
+# `public/media/`, e uma imagem posta lá ficava de fora do repositório sem o
+# `git add` dizer nada — foi assim que a fotografia do recrutamento não chegou
+# ao site, e o defeito só se vê em produção.
+/media/
 
 # Registo de ids do Payload: um por base de dados, nunca partilhado
 content-import/payload-media.*.json
