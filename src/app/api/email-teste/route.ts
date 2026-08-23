@@ -38,13 +38,31 @@ export async function GET(request: NextRequest) {
     }
   };
 
-  const [conta, remetentes, enviados] = await Promise.all([
-    pede("account"),
-    pede("senders"),
-    pede("smtp/emails?limit=10&sort=desc"),
-  ]);
+  // Um caminho à escolha, de uma lista fechada: chega para ver o que se passa
+  // sem transformar isto numa porta para a API do fornecedor.
+  const PERMITIDOS: Record<string, string> = {
+    conta: "account",
+    remetentes: "senders",
+    dominios: "senders/domains",
+    eventos: "smtp/statistics/events?limit=20&sort=desc",
+    agregado: "smtp/statistics/aggregatedReport",
+  };
 
-  return NextResponse.json({ conta, remetentes, enviados });
+  const pedido = request.nextUrl.searchParams.get("ver");
+  const email = request.nextUrl.searchParams.get("email");
+
+  if (email) {
+    return NextResponse.json(await pede(`smtp/emails?limit=10&sort=desc&email=${encodeURIComponent(email)}`));
+  }
+
+  if (pedido) {
+    const caminho = PERMITIDOS[pedido];
+    if (!caminho) return NextResponse.json({ erro: `ver= um de: ${Object.keys(PERMITIDOS).join(", ")}` }, { status: 400 });
+    return NextResponse.json(await pede(caminho));
+  }
+
+  const [conta, remetentes, dominios] = await Promise.all([pede("account"), pede("senders"), pede("senders/domains")]);
+  return NextResponse.json({ conta, remetentes, dominios });
 }
 
 export async function POST(request: NextRequest) {
