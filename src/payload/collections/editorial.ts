@@ -1,9 +1,23 @@
 import type { CollectionConfig } from "payload";
-import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import {
+  revalidateEverythingOnChange,
+  revalidateEverythingOnDelete,
+  revalidateOnChange,
+  revalidateOnDelete,
+} from "../hooks/revalidate";
 import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
+
+/*
+ * Autores e categorias aparecem em muitos artigos, e por isso limpam tudo — o
+ * gancho `revalidateEverything*` abaixo.
+ *
+ * Faltava-lhes gancho nenhum, e o efeito era o pior possível: silencioso. A
+ * fotografia entrava na ficha do autor, ficava lá gravada, e o site continuava a
+ * servir a versão guardada sem ela. Nada falhava; só não mudava.
+ */
 
 export const Categories: CollectionConfig = {
   slug: "categories",
@@ -12,6 +26,7 @@ export const Categories: CollectionConfig = {
   // grupo { pt, en } o React recebia um objeto onde esperava uma string.
   admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug"] },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   fields: [
     {
       type: "row",
@@ -39,6 +54,7 @@ export const Authors: CollectionConfig = {
   labels: { singular: "Autor", plural: "Autores" },
   admin: { useAsTitle: "name", group: "Editorial", defaultColumns: ["name", "role"] },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   fields: [
     {
       type: "row",

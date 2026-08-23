@@ -47,6 +47,38 @@ function purge(paths: string[]) {
   }
 }
 
+/**
+ * Para o que muda em muitos sítios ao mesmo tempo: um autor, uma categoria.
+ *
+ * Não se sabe que artigos é que um autor assinou sem ir à base, e passar
+ * `/pt/blog/[slug]` ao Next é misturar uma língua literal com um segmento
+ * dinâmico — pode não acertar em rota nenhuma. Isto larga a árvore inteira de
+ * cada língua, que é exactamente o que a purga manual do site faz e o que se
+ * sabe que funciona aqui.
+ *
+ * É um martelo, e é de propósito: um autor muda uma vez por ano e um artigo
+ * servido com a assinatura errada é pior do que um cache que se refaz.
+ */
+function purgeTudo() {
+  try {
+    revalidateTag(CMS_TAG, { expire: 0 });
+    revalidatePath("/", "layout");
+    revalidatePath("/en", "layout");
+  } catch {
+    return;
+  }
+}
+
+export const revalidateEverythingOnChange: CollectionAfterChangeHook = ({ doc }) => {
+  purgeTudo();
+  return doc;
+};
+
+export const revalidateEverythingOnDelete: CollectionAfterDeleteHook = ({ doc }) => {
+  purgeTudo();
+  return doc;
+};
+
 export function revalidateOnChange(paths: (doc: Doc) => string[]): CollectionAfterChangeHook {
   return ({ doc }) => {
     purge(paths(doc as Doc));
