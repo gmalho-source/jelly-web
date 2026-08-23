@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { enviaEmail } from "@/lib/email";
+import { enviaEmail, remetentePara } from "@/lib/email";
 import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
@@ -101,7 +101,12 @@ export async function POST(request: NextRequest) {
     chaves: {
       brevo: Boolean(env(process.env.BREVO_API_KEY)),
       resend: Boolean(env(process.env.RESEND_API_KEY)),
-      remetente: process.env.MAIL_FROM ?? "(por omissão: Jelly <hello@jelly.pt>)",
+      remetentes: {
+        cliente: remetentePara("cliente"),
+        talento: remetentePara("talento"),
+        blog: remetentePara("blog"),
+        faturacao: remetentePara("faturacao"),
+      },
     },
   });
 }

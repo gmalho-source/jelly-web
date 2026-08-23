@@ -311,7 +311,32 @@ para enviar email, e o erro que dá é `401 Key not found` — que se lê como �
 errada» e é, na verdade, «chave de outro tipo». A que serve cria-se em
 *SMTP & API → API keys* e começa por `xkeysib-`. O remetente também tem de estar
 validado no Brevo, ou o domínio autenticado; senão o erro passa a ser sobre o
-remetente. O endereço muda-se em `MAIL_FROM` (formato `Jelly <endereco@jelly.pt>`).
+remetente.
+
+**Aceitar não é entregar.** Um endereço não validado é aceite pela API — devolve
+`200` e um `messageId` — e rejeitado a seguir, sem chegar a lado nenhum. Ficou
+assim uma tarde inteira: o código dizia que tinha enviado e o Brevo,
+no seu próprio registo de eventos, dizia `error: Sending has been rejected
+because the sender you used hello@jelly.pt is not valid`. A verificação de um
+envio é o evento **`delivered`** no log do fornecedor, nunca a resposta da API.
+
+### Quem assina cada área
+
+Os dois domínios estão autenticados no Brevo — DKIM e DMARC verdes em `jelly.pt`
+e em `jelly.agency` — e isso dispensa validar endereço a endereço: qualquer caixa
+nesses domínios sai assinada. Os remetentes vivem num sítio só, em
+`remetentePara()` de `src/lib/email.ts`, e cada chamada declara a sua **voz** em
+vez de construir o seu próprio endereço:
+
+| Voz | Endereço | Variável | Onde se usa |
+| --- | --- | --- | --- |
+| `cliente` | `hello@jelly.pt` | `MAIL_FROM` | formulário de contactos: aviso à casa e confirmação |
+| `talento` | `talent@jelly.pt` | `TALENT_FROM_EMAIL` | emails de estado ao candidato |
+| `blog` | `blog@jelly.agency` | `BLOG_FROM_EMAIL` | envio de artigos |
+| `faturacao` | `pagamentos@jelly.pt` | `BILLING_FROM_EMAIL` | link de acesso dos prestadores |
+
+As variáveis são opcionais: sem elas vale o endereço da tabela, que é o que está
+escrito no código. Servem para mudar um remetente sem publicar código.
 
 **Uma variável mudada no painel da Vercel só conta depois de um novo deploy.** O
 ambiente de uma função é o do deploy que a serviu; mudar o valor e voltar a

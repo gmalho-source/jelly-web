@@ -104,11 +104,10 @@ export async function POST(request: NextRequest) {
     console.error("[contacto] não gravou a mensagem", error);
   }
 
-  const de = envOr(process.env.MAIL_FROM, "Jelly <hello@jelly.pt>");
   const paraCasa = envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt");
 
   const aviso = await enviaEmail({
-    from: de,
+    voz: "cliente",
     to: paraCasa,
     replyTo: email,
     subject: `Briefing de ${name}${company ? ` (${company})` : ""}`,
@@ -137,7 +136,7 @@ export async function POST(request: NextRequest) {
 
   // A confirmação a quem escreveu. Falhar aqui não invalida o pedido, que já
   // está gravado e já foi avisado — por isso não devolve erro.
-  const recibo = await enviaEmail({ from: de, to: email, replyTo: paraCasa, ...confirmacao });
+  const recibo = await enviaEmail({ voz: "cliente", to: email, replyTo: paraCasa, ...confirmacao });
   if (!recibo.ok) console.error(`[contacto] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
 
   // O `via` diz por onde saiu — brevo, resend, ou o log de desenvolvimento. Não

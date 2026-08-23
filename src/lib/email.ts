@@ -13,12 +13,49 @@ import { env, envOr } from "@/lib/env";
  * Isto é email transacional: confirmações, avisos, links de acesso. Não é
  * marketing, e não passa pelas listas nem pelas campanhas.
  */
+/**
+ * Cada área do site fala pelo seu endereço, e todos eles vivem aqui.
+ *
+ * Os dois domínios estão autenticados no fornecedor (DKIM e DMARC verdes), o
+ * que dispensa validar cada endereço um a um: qualquer caixa em `jelly.pt` ou
+ * em `jelly.agency` sai assinada. Antes disso só havia um remetente válido — e
+ * um endereço não validado era aceite pela API e rejeitado a seguir, sem
+ * chegar a lado nenhum. Foi essa a razão de todos os emails que não chegaram.
+ *
+ * Cada voz aceita uma variável de ambiente própria, para se poder mudar um
+ * endereço sem tocar no código. Sem variável, vale o que está aqui escrito.
+ */
+export type Voz = "cliente" | "talento" | "blog" | "faturacao";
+
+const ENDERECO: Record<Voz, string> = {
+  cliente: "Jelly <hello@jelly.pt>",
+  talento: "Jelly Talento <talent@jelly.pt>",
+  blog: "Jelly <blog@jelly.agency>",
+  faturacao: "Jelly <pagamentos@jelly.pt>",
+};
+
+export function remetentePara(voz: Voz): string {
+  // Lido aqui dentro, e não numa tabela ao lado da outra: `process.env` fora de
+  // uma função é lido uma vez e fica preso ao arranque do processo.
+  const proprio = {
+    cliente: process.env.MAIL_FROM,
+    talento: process.env.TALENT_FROM_EMAIL,
+    blog: process.env.BLOG_FROM_EMAIL,
+    faturacao: process.env.BILLING_FROM_EMAIL,
+  }[voz];
+
+  return envOr(proprio, ENDERECO[voz]);
+}
+
 export type Carta = {
   to: string;
   subject: string;
   text?: string;
   html?: string;
   replyTo?: string;
+  /** Quem assina. Por omissão, a voz do cliente. */
+  voz?: Voz;
+  /** Endereço explícito, para a sonda: passa à frente da voz. */
   from?: string;
 };
 
@@ -31,7 +68,7 @@ function remetente(valor: string) {
 }
 
 async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
-  const de = remetente(carta.from ?? envOr(process.env.MAIL_FROM, "Jelly <hello@jelly.pt>"));
+  const de = remetente(carta.from ?? remetentePara(carta.voz ?? "cliente"));
   const resposta = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: { "api-key": chave, "content-type": "application/json", accept: "application/json" },
@@ -61,7 +98,7 @@ async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
 
 async function peloResend(chave: string, carta: Carta): Promise<Resultado> {
   const { Resend } = await import("resend");
-  const de = carta.from ?? envOr(process.env.MAIL_FROM, "Jelly <hello@jelly.pt>");
+  const de = carta.from ?? remetentePara(carta.voz ?? "cliente");
   const comum = { from: de, to: carta.to, replyTo: carta.replyTo, subject: carta.subject };
   const { error } = carta.html
     ? await new Resend(chave).emails.send({ ...comum, html: carta.html })

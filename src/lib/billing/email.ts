@@ -1,6 +1,5 @@
 import { MAGIC_LINK_TTL_SECONDS } from "./auth";
 import { enviaEmail } from "@/lib/email";
-import { envOr } from "@/lib/env";
 
 const minutes = Math.round(MAGIC_LINK_TTL_SECONDS / 60);
 
@@ -21,10 +20,7 @@ function template(link: string) {
 
 export async function sendMagicLinkEmail(to: string, link: string): Promise<void> {
   const resultado = await enviaEmail({
-    // Cai no remetente geral quando não há um próprio: um endereço não
-    // verificado no fornecedor é aceite pela API e nunca entregue, e não vale a
-    // pena ter três sítios onde isso pode acontecer.
-    from: envOr(process.env.BILLING_FROM_EMAIL, envOr(process.env.MAIL_FROM, "Jelly <pagamentos@jelly.pt>")),
+    voz: "faturacao",
     to,
     subject: "O seu link de acesso à área de prestadores",
     html: template(link),
