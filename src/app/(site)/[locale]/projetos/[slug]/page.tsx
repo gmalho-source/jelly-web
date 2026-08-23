@@ -59,6 +59,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const eyebrow = archived?.subtitle || project?.disciplines[locale] || archived?.disciplines.join(" · ") || "";
   const lead = project?.summary[locale] || archived?.summary || "";
   const cover = archived?.cover?.src;
+  // A capa continua a ser a capa em toda a parte; aqui decide-se só se ela
+  // entra no corpo desta página.
+  const capaNoCorpo = Boolean(cover) && !archived?.hideCoverInBody;
   const story = archived?.story ?? [];
 
   const facts = [
@@ -94,7 +97,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
       {lead ? <p className="subtitle mt-10 max-w-[58ch] text-lg">{lead}</p> : null}
 
-      {cover ? (
+      {capaNoCorpo && cover ? (
         <Image
           src={cover}
           alt={archived?.cover?.alt || client}

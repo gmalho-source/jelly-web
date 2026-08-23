@@ -377,6 +377,10 @@ export interface Project {
     en?: string | null;
   };
   cover?: (number | null) | Media;
+  /**
+   * A capa continua a identificar o projeto na grelha e no índice, e continua a servir de primeiro fotograma aos vídeos do caso. Deixa apenas de aparecer no corpo da página — útil quando a história já abre com uma imagem melhor.
+   */
+  hideCoverInBody?: boolean | null;
   story?:
     | (
         | {
@@ -1316,6 +1320,7 @@ export interface ProjectsSelect<T extends boolean = true> {
         en?: T;
       };
   cover?: T;
+  hideCoverInBody?: T;
   story?:
     | T
     | {

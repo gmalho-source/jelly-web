@@ -151,6 +151,15 @@ export type ArchivedProject = {
   slug: string;
   legacyPath: string | null;
   client: string;
+  /**
+   * Esconder a capa no corpo da página.
+   *
+   * Só no corpo: a capa continua a identificar o projeto na grelha, no índice e
+   * como primeiro fotograma dos vídeos do caso. Em negativo de propósito — os
+   * projetos que já existem têm o campo vazio, e um campo vazio tem de querer
+   * dizer «mostra», que é o que o site fazia antes de isto existir.
+   */
+  hideCoverInBody?: boolean;
   date: string;
   year: string;
   disciplines: string[];

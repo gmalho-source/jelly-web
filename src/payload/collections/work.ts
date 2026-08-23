@@ -87,6 +87,15 @@ export const Projects: CollectionConfig = {
     locale("summary", "Resumo", { long: true }),
     locale("team", "Equipa"),
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
+    {
+      name: "hideCoverInBody",
+      label: "Não mostrar a capa dentro da página",
+      type: "checkbox",
+      admin: {
+        description:
+          "A capa continua a identificar o projeto na grelha e no índice, e continua a servir de primeiro fotograma aos vídeos do caso. Deixa apenas de aparecer no corpo da página — útil quando a história já abre com uma imagem melhor.",
+      },
+    },
     { name: "story", label: "História", type: "blocks", blocks: storyBlocks },
     {
       name: "numbersValidated",

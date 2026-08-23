@@ -251,6 +251,7 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         slug: text(raw.slug),
         legacyPath: text(raw.legacyPath) || null,
         client: text(raw.client),
+        hideCoverInBody: raw.hideCoverInBody === true,
         date: text(raw.date).slice(0, 10),
         year: text(raw.year) || text(raw.date).slice(0, 4),
         disciplines: (raw.disciplines as string[] | null) ?? [],
