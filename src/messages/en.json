@@ -201,7 +201,7 @@
     "sending": "Sending…",
     "sent": "The change is about to start, {nome}!",
     "error": "We could not send it. Try again or write to hello@jelly.pt.",
-    "invalid": "Fill in your name, phone, a valid email and what you need.",
+    "invalid": "Fill in your name, company, phone, a valid email and what you need.",
     "office": "Office",
     "careers": "Working at Jelly",
     "careersApply": "or <aqui>apply here</aqui>.",

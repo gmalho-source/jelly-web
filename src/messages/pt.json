@@ -201,7 +201,7 @@
     "sending": "A enviar…",
     "sent": "A mudança está prestes a começar, {nome}!",
     "error": "Não foi possível enviar. Tente outra vez ou escreva para hello@jelly.pt.",
-    "invalid": "Preencha o nome, o telefone, um email válido e o que precisa.",
+    "invalid": "Preencha o nome, a empresa, o telefone, um email válido e o que precisa.",
     "office": "Escritório",
     "careers": "Trabalhar na Jelly",
     "careersApply": "ou <aqui>candidata-te aqui</aqui>.",

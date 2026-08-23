@@ -59,6 +59,7 @@ export function ContactForm({ copy }: { copy: Copy }) {
 
     if (
       !valores.name ||
+      !valores.company ||
       !valores.message ||
       digitos < 6 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valores.email)
@@ -119,7 +120,7 @@ export function ContactForm({ copy }: { copy: Copy }) {
         <label htmlFor="company" className="eyebrow text-fg-soft">
           {copy.company}
         </label>
-        <input id="company" name="company" autoComplete="organization" className={field} />
+        <input id="company" name="company" required autoComplete="organization" className={field} />
       </div>
       <div className="grid gap-1.5">
         <label htmlFor="email" className="eyebrow text-fg-soft">
