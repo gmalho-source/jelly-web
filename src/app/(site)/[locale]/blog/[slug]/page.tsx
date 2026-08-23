@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPostBody, getPosts, getRelatedPosts } from "@/lib/cms";
+import { resumoPublicavel } from "@/lib/resumo";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -23,9 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { locale, slug } = await params;
   const post = await getPost(slug);
   if (!post) return {};
+  // O corpo vem em cache (é o mesmo pedido que a página faz) e serve de rede ao
+  // resumo: sem ele, 123 artigos importados publicavam shortcodes como
+  // description.
+  const corpo = await getPostBody(slug);
+  const blocos = (locale === "en" ? corpo?.blocksEn : corpo?.blocks) ?? corpo?.blocks ?? post.blocks;
   return {
     title: post.title[locale],
-    description: post.excerpt[locale],
+    description: resumoPublicavel(post.excerpt[locale], blocos),
     alternates: alternates(
       (candidate) => ({ pathname: "/blog/[slug]" as const, params: { slug: slugFor(post, candidate) } }),
       locale,
@@ -60,12 +66,13 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   const blocks = corpo?.blocks ?? post.blocks;
   const blocksEn = corpo?.blocksEn ?? post.blocksEn;
   const body = locale === "en" && blocksEn?.length ? blocksEn : blocks;
+  const resumo = resumoPublicavel(post.excerpt[locale], body);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title[locale],
-    description: post.excerpt[locale],
+    description: resumo,
     datePublished: post.date,
     // A casa é uma organização, uma pessoa é uma pessoa: o schema.org distingue
     // as duas, e é isso que decide como o artigo aparece nos resultados.
@@ -151,7 +158,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
                 ))}
               </div>
             ) : (
-              <p className="reading max-w-[66ch]">{post.excerpt[locale]}</p>
+              <p className="reading max-w-[66ch]">{resumo}</p>
             )}
           </div>
 
