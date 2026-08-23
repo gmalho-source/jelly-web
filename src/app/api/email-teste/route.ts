@@ -17,6 +17,36 @@ export const runtime = "nodejs";
  *     -H "authorization: Bearer $REVALIDATE_SECRET" \
  *     -H "content-type: application/json" -d '{"para":"alguem@jelly.pt"}'
  */
+/** Aceitar não é entregar: isto vai ver o que o Brevo fez com as mensagens. */
+export async function GET(request: NextRequest) {
+  const segredo = env(process.env.REVALIDATE_SECRET);
+  const dado = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  if (!segredo || dado !== segredo) return NextResponse.json({ ok: false }, { status: 401 });
+
+  const chave = env(process.env.BREVO_API_KEY);
+  if (!chave) return NextResponse.json({ erro: "sem chave do Brevo" }, { status: 400 });
+
+  const pede = async (caminho: string) => {
+    const resposta = await fetch(`https://api.brevo.com/v3/${caminho}`, {
+      headers: { "api-key": chave, accept: "application/json" },
+    });
+    const texto = await resposta.text();
+    try {
+      return { estado: resposta.status, dados: JSON.parse(texto) as unknown };
+    } catch {
+      return { estado: resposta.status, dados: texto.slice(0, 400) };
+    }
+  };
+
+  const [conta, remetentes, enviados] = await Promise.all([
+    pede("account"),
+    pede("senders"),
+    pede("smtp/emails?limit=10&sort=desc"),
+  ]);
+
+  return NextResponse.json({ conta, remetentes, enviados });
+}
+
 export async function POST(request: NextRequest) {
   const segredo = env(process.env.REVALIDATE_SECRET);
   const dado = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
@@ -43,6 +73,7 @@ export async function POST(request: NextRequest) {
     para,
     via: resultado.via,
     ok: resultado.ok,
+    id: resultado.id ?? null,
     erro: resultado.erro ?? null,
     chaves: {
       brevo: Boolean(env(process.env.BREVO_API_KEY)),

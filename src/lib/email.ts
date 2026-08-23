@@ -22,7 +22,7 @@ export type Carta = {
   from?: string;
 };
 
-export type Resultado = { ok: boolean; via: "brevo" | "resend" | "log"; erro?: string };
+export type Resultado = { ok: boolean; via: "brevo" | "resend" | "log"; erro?: string; id?: string };
 
 /** "Jelly <hello@jelly.pt>" → { nome, email } */
 function remetente(valor: string) {
@@ -45,7 +45,13 @@ async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
     }),
   });
 
-  if (resposta.ok) return { ok: true, via: "brevo" };
+  if (resposta.ok) {
+    // O identificador serve para ir buscar o estado da entrega ao registo do
+    // Brevo: aceitar não é entregar, e a diferença entre as duas coisas é
+    // exactamente onde estes problemas vivem.
+    const corpo = (await resposta.json().catch(() => ({}))) as { messageId?: string };
+    return { ok: true, via: "brevo", id: corpo.messageId };
+  }
 
   // A mensagem do Brevo diz o que se passa — remetente não verificado, chave
   // sem permissão — e é isso que interessa ver no log, não um 400 seco.
