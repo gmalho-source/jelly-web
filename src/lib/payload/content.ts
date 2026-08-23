@@ -474,3 +474,37 @@ export function fetchJobs(fallback: Job[]) {
     });
   }, fallback);
 }
+
+
+/**
+ * Uma ficha de autor pelo nome.
+ *
+ * Pelo nome e não pelo id: quem escreve a página sabe o nome de quem cunhou o
+ * termo, e um número no código não diz nada a quem o lê depois. Se a ficha não
+ * existir, devolve nada e a página segue sem ela — não se parte uma página por
+ * causa de uma fotografia.
+ */
+export async function fetchAuthorByName(name: string): Promise<Autor | undefined> {
+  const payload = await getCms();
+  if (!payload) return undefined;
+  try {
+    const { docs } = await payload.find({
+      collection: "authors",
+      where: { name: { equals: name } },
+      limit: 1,
+      depth: 1,
+    });
+    const raw = docs[0] as unknown as Doc | undefined;
+    if (!raw) return undefined;
+    const foto = image(raw.photo as MediaDoc);
+    return {
+      name: text(raw.name) || name,
+      ...(text(raw.role) ? { role: text(raw.role) } : {}),
+      ...(text(raw.bio) ? { bio: text(raw.bio) } : {}),
+      ...(foto ? { photo: foto } : {}),
+    };
+  } catch (error) {
+    console.error("[payload] a ficha do autor não veio:", error);
+    return undefined;
+  }
+}

@@ -591,6 +591,54 @@
   }
 }
 
+/* ── As camadas da Imunidade Algorítmica ───────────────────────────────────
+   Cinco camadas que se constroem de baixo para cima, e um fio que se desenha à
+   medida que se desce. O fio é o argumento: a autoridade acumula-se, não se
+   liga.
+
+   O fio move-se em escala e não em altura — escala corre na placa gráfica, e
+   uma altura a mudar obriga o browser a refazer a posição de tudo o que está
+   por baixo. E o `view()` mede a visibilidade do próprio elemento: como o fio é
+   tão alto quanto a lista, o progresso dele é o progresso da leitura.
+
+   Sem `animation-timeline`, ou a quem pediu menos movimento, fica tudo no lugar
+   e o fio inteiro: é uma página que se lê, não uma que se vê acontecer. */
+/* O fio começa inteiro, não escondido. É a diferença entre um efeito e um
+   defeito: sem suporte para `animation-timeline`, ou a quem pediu menos
+   movimento, um fio em `scaleY(0)` simplesmente não existe — e o que se perde
+   não é a animação, é o desenho. Quem tem suporte vê-o desenhar-se. */
+.camada-fio {
+  transform-origin: top center;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .camada-fio {
+      animation: fio-desce linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 70%;
+    }
+
+    .camada {
+      animation: camada-entra var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 30%;
+    }
+  }
+}
+
+@keyframes fio-desce {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Sobe pouco — dez pixels — e clareia. Uma camada que entra de muito longe
+   parece um carrossel; o que se quer é a sensação de assentar. */
+@keyframes camada-entra {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
 /* Qual das duas pílulas se vê: a página de contactos deixa uma marca no
    documento, e o `:has` faz o resto. Sem javascript, e sem o desencontro de
    hidratação que dava decidir isto no cliente. */

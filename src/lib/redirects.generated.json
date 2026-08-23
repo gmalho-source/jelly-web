@@ -4703,10 +4703,5 @@
     "source": "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia",
     "destination": "/servicos/inteligencia-artificial",
     "permanent": true
-  },
-  {
-    "source": "/imunidade-algoritmica",
-    "destination": "/servicos/inteligencia-artificial",
-    "permanent": true
   }
 ]

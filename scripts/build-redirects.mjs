@@ -27,7 +27,6 @@ const SERVICES = {
   "/servicos/producoes-3d/": "/servicos/marketing",
   "/inteligencia-artificial/": "/servicos/inteligencia-artificial",
   "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia/": "/servicos/inteligencia-artificial",
-  "/imunidade-algoritmica/": "/servicos/inteligencia-artificial",
   "/servicos/web-design-criacao-de-sites/": "/servicos/tecnologia",
   "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia",
   "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia",

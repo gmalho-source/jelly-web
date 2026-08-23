@@ -15,6 +15,7 @@ import {
   fetchLogoGalleries,
   fetchMilestones,
   fetchNews,
+  fetchAuthorByName,
   fetchDepartments,
   fetchJobs,
   fetchPostBody,
@@ -226,6 +227,15 @@ export async function getPostBody(slug: string) {
   // artigo. Não passa pelo `fromStore` porque aquele embrulha em `cache()` do
   // React, e um embrulho novo a cada chamada não junta nada.
   const ler = unstable_cache(() => fetchPostBody(slug), ["cms", "post-body", slug], {
+    revalidate: false,
+    tags: [CMS_TAG],
+  });
+  return ler();
+}
+
+/** A ficha de um autor, guardada por nome. Uma entrada por pessoa. */
+export async function getAuthorByName(name: string) {
+  const ler = unstable_cache(() => fetchAuthorByName(name), ["cms", "author", name], {
     revalidate: false,
     tags: [CMS_TAG],
   });

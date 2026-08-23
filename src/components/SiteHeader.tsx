@@ -23,6 +23,14 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
 
   const tiles: SheetTile[] = [
     { label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },
+    // O conceito da casa entra a seguir a «Sobre»: é o que a Jelly defende, não
+    // um serviço que vende.
+    {
+      label: nav("immunity"),
+      kind: pt ? "conceito" : "concept",
+      href: url("/imunidade-algoritmica"),
+      tone: "bg-lavender",
+    },
     ...services.map((service, index) => ({
       label: service.name[locale],
       kind: pt ? "serviço" : "service",
