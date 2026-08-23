@@ -40,6 +40,15 @@ export default buildConfig({
     // Inicial em vez de gravatar: uma fotografia de perfil não vale um pedido a
     // um serviço de fora com o email de quem entra pelo meio.
     avatar: "default",
+    /*
+     * Atenção ao regenerar o mapa (`payload generate:importmap`): tem de ser
+     * com o ambiente de produção, com BLOB_READ_WRITE_TOKEN. Os plugins entram
+     * na configuração conforme o ambiente, e o do Blob traz um componente de
+     * cliente para os uploads. Gerado sem o token, o mapa fica sem essa entrada
+     * — e em produção, onde o plugin está ligado, o painel pede um componente
+     * que o mapa não tem e fica em branco. Inteiro, entrada incluída. Foi
+     * exactamente isso que aconteceu a 23/08/2026.
+     */
     importMap: { baseDir: path.resolve(dirname) },
     components: {
       // A marca da casa em vez da do Payload, e uma linha de boas-vindas.
