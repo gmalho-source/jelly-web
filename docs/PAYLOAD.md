@@ -296,6 +296,45 @@ gastos e a conta em dólares. A tradução é uma **primeira versão para revis�
 não uma publicação: fica nos campos ingleses, visível no painel, e quem revê
 corrige por cima.
 
+## O email transacional
+
+Tudo o que o site envia — o aviso de um briefing novo, a confirmação a quem
+escreveu, o email ao candidato, o link de acesso dos prestadores — sai por
+`src/lib/email.ts`. Usa o **Brevo** quando existe `BREVO_API_KEY`, o **Resend**
+quando existe `RESEND_API_KEY`, e escreve no log quando não existe nenhuma, o
+que é o que serve para desenvolver.
+
+Duas coisas que se aprenderam à força:
+
+**A chave do Brevo tem de ser da API v3.** Uma chave criada para o MCP não serve
+para enviar email, e o erro que dá é `401 Key not found` — que se lê como «chave
+errada» e é, na verdade, «chave de outro tipo». A que serve cria-se em
+*SMTP & API → API keys* e começa por `xkeysib-`. O remetente também tem de estar
+validado no Brevo, ou o domínio autenticado; senão o erro passa a ser sobre o
+remetente. O endereço muda-se em `MAIL_FROM` (formato `Jelly <endereco@jelly.pt>`).
+
+**Uma variável mudada no painel da Vercel só conta depois de um novo deploy.** O
+ambiente de uma função é o do deploy que a serviu; mudar o valor e voltar a
+testar sem publicar dá exactamente o mesmo erro.
+
+Para não adivinhar, há uma sonda:
+
+```bash
+curl -X POST https://…/api/email-teste \
+  -H "authorization: Bearer $REVALIDATE_SECRET" \
+  -H "content-type: application/json" -d '{"para":"alguem@jelly.pt"}'
+```
+
+Devolve por onde tentou sair, o que o fornecedor respondeu, e que chaves existem
+no ambiente. É como se descobriu que a chave era do tipo errado, em vez de
+mexer no código à espera de acertar.
+
+E o código deixou de mentir: se o fornecedor recusar, o formulário de contactos
+grava a mensagem, registra o erro com a resposta do fornecedor, e diz a quem
+submeteu que não foi. Um formulário que diz «enviado» sem ter enviado é pior do
+que um que assume a falha — foi assim que este problema passou despercebido a
+primeira vez.
+
 ## Endereços ingleses
 
 O título inglês já existia, mas o endereço continuava português:
