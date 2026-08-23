@@ -93,7 +93,11 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
         poster={{ src: "/media/imunidade-cupula-poster.webp" }}
         height="alto"
         cta={
-          <Link href="/contactos" className="btn btn-hero">
+          // O CTA desta casa é uma pílula, não o botão vermelho com brilho, que
+          // é do site antigo. `btn-pill` é a clara — cor de papel — e é a que
+          // serve sobre vídeo e sobre fundo escuro; a escura (`btn-pill-ink`)
+          // é para as secções em papel.
+          <Link href="/contactos" className="btn-pill">
             {imunidade.fecho.cta[locale]} <span aria-hidden="true">→</span>
           </Link>
         }
@@ -258,10 +262,10 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
       <section className="surface-ink">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-8 px-5 py-16 sm:px-8 lg:py-24">
           <h2 className="text-chapter max-w-[26ch]">{imunidade.fecho.titulo[locale]}</h2>
-          <Link href="/contactos" className="btn btn-hero">
+          <Link href="/contactos" className="btn-pill">
             {imunidade.fecho.cta[locale]} <span aria-hidden="true">→</span>
           </Link>
-          <p className="w-full text-sm text-fg-soft">{t("contact")} · hello@jelly.pt</p>
+          <p className="w-full text-sm text-fg-soft">hello@jelly.pt</p>
         </div>
       </section>
     </>

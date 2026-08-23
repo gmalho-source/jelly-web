@@ -45,7 +45,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         poster={{ src: "/media/recrutamento-capa.webp", alt: t("photoAlt") }}
         height="medio"
         cta={
-          <a href={jobs.length ? "#vagas" : "#candidatura"} className="btn btn-hero">
+          <a href={jobs.length ? "#vagas" : "#candidatura"} className="btn-pill">
             {jobs.length ? t("openRoles") : t("apply")} <span aria-hidden="true">→</span>
           </a>
         }

@@ -121,7 +121,7 @@ export default async function JobPage({ params }: { params: Promise<{ locale: Lo
               {job.deadline ? `${t("deadline")} ${formatter.format(new Date(job.deadline))}` : t("noDeadline")}
             </span>
           </p>
-          <a href="#candidatura" className="btn mt-10 w-fit">
+          <a href="#candidatura" className="btn-pill mt-10 w-fit">
             {t("applyTo")} <span aria-hidden="true">→</span>
           </a>
         </div>

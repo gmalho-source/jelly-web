@@ -1,7 +1,13 @@
 import Image from "next/image";
 
 /**
- * Topo de página de serviço com vídeo de fundo.
+ * Topo de página com vídeo ou fotografia de fundo.
+ *
+ * Sobe até ao topo do documento. O `main` do site reserva espaço para a barra
+ * fixa — que é transparente —, e sem anular esse espaço a imagem começava
+ * abaixo dele: uma faixa escura por cima do vídeo, com o aspeto de um erro. O
+ * `pt-[104px]` continua lá para o título não passar por baixo do logótipo, e o
+ * degradê do topo é claro o suficiente para o logótipo e o menu se lerem.
  *
  * O vídeo é decoração: escuro, sem som, sete segundos em ciclo, e o que se lê é
  * o título por cima. Por isso entra como fundo e não como conteúdo — quem usa
@@ -43,7 +49,7 @@ export function ServiceHero({
 }) {
   return (
     <header
-      className={`surface-cover relative isolate flex ${ALTURAS[height]} flex-col justify-end overflow-hidden bg-ink pb-14 pt-[104px]`}
+      className={`surface-cover relative isolate -mt-6 flex ${ALTURAS[height]} flex-col justify-end overflow-hidden bg-ink pb-14 pt-[104px] sm:-mt-24`}
     >
       {poster?.src ? (
         <Image src={poster.src} alt="" fill priority sizes="100vw" className="-z-30 object-cover" />
