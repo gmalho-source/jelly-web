@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { Block, Span } from "@/content/types";
+import { VideoEmbed } from "@/components/VideoEmbed";
+import { fonteDeVideo, videoDeParagrafo } from "@/lib/video";
 
 /** Negrito, itálico e links escritos no CMS. O texto migrado não tem marcação. */
 function Inline({ spans }: { spans: Span[] }) {
@@ -25,12 +27,22 @@ function Inline({ spans }: { spans: Span[] }) {
  * capitular vermelha no primeiro parágrafo.
  */
 export function ArticleBody({ blocks }: { blocks: Block[] }) {
+  // Um parágrafo que é só o endereço de um vídeo é um vídeo. Trata-se aqui, à
+  // entrada, e não em cada conversor: assim vale para o que se escreve no
+  // painel, para o Markdown importado e para os artigos que vieram do site
+  // antigo com o endereço do ficheiro a nu no meio do texto.
+  const body: Block[] = blocks.map((block) =>
+    block.type === "p" && !block.spans && videoDeParagrafo(block.text)
+      ? { type: "embed", url: block.text.trim() }
+      : block,
+  );
+
   // Índice do primeiro parágrafo: é o que leva capitular.
-  const dropCapIndex = blocks.findIndex((block) => block.type === "p");
+  const dropCapIndex = body.findIndex((block) => block.type === "p");
 
   return (
     <div className="max-w-[66ch]">
-      {blocks.map((block, index) => {
+      {body.map((block, index) => {
         if (block.type === "p") {
           const isFirst = index === dropCapIndex;
           return (
@@ -96,6 +108,29 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={block.src} alt={block.alt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px]" />
+              )}
+              {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
+            </figure>
+          );
+        }
+        if (block.type === "embed") {
+          const fonte = fonteDeVideo(block.url);
+          if (!fonte) return null;
+          return (
+            <figure key={index} className="my-10">
+              {fonte.tipo === "ficheiro" ? (
+                // Ficheiro nosso: não há plataforma a quem pedir licença, e os
+                // controlos do browser bastam. `preload="metadata"` traz a
+                // duração e não o vídeo.
+                <video
+                  src={fonte.src}
+                  controls
+                  preload="metadata"
+                  playsInline
+                  className="aspect-video w-full rounded-[20px] bg-ink"
+                />
+              ) : (
+                <VideoEmbed fonte={fonte} titulo={block.caption ?? "Vídeo"} />
               )}
               {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
             </figure>

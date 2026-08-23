@@ -1,4 +1,5 @@
-import type { CollectionConfig } from "payload";
+import type { Block, CollectionConfig } from "payload";
+import { BlocksFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
 import {
   revalidateEverythingOnChange,
   revalidateEverythingOnDelete,
@@ -9,6 +10,52 @@ import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
+
+/**
+ * Vídeo no corpo de um artigo.
+ *
+ * Um campo só, o endereço, porque é o que quem escreve tem à mão: cola-se o
+ * que está na barra do browser, ou o que o botão «partilhar» dá, e o site
+ * reconhece o YouTube, o Vimeo e um ficheiro nosso. Não se pede o código de
+ * `<iframe>` a ninguém — colar HTML num campo de texto é a porta pela qual
+ * entram os problemas que depois não se sabe de onde vieram.
+ *
+ * Colar o endereço sozinho num parágrafo também funciona, e é o que faz os
+ * ficheiros Markdown importados trazerem vídeo. O bloco existe para que se veja
+ * que é possível, e para que possa levar legenda.
+ */
+const videoBlock: Block = {
+  slug: "video",
+  labels: { singular: "Vídeo", plural: "Vídeos" },
+  fields: [
+    {
+      name: "url",
+      label: "Endereço do vídeo",
+      type: "text",
+      required: true,
+      admin: {
+        description:
+          "YouTube, Vimeo ou um ficheiro .mp4. Cola o endereço tal como está na barra do browser — por exemplo https://www.youtube.com/watch?v=XXXXXXXXXXX",
+      },
+    },
+    {
+      name: "caption",
+      label: "Legenda",
+      type: "text",
+      admin: { description: "Aparece debaixo do vídeo, e é o que os leitores de ecrã anunciam." },
+    },
+  ],
+};
+
+/*
+ * O corpo dos artigos leva as funcionalidades de origem mais o bloco de vídeo.
+ * `defaultFeatures` primeiro, e não uma lista escrita à mão: assim os títulos,
+ * as listas, os links e as imagens continuam todos lá quando o Payload lhes
+ * mexer.
+ */
+const corpoDeArtigo = lexicalEditor({
+  features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [videoBlock] })],
+});
 
 /*
  * Autores e categorias aparecem em muitos artigos, e por isso limpam tudo — o
@@ -134,6 +181,7 @@ export const Posts: CollectionConfig = {
       name: "body",
       label: "Corpo (PT)",
       type: "richText",
+      editor: corpoDeArtigo,
       admin: {
         components: {
           beforeInput: [
@@ -146,6 +194,7 @@ export const Posts: CollectionConfig = {
       name: "bodyEn",
       label: "Corpo (EN)",
       type: "richText",
+      editor: corpoDeArtigo,
       admin: {
         description: "Tradução do corpo. Vazio, o site em inglês mostra o texto português.",
         components: {

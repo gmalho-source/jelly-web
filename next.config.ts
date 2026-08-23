@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
       // Imagens ainda por migrar do site antigo.
       { protocol: "https", hostname: "www.jelly.pt" },
+      // Miniaturas dos vídeos do YouTube. Passam pelo otimizador de propósito:
+      // até ao clique de quem lê, o YouTube não recebe pedido nenhum do browser.
+      { protocol: "https", hostname: "i.ytimg.com" },
     ],
   },
   // O middleware trata dos endereços antigos, mas o seu matcher não vê caminhos

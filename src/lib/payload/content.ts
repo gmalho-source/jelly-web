@@ -13,6 +13,7 @@ import type {
   Post,
   Project,
   Service,
+  Span,
   TeamMember,
 } from "@/content/types";
 import { fromCms, getCms } from "./client";
@@ -45,6 +46,45 @@ function fromLexical(root: unknown): Block[] {
       .join("")
       .trim();
 
+  /*
+   * A marcação de dentro do parágrafo: negrito, itálico e links.
+   *
+   * O `format` do Lexical é um mapa de bits — 1 é negrito, 2 é itálico — e um
+   * link é um nó com os filhos dentro. Sem isto, quem escrevesse um link no
+   * painel via-o publicado como texto morto: não falhava nada, só deixava de
+   * ser link. Ninguém dá por isso a tempo.
+   */
+  const spans = (node: Doc, href?: string): Span[] => {
+    const saida: Span[] = [];
+    for (const child of (node.children ?? []) as Doc[]) {
+      if (typeof child.text === "string") {
+        if (!child.text) continue;
+        const format = typeof child.format === "number" ? child.format : 0;
+        saida.push({
+          text: child.text,
+          ...(format & 1 ? { bold: true } : {}),
+          ...(format & 2 ? { italic: true } : {}),
+          ...(href ? { href } : {}),
+        });
+      } else if (child.type === "link" || child.type === "autolink") {
+        const campos = (child.fields ?? {}) as { url?: string };
+        saida.push(...spans(child, text(campos.url) || href));
+      } else {
+        saida.push(...spans(child, href));
+      }
+    }
+    return saida;
+  };
+
+  /** Só vale a pena guardar os pedaços quando há mesmo marcação. */
+  const paragrafo = (node: Doc): Block | undefined => {
+    const value = plain(node);
+    if (!value) return undefined;
+    const pedacos = spans(node);
+    const marcado = pedacos.some((pedaco) => pedaco.bold || pedaco.italic || pedaco.href);
+    return marcado ? { type: "p", text: value, spans: pedacos } : { type: "p", text: value };
+  };
+
   for (const node of children) {
     const type = node.type as string;
     if (type === "heading") {
@@ -60,9 +100,18 @@ function fromLexical(root: unknown): Block[] {
       const media = image((node.value ?? null) as MediaDoc);
       // Com as medidas reais, uma infografia alta não é cortada a 16:9.
       if (media) blocks.push({ type: "image", src: media.src, alt: media.alt, width: media.width, height: media.height });
+    } else if (type === "block") {
+      // O bloco de vídeo do editor. O endereço é que manda: quem desenha
+      // decide-se mais tarde, pelo que ele é.
+      const campos = (node.fields ?? {}) as Doc;
+      if (campos.blockType === "video") {
+        const url = text(campos.url);
+        const caption = text(campos.caption);
+        if (url) blocks.push({ type: "embed", url, ...(caption ? { caption } : {}) });
+      }
     } else {
-      const value = plain(node);
-      if (value) blocks.push({ type: "p", text: value });
+      const bloco = paragrafo(node);
+      if (bloco) blocks.push(bloco);
     }
   }
   return blocks;

@@ -126,7 +126,7 @@ export type Block =
   /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
   | { type: "gallery"; images: { src: string; alt?: string }[] }
   | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean }
-  | { type: "embed"; url: string }
+  | { type: "embed"; url: string; caption?: string }
   | { type: "link"; label: string; href: string };
 
 /** Artigo migrado do jelly.pt. Uma língua por registo (hoje só PT). */
