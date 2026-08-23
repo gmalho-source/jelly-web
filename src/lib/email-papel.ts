@@ -20,6 +20,9 @@ import { SITE_URL } from "@/lib/seo";
  */
 export const CASA = {
   nome: "Jelly · Digital Agency",
+  /** O nome que está na certidão, para a identificação legal. */
+  legal: "Jelly - Digital Agency & AI, Lda.",
+  vat: "PT509686605",
   rua: "Rua Dom João V, 29C",
   local: "1250-089 Lisboa · Portugal",
   email: "hello@jelly.pt",
@@ -62,8 +65,8 @@ export type Papel = {
   antevisao: string;
   /** Sobretítulo curto, em maiúsculas. */
   sobretitulo: string;
-  /** O título grande. */
-  cabeca: string;
+  /** O título grande. Sem ele, o corpo começa em cima. */
+  cabeca?: string;
   /** O corpo, já em HTML. */
   corpo: string;
   /**
@@ -141,7 +144,7 @@ export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo, r
 
       <p style="margin:0 0 18px;font:600 11px/1.4 ${SANS};letter-spacing:.14em;text-transform:uppercase;color:${RED}">${escapa(sobretitulo)}</p>
 
-      <h1 class="cabeca" style="margin:0 0 22px;font:600 30px/1.15 ${SERIF};letter-spacing:-.02em;color:${INK};mso-line-height-rule:exactly">${escapa(cabeca)}</h1>
+      ${cabeca ? `<h1 class="cabeca" style="margin:0 0 22px;font:600 30px/1.15 ${SERIF};letter-spacing:-.02em;color:${INK};mso-line-height-rule:exactly">${escapa(cabeca)}</h1>` : ""}
 
       ${corpo}
 
@@ -168,10 +171,12 @@ export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo, r
             <a href="mailto:${CASA.talento}" style="color:${SUAVE};text-decoration:none">${r.talento}: ${CASA.talento}</a>
           </p>
 
-          <p style="margin:0;font:400 12px/1.6 ${SANS};color:${SUAVE}">
+          <p style="margin:0 0 10px;font:400 12px/1.6 ${SANS};color:${SUAVE}">
             ${r.porque} <a href="${SITE_URL}${r.contactos}" style="color:${SUAVE}">${dominio}${r.contactos}</a>.
             <a href="${privacidade}" style="color:${SUAVE}">${r.privacidade}</a>.
-          </p>`
+          </p>
+
+          <p style="margin:0;font:400 11px/1.6 ${SANS};color:${SUAVE}">${CASA.legal} &middot; VAT ${CASA.vat}</p>`
           }
 
         </td></tr>
@@ -229,4 +234,22 @@ export function botao(href: string, texto: string, principal = true): string {
     <a href="${href}" style="display:inline-block;padding:11px 20px;font:500 14px/1 ${SANS};color:${cor};text-decoration:none">${escapa(texto)}</a>
   </td></tr>
 </table>`;
+}
+
+/**
+ * Texto simples em parágrafos de HTML.
+ *
+ * Existe para os emails cujo texto se escreve à mão no painel — os que vão aos
+ * candidatos. Quem escreve escreve texto, e é o papel que trata do resto: pedir
+ * HTML a quem está a redigir uma recusa com cuidado era pedir a coisa errada.
+ *
+ * A primeira linha de um parágrafo pode terminar sem linha em branco a seguir
+ * (uma assinatura, por exemplo), e essas mudanças de linha mantêm-se.
+ */
+export function corpoDeTexto(texto: string): string {
+  return texto
+    .trim()
+    .split(/\n\s*\n/)
+    .map((bloco) => p(escapa(bloco.trim()).replace(/\n/g, "<br>")))
+    .join("\n");
 }

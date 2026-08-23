@@ -1,5 +1,6 @@
 import type { PayloadHandler } from "payload";
 import { enviaEmail } from "@/lib/email";
+import { papel, corpoDeTexto } from "@/lib/email-papel";
 
 type Candidatura = {
   id: number | string;
@@ -139,7 +140,27 @@ export const sendCandidateEmail: PayloadHandler = async (req) => {
 
   const responderPara = process.env.TALENT_TO_EMAIL?.trim() || "talent@jelly.pt";
 
-  const enviadoAgora = await enviaEmail({ voz: "talento", to: doc.email, replyTo: responderPara, subject, text: body });
+  // O que se edita no painel é texto; o papel da casa põe-se por cima no
+  // momento do envio. Pedir HTML a quem está a redigir uma recusa com cuidado
+  // era pedir a coisa errada — e o texto vai também, tal como foi escrito.
+  const html = papel({
+    locale: "pt",
+    titulo: subject,
+    antevisao: body.split(/\n/)[0] ?? subject,
+    sobretitulo: "Jelly · Talento",
+    cabeca: subject,
+    corpo: corpoDeTexto(body),
+    rodape: "cliente",
+  });
+
+  const enviadoAgora = await enviaEmail({
+    voz: "talento",
+    to: doc.email,
+    replyTo: responderPara,
+    subject,
+    text: body,
+    html,
+  });
   if (!enviadoAgora.ok && enviadoAgora.via !== "log") {
     req.payload.logger.error(`email ao candidato ${doc.id}: ${enviadoAgora.erro}`);
     return Response.json({ error: enviadoAgora.erro }, { status: 502 });

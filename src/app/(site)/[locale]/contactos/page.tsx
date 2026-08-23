@@ -7,7 +7,7 @@ import { ContactForm } from "./ContactForm";
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
-  return { title: t("eyebrow"), description: t("lead"), alternates: alternates("/contactos", locale) };
+  return { title: t("eyebrow"), description: t("description"), alternates: alternates("/contactos", locale) };
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -18,12 +18,12 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <section data-pagina="contactos" className="surface-ink mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-      <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
-        <div>
-          <span className="eyebrow">{t("eyebrow")}</span>
-          <h1 className="mt-5 text-display">{t("title")}</h1>
-        </div>
-        <p className="subtitle">{t("lead")}</p>
+      {/* Sem a frase da direita, o título fica sozinho na linha. A largura é a
+          da coluna que ele ocupava antes — em ch partia-se palavra a palavra,
+          porque a fonte do display é enorme e 16 caracteres não chegam a duas. */}
+      <div className="lg:max-w-[62%]">
+        <span className="eyebrow">{t("eyebrow")}</span>
+        <h1 className="mt-5 text-display">{t("title")}</h1>
       </div>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,52%)_minmax(0,40%)] lg:justify-between">
@@ -32,6 +32,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             name: t("name"),
             company: t("company"),
             email: t("email"),
+            phone: t("phone"),
+            phoneHint: t("phoneHint"),
             message: t("message"),
             messageHint: t("messageHint"),
             start: t("start"),
@@ -62,14 +64,32 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               <br />
               1250-089 Lisboa
               <br />
-              hello@jelly.pt
+              <a href="tel:+351915098769" className="link-quiet">
+                (+351) 915 098 769
+              </a>
+              <br />
+              <a href="mailto:hello@jelly.pt" className="link-quiet">
+                hello@jelly.pt
+              </a>
             </p>
           </div>
           <div className="border-t border-line pt-6">
             <h2 className="eyebrow text-fg-soft">{t("careers")}</h2>
-            <p className="mt-2 text-md text-fg-soft">talent@jelly.pt</p>
+            <p className="mt-2 text-md text-fg-soft">
+              <a href="mailto:talent@jelly.pt" className="link-quiet">
+                talent@jelly.pt
+              </a>{" "}
+              {t.rich("careersApply", {
+                // Por enquanto aponta para a página de candidaturas que está de
+                // pé. Passa para a interna quando ela existir neste site.
+                aqui: (texto) => (
+                  <a href="https://www.jelly.pt/recrutamento/" className="link-quiet underline">
+                    {texto}
+                  </a>
+                ),
+              })}
+            </p>
           </div>
-          <p className="text-sm text-fg-soft">{t("reply")}</p>
         </div>
       </div>
     </section>

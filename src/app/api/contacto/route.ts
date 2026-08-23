@@ -4,6 +4,7 @@ import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
 import { cartaDeContacto } from "@/lib/email-contacto";
 import { avisoDeContacto } from "@/lib/email-aviso";
+import { indicativoDe } from "@/lib/indicativos";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { envOr } from "@/lib/env";
@@ -37,6 +38,10 @@ export async function POST(request: NextRequest) {
   const email = normalizeEmail(texto("email", 160));
   const message = texto("message", 4000);
   const start = texto("start", 20);
+  // O indicativo vem por código ISO e não pelo número: um "+1" não diz se é dos
+  // Estados Unidos ou do Canadá, e o que se guarda é o número já montado.
+  const numero = texto("phone", 30).replace(/[^\d\s]/g, "").trim();
+  const phone = numero ? `${indicativoDe(texto("dial", 2).toUpperCase()).codigo} ${numero}` : "";
   const brief = dados.get("brief");
 
   if (!name || !message || !isValidEmail(email)) {
@@ -117,7 +122,7 @@ export async function POST(request: NextRequest) {
 
     const registo = await payload.create({
       collection: "messages",
-      data: { name, company, email, message, locale, status: "nova", start: janela, brief: anexo },
+      data: { name, company, email, phone, message, locale, status: "nova", start: janela, brief: anexo },
     });
     registoId = registo.id;
   } catch (error) {
@@ -130,6 +135,7 @@ export async function POST(request: NextRequest) {
     nome: name,
     empresa: company,
     email,
+    telefone: phone,
     janela: janela ? (JANELAS.pt[janela] ?? "") : "",
     mensagem: message,
     mensagemId: registoId,
@@ -157,6 +163,7 @@ export async function POST(request: NextRequest) {
     locale,
     nome: name,
     empresa: company,
+    telefone: phone,
     janela: janela ? (JANELAS[locale][janela] ?? "") : "",
     mensagem: message,
     temAnexo: anexo !== undefined,

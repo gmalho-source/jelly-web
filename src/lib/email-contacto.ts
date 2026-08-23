@@ -21,6 +21,8 @@ export type Contacto = {
   locale: "pt" | "en";
   nome: string;
   empresa: string;
+  /** Já com o indicativo à frente, ou vazio. */
+  telefone: string;
   /** A janela de arranque, já em texto corrido. */
   janela: string;
   mensagem: string;
@@ -38,6 +40,7 @@ const T = {
       "a sua mensagem chegou à Jelly. Um elemento da nossa equipa entrará brevemente em contacto para responder ao seu desafio.",
     recibo: "O que nos enviou",
     empresa: "Empresa",
+    telefone: "Telefone",
     arranque: "Arranque",
     anexo: "Briefing",
     anexoValor: "recebemos o ficheiro que anexou",
@@ -58,6 +61,7 @@ const T = {
       "your message reached Jelly. Someone from our team will be in touch shortly to answer your challenge.",
     recibo: "What you sent us",
     empresa: "Company",
+    telefone: "Phone",
     arranque: "Kick-off",
     anexo: "Brief",
     anexoValor: "we received the file you attached",
@@ -70,7 +74,7 @@ const T = {
   },
 } as const;
 
-export function cartaDeContacto({ locale, nome, empresa, janela, mensagem, temAnexo }: Contacto) {
+export function cartaDeContacto({ locale, nome, empresa, telefone, janela, mensagem, temAnexo }: Contacto) {
   const t = T[locale];
   // O primeiro nome, que é como se trata alguém numa carta. O nome inteiro fica
   // no recibo interno, não aqui.
@@ -82,6 +86,7 @@ export function cartaDeContacto({ locale, nome, empresa, janela, mensagem, temAn
       t.recibo,
       [
         { rotulo: t.empresa, valor: empresa },
+        { rotulo: t.telefone, valor: telefone },
         { rotulo: t.arranque, valor: janela },
         { rotulo: t.anexo, valor: temAnexo ? t.anexoValor : "" },
       ],
@@ -112,6 +117,7 @@ export function cartaDeContacto({ locale, nome, empresa, janela, mensagem, temAn
     "",
     t.recibo.toUpperCase(),
     empresa ? `${t.empresa}: ${empresa}` : null,
+    telefone ? `${t.telefone}: ${telefone}` : null,
     janela ? `${t.arranque}: ${janela}` : null,
     temAnexo ? `${t.anexo}: ${t.anexoValor}` : null,
     "",
@@ -122,7 +128,7 @@ export function cartaDeContacto({ locale, nome, empresa, janela, mensagem, temAn
     locale === "pt" ? "Até breve,\nJelly" : "Talk soon,\nJelly",
     "",
     "—",
-    CASA.nome,
+    `${CASA.legal} · VAT ${CASA.vat}`,
     `${CASA.rua} · ${CASA.local}`,
     `${CASA.telefone} · ${CASA.email} · ${SITE_URL}`,
   ]

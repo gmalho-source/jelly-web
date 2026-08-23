@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { INDICATIVOS, PADRAO, rotulo } from "@/lib/indicativos";
 
 type Copy = {
   name: string;
   company: string;
   email: string;
+  phone: string;
+  phoneHint: string;
   message: string;
   messageHint: string;
   start: string;
@@ -111,6 +114,38 @@ export function ContactForm({ copy }: { copy: Copy }) {
           {copy.email}
         </label>
         <input id="email" name="email" type="email" required autoComplete="email" className={field} />
+      </div>
+      {/* Indicativo e número lado a lado. São dois controlos porque um só,
+          com máscara, obriga a escrever o «+351» a quem já o tem por omissão —
+          e falha para quem não é de cá. Juntam-se no servidor. */}
+      <div className="grid gap-1.5">
+        <label htmlFor="phone" className="eyebrow text-fg-soft">
+          {copy.phone}
+        </label>
+        <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-2">
+          <select
+            id="dial"
+            name="dial"
+            defaultValue={PADRAO}
+            aria-label={copy.phoneHint}
+            className={field}
+          >
+            {INDICATIVOS.map((indicativo) => (
+              <option key={indicativo.iso} value={indicativo.iso}>
+                {rotulo(indicativo)}
+              </option>
+            ))}
+          </select>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel-national"
+            placeholder={copy.phoneHint}
+            className={field}
+          />
+        </div>
       </div>
       <div className="grid gap-1.5">
         <label htmlFor="message" className="eyebrow text-fg-soft">

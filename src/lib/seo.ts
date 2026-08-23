@@ -52,10 +52,13 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "Jelly",
     alternateName: "Jelly Digital Agency",
+    legalName: "Jelly - Digital Agency & AI, Lda.",
+    vatID: "PT509686605",
     url: SITE_URL,
     slogan: "be the change",
     foundingDate: "2010",
     email: "hello@jelly.pt",
+    telephone: "+351915098769",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rua Dom João V, 29C",

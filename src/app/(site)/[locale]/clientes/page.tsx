@@ -47,8 +47,9 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
                   height={192}
                   sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
                   // Cresce e acende ao passar o rato: uma parede de logos não
-                  // responde a nada, e este é o único gesto que tem.
-                  className="max-h-[76px] w-auto max-w-full object-contain opacity-85 transition-[transform,opacity] duration-500 ease-out will-change-transform group-hover:scale-[1.12] group-hover:opacity-100 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  // responde a nada, e este é o único gesto que tem. A inércia
+                  // do movimento está em `.logo-zoom`, com duas curvas.
+                  className="logo-zoom max-h-[76px] w-auto max-w-full object-contain"
                 />
               </li>
             ))}

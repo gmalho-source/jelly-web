@@ -18,6 +18,8 @@ export type Aviso = {
   nome: string;
   empresa: string;
   email: string;
+  /** Já com o indicativo à frente, ou vazio. */
+  telefone: string;
   /** A janela de arranque, em português. */
   janela: string;
   mensagem: string;
@@ -38,7 +40,7 @@ const kb = (bytes: number) =>
 /** Um endereço do painel ou do ficheiro pode vir relativo; o email precisa dele inteiro. */
 export const absoluto = (url: string) => (url.startsWith("http") ? url : `${SITE_URL}${url}`);
 
-export function avisoDeContacto({ nome, empresa, email, janela, mensagem, mensagemId, briefing }: Aviso) {
+export function avisoDeContacto({ nome, empresa, email, telefone, janela, mensagem, mensagemId, briefing }: Aviso) {
   const assunto = `Briefing de ${nome}${empresa ? ` (${empresa})` : ""}`;
 
   const acoes = [
@@ -55,6 +57,7 @@ export function avisoDeContacto({ nome, empresa, email, janela, mensagem, mensag
         { rotulo: "Nome", valor: nome },
         { rotulo: "Empresa", valor: empresa },
         { rotulo: "Email", valor: email },
+        { rotulo: "Telefone", valor: telefone },
         { rotulo: "Arranque", valor: janela },
       ],
       mensagem,
@@ -86,6 +89,7 @@ export function avisoDeContacto({ nome, empresa, email, janela, mensagem, mensag
     `Nome: ${nome}`,
     `Empresa ou marca: ${empresa || "—"}`,
     `Email: ${email}`,
+    telefone ? `Telefone: ${telefone}` : null,
     `Quer arrancar: ${janela || "—"}`,
     "",
     mensagem,

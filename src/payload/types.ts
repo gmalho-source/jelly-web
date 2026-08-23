@@ -681,6 +681,7 @@ export interface Message {
   name: string;
   company?: string | null;
   email: string;
+  phone?: string | null;
   message?: string | null;
   start?: ('um-mes' | 'dois-tres' | 'mais-tarde' | 'nao-sei') | null;
   brief?: (number | null) | Attachment;
@@ -1594,6 +1595,7 @@ export interface MessagesSelect<T extends boolean = true> {
   name?: T;
   company?: T;
   email?: T;
+  phone?: T;
   message?: T;
   start?: T;
   brief?: T;

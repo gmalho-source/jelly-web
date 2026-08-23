@@ -29,6 +29,10 @@ export const Messages: CollectionConfig = {
         { name: "email", label: "Email", type: "email", required: true, admin: { readOnly: true } },
       ],
     },
+    // O telefone chega já com o indicativo à frente, montado no formulário: um
+    // número sem indicativo não se marca de fora do país, e é de fora do país
+    // que vem parte destes pedidos.
+    { name: "phone", label: "Telefone", type: "text", admin: { readOnly: true } },
     { name: "message", label: "O que precisa", type: "textarea", admin: { readOnly: true } },
     {
       type: "row",

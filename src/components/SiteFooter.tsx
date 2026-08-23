@@ -81,6 +81,11 @@ export async function SiteFooter() {
               </a>
             </li>
             <li>
+              <a href="tel:+351915098769" className="text-paper/80 transition-colors duration-200 hover:text-red">
+                (+351) 915 098 769
+              </a>
+            </li>
+            <li>
               <Link href="/contactos" className="text-paper/80 transition-colors duration-200 hover:text-red">
                 {nav("contact")}
               </Link>
@@ -109,8 +114,15 @@ export async function SiteFooter() {
           </a>
         </div>
 
-        <div className="col-span-2 mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-sm text-fg-soft lg:col-span-4">
-          <span>Rua Dom João V, 29C · Lisboa · Jelly 2010—2026</span>
+        {/* A identificação legal da casa. Mais pequena do que o resto do rodapé
+            de propósito: é informação que tem de estar, não informação que se
+            lê — quem a procura sabe onde a encontrar. */}
+        <div className="col-span-2 mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-xs text-fg-soft lg:col-span-4">
+          <span className="leading-relaxed">
+            Jelly - Digital Agency &amp; AI, Lda. · VAT PT509686605
+            <br />
+            Rua Dom João V, 29C · 1250-089 Lisboa · Portugal · Jelly 2010—2026
+          </span>
           <span className="font-display text-lg text-paper">
             be the <span className="text-red">change</span>
           </span>
