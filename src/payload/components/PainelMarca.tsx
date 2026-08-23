@@ -44,7 +44,7 @@ export function PainelLogo() {
             letterSpacing: "-0.01em",
           }}
         >
-          Bem-vindo à casa.
+          Bem-vindo a casa.
         </span>
         <span
           style={{
