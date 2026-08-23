@@ -614,10 +614,21 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   z-index: -10;
   filter: blur(22px) saturate(170%) brightness(1.18);
   /* A forma vem da máscara, não de um `overflow` com cantos redondos: essa
-     versão deixava ver a borda da caixa onde a máscara ainda não tinha
-     acabado de desvanecer, e lia-se como uma pílula desfocada em vez de luz.
-     A máscara fecha em 68%, dentro da caixa, e por isso a caixa nunca aparece. */
-  mask-image: radial-gradient(58% 100% at 50% 50%, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 68%);
+     versão deixava ver a borda da caixa e lia-se como uma pílula desfocada em
+     vez de luz.
+
+     Os raios vão em pixels e não em percentagem, e é essa a diferença que
+     importa. Em percentagem, o raio vertical era 100% da *altura* da caixa —
+     96px — e o desvanecimento só acabava a 65px do centro, quando a caixa
+     acaba a 48px. Resultado: a luz era cortada a régua na base, porque nunca
+     chegava a transparente dentro da caixa. Na horizontal isso não se via, por
+     acaso: ali o raio era menor que a metade da largura.
+
+     Agora fecha a 42px do centro (68% de 62px). Cabe nos 48px da caixa e cabe
+     também nos 44px que há acima da pílula até ao topo do ecrã — a barra tem
+     88px e a pílula está a meio, por isso é esse o espaço que existe para
+     cima. */
+  mask-image: radial-gradient(270px 62px at 50% 50%, #000 0%, rgba(0, 0, 0, 0.55) 42%, transparent 68%);
 }
 
 .fluxo-mancha {

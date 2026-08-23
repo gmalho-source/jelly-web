@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
   const phone = numero ? `${indicativoDe(texto("dial", 2).toUpperCase()).codigo} ${numero}` : "";
   const brief = dados.get("brief");
 
-  if (!name || !message || !isValidEmail(email)) {
+  // A mesma regra do formulário, aqui outra vez: a validação do browser é uma
+  // cortesia, não uma garantia — um pedido pode chegar sem ela.
+  if (!name || !message || !isValidEmail(email) || numero.replace(/\D/g, "").length < 6) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 

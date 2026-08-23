@@ -47,10 +47,22 @@ export function ContactForm({ copy }: { copy: Copy }) {
       name: String(data.get("name") ?? "").trim(),
       company: String(data.get("company") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
+      phone: String(data.get("phone") ?? "").trim(),
       message: String(data.get("message") ?? "").trim(),
     };
 
-    if (!valores.name || !valores.message || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valores.email)) {
+    // Seis dígitos é o mais curto que um número de telefone chega a ser em
+    // qualquer parte. Não se valida por país: a lista tem 55 indicativos e cada
+    // um tem as suas regras — o que se quer aqui é impedir um número de fachada,
+    // não fazer as contas da operadora.
+    const digitos = valores.phone.replace(/\D/g, "").length;
+
+    if (
+      !valores.name ||
+      !valores.message ||
+      digitos < 6 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valores.email)
+    ) {
       setState("invalid");
       return;
     }
@@ -117,7 +129,11 @@ export function ContactForm({ copy }: { copy: Copy }) {
       </div>
       {/* Indicativo e número lado a lado. São dois controlos porque um só,
           com máscara, obriga a escrever o «+351» a quem já o tem por omissão —
-          e falha para quem não é de cá. Juntam-se no servidor. */}
+          e falha para quem não é de cá. Juntam-se no servidor.
+
+          Obrigatório de propósito: quem tem um projeto a sério dá o telefone, e
+          quem não o dá está a dizer alguma coisa sobre o pedido. É a única
+          pergunta do formulário que serve para filtrar. */}
       <div className="grid gap-1.5">
         <label htmlFor="phone" className="eyebrow text-fg-soft">
           {copy.phone}
@@ -140,6 +156,7 @@ export function ContactForm({ copy }: { copy: Copy }) {
             id="phone"
             name="phone"
             type="tel"
+            required
             inputMode="tel"
             autoComplete="tel-national"
             placeholder={copy.phoneHint}
