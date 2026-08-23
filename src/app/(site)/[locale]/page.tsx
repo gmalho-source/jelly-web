@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import type React from "react";
+import { Fragment } from "react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Chapter } from "@/components/Chapter";
 import { Marquee } from "@/components/Marquee";
+import { Odometer } from "@/components/Odometer";
 import { LogoWall, type WallLogo } from "@/components/LogoWall";
 import { ProjectRail, type RailProject } from "@/components/ProjectRail";
 import { Link, getPathname } from "@/i18n/navigation";
@@ -316,34 +318,60 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ── 04 A diferença: vermelho cheio, números reais ── */}
-      <section className="surface-red relative overflow-hidden">
+      {/* ── 04 A diferença: vermelho cheio, números reais ──
+          A chegada está em quatro tempos, e todos eles no CSS (`bloco-acao`):
+          o fundo respira, a frase lê-se palavra a palavra, a régua abre e os
+          números rodam até ao seu valor. */}
+      <section className="bloco-acao surface-red relative overflow-clip">
         <span aria-hidden="true" className="ghost-word text-center">
           AÇÃO
         </span>
         <div className="relative mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
-          <Chapter label={t("chapters.difference")} number="04" />
-          <p className="mt-12 max-w-[30ch] font-display text-[clamp(32px,5.4vw,84px)] leading-[0.94] tracking-[-0.03em]">
-            {t("differenceStatement")}
+          <div className="fade" style={{ "--fade-from": "2%" } as React.CSSProperties}>
+            <Chapter label={t("chapters.difference")} number="04" />
+          </div>
+          {/* A frase vem do CMS: parte-se por espaços, e cada palavra leva o seu
+              lugar na fila. O espaço fica fora do bloco, para a linha quebrar
+              como quebrava. */}
+          <p className="frase-lida mt-12 max-w-[30ch] font-display text-[clamp(32px,5.4vw,84px)] leading-[0.94] tracking-[-0.03em]">
+            {t("differenceStatement")
+              .split(" ")
+              .map((palavra, index, todas) => (
+                <Fragment key={`${palavra}-${index}`}>
+                  <span style={{ "--i": index } as React.CSSProperties}>
+                    {palavra}
+                  </span>
+                  {index < todas.length - 1 ? " " : null}
+                </Fragment>
+              ))}
           </p>
-          <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-line pt-8 lg:grid-cols-4">
-            {stats.map((stat, index) => (
-              <div
-                key={stat.label}
-                className="fade"
-                style={
-                  { "--fade-from": `${4 + index * 4}%` } as React.CSSProperties
-                }
-              >
-                <dt className="font-display text-[clamp(38px,5vw,72px)] leading-none tabular-nums">
-                  {stat.value}
-                </dt>
-                <dd className="mt-2 text-xs font-semibold uppercase tracking-[0.08em] text-fg-soft">
-                  {stat.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <div className="mt-16">
+            <span
+              aria-hidden="true"
+              className="regua-acao block h-px w-full bg-line"
+            />
+            <dl className="mt-8 grid grid-cols-2 gap-8 lg:grid-cols-4">
+              {stats.map((stat, index) => (
+                <div
+                  key={stat.label}
+                  className="fade"
+                  style={
+                    {
+                      "--fade-from": `${4 + index * 4}%`,
+                      "--vez": index,
+                    } as React.CSSProperties
+                  }
+                >
+                  <dt className="font-display text-[clamp(38px,5vw,72px)] leading-none tabular-nums">
+                    <Odometer value={stat.value} />
+                  </dt>
+                  <dd className="mt-2 text-xs font-semibold uppercase tracking-[0.08em] text-fg-soft">
+                    {stat.label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 

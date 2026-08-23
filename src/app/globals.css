@@ -897,3 +897,122 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
     }
   }
 }
+
+/* ── O bloco da ação: uma chegada em quatro tempos ──────────────────────────
+   O campo vermelho estava bonito e estava parado. Faltava-lhe uma chegada, e
+   uma chegada é uma ordem: primeiro o fundo respira, depois a frase lê-se,
+   depois a régua abre, e só então os números rodam. Se tudo entrasse ao mesmo
+   tempo não havia chegada nenhuma — havia um piscar.
+
+   O tempo é o scroll, não o relógio: corre todo em `view()`, feito pelo
+   browser, sem javascript e sem ninguém a ouvir o scroll.
+
+   Cada tempo mede-se pela linha de tempo certa. A palavra fantasma mede-se
+   pela secção inteira (é fundo, e o fundo dura todo o bloco); a frase mede-se
+   por si própria, para que a onda de palavras seja a mesma independentemente de
+   onde as linhas quebram; a régua e os números medem-se por si, que é o que os
+   faz acontecer quando se olha para eles.
+
+   Só opacidade e transformação. Nada aqui muda a letra grande de sítio: com
+   blocos deste tamanho, mexer-lhes na posição obriga o browser a redesenhá-los
+   a cada linha de scroll, e o scroll começa a saltar. */
+.bloco-acao {
+  view-timeline-name: --acao;
+}
+
+.frase-lida {
+  view-timeline-name: --frase;
+}
+
+/* Cada palavra é um bloco atómico — quebra-se entre palavras, como antes — e
+   um bloco é também o que lhe dá direito a uma animação própria. */
+.frase-lida > span {
+  display: inline-block;
+}
+
+/* Primeiro tempo: o fundo respira. A palavra fantasma desce enquanto a página
+   sobe; fica atrás do texto, literalmente, e é isso que dá profundidade ao
+   campo em vez de o deixar chapado. */
+@keyframes fantasma-deriva {
+  from { opacity: 0.05; transform: translate3d(0, -4%, 0) scale(1.05); }
+  to   { opacity: 0.12; transform: translate3d(0, 4%, 0) scale(1); }
+}
+
+/* Quarto tempo: o contador mecânico. Cada algarismo é uma fita com os dez
+   dígitos duas vezes, parada no dígito certo — este é o estado final e é
+   também o de quem não tem animação nenhuma: o número está lá, quieto. A
+   segunda volta é só o espaço de onde a rotação vem.
+
+   A janela tem `overflow: hidden`, e uma caixa com overflow é um contentor de
+   scroll: a fita lá dentro não consegue medir-se pela página. Por isso o nome
+   da linha de tempo está na casa de fora — a fita anima-se com o tempo de quem
+   se vê, não com o seu. */
+.odometro {
+  display: inline-flex;
+  view-timeline-name: --numero;
+}
+
+.odometro-casa {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+
+.odometro-fita {
+  display: block;
+  transform: translate3d(0, calc((var(--digito) + 10) * -1em), 0);
+}
+
+.odometro-fita > span {
+  display: block;
+  height: 1em;
+}
+
+/* Uma volta inteira, a subir, até parar no dígito certo. Dez dígitos, dez
+   passos: a fita salta de dígito em dígito e nunca fica a meio caminho. Foi
+   uma correção, não um capricho — em movimento contínuo via-se sempre meio
+   algarismo em cima e meio em baixo, e um número cortado ao meio não parece
+   mecânico, parece estragado. */
+@keyframes odometro-roda {
+  from { transform: translate3d(0, calc(var(--digito) * -1em), 0); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bloco-acao .ghost-word {
+      animation: fantasma-deriva linear both;
+      animation-timeline: --acao;
+      animation-range: cover 0% cover 100%;
+      will-change: transform;
+    }
+
+    /* Segundo tempo: a frase lê-se, palavra a palavra. A janela de cada
+       palavra abre pouco depois da anterior — é uma leitura, não um fundido. */
+    .frase-lida > span {
+      animation: fade-in linear both;
+      animation-timeline: --frase;
+      animation-range: cover calc(4% + var(--i, 0) * 1.4%)
+                       cover calc(17% + var(--i, 0) * 1.4%);
+    }
+
+    /* Terceiro tempo: a régua abre da esquerda e anuncia os números. Rápida:
+       é uma deixa, não um número de circo. */
+    .regua-acao {
+      transform-origin: left center;
+      animation: rule-sweep var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 14%;
+    }
+
+    /* Os números entram da esquerda para a direita (`--vez`), e dentro de cada
+       número as unidades assentam depois das dezenas (`--casa`): é o que faz o
+       contador parecer que para, em vez de aterrar de bloco. */
+    .odometro-fita {
+      animation: odometro-roda steps(10, jump-end) both;
+      animation-timeline: --numero;
+      animation-range: cover calc(4% + var(--vez, 0) * 3%)
+                       cover calc(34% + var(--vez, 0) * 3% + var(--casa, 0) * 4%);
+    }
+  }
+}
