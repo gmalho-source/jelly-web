@@ -7,7 +7,7 @@ export const Media: CollectionConfig = {
   labels: { singular: "Imagem", plural: "Imagens" },
   // Sem isto o painel mostra o nome do ficheiro, e um nome vindo do WordPress
   // (256513_441780705844923_o-150x150.webp) não diz nada a ninguém.
-  admin: { useAsTitle: "title", defaultColumns: ["title", "alt", "filename"] },
+  admin: { useAsTitle: "title", group: "Biblioteca", defaultColumns: ["title", "alt", "filename"] },
   access: { read: () => true },
   upload: {
     mimeTypes: ["image/*"],

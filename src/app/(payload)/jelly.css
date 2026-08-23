@@ -1,0 +1,569 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   O painel na casa da Jelly.
+   ───────────────────────────────────────────────────────────────────────────
+   O Payload desenha tudo a partir de meia dúzia de variáveis: uma escala de
+   cinzas (`--color-base-*`), duas famílias tipográficas e três raios. Trocar
+   essas variáveis chega para o painel inteiro mudar de temperatura — é por aí
+   que isto começa, e é por isso que não há aqui uma folha de estilos a copiar
+   componente a componente o que o Payload já sabe fazer.
+
+   As regras deste ficheiro ficam fora das `@layer` do Payload de propósito:
+   CSS sem camada ganha a CSS em camada, e assim não é preciso disputar
+   especificidade com o painel a cada actualização.
+
+   Duas decisões de desenho:
+
+   1. A escala de cinzas passa a ser fria, tirada do papel (#f4f6f8) e da tinta
+      (#151719) da marca. Nenhum cinza do painel é neutro — todos puxam para o
+      azul, como o site.
+   2. O vermelho é só acção: botão principal, item activo, foco. Não é decoração
+      e não é aviso — os erros continuam a ter a paleta de erro do Painel, que
+      seria confundível com a nossa se lhe puséssemos a marca em cima.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@font-face { font-family: "Bree Serif"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/fonts/BreeSerif-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 300; font-style: normal; font-display: swap;
+  src: url("/fonts/Poppins-Light.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("/fonts/Poppins-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 500; font-style: normal; font-display: swap;
+  src: url("/fonts/Poppins-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 600; font-style: normal; font-display: swap;
+  src: url("/fonts/Poppins-SemiBold.woff2") format("woff2"); }
+
+:root {
+  /* Marca */
+  --jelly-red: #dd364a;
+  --jelly-red-deep: #9d141c;
+  --jelly-ink: #151719;
+  --jelly-slate: #2a384a;
+  --jelly-paper: #f4f6f8;
+  --jelly-paper-2: #e9ecef;
+  --jelly-paper-3: #d6dbe1;
+  --jelly-mute: #8a93a0;
+  --jelly-lavender: #c3abff;
+  --jelly-chartreuse: #dce277;
+
+  /* Tipografia: serifada nos títulos, Poppins em tudo o que é interface. */
+  --font-body: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Bree Serif", Georgia, "Times New Roman", serif;
+
+  /* Forma: os mesmos raios do site. */
+  --style-radius-s: 8px;
+  --style-radius-m: 12px;
+  --style-radius-l: 20px;
+
+  /* A escala de cinzas do painel, agora fria. Do papel à tinta. */
+  --color-base-0: #ffffff;
+  --color-base-50: #f7f9fa;
+  --color-base-100: #f0f3f5;
+  --color-base-150: #e4e8ec;
+  --color-base-200: #d6dbe1;
+  --color-base-250: #c6ccd4;
+  --color-base-300: #b4bcc6;
+  --color-base-350: #a3acb8;
+  --color-base-400: #929caa;
+  --color-base-450: #828d9c;
+  --color-base-500: #737e8d;
+  --color-base-550: #66707e;
+  --color-base-600: #59626f;
+  --color-base-650: #4c5460;
+  --color-base-700: #404752;
+  --color-base-750: #353b44;
+  --color-base-800: #2a3038;
+  --color-base-850: #20252b;
+  --color-base-900: #151719;
+  --color-base-950: #0d0f11;
+  --color-base-1000: #000000;
+
+  --theme-bg: var(--jelly-paper);
+  --theme-input-bg: #ffffff;
+  --theme-text: var(--jelly-ink);
+  --theme-border-color: var(--jelly-paper-3);
+  --theme-overlay: rgba(21, 23, 25, 0.55);
+
+  /* O foco é vermelho: é a cor que no site quer dizer «aqui». */
+  --accessibility-outline: 2px solid var(--jelly-red);
+  --accessibility-outline-offset: 2px;
+}
+
+html[data-theme="dark"] {
+  --theme-bg: var(--jelly-ink);
+  --theme-input-bg: #1c1f23;
+  --theme-text: var(--jelly-paper);
+  --theme-border-color: rgba(244, 246, 248, 0.16);
+  --theme-overlay: rgba(9, 10, 11, 0.66);
+}
+
+/* ── Tipografia ───────────────────────────────────────────────────────────── */
+
+body,
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-body);
+  font-feature-settings: "kern" 1;
+}
+
+/* Os títulos das vistas em serifada: é a assinatura do site, e aqui distingue
+   de relance o nome da página do resto da interface. */
+.doc-header__title,
+.list-header h1,
+.list-header__title-and-actions h1,
+.account__title,
+.dashboard h1,
+.template-minimal h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.nav-group__toggle,
+.list-controls .search-bar input::placeholder,
+th button,
+.table thead th {
+  font-family: var(--font-body);
+}
+
+/* ── A barra lateral: a mesma tinta do site ───────────────────────────────── */
+
+aside.nav {
+  background: var(--jelly-ink);
+  border-right: 1px solid rgba(244, 246, 248, 0.08);
+  color: var(--jelly-paper);
+}
+
+aside.nav a,
+aside.nav button,
+aside.nav .nav-group__toggle {
+  color: rgba(244, 246, 248, 0.72);
+}
+
+aside.nav a:hover,
+aside.nav button:hover {
+  color: #ffffff;
+}
+
+/* Os nomes dos grupos são etiquetas, não títulos: pequenos, espaçados, calmos. */
+.nav-group__toggle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 248, 0.42) !important;
+}
+
+/* Cada entrada é uma pastilha. A activa leva o vermelho — e um fio à esquerda,
+   para quem não distingue a cor. */
+aside.nav .nav__link {
+  position: relative;
+  border-radius: var(--style-radius-s);
+  padding-block: 7px;
+  transition: background 160ms ease-out, color 160ms ease-out;
+}
+
+aside.nav .nav__link:hover {
+  background: rgba(244, 246, 248, 0.07);
+}
+
+aside.nav .nav__link--active {
+  background: rgba(221, 54, 74, 0.16);
+  color: #ffffff;
+}
+
+aside.nav .nav__link--active::before {
+  content: "";
+  position: absolute;
+  inset-block: 6px;
+  inset-inline-start: -10px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--jelly-red);
+}
+
+.nav__log-out {
+  color: rgba(244, 246, 248, 0.5) !important;
+}
+
+.nav__log-out:hover {
+  color: var(--jelly-red) !important;
+}
+
+/* ── O cabeçalho da aplicação ─────────────────────────────────────────────── */
+
+.app-header__bg {
+  background: color-mix(in oklab, var(--theme-bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--theme-border-color);
+}
+
+.step-nav a:hover {
+  color: var(--jelly-red);
+}
+
+/* ── Cartões e painéis ────────────────────────────────────────────────────── */
+
+.card,
+.widget {
+  border-radius: var(--style-radius-l);
+}
+
+.card {
+  background: var(--theme-elevation-0);
+  border: 1px solid var(--theme-border-color);
+  box-shadow: 0 1px 2px rgba(21, 23, 25, 0.04);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms ease-out, border-color 200ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--jelly-red) 40%, transparent);
+  box-shadow: 0 10px 28px rgba(21, 23, 25, 0.1);
+}
+
+.card__title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* ── Botões: as pastilhas da casa ─────────────────────────────────────────── */
+
+.btn {
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background 200ms ease-out, color 200ms ease-out,
+    box-shadow 200ms ease-out, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn.btn--style-primary {
+  background: var(--jelly-red);
+  border-color: var(--jelly-red);
+  color: #ffffff;
+}
+
+.btn.btn--style-primary:hover:not(:disabled) {
+  background: var(--jelly-red-deep);
+  border-color: var(--jelly-red-deep);
+  box-shadow: 0 8px 22px rgba(221, 54, 74, 0.28);
+}
+
+.btn.btn--style-secondary {
+  border-color: var(--theme-elevation-300);
+}
+
+.btn.btn--style-secondary:hover:not(:disabled) {
+  border-color: var(--jelly-red);
+  color: var(--jelly-red);
+}
+
+/* ── Campos ───────────────────────────────────────────────────────────────── */
+
+.field-type input:not([type="checkbox"]):not([type="radio"]),
+.field-type textarea,
+.field-type .rs__control,
+.search-bar input {
+  border-radius: var(--style-radius-s);
+  border-color: var(--theme-elevation-200);
+  transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.field-type input:focus,
+.field-type textarea:focus,
+.field-type .rs__control--is-focused,
+.search-bar input:focus {
+  border-color: var(--jelly-red);
+  box-shadow: 0 0 0 3px rgba(221, 54, 74, 0.16);
+  outline: none;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.field-description {
+  color: var(--theme-elevation-500);
+}
+
+/* O editor de texto e os blocos ficam com a forma da casa. */
+.rich-text-lexical,
+.blocks-field__rows > *,
+.collapsible__content {
+  border-radius: var(--style-radius-m);
+}
+
+/* ── Tabelas ──────────────────────────────────────────────────────────────── */
+
+.table thead th,
+.table thead th button {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-500);
+}
+
+.table tbody tr:hover {
+  background: color-mix(in oklab, var(--jelly-red) 5%, transparent);
+}
+
+.table a {
+  font-weight: 500;
+}
+
+.table a:hover {
+  color: var(--jelly-red);
+}
+
+/* ── A página de entrada ──────────────────────────────────────────────────── */
+
+/* Tinta cheia, e uma luz vermelha ao alto à esquerda: é o mesmo campo escuro
+   com que o site abre. O cartão é papel, com o raio grande da casa. */
+.template-minimal:has(.login__form) {
+  min-height: 100vh;
+  background:
+    radial-gradient(920px 560px at 16% 4%, rgba(221, 54, 74, 0.5), transparent 58%),
+    radial-gradient(680px 420px at 88% 96%, rgba(195, 171, 255, 0.2), transparent 58%),
+    var(--jelly-ink);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.template-minimal:has(.login__form) .template-minimal__wrap {
+  width: 100%;
+  max-width: 452px;
+  padding: 40px 40px 36px;
+  border-radius: var(--style-radius-l);
+  background: var(--jelly-paper);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.44);
+  color: var(--jelly-ink);
+}
+
+html[data-theme="dark"] .template-minimal:has(.login__form) .template-minimal__wrap {
+  background: #1b1e22;
+  color: var(--jelly-paper);
+}
+
+.login__brand {
+  margin-bottom: 4px;
+}
+
+.login__form {
+  margin-top: 26px;
+}
+
+.login__form .field-type input {
+  background: #ffffff;
+  height: 44px;
+}
+
+html[data-theme="dark"] .login__form .field-type input {
+  background: #14171a;
+}
+
+.login__form .form-submit {
+  margin-top: 22px;
+}
+
+.login__form .form-submit button {
+  width: 100%;
+  justify-content: center;
+}
+
+/* «Esqueceu-se da senha?» é uma saída de emergência, não uma opção a par das
+   outras: fica discreta, e acende ao passar. */
+.login .form-submit + a,
+.login__form + a,
+.login a {
+  font-size: 13px;
+  color: var(--theme-elevation-500);
+  text-decoration-color: var(--theme-elevation-300);
+}
+
+.login a:hover {
+  color: var(--jelly-red);
+}
+
+/* ── A faixa de boas-vindas ───────────────────────────────────────────────── */
+
+.painel-casa {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 34px;
+  padding: 26px 30px;
+  border-radius: var(--style-radius-l);
+  background:
+    radial-gradient(680px 260px at 6% -30%, rgba(221, 54, 74, 0.5), transparent 62%),
+    var(--jelly-ink);
+  color: var(--jelly-paper);
+}
+
+.painel-casa__etiqueta {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 248, 0.5);
+}
+
+.painel-casa__titulo {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 27px;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+}
+
+.painel-casa__atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.painel-casa__atalho {
+  padding: 9px 16px;
+  border: 1px solid rgba(244, 246, 248, 0.22);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--jelly-paper);
+  text-decoration: none;
+  transition: background 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+}
+
+.painel-casa__atalho:hover {
+  background: var(--jelly-red);
+  border-color: var(--jelly-red);
+  color: #ffffff;
+}
+
+/* ── Remates ──────────────────────────────────────────────────────────────── */
+
+/* Os nomes dos grupos, no painel e na lista, em serifada. */
+.dashboard h2,
+.dashboard h3,
+.modular-dashboard h2,
+.modular-dashboard h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Uma tabela de títulos sublinhados lê-se como uma lista de links; sem o
+   sublinhado lê-se como uma tabela, que é o que é. O vermelho ao passar diz o
+   resto. */
+.table a,
+.table a:visited {
+  text-decoration: none;
+}
+
+.table tbody tr a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--jelly-red);
+  text-underline-offset: 3px;
+}
+
+/* O botão de criar, no cabeçalho da lista, é a acção principal da vista. */
+.list-header .btn,
+.list-header__title-and-actions .btn {
+  background: var(--jelly-red);
+  border-color: var(--jelly-red);
+  color: #ffffff;
+}
+
+.list-header .btn:hover,
+.list-header__title-and-actions .btn:hover {
+  background: var(--jelly-red-deep);
+  border-color: var(--jelly-red-deep);
+  color: #ffffff;
+}
+
+/* A pastilha de estado: rascunho é calmo, publicado é verde da casa. */
+.status .pill,
+.pill--style-light {
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+/* ── A cabeça da barra lateral ────────────────────────────────────────────── */
+
+.painel-barra {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(244, 246, 248, 0.1);
+  text-decoration: none;
+  color: var(--jelly-paper) !important;
+}
+
+.painel-barra__azulejo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--jelly-red);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.painel-barra:hover .painel-barra__azulejo {
+  transform: scale(1.06);
+}
+
+.painel-barra__nome {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.painel-barra__nota {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 246, 248, 0.38);
+}
+
+/* O botão que fecha a barra vive sobre a tinta: era um quadrado branco. */
+.nav-toggler:not(.app-header__mobile-nav-toggler),
+aside.nav .nav-toggler {
+  background: rgba(244, 246, 248, 0.08);
+  border-color: transparent;
+  color: var(--jelly-paper);
+  border-radius: var(--style-radius-s);
+}
+
+.nav-toggler:not(.app-header__mobile-nav-toggler):hover,
+aside.nav .nav-toggler:hover {
+  background: rgba(244, 246, 248, 0.16);
+}
+
+/* No modo escuro a faixa de boas-vindas precisa de um fio para se ler como
+   painel: tinta sobre tinta não tem limite. */
+html[data-theme="dark"] .painel-casa {
+  border: 1px solid rgba(244, 246, 248, 0.12);
+  background:
+    radial-gradient(680px 260px at 6% -30%, rgba(221, 54, 74, 0.42), transparent 62%),
+    #1b1e22;
+}

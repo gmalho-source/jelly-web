@@ -25,7 +25,11 @@ import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93
 import { MarkdownImport as MarkdownImport_244644c11481654cefffd374751bd598 } from '@/payload/components/MarkdownImport'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
-import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
+import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
+import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
+import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
+import { PainelCasa as PainelCasa_08e90f846953d2e7c14238564f1115f8 } from '@/payload/components/PainelCasa'
+import { PainelBarra as PainelBarra_26b5a52e79442c96441209b56420c706 } from '@/payload/components/PainelBarra'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -57,6 +61,10 @@ export const importMap = {
   "@/payload/components/MarkdownImport#MarkdownImport": MarkdownImport_244644c11481654cefffd374751bd598,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
+  "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,
+  "@/payload/components/PainelMarca#PainelLogo": PainelLogo_965c530af436ec2f048556b8c88302b0,
+  "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,
+  "@/payload/components/PainelCasa#PainelCasa": PainelCasa_08e90f846953d2e7c14238564f1115f8,
+  "@/payload/components/PainelBarra#PainelBarra": PainelBarra_26b5a52e79442c96441209b56420c706,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

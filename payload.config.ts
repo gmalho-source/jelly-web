@@ -10,6 +10,7 @@ import sharp from "sharp";
 import { Media } from "./src/payload/collections/media";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
+import { i18n } from "./src/payload/i18n";
 import { Authors, Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
 import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
@@ -34,7 +35,24 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     meta: { titleSuffix: " · Jelly" },
+    // 30/06/2026, e não «junho 30º 2026, 12:00 AM».
+    dateFormat: "dd/MM/yyyy",
+    // Inicial em vez de gravatar: uma fotografia de perfil não vale um pedido a
+    // um serviço de fora com o email de quem entra pelo meio.
+    avatar: "default",
     importMap: { baseDir: path.resolve(dirname) },
+    components: {
+      // A marca da casa em vez da do Payload, e uma linha de boas-vindas.
+      graphics: {
+        Logo: "@/payload/components/PainelMarca#PainelLogo",
+        Icon: "@/payload/components/PainelMarca#PainelIcone",
+      },
+      afterLogin: ["@/payload/components/PainelEntrada#PainelEntrada"],
+      // A faixa de boas-vindas, com os atalhos do dia-a-dia.
+      beforeDashboard: ["@/payload/components/PainelCasa#PainelCasa"],
+      // A marca no topo da barra lateral.
+      beforeNavLinks: ["@/payload/components/PainelBarra#PainelBarra"],
+    },
   },
   collections: [
     Pages,
@@ -58,6 +76,8 @@ export default buildConfig({
     Documents,
     Users,
   ],
+  // O painel fala português de Portugal — ver src/payload/i18n.ts.
+  i18n,
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
   db: postgresAdapter({
