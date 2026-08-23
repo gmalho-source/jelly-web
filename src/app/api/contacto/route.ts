@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
+import { cartaDeContacto } from "@/lib/email-contacto";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { envOr } from "@/lib/env";
@@ -46,11 +47,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }
 
-  const JANELAS: Record<string, string> = {
-    "um-mes": "dentro de um mês",
-    "dois-tres": "dentro de dois a três meses",
-    "mais-tarde": "mais para a frente",
-    "nao-sei": "ainda não sabe",
+  const JANELAS: Record<"pt" | "en", Record<string, string>> = {
+    pt: {
+      "um-mes": "dentro de um mês",
+      "dois-tres": "dentro de dois a três meses",
+      "mais-tarde": "mais para a frente",
+      "nao-sei": "ainda não sabe",
+    },
+    en: {
+      "um-mes": "within a month",
+      "dois-tres": "in two to three months",
+      "mais-tarde": "further ahead",
+      "nao-sei": "not sure yet",
+    },
   };
 
   const locale = request.headers.get("referer")?.includes("/en/") ? "en" : "pt";
@@ -58,7 +67,7 @@ export async function POST(request: NextRequest) {
     `Nome: ${name}`,
     `Empresa ou marca: ${company || "—"}`,
     `Email: ${email}`,
-    `Quer arrancar: ${JANELAS[start] ?? "—"}`,
+    `Quer arrancar: ${JANELAS.pt[start] ?? "—"}`,
     "",
     message,
   ].join("\n");
@@ -123,16 +132,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, erro: "email" }, { status: 502 });
   }
 
-  const confirmacao =
-    locale === "en"
-      ? {
-          subject: "The change is about to start",
-          text: `Hello ${name.split(" ")[0]},\n\nYour message reached us and someone from our team will get in touch shortly to answer your challenge.\n\nWhat you sent us:\n\n${message}\n\nIf you want to add anything, just reply to this email.\n\nJelly`,
-        }
-      : {
-          subject: "A mudança está prestes a começar",
-          text: `Olá ${name.split(" ")[0]},\n\nA sua mensagem chegou. Um elemento da nossa equipa entrará brevemente em contacto para responder ao seu desafio.\n\nO que nos enviou:\n\n${message}\n\nSe quiser acrescentar algo, basta responder a este email.\n\nJelly`,
-        };
+  const confirmacao = cartaDeContacto({
+    locale,
+    nome: name,
+    empresa: company,
+    janela: janela ? (JANELAS[locale][janela] ?? "") : "",
+    mensagem: message,
+    temAnexo: anexo !== undefined,
+  });
 
   // A confirmação a quem escreveu. Falhar aqui não invalida o pedido, que já
   // está gravado e já foi avisado — por isso não devolve erro.
