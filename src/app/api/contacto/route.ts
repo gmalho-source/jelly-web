@@ -3,6 +3,7 @@ import { getPayload } from "payload";
 import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
 import { cartaDeContacto } from "@/lib/email-contacto";
+import { avisoDeContacto } from "@/lib/email-aviso";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { envOr } from "@/lib/env";
@@ -63,20 +64,17 @@ export async function POST(request: NextRequest) {
   };
 
   const locale = request.headers.get("referer")?.includes("/en/") ? "en" : "pt";
-  const text = [
-    `Nome: ${name}`,
-    `Empresa ou marca: ${company || "—"}`,
-    `Email: ${email}`,
-    `Quer arrancar: ${JANELAS.pt[start] ?? "—"}`,
-    "",
-    message,
-  ].join("\n");
 
   // O registo primeiro. Se a base falhar, o pedido não se perde por isso: o
   // email sai a seguir de qualquer maneira.
   // O id do anexo é numérico nesta base; o campo da janela só aceita os quatro
   // valores da lista, e o que vier de fora dela não entra.
   let anexo: number | undefined;
+  // O briefing segue com o aviso à casa. Fica em memória de propósito: ir
+  // buscá-lo outra vez ao armazenamento para o anexar era uma viagem à rede por
+  // um ficheiro que já se tem na mão.
+  let briefing: { nome: string; url: string; bytes: number; segue: boolean; base64?: string } | undefined;
+  let registoId: string | number | undefined;
   const JANELAS_VALIDAS = ["um-mes", "dois-tres", "mais-tarde", "nao-sei"] as const;
   const janela = (JANELAS_VALIDAS as readonly string[]).includes(start)
     ? (start as (typeof JANELAS_VALIDAS)[number])
@@ -88,39 +86,62 @@ export async function POST(request: NextRequest) {
       if (brief.size > 4_000_000) return NextResponse.json({ ok: false, erro: "ficheiro grande" }, { status: 413 });
       // Em caixa própria: um ficheiro que o servidor recuse — um PDF que não é
       // um PDF — não pode levar consigo o pedido inteiro.
+      const conteudo = Buffer.from(await brief.arrayBuffer());
       try {
         const guardado = await payload.create({
           collection: "attachments",
           data: { note: `Briefing de ${name}${company ? ` (${company})` : ""}` },
           file: {
             name: brief.name,
-            data: Buffer.from(await brief.arrayBuffer()),
+            data: conteudo,
             mimetype: brief.type || "application/pdf",
             size: brief.size,
           },
         });
         anexo = Number(guardado.id);
+        // Acima disto o anexo é grande para seguir por email — em base64 cresce
+        // um terço — e o risco é o fornecedor recusar a mensagem inteira. Um
+        // aviso sem ficheiro serve; um aviso que não chega, não.
+        const segue = brief.size <= 3_500_000;
+        briefing = {
+          nome: brief.name,
+          url: String(guardado.url ?? `/api/attachments/file/${guardado.filename ?? brief.name}`),
+          bytes: brief.size,
+          segue,
+          ...(segue ? { base64: conteudo.toString("base64") } : {}),
+        };
       } catch (error) {
         console.error("[contacto] o briefing não entrou", error);
       }
     }
 
-    await payload.create({
+    const registo = await payload.create({
       collection: "messages",
       data: { name, company, email, message, locale, status: "nova", start: janela, brief: anexo },
     });
+    registoId = registo.id;
   } catch (error) {
     console.error("[contacto] não gravou a mensagem", error);
   }
 
   const paraCasa = envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt");
 
+  const paraCasaCarta = avisoDeContacto({
+    nome: name,
+    empresa: company,
+    email,
+    janela: janela ? (JANELAS.pt[janela] ?? "") : "",
+    mensagem: message,
+    mensagemId: registoId,
+    ...(briefing ? { briefing } : {}),
+  });
+
   const aviso = await enviaEmail({
     voz: "cliente",
     to: paraCasa,
     replyTo: email,
-    subject: `Briefing de ${name}${company ? ` (${company})` : ""}`,
-    text: `${text}${anexo ? "\n\nVeio com briefing em anexo: está no painel." : ""}\n\nFica também no painel, em Mensagens.`,
+    ...paraCasaCarta,
+    ...(briefing?.base64 ? { anexos: [{ nome: briefing.nome, base64: briefing.base64 }] } : {}),
   });
 
   // Sem chave de email — em desenvolvimento — o texto fica no log e o pedido

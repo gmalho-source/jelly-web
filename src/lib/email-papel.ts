@@ -13,6 +13,23 @@ import { SITE_URL } from "@/lib/seo";
  * Um PNG e não o SVG que a casa usa nas páginas: o Gmail não desenha SVG.
  */
 
+/**
+ * A identificação da casa. Está aqui e não espalhada porque a morada e o
+ * telefone aparecem no rodapé de cada carta e outra vez na versão em texto — e
+ * um contacto errado em metade dos sítios é pior do que errado em todos.
+ */
+export const CASA = {
+  nome: "Jelly · Digital Agency",
+  rua: "Rua Dom João V, 29C",
+  local: "1250-089 Lisboa · Portugal",
+  email: "hello@jelly.pt",
+  talento: "talent@jelly.pt",
+  /** Como se lê. */
+  telefone: "(+351) 915 098 769",
+  /** Como se liga: sem espaços nem parêntesis, que é o que o `tel:` aceita. */
+  telefoneLigar: "+351915098769",
+} as const;
+
 const RED = "#dd364a";
 const INK = "#151719";
 const PAPER = "#f4f6f8";
@@ -49,27 +66,35 @@ export type Papel = {
   cabeca: string;
   /** O corpo, já em HTML. */
   corpo: string;
+  /**
+   * Para quem é o rodapé. O aviso que chega à casa não precisa da morada nem da
+   * política de privacidade — precisa de dizer de onde veio.
+   */
+  rodape?: "cliente" | "interno";
 };
 
 const RODAPE = {
   pt: {
     porque: "Recebeu este email porque enviou uma mensagem em",
-    forma: "jelly.pt/contactos",
     contactos: "/contactos",
     privacidade: "Política de privacidade",
     talento: "Candidaturas",
   },
   en: {
     porque: "You received this email because you sent us a message at",
-    forma: "jelly.pt/en/contact",
     contactos: "/en/contact",
     privacidade: "Privacy policy",
     talento: "Careers",
   },
 } as const;
 
-export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo }: Papel): string {
+export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo, rodape = "cliente" }: Papel): string {
   const r = RODAPE[locale];
+  // O endereço escrito vem do endereço a que o link leva. Antes do lançamento o
+  // site vive num domínio de pré-produção, e um rodapé a dizer «www.jelly.pt»
+  // por cima de um link que vai para outro sítio é uma mentira pequena que se
+  // publica sozinha.
+  const dominio = SITE_URL.replace(/^https?:\/\//, "");
   const prefixo = locale === "pt" ? "" : "/en";
   const privacidade = `${SITE_URL}${prefixo}/legal/politica-de-privacidade-2`;
 
@@ -127,21 +152,27 @@ export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo }:
       <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr><td style="border-top:1px solid ${LINHA};padding-top:22px">
 
-          <p style="margin:0 0 10px;font:600 13px/1.5 ${SANS};color:${INK}">Jelly &middot; Digital Agency</p>
+          ${
+            rodape === "interno"
+              ? `<p style="margin:0;font:400 12px/1.6 ${SANS};color:${SUAVE}">Aviso automático do site &middot; <a href="${SITE_URL}/admin" style="color:${SUAVE}">painel</a></p>`
+              : `
+          <p style="margin:0 0 10px;font:600 13px/1.5 ${SANS};color:${INK}">${CASA.nome}</p>
 
           <p style="margin:0 0 14px;font:400 13px/1.7 ${SANS};color:${SUAVE}">
-            Rua Dom Jo&atilde;o V, 29C &middot; 1250-091 Lisboa &middot; Portugal<br>
-            <a href="mailto:hello@jelly.pt" style="color:${TEXTO};text-decoration:none">hello@jelly.pt</a>
+            ${CASA.rua} &middot; ${CASA.local}<br>
+            <a href="tel:${CASA.telefoneLigar}" style="color:${TEXTO};text-decoration:none">${CASA.telefone}</a>
             &nbsp;&middot;&nbsp;
-            <a href="${SITE_URL}" style="color:${TEXTO};text-decoration:none">www.jelly.pt</a>
+            <a href="mailto:${CASA.email}" style="color:${TEXTO};text-decoration:none">${CASA.email}</a>
             &nbsp;&middot;&nbsp;
-            <a href="mailto:talent@jelly.pt" style="color:${TEXTO};text-decoration:none">${r.talento}: talent@jelly.pt</a>
+            <a href="${SITE_URL}" style="color:${TEXTO};text-decoration:none">${dominio}</a><br>
+            <a href="mailto:${CASA.talento}" style="color:${SUAVE};text-decoration:none">${r.talento}: ${CASA.talento}</a>
           </p>
 
           <p style="margin:0;font:400 12px/1.6 ${SANS};color:${SUAVE}">
-            ${r.porque} <a href="${SITE_URL}${r.contactos}" style="color:${SUAVE}">${r.forma}</a>.
+            ${r.porque} <a href="${SITE_URL}${r.contactos}" style="color:${SUAVE}">${dominio}${r.contactos}</a>.
             <a href="${privacidade}" style="color:${SUAVE}">${r.privacidade}</a>.
-          </p>
+          </p>`
+          }
 
         </td></tr>
       </table>
@@ -184,6 +215,18 @@ export function recibo(titulo: string, linhas: { rotulo: string; valor: string }
     <p style="margin:0 0 14px;font:600 11px/1.4 ${SANS};letter-spacing:.12em;text-transform:uppercase;color:${SUAVE}">${escapa(titulo)}</p>
     ${campos ? `<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin:0 0 14px">${campos}</table>` : ""}
     <p style="margin:0;font:400 15px/1.7 ${SANS};color:${TEXTO}">${paragrafos(mensagem)}</p>
+  </td></tr>
+</table>`;
+}
+
+/** Um link que se lê como botão. Sem CSS de fora, é uma célula com fundo. */
+export function botao(href: string, texto: string, principal = true): string {
+  const fundo = principal ? RED : "#ffffff";
+  const cor = principal ? "#ffffff" : INK;
+  const borda = principal ? RED : LINHA;
+  return `<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="display:inline-block;margin:0 8px 8px 0">
+  <tr><td style="background:${fundo};border:1px solid ${borda};border-radius:6px">
+    <a href="${href}" style="display:inline-block;padding:11px 20px;font:500 14px/1 ${SANS};color:${cor};text-decoration:none">${escapa(texto)}</a>
   </td></tr>
 </table>`;
 }

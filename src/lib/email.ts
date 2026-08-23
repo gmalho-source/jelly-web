@@ -57,6 +57,8 @@ export type Carta = {
   voz?: Voz;
   /** Endereço explícito, para a sonda: passa à frente da voz. */
   from?: string;
+  /** Ficheiros a seguir com a carta. O conteúdo vai em base64. */
+  anexos?: { nome: string; base64: string }[];
 };
 
 export type Resultado = { ok: boolean; via: "brevo" | "resend" | "log"; erro?: string; id?: string };
@@ -79,6 +81,9 @@ async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
       subject: carta.subject,
       ...(carta.text ? { textContent: carta.text } : {}),
       ...(carta.html ? { htmlContent: carta.html } : {}),
+      ...(carta.anexos?.length
+        ? { attachment: carta.anexos.map((anexo) => ({ name: anexo.nome, content: anexo.base64 })) }
+        : {}),
     }),
   });
 
@@ -99,7 +104,15 @@ async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
 async function peloResend(chave: string, carta: Carta): Promise<Resultado> {
   const { Resend } = await import("resend");
   const de = carta.from ?? remetentePara(carta.voz ?? "cliente");
-  const comum = { from: de, to: carta.to, replyTo: carta.replyTo, subject: carta.subject };
+  const comum = {
+    from: de,
+    to: carta.to,
+    replyTo: carta.replyTo,
+    subject: carta.subject,
+    ...(carta.anexos?.length
+      ? { attachments: carta.anexos.map((anexo) => ({ filename: anexo.nome, content: anexo.base64 })) }
+      : {}),
+  };
   const { error } = carta.html
     ? await new Resend(chave).emails.send({ ...comum, html: carta.html })
     : await new Resend(chave).emails.send({ ...comum, text: carta.text ?? "" });

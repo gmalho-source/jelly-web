@@ -60,7 +60,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             <p className="mt-2 text-md text-fg-soft">
               Rua Dom João V, 29C
               <br />
-              1250-091 Lisboa
+              1250-089 Lisboa
               <br />
               hello@jelly.pt
             </p>

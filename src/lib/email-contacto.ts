@@ -1,4 +1,4 @@
-import { papel, p, recibo, escapa } from "@/lib/email-papel";
+import { papel, p, recibo, escapa, CASA } from "@/lib/email-papel";
 import { SITE_URL } from "@/lib/seo";
 
 /**
@@ -122,9 +122,9 @@ export function cartaDeContacto({ locale, nome, empresa, janela, mensagem, temAn
     locale === "pt" ? "Até breve,\nJelly" : "Talk soon,\nJelly",
     "",
     "—",
-    "Jelly · Digital Agency",
-    "Rua Dom João V, 29C · 1250-091 Lisboa · Portugal",
-    `hello@jelly.pt · ${SITE_URL}`,
+    CASA.nome,
+    `${CASA.rua} · ${CASA.local}`,
+    `${CASA.telefone} · ${CASA.email} · ${SITE_URL}`,
   ]
     .filter((linha): linha is string => linha !== null)
     .join("\n");

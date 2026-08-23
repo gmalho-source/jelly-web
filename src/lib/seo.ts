@@ -59,7 +59,7 @@ export function organizationJsonLd() {
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rua Dom João V, 29C",
-      postalCode: "1250-091",
+      postalCode: "1250-089",
       addressLocality: "Lisboa",
       addressCountry: "PT",
     },
