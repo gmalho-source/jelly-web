@@ -1,10 +1,12 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, after, type NextRequest } from "next/server";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
 import { cartaDeContacto } from "@/lib/email-contacto";
 import { avisoDeContacto } from "@/lib/email-aviso";
 import { indicativoDe } from "@/lib/indicativos";
+import { abreNegocio } from "@/lib/pipedrive";
+import { absoluto } from "@/lib/email-aviso";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { envOr } from "@/lib/env";
@@ -173,6 +175,22 @@ export async function POST(request: NextRequest) {
   // está gravado e já foi avisado — por isso não devolve erro.
   const recibo = await enviaEmail({ voz: "cliente", to: email, replyTo: paraCasa, ...confirmacao });
   if (!recibo.ok) console.error(`[contacto] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
+
+  // O negócio no Pipedrive abre-se depois da resposta. São três chamadas a um
+  // servidor de fora e quem submeteu não tem de esperar por elas — e se
+  // falharem, o pedido está gravado e avisado de qualquer maneira.
+  after(async () => {
+    await abreNegocio({
+      nome: name,
+      empresa: company,
+      email,
+      telefone: phone,
+      janela: janela ? (JANELAS.pt[janela] ?? "") : "",
+      mensagem: message,
+      ...(briefing ? { briefingUrl: absoluto(briefing.url) } : {}),
+      ...(registoId !== undefined ? { mensagemId: registoId } : {}),
+    });
+  });
 
   // O `via` diz por onde saiu — brevo, resend, ou o log de desenvolvimento. Não
   // é segredo nenhum e poupa uma ida aos registos do servidor quando alguém
