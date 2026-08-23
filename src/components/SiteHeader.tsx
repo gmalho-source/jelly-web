@@ -18,11 +18,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   const pt = locale === "pt";
 
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
-  // Os projetos entram do mais recente para o mais antigo. O arquivo vem
-  // ordenado como se mostra na página de trabalho, que não é por data.
-  const withCover = archive
-    .filter((project) => project.cover?.src)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  // Do mais recente para o mais antigo, que é a ordem em que o arquivo já vem.
+  const withCover = archive.filter((project) => project.cover?.src);
 
   const tiles: SheetTile[] = [
     { label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },

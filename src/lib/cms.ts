@@ -160,10 +160,20 @@ const localArchive = archived as ArchivedProject[];
 
 const getArchive = fromStore("archive", async () => fetchArchivedProjects(localArchive));
 
+/**
+ * O arquivo, do mais recente para o mais antigo.
+ *
+ * A leitura vem ordenada pelo campo `order`, que é a ordem de destaque dos
+ * projetos escritos — não serve para uma grelha de arquivo, onde o que se
+ * espera é a cronologia. Ordena-se aqui, onde a lista se monta, e não em cada
+ * página que a mostra.
+ */
 export async function getArchivedProjects(): Promise<ArchivedProject[]> {
   const [archive, featured] = await Promise.all([getArchive(), getProjects()]);
   const written = new Set(featured.map((project) => project.slug));
-  return archive.filter((project) => !written.has(project.slug));
+  return archive
+    .filter((project) => !written.has(project.slug))
+    .sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export async function getArchivedProject(slug: string): Promise<ArchivedProject | undefined> {
