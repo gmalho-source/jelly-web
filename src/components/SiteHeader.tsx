@@ -48,6 +48,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     { label: nav("clients"), kind: pt ? "página" : "page", href: url("/clientes"), tone: "bg-coral" },
     { label: nav("blog"), kind: pt ? "página" : "page", href: url("/blog"), tone: "bg-slate" },
     { label: nav("newsroom"), kind: pt ? "página" : "page", href: url("/newsroom"), tone: "bg-slate" },
+    { label: nav("careers"), kind: pt ? "página" : "page", href: url("/recrutamento"), tone: "bg-chartreuse" },
     { label: nav("contact"), kind: pt ? "página" : "page", href: url("/contactos"), tone: "bg-red" },
   ];
 

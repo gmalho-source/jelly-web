@@ -169,3 +169,38 @@ export type LogoGallery = {
   slug: string;
   logos: { src: string; name: string; link: string | null }[];
 };
+
+/** Uma pergunta que só existe numa vaga. */
+export type JobQuestion = {
+  type: "escolha" | "varias" | "curto" | "longo" | "numero";
+  required: boolean;
+  label: Localized;
+  options: Localized[];
+};
+
+/** Uma vaga aberta, como o site a mostra. */
+export type Job = {
+  slug: string;
+  /** Endereço em inglês. Vazio, o inglês usa o português. */
+  slugEn?: string;
+  title: Localized;
+  department: { slug: string; name: Localized };
+  functionName: Localized;
+  contract?: "contrato" | "estagio" | "freelancer";
+  regime?: "presencial" | "hibrido" | "remoto";
+  seniority?: "junior" | "intermedio" | "senior";
+  location?: string;
+  /** ISO, ou vazio quando a vaga não tem prazo. */
+  deadline?: string;
+  intro: Localized;
+  responsibilities: Localized[];
+  requirements: Localized[];
+  niceToHave: Localized[];
+  benefits: Localized[];
+  closing: Localized;
+  questions: JobQuestion[];
+  legacyPath?: string;
+};
+
+/** Uma área da agência, para agrupar as vagas e as candidaturas espontâneas. */
+export type Department = { slug: string; name: Localized; order: number };

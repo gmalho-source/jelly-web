@@ -28,7 +28,7 @@ export async function SiteFooter() {
       title: footer("agency"),
       items: [
         { label: nav("about"), href: "/sobre" as const },
-        { label: footer("careers"), href: "/sobre" as const },
+        { label: footer("careers"), href: "/recrutamento" as const },
         { label: nav("newsroom"), href: "/newsroom" as const },
       ],
     },

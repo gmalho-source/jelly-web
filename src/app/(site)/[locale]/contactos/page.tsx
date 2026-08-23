@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { ContactForm } from "./ContactForm";
@@ -80,12 +81,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 talent@jelly.pt
               </a>{" "}
               {t.rich("careersApply", {
-                // Por enquanto aponta para a página de candidaturas que está de
-                // pé. Passa para a interna quando ela existir neste site.
                 aqui: (texto) => (
-                  <a href="https://www.jelly.pt/recrutamento/" className="link-quiet underline">
+                  <Link href="/recrutamento" className="link-quiet underline">
                     {texto}
-                  </a>
+                  </Link>
                 ),
               })}
             </p>

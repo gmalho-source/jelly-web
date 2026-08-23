@@ -6,7 +6,7 @@ import archived from "@/content/generated/projects.json";
 import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { clients, milestones, services, team } from "@/content/site";
-import type { ArchivedProject, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
+import type { ArchivedProject, Department, Job, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
 import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
@@ -15,6 +15,9 @@ import {
   fetchLogoGalleries,
   fetchMilestones,
   fetchNews,
+  fetchDepartments,
+  fetchJobs,
+  fetchPostBody,
   fetchPosts,
   fetchProjects,
   fetchServices,
@@ -174,4 +177,47 @@ const getLogoGalleries = fromStore("logos", async () => fetchLogoGalleries(logoG
 export async function getClientLogos(gallery = "Clientes") {
   const galleries = await getLogoGalleries();
   return galleries.find((item) => item.gallery.toLowerCase() === gallery.toLowerCase())?.logos ?? [];
+}
+
+/**
+ * As vagas abertas, e os departamentos por onde se agrupam.
+ *
+ * O prazo filtra-se aqui, na leitura, e não na consulta: a leitura fica
+ * guardada por etiqueta e sem prazo, e uma condição de data escrita na consulta
+ * ficava congelada no dia em que o cache foi escrito. Assim a data compara-se a
+ * cada pedido, com o cache a servir os dados e não a decisão.
+ */
+export const getDepartments = fromStore("departments", async (): Promise<Department[]> => {
+  const all = await fetchDepartments([]);
+  return [...all].sort((a, b) => a.order - b.order);
+});
+
+const allJobs = fromStore("jobs", async (): Promise<Job[]> => fetchJobs([]));
+
+export async function getJobs(): Promise<Job[]> {
+  const hoje = new Date().toISOString().slice(0, 10);
+  return (await allJobs()).filter((job) => !job.deadline || job.deadline >= hoje);
+}
+
+export async function getJob(slug: string): Promise<Job | undefined> {
+  return findBySlug(await getJobs(), slug);
+}
+
+/**
+ * O corpo de um artigo, guardado por endereço.
+ *
+ * Uma entrada por artigo, e cada uma cabe nos 2 MB que o cache do Next aceita —
+ * ao contrário da entrada única com os 179 corpos, que não cabia e por isso
+ * nunca era escrita. A etiqueta é a mesma, portanto publicar continua a largar
+ * tudo de uma vez.
+ */
+export async function getPostBody(slug: string) {
+  // A chave leva o endereço, e não o nome só: é o que faz uma entrada por
+  // artigo. Não passa pelo `fromStore` porque aquele embrulha em `cache()` do
+  // React, e um embrulho novo a cada chamada não junta nada.
+  const ler = unstable_cache(() => fetchPostBody(slug), ["cms", "post-body", slug], {
+    revalidate: false,
+    tags: [CMS_TAG],
+  });
+  return ler();
 }

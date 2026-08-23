@@ -40,7 +40,6 @@ const PAGES = {
   "/": "/",
   "/empresa/": "/sobre",
   "/equipa-jelly/": "/sobre",
-  "/recrutamento/": "/sobre",
   "/portfolio/": "/projetos",
   "/contactos-jelly/": "/contactos",
   "/noticias-eventos/": "/newsroom",
@@ -72,7 +71,6 @@ async function locs(sitemap) {
 const posts = await locs("post-sitemap");
 const pages = await locs("page-sitemap");
 const portfolio = await locs("portfolio-sitemap");
-const recrutamento = await locs("recrutamento-sitemap");
 const categories = await locs("category-sitemap");
 const tags = await locs("post_tag-sitemap");
 
@@ -103,11 +101,19 @@ for (const pathname of portfolio) {
   if (slug) add(pathname, `/projetos/${slug}`);
 }
 
-// Recrutamento
-for (const pathname of recrutamento) {
-  if (pathname.replace(/\/$/, "") === "/recrutamento") continue;
-  add(pathname, "/sobre");
-}
+/*
+ * Recrutamento: nada a redirecionar.
+ *
+ * Estas linhas mandavam `/recrutamento` e cada vaga antiga para `/sobre`,
+ * porque quando foram escritas a página de recrutamento não existia no site
+ * novo. Existe, e os endereços são os mesmos — as vagas vieram da mesma
+ * importação e ficaram com os slugs de origem. Um redirecionamento aqui tapava
+ * a página verdadeira, que foi exactamente o que aconteceu.
+ *
+ * Uma vaga antiga que já não esteja aberta dá 404, e é o que deve dar: a lista
+ * das abertas está a um clique e um 404 é mais honesto do que servir uma vaga
+ * que já fechou.
+ */
 
 // Categorias e tags: o índice do blog absorve-as (as tags saem do índice).
 for (const pathname of [...categories, ...tags]) add(pathname, "/blog");

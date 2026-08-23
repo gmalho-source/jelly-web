@@ -4,6 +4,9 @@ import type {
   Autor,
   Block,
   Client,
+  Department,
+  Job,
+  JobQuestion,
   Localized,
   LogoGallery,
   NewsItem,
@@ -12,7 +15,7 @@ import type {
   Service,
   TeamMember,
 } from "@/content/types";
-import { fromCms } from "./client";
+import { fromCms, getCms } from "./client";
 
 type Doc = Record<string, unknown>;
 type MediaDoc = { url?: string | null; alt?: string | null; width?: number | null; height?: number | null } | number | null | undefined;
@@ -135,9 +138,27 @@ function autor(raw: Doc): Autor {
   return { name: text(raw.author) || "Jelly" };
 }
 
+/**
+ * A lista dos artigos, sem os corpos.
+ *
+ * Isto é uma correcção de um erro caro. A leitura trazia os 179 artigos com o
+ * texto todo — 3,7 MB — e a entrada não caber nos 2 MB que o cache do Next
+ * aceita: falhava a escrita em silêncio e cada página voltava a ler tudo à base.
+ * E como a barra do topo mostra artigos, «cada página» era o site inteiro. Um só
+ * build fez 518 leituras dessas.
+ *
+ * Agora o `select` deixa os corpos de fora, e a diferença não é só no cache: a
+ * base deixa de os enviar. O corpo de um artigo vai-se buscar quando é preciso —
+ * um, o que se está a ler — em `fetchPostBody`.
+ */
 export function fetchPosts(fallback: Post[]) {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "posts", sort: "-date", ...all });
+    const { docs } = await payload.find({
+      collection: "posts",
+      sort: "-date",
+      ...all,
+      select: { body: false, bodyEn: false },
+    });
     return (docs as unknown as Doc[]).map((raw): Post => {
       const category = raw.category as Doc | number | null;
       return {
@@ -158,11 +179,35 @@ export function fetchPosts(fallback: Post[]) {
               }
             : { pt: "Jelly", en: "Jelly" },
         cover: image(raw.cover as MediaDoc),
-        blocks: fromLexical(raw.body),
-        blocksEn: fromLexical(raw.bodyEn),
       };
     });
   }, fallback);
+}
+
+/**
+ * O corpo de um artigo, e só dele.
+ *
+ * Aceita os dois endereços — português e inglês — porque é por endereço que a
+ * página o pede, e o inglês pode ter o seu.
+ */
+export async function fetchPostBody(slug: string): Promise<{ blocks: Block[]; blocksEn: Block[] } | undefined> {
+  const payload = await getCms();
+  if (!payload) return undefined;
+  try {
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: { or: [{ slug: { equals: slug } }, { slugEn: { equals: slug } }] },
+      limit: 1,
+      depth: 2,
+      select: { body: true, bodyEn: true },
+    });
+    const raw = docs[0] as Doc | undefined;
+    if (!raw) return undefined;
+    return { blocks: fromLexical(raw.body), blocksEn: fromLexical(raw.bodyEn) };
+  } catch (error) {
+    console.error("[payload] o corpo do artigo não veio:", error);
+    return undefined;
+  }
 }
 
 async function projectDocs(payload: Payload) {
@@ -343,4 +388,89 @@ export function fetchPageCopy(): Promise<PageCopy[]> {
       })),
     }));
   }, []);
+}
+
+
+/** As linhas de uma lista da vaga: um array de grupos { pt, en }. */
+function linhas(valor: unknown): Localized[] {
+  return ((valor as { item?: unknown }[] | null) ?? [])
+    .map((linha) => localized(linha?.item))
+    .filter((linha) => linha.pt);
+}
+
+export function fetchDepartments(fallback: Department[]) {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({ collection: "departments", sort: "order", limit: 0, depth: 0 });
+    return (docs as unknown as Doc[]).map((raw): Department => ({
+      slug: text(raw.slug),
+      name: localized({ pt: raw.namePt, en: raw.nameEn }),
+      order: typeof raw.order === "number" ? raw.order : 100,
+    }));
+  }, fallback);
+}
+
+/**
+ * As vagas que o site mostra.
+ *
+ * Só as abertas, e só as que ainda estão dentro do prazo: uma vaga com data
+ * limite passada sai da lista sozinha. Deixar uma vaga fechada à vista é pior do
+ * que não a ter — alguém candidata-se e fica à espera.
+ *
+ * O filtro é feito aqui e não na consulta porque a leitura fica guardada por
+ * etiqueta e sem prazo: uma condição de data escrita na consulta ficava
+ * congelada no dia em que o cache foi escrito.
+ */
+export function fetchJobs(fallback: Job[]) {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({
+      collection: "jobs",
+      where: { status: { equals: "aberta" } },
+      sort: "-createdAt",
+      limit: 0,
+      depth: 2,
+    });
+
+    return (docs as unknown as Doc[]).map((raw): Job => {
+      const funcao = raw.function as Doc | number | null;
+      const departamento =
+        funcao && typeof funcao === "object" ? (funcao.department as Doc | number | null) : null;
+
+      return {
+        slug: text(raw.slug),
+        slugEn: text(raw.slugEn) || undefined,
+        title: localized({ pt: raw.titlePt, en: raw.titleEn }),
+        department:
+          departamento && typeof departamento === "object"
+            ? {
+                slug: text(departamento.slug),
+                name: localized({ pt: departamento.namePt, en: departamento.nameEn }),
+              }
+            : { slug: "", name: { pt: "Jelly", en: "Jelly" } },
+        functionName:
+          funcao && typeof funcao === "object"
+            ? localized({ pt: funcao.namePt, en: funcao.nameEn })
+            : { pt: "", en: "" },
+        contract: (text(raw.contract) || undefined) as Job["contract"],
+        regime: (text(raw.regime) || undefined) as Job["regime"],
+        seniority: (text(raw.seniority) || undefined) as Job["seniority"],
+        location: text(raw.location) || undefined,
+        deadline: text(raw.deadline).slice(0, 10) || undefined,
+        intro: localized(raw.intro),
+        responsibilities: linhas(raw.responsibilities),
+        requirements: linhas(raw.requirements),
+        niceToHave: linhas(raw.niceToHave),
+        benefits: linhas(raw.benefits),
+        closing: localized(raw.closing),
+        questions: ((raw.questions as Doc[] | null) ?? []).map((pergunta): JobQuestion => ({
+          type: (text(pergunta.type) || "curto") as JobQuestion["type"],
+          required: pergunta.required !== false,
+          label: localized(pergunta.label),
+          options: ((pergunta.options as { value?: unknown }[] | null) ?? [])
+            .map((opcao) => localized(opcao?.value))
+            .filter((opcao) => opcao.pt),
+        })),
+        legacyPath: text(raw.legacyPath) || undefined,
+      };
+    });
+  }, fallback);
 }

@@ -6,7 +6,7 @@ import { ArticleBody } from "@/components/ArticleBody";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { getPost, getPosts, getRelatedPosts } from "@/lib/cms";
+import { getPost, getPostBody, getPosts, getRelatedPosts } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -55,7 +55,11 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
 
   // O corpo segue a língua da página; sem tradução, serve o português — mais
   // vale um artigo em português do que uma página vazia.
-  const body = locale === "en" && post.blocksEn?.length ? post.blocksEn : post.blocks;
+  // O corpo vem à parte, e só o deste artigo: a lista não o traz, de propósito.
+  const corpo = await getPostBody(slug);
+  const blocks = corpo?.blocks ?? post.blocks;
+  const blocksEn = corpo?.blocksEn ?? post.blocksEn;
+  const body = locale === "en" && blocksEn?.length ? blocksEn : blocks;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -107,7 +111,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <span>
             {post.readingMinutes} {t("minutes")}
           </span>
-          {post.draft && !post.blocks?.length ? (
+          {post.draft && !blocks?.length ? (
             <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fg">
               {t("draft")}
             </span>
