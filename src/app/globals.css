@@ -1016,3 +1016,82 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
     }
   }
 }
+
+/* ── A prova do artigo ──────────────────────────────────────────────────────
+   O índice das notas diz do que se fala; a prova mostra. Em repouso o palco
+   tem a capa do artigo mais recente — não é um buraco à espera do rato — e ao
+   percorrer a lista cada linha traz a sua capa por cima, em fundido.
+
+   O palco está no vazio do cabeçalho e não dentro das linhas. Tentei primeiro
+   dentro: uma faixa à direita de cada linha, com a capa a entrar da direita.
+   Bonito, e errado — a faixa tem de estar sempre reservada para nada saltar, e
+   essa reserva parte os títulos longos em duas linhas mesmo quando ninguém
+   está a apontar. Paga-se em repouso o que só se ganha com o rato em cima.
+   Sem reserva, a fotografia passa por baixo do fim do título, e um título por
+   cima de uma fotografia não se lê. Aqui não há nada a reservar: o espaço já
+   estava vazio, e ganha uma imagem.
+
+   Sem javascript: `:has()` pergunta à lista qual a linha apontada. As provas
+   estão empilhadas, a mais recente em baixo, e a que se acende vem por cima —
+   assim nenhuma regra precisa de apagar a outra.
+
+   A prova sabe o número da linha (`data-nota`) em vez de contar irmãos: um
+   artigo sem capa não tem prova, e a contagem passaria a apontar para a capa
+   do artigo errado. */
+.prova-palco {
+  position: relative;
+  display: none;
+  width: 420px;
+  aspect-ratio: 3 / 2;
+  overflow: clip;
+  background-color: var(--color-line);
+}
+
+@media (min-width: 1024px) {
+  .prova-palco { display: block; }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .prova-palco { width: 320px; }
+}
+
+.prova {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* A que entra vem um pouco maior e assenta: a inércia da casa. */
+  transform: scale(1.05);
+  transition:
+    opacity 420ms ease-out,
+    transform 820ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.prova:first-child {
+  opacity: 1;
+  transform: none;
+}
+
+.notas-bloco:has(.notas > li:nth-child(1) a:hover) .prova[data-nota="0"],
+.notas-bloco:has(.notas > li:nth-child(2) a:hover) .prova[data-nota="1"],
+.notas-bloco:has(.notas > li:nth-child(3) a:hover) .prova[data-nota="2"],
+.notas-bloco:has(.notas > li:nth-child(4) a:hover) .prova[data-nota="3"],
+.notas-bloco:has(.notas > li:nth-child(5) a:hover) .prova[data-nota="4"],
+.notas-bloco:has(.notas > li:nth-child(1) a:focus-visible) .prova[data-nota="0"],
+.notas-bloco:has(.notas > li:nth-child(2) a:focus-visible) .prova[data-nota="1"],
+.notas-bloco:has(.notas > li:nth-child(3) a:focus-visible) .prova[data-nota="2"],
+.notas-bloco:has(.notas > li:nth-child(4) a:focus-visible) .prova[data-nota="3"],
+.notas-bloco:has(.notas > li:nth-child(5) a:focus-visible) .prova[data-nota="4"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 260ms ease-out,
+    transform 620ms cubic-bezier(0.34, 1.46, 0.58, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova,
+  .prova:first-child {
+    transform: none;
+    transition: opacity 200ms ease-out;
+  }
+}

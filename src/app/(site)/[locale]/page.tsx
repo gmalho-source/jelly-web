@@ -72,6 +72,12 @@ export default async function HomePage({
   const years = new Date().getFullYear() - Number(since);
   const workHref = getPathname({ href: "/projetos", locale });
 
+  // As cinco notas do índice. O palco mostra a capa de cada uma; um artigo sem
+  // capa não tem prova, e é por isso que a prova leva o número da linha em
+  // `data-nota` em vez de contar irmãos — um artigo sem capa desalinharia a
+  // conta e o palco passaria a mostrar a capa do artigo errado.
+  const notes = posts.slice(0, 5);
+
   const stats = [
     { value: `${years}`, label: t("statYears") },
     { value: `${withCover.length}`, label: t("statProjects") },
@@ -377,7 +383,7 @@ export default async function HomePage({
 
       {/* ── 05 Field notes ── */}
       <section className="surface-paper">
-        <div className="mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
+        <div className="notas-bloco mx-auto max-w-[1600px] px-5 py-24 sm:px-8 lg:py-32">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <Chapter label={t("chapters.notes")} number="05" />
@@ -385,16 +391,38 @@ export default async function HomePage({
                 {t("notesTitle")}
               </h2>
             </div>
-            <Link
-              href="/blog"
-              className="shrink-0 border-b border-fg pb-1 text-sm font-semibold hover:text-red"
-            >
-              {posts.length} {t("notesAll")} ↗
-            </Link>
+            <div className="flex shrink-0 flex-col items-start gap-5 lg:items-end">
+              {/* O palco: a capa do artigo mais recente, e a do artigo que o
+                  rato aponta. Fica aqui, no vazio do cabeçalho, e não dentro
+                  das linhas — nas linhas obrigava a reservar-lhe espaço, e essa
+                  reserva partia os títulos longos em duas linhas em repouso,
+                  para servir uma imagem que só aparece com o rato em cima. */}
+              <span aria-hidden="true" className="prova-palco">
+                {notes.map((post, index) =>
+                  post.cover?.src ? (
+                  <span key={post.slug} className="prova" data-nota={index}>
+                    <Image
+                      src={post.cover!.src}
+                      alt=""
+                      fill
+                      sizes="420px"
+                      className="object-cover"
+                    />
+                  </span>
+                  ) : null,
+                )}
+              </span>
+              <Link
+                href="/blog"
+                className="border-b border-fg pb-1 text-sm font-semibold hover:text-red"
+              >
+                {posts.length} {t("notesAll")} ↗
+              </Link>
+            </div>
           </div>
 
-          <ul className="mt-14 border-t border-line">
-            {posts.slice(0, 5).map((post) => (
+          <ul className="notas mt-14 border-t border-line">
+            {notes.map((post) => (
               <li key={post.slug} className="border-b border-line">
                 <Link
                   href={{
