@@ -1,3 +1,6 @@
+"use client";
+
+import { useAuth } from "@payloadcms/ui";
 import Link from "next/link";
 
 /**
@@ -8,9 +11,9 @@ import Link from "next/link";
  * faixa dá as duas coisas — a casa, e os quatro caminhos que se percorrem
  * noventa por cento das vezes.
  *
- * O nome vem do utilizador da sessão quando o Payload o passa; sem ele, a frase
- * ainda faz sentido. Um painel não devia depender de uma propriedade para não
- * abrir torto.
+ * O nome vem da sessão, pelo `useAuth` do painel — e não de uma propriedade que
+ * o Payload pode ou não passar a um componente de cliente. Sem nome, a frase
+ * ainda faz sentido: um painel não devia depender disso para abrir direito.
  */
 const ATALHOS = [
   { href: "/admin/collections/posts/create", label: "Escrever artigo" },
@@ -19,7 +22,8 @@ const ATALHOS = [
   { href: "/", label: "Ver o site ↗" },
 ];
 
-export function PainelCasa({ user }: { user?: { name?: string | null; email?: string | null } }) {
+export function PainelCasa() {
+  const { user } = useAuth<{ name?: string | null }>();
   const primeiro = (user?.name ?? "").trim().split(/\s+/)[0];
 
   return (

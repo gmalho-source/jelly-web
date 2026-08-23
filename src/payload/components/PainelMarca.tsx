@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * A marca no painel: o azulejo vermelho com a assinatura branca, como no site.
  *

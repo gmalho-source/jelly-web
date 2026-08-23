@@ -329,7 +329,7 @@ aside.nav .nav__link--active::before {
 
 /* Tinta cheia, e uma luz vermelha ao alto à esquerda: é o mesmo campo escuro
    com que o site abre. O cartão é papel, com o raio grande da casa. */
-.template-minimal:has(.login__form) {
+.login {
   min-height: 100vh;
   background:
     radial-gradient(920px 560px at 16% 4%, rgba(221, 54, 74, 0.5), transparent 58%),
@@ -340,7 +340,7 @@ aside.nav .nav__link--active::before {
   padding: 24px;
 }
 
-.template-minimal:has(.login__form) .template-minimal__wrap {
+.login .template-minimal__wrap {
   width: 100%;
   max-width: 452px;
   padding: 40px 40px 36px;
@@ -350,7 +350,7 @@ aside.nav .nav__link--active::before {
   color: var(--jelly-ink);
 }
 
-html[data-theme="dark"] .template-minimal:has(.login__form) .template-minimal__wrap {
+html[data-theme="dark"] .login .template-minimal__wrap {
   background: #1b1e22;
   color: var(--jelly-paper);
 }
