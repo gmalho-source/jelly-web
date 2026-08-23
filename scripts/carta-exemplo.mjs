@@ -8,6 +8,7 @@
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { cartaDeContacto } from "../src/lib/email-contacto.ts";
+import { avisoDeContacto } from "../src/lib/email-aviso.ts";
 
 const destino = process.argv[2] ?? "/tmp";
 mkdirSync(destino, { recursive: true });
@@ -30,3 +31,17 @@ for (const [locale, janela] of [
   console.log(`${locale}: ${carta.subject}`);
   console.log(`   ${destino}/carta-${locale}.html  (${(carta.html.length / 1024).toFixed(1)} KB)`);
 }
+
+// E o aviso que chega à casa, com o briefing.
+const aviso = avisoDeContacto({
+  nome: exemplo.nome,
+  empresa: exemplo.empresa,
+  email: "goncalo@adamastor.vc",
+  janela: "dentro de um mês",
+  mensagem: exemplo.mensagem,
+  mensagemId: 42,
+  briefing: { nome: "briefing-adamastor.pdf", url: "/api/attachments/file/briefing-adamastor.pdf", bytes: 486_000, segue: true },
+});
+writeFileSync(`${destino}/aviso.html`, aviso.html);
+writeFileSync(`${destino}/aviso.txt`, `${aviso.subject}\n\n${aviso.text}`);
+console.log(`aviso: ${aviso.subject}`);
