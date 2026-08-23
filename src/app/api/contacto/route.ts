@@ -82,7 +82,9 @@ export async function POST(request: NextRequest) {
   // O briefing segue com o aviso à casa. Fica em memória de propósito: ir
   // buscá-lo outra vez ao armazenamento para o anexar era uma viagem à rede por
   // um ficheiro que já se tem na mão.
-  let briefing: { nome: string; url: string; bytes: number; segue: boolean; base64?: string } | undefined;
+  let briefing:
+    | { nome: string; url: string; bytes: number; segue: boolean; base64?: string; conteudo?: Buffer; tipo?: string }
+    | undefined;
   let registoId: string | number | undefined;
   const JANELAS_VALIDAS = ["um-mes", "dois-tres", "mais-tarde", "nao-sei"] as const;
   const janela = (JANELAS_VALIDAS as readonly string[]).includes(start)
@@ -118,6 +120,10 @@ export async function POST(request: NextRequest) {
           bytes: brief.size,
           segue,
           ...(segue ? { base64: conteudo.toString("base64") } : {}),
+          // Para o Pipedrive vão sempre os bytes, seja qual for o tamanho: o
+          // limite de 3,5 MB é do email, não dele.
+          conteudo,
+          tipo: brief.type || "application/pdf",
         };
       } catch (error) {
         console.error("[contacto] o briefing não entrou", error);
@@ -190,6 +196,9 @@ export async function POST(request: NextRequest) {
       janela: janela ? (JANELAS.pt[janela] ?? "") : "",
       mensagem: message,
       ...(briefing ? { briefingUrl: absoluto(briefing.url) } : {}),
+      ...(briefing?.conteudo
+        ? { ficheiro: { nome: briefing.nome, bytes: briefing.conteudo, tipo: briefing.tipo ?? "application/pdf" } }
+        : {}),
       ...(registoId !== undefined ? { mensagemId: registoId } : {}),
     });
   });

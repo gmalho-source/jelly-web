@@ -84,6 +84,14 @@ export type Briefing = {
   mensagem: string;
   /** Endereço absoluto do ficheiro anexado, se houver. */
   briefingUrl?: string;
+  /**
+   * O ficheiro em si, para ficar nos Files do negócio.
+   *
+   * Vai aqui e não é ido buscar ao armazenamento: os bytes já estão na mão de
+   * quem recebeu o formulário, e o endereço do site é protegido — o Pipedrive
+   * não teria sessão para o descarregar.
+   */
+  ficheiro?: { nome: string; bytes: Buffer; tipo: string };
   /** O registo na base do site, para se ir da ficha ao original. */
   mensagemId?: string | number;
 };
@@ -161,6 +169,38 @@ export async function abreNegocio(briefing: Briefing): Promise<Negocio> {
       .join("<br>");
 
     await chama(chave, "/notes", { metodo: "POST", v1: true, corpo: { deal_id: negocio.id, content: nota } });
+
+    // E o briefing nos Files do negócio. Multipart, e por isso fora do `chama`:
+    // aqui o `content-type` tem de ser o fetch a escrevê-lo, com a fronteira
+    // que ele próprio gera. Os ficheiros também só existem na v1 da API.
+    if (briefing.ficheiro) {
+      try {
+        const formulario = new FormData();
+        formulario.append(
+          "file",
+          new Blob([new Uint8Array(briefing.ficheiro.bytes)], { type: briefing.ficheiro.tipo }),
+          briefing.ficheiro.nome,
+        );
+        formulario.append("deal_id", String(negocio.id));
+        if (personId) formulario.append("person_id", String(personId));
+        if (orgId) formulario.append("org_id", String(orgId));
+
+        const resposta = await fetch(`${BASE_V1}/files`, {
+          method: "POST",
+          headers: { "x-api-token": chave, accept: "application/json" },
+          body: formulario,
+        });
+
+        if (!resposta.ok) {
+          const texto = await resposta.text().catch(() => "");
+          console.error(`[pipedrive] o ficheiro não subiu: ${resposta.status} ${texto.slice(0, 240)}`);
+        }
+      } catch (erro) {
+        // Um ficheiro que não sobe não desfaz o negócio: o link para o original
+        // está na nota, e o negócio é o que importa não perder.
+        console.error("[pipedrive] o ficheiro não subiu", erro);
+      }
+    }
 
     console.info(`[pipedrive] negócio ${negocio.id} aberto para ${briefing.email}`);
     return { ok: true, dealId: negocio.id };
