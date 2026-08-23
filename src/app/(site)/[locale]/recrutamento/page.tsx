@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { getDepartments, getJobs } from "@/lib/cms";
 import { slugFor } from "@/lib/slugs";
+import { ServiceHero } from "@/components/ServiceHero";
 import { ApplicationForm } from "./ApplicationForm";
 import { formCopy } from "./copy";
 
@@ -32,13 +33,23 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <section className="surface-ink">
-        <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-          <span className="eyebrow">{t("eyebrow")}</span>
-          <h1 className="mt-5 max-w-[20ch] text-display">{t("title")}</h1>
-          <p className="subtitle mt-8 max-w-[52ch]">{t("lead")}</p>
-        </div>
-      </section>
+      {/* O mesmo herói das páginas de serviço, com fotografia em vez de vídeo:
+          é o desenho que a casa já tem para um topo com imagem, e inventar um
+          segundo era ter dois. A fotografia é a do site antigo, com a faixa
+          inferior cortada — trazia «be the change» gravado, e duas frases no
+          mesmo canto competem em vez de somarem. */}
+      <ServiceHero
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        claim={t("lead")}
+        poster={{ src: "/media/recrutamento-capa.webp", alt: t("photoAlt") }}
+        height="medio"
+        cta={
+          <a href={jobs.length ? "#vagas" : "#candidatura"} className="btn btn-hero">
+            {jobs.length ? t("openRoles") : t("apply")} <span aria-hidden="true">→</span>
+          </a>
+        }
+      />
 
       <section className="surface-paper">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
@@ -49,11 +60,11 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
               // linhas não precisa de javascript, e assim cada área tem endereço
               // próprio para se partilhar.
               <div className="flex flex-wrap gap-2">
-                <a href="#vagas" className="btn-pill-ink">
+                <a href="#vagas" className="btn-pill btn-pill-ink">
                   {t("allAreas")}
                 </a>
                 {comVaga.map((area) => (
-                  <a key={area.slug} href={`#area-${area.slug}`} className="btn-pill">
+                  <a key={area.slug} href={`#area-${area.slug}`} className="btn-pill btn-pill-line">
                     {area.name[locale]}
                   </a>
                 ))}

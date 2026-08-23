@@ -228,7 +228,7 @@
   },
   "careers": {
     "eyebrow": "Recrutamento",
-    "title": "Vem mudar coisas com a gente.",
+    "title": "How Jelly are you?",
     "description": "Vagas abertas na Jelly e candidaturas espontâneas. Procuramos mentes criativas e apaixonadas pela mudança.",
     "lead": "Procuramos mentes criativas e apaixonadas pela mudança. Valorizamos a curiosidade, a coragem de começar mesmo não sabendo tudo, e a capacidade de pensar a sério sobre os desafios de quem consome.",
     "openRoles": "Vagas abertas",
@@ -304,6 +304,7 @@
     "closedBody": "Vê as que estão abertas, ou deixa uma candidatura espontânea.",
     "area": "Área",
     "role": "Função",
-    "cvRejected": "O CV não foi aceite. Tenta outra vez, em PDF ou Word."
+    "cvRejected": "O CV não foi aceite. Tenta outra vez, em PDF ou Word.",
+    "photoAlt": "Uma pessoa da equipa Jelly no escritório, a olhar para a câmara"
   }
 }

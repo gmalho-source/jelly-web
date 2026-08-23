@@ -101,8 +101,12 @@ export function ApplicationForm({
 
   // A caixa é branca sobre a secção escura: a cor do texto é desta caixa, não da
   // secção onde ela está.
+  // `w-full min-w-0` não é enfeite: um `input` traz uma largura própria de umas
+  // vinte letras, e numa grelha isso é um mínimo que a célula não consegue
+  // apertar — o campo passava por cima do vizinho. Medido: 301px de campo numa
+  // coluna de 264px.
   const campo =
-    "rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
+    "w-full min-w-0 rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
   const etiqueta = "eyebrow text-fg-soft";
 
   return (
@@ -149,7 +153,7 @@ export function ApplicationForm({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="grid gap-1.5">
           <label htmlFor="c-city" className={etiqueta}>
             {copy.city}
@@ -181,7 +185,7 @@ export function ApplicationForm({
         </fieldset>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="grid gap-1.5">
           <label htmlFor="c-experience" className={etiqueta}>
             {copy.experience}
@@ -210,7 +214,7 @@ export function ApplicationForm({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <div className="grid gap-1.5">
           <label htmlFor="c-linkedin" className={etiqueta}>
             {copy.linkedin}

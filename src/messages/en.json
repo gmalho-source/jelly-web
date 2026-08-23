@@ -228,7 +228,7 @@
   },
   "careers": {
     "eyebrow": "Careers",
-    "title": "Come change things with us.",
+    "title": "How Jelly are you?",
     "description": "Open roles at Jelly and speculative applications. We look for creative minds with an appetite for change.",
     "lead": "We look for creative minds with an appetite for change. We value curiosity, the courage to start before knowing everything, and the ability to think seriously about the challenges of the people who buy.",
     "openRoles": "Open roles",
@@ -304,6 +304,7 @@
     "closedBody": "See the open ones, or leave a speculative application.",
     "area": "Area",
     "role": "Role",
-    "cvRejected": "The CV was not accepted. Try again, as PDF or Word."
+    "cvRejected": "The CV was not accepted. Try again, as PDF or Word.",
+    "photoAlt": "Someone from the Jelly team at the office, looking at the camera"
   }
 }

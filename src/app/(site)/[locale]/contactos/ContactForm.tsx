@@ -105,8 +105,11 @@ export function ContactForm({ copy }: { copy: Copy }) {
   // A caixa é branca mas herdava o texto da superfície escura: escrevia-se
   // branco sobre branco. A cor do texto e do sugerido são desta caixa, não da
   // secção onde ela está.
+  // `w-full min-w-0`: um `input` traz uma largura própria de umas vinte letras,
+  // e numa grelha isso é um mínimo que a célula não aperta — o campo do número
+  // passava por cima do indicativo em ecrãs estreitos.
   const field =
-    "rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
+    "w-full min-w-0 rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
 
   return (
     <form onSubmit={onSubmit} className="grid gap-4" noValidate>

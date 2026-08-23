@@ -317,6 +317,20 @@
   color: var(--color-paper);
 }
 
+/* A pílula normal é cor de papel, o que a torna invisível numa secção de papel.
+   Esta troca o fundo por um contorno, para os filtros se verem onde estão. */
+@utility btn-pill-line {
+  background: transparent;
+  color: var(--color-fg-soft);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+
+  &:hover {
+    background: var(--color-red);
+    color: #fff;
+    box-shadow: none;
+  }
+}
+
 /* Um link dentro de um parágrafo de informação — morada, telefone, email. Não
    se pinta de vermelho: numa coluna de contactos, três links vermelhos seguidos
    pesam mais do que o texto que os rodeia. Assinala-se ao passar. */
