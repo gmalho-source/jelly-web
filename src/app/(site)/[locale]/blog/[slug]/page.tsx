@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       (candidate) => ({ pathname: "/blog/[slug]" as const, params: { slug: slugFor(post, candidate) } }),
       locale,
     ),
-    openGraph: { type: "article", publishedTime: post.date, authors: [post.author] },
+    openGraph: { type: "article", publishedTime: post.date, authors: [post.author.name] },
   };
 }
 
@@ -63,7 +63,13 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
     headline: post.title[locale],
     description: post.excerpt[locale],
     datePublished: post.date,
-    author: { "@type": post.author === "Equipa Jelly" ? "Organization" : "Person", name: post.author },
+    // A casa é uma organização, uma pessoa é uma pessoa: o schema.org distingue
+    // as duas, e é isso que decide como o artigo aparece nos resultados.
+    author: {
+      "@type": /^(Jelly|Equipa Jelly)$/.test(post.author.name) ? "Organization" : "Person",
+      name: post.author.name,
+      ...(post.author.role ? { jobTitle: post.author.role } : {}),
+    },
     publisher: { "@type": "Organization", name: "Jelly" },
     inLanguage: locale === "pt" ? "pt-PT" : "en",
   };
@@ -83,7 +89,20 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
       <div className="mt-8 grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
         {/* Marginália: autor, data, tempo de leitura. */}
         <aside className="flex flex-col gap-1 text-sm text-fg-soft">
-          <span className="text-fg">{post.author}</span>
+          {/* A assinatura: cara, nome e função. A fotografia é redonda e pequena
+              — nesta coluna de 150px é um sinal de presença, não um retrato. */}
+          {post.author.photo?.src ? (
+            <Image
+              src={post.author.photo.src}
+              alt={post.author.photo.alt ?? post.author.name}
+              width={80}
+              height={80}
+              sizes="40px"
+              className="mb-2 size-10 rounded-full object-cover"
+            />
+          ) : null}
+          <span className="text-fg">{post.author.name}</span>
+          {post.author.role ? <span className="text-xs">{post.author.role}</span> : null}
           <span>{formatter.format(new Date(post.date))}</span>
           <span>
             {post.readingMinutes} {t("minutes")}
@@ -131,6 +150,26 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
               <p className="reading max-w-[66ch]">{post.excerpt[locale]}</p>
             )}
           </div>
+
+          {post.author.bio ? (
+            <div className="mt-12 flex items-start gap-4 border-t border-line pt-8">
+              {post.author.photo?.src ? (
+                <Image
+                  src={post.author.photo.src}
+                  alt={post.author.photo.alt ?? post.author.name}
+                  width={112}
+                  height={112}
+                  sizes="56px"
+                  className="size-14 shrink-0 rounded-full object-cover"
+                />
+              ) : null}
+              <div>
+                <p className="text-md font-semibold text-fg">{post.author.name}</p>
+                {post.author.role ? <p className="text-sm text-fg-soft">{post.author.role}</p> : null}
+                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">{post.author.bio}</p>
+              </div>
+            </div>
+          ) : null}
 
           <div className="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
             {related.map((item) => (

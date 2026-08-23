@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 import { locale, slugEnField, slugField } from "../fields";
+import { importMarkdown } from "../endpoints/markdown-import";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
 
@@ -23,6 +24,50 @@ export const Categories: CollectionConfig = {
   ],
 };
 
+/**
+ * Quem escreve.
+ *
+ * Tabela própria, sem relação com os utilizadores do painel — e isso é a
+ * decisão, não um atalho. Quem assina um artigo não é necessariamente quem tem
+ * sessão no backoffice: há textos da casa assinados «Jelly», há quem escreva
+ * uma vez e nunca mais entre aqui, e há quem administre o site sem nunca
+ * escrever. Amarrar as duas coisas obrigava a criar uma conta de acesso a cada
+ * pessoa que assina uma peça.
+ */
+export const Authors: CollectionConfig = {
+  slug: "authors",
+  labels: { singular: "Autor", plural: "Autores" },
+  admin: { useAsTitle: "name", group: "Editorial", defaultColumns: ["name", "role"] },
+  access: { read: () => true },
+  fields: [
+    {
+      type: "row",
+      fields: [
+        { name: "name", label: "Nome", type: "text", required: true },
+        {
+          name: "role",
+          label: "Função",
+          type: "text",
+          admin: { description: "Como aparece debaixo do nome: «CEO», «Head of Paid Media»." },
+        },
+      ],
+    },
+    {
+      name: "photo",
+      label: "Fotografia",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "De rosto e quadrada, se possível: é assim que sai no artigo." },
+    },
+    {
+      name: "bio",
+      label: "Uma linha",
+      type: "textarea",
+      admin: { description: "Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo." },
+    },
+  ],
+};
+
 export const Posts: CollectionConfig = {
   slug: "posts",
   labels: { singular: "Artigo", plural: "Artigos" },
@@ -36,6 +81,9 @@ export const Posts: CollectionConfig = {
   versions: { drafts: true },
   access: { read: () => true },
   hooks: { afterChange: [revalidateOnChange(postPaths)], afterDelete: [revalidateOnDelete(postPaths)] },
+  // Um Markdown a povoar o artigo. O trabalho é do servidor porque é lá que as
+  // imagens entram na biblioteca.
+  endpoints: [{ path: "/markdown", method: "post", handler: importMarkdown }],
   fields: [
     {
       type: "row",
@@ -50,19 +98,46 @@ export const Posts: CollectionConfig = {
       type: "row",
       fields: [
         { name: "date", label: "Data", type: "date", required: true, admin: { date: { pickerAppearance: "dayOnly" } } },
-        { name: "author", label: "Autor", type: "text", defaultValue: "Jelly" },
+        { name: "authorRef", label: "Autor", type: "relationship", relationTo: "authors" },
+        {
+          name: "author",
+          label: "Autor (texto antigo)",
+          type: "text",
+          admin: {
+            readOnly: true,
+            description: "O que veio do site antigo. Fica para conferência; quem manda é o campo acima.",
+          },
+        },
         { name: "readingMinutes", label: "Minutos de leitura", type: "number" },
       ],
     },
     { name: "category", label: "Categoria", type: "relationship", relationTo: "categories" },
     locale("excerpt", "Resumo", { long: true }),
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
-    { name: "body", label: "Corpo (PT)", type: "richText" },
+    {
+      name: "body",
+      label: "Corpo (PT)",
+      type: "richText",
+      admin: {
+        components: {
+          beforeInput: [
+            { path: "@/payload/components/MarkdownImport#MarkdownImport", clientProps: { campo: "body" } },
+          ],
+        },
+      },
+    },
     {
       name: "bodyEn",
       label: "Corpo (EN)",
       type: "richText",
-      admin: { description: "Tradução do corpo. Vazio, o site em inglês mostra o texto português." },
+      admin: {
+        description: "Tradução do corpo. Vazio, o site em inglês mostra o texto português.",
+        components: {
+          beforeInput: [
+            { path: "@/payload/components/MarkdownImport#MarkdownImport", clientProps: { campo: "bodyEn" } },
+          ],
+        },
+      },
     },
     { name: "lang", label: "Língua do original", type: "select", options: ["pt", "en"], defaultValue: "pt" },
     { name: "legacyPath", label: "URL antigo", type: "text", admin: { readOnly: true, description: "Serve o redirecionamento 301." } },

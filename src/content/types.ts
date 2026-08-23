@@ -59,13 +59,27 @@ export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" 
 
 export type TeamMember = { name: string; role?: Localized };
 
+/**
+ * Quem assina um artigo.
+ *
+ * Era uma string. Passou a isto quando os autores ganharam tabela própria: um
+ * nome sozinho não dá para desenhar a assinatura no fim de um texto, que é o
+ * sítio onde se quer ver a cara e a função de quem escreveu.
+ */
+export type Autor = {
+  name: string;
+  role?: string;
+  bio?: string;
+  photo?: { src: string; alt?: string; width?: number; height?: number };
+};
+
 export type Post = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
   date: string;
   category: Localized;
-  author: string;
+  author: Autor;
   readingMinutes: number;
   title: Localized;
   excerpt: Localized;

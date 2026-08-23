@@ -10,7 +10,7 @@ import sharp from "sharp";
 import { Media } from "./src/payload/collections/media";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
-import { Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
+import { Authors, Categories, NewsItems, Posts } from "./src/payload/collections/editorial";
 import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
 import { Messages } from "./src/payload/collections/messages";
@@ -40,6 +40,7 @@ export default buildConfig({
     Pages,
     Posts,
     Categories,
+    Authors,
     Projects,
     Services,
     NewsItems,

@@ -1,6 +1,7 @@
 import type { Payload } from "payload";
 import type {
   ArchivedProject,
+  Autor,
   Block,
   Client,
   Localized,
@@ -110,6 +111,30 @@ function fromStory(story: unknown): Block[] {
 
 const all = { limit: 0, depth: 2 } as const;
 
+/**
+ * O autor da peça, da tabela ou do texto antigo.
+ *
+ * `depth: 2` chega para trazer o autor com a fotografia dentro: um salto para o
+ * autor, outro para a imagem. Sem ficha na tabela vale o campo de texto que
+ * veio do site antigo — 179 artigos importados não podem ficar sem assinatura à
+ * espera de serem tratados um a um.
+ */
+function autor(raw: Doc): Autor {
+  const ficha = raw.authorRef as Doc | number | null;
+  if (ficha && typeof ficha === "object") {
+    return {
+      name: text(ficha.name) || "Jelly",
+      ...(text(ficha.role) ? { role: text(ficha.role) } : {}),
+      ...(text(ficha.bio) ? { bio: text(ficha.bio) } : {}),
+      ...((() => {
+        const foto = image(ficha.photo as MediaDoc);
+        return foto ? { photo: foto } : {};
+      })()),
+    };
+  }
+  return { name: text(raw.author) || "Jelly" };
+}
+
 export function fetchPosts(fallback: Post[]) {
   return fromCms(async (payload) => {
     const { docs } = await payload.find({ collection: "posts", sort: "-date", ...all });
@@ -119,7 +144,7 @@ export function fetchPosts(fallback: Post[]) {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
         date: text(raw.date).slice(0, 10),
-        author: text(raw.author) || "Jelly",
+        author: autor(raw),
         readingMinutes: typeof raw.readingMinutes === "number" ? raw.readingMinutes : 4,
         legacyPath: text(raw.legacyPath) || undefined,
         lang: raw.lang === "en" ? "en" : "pt",

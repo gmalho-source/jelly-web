@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     categories: Category;
+    authors: Author;
     projects: Project;
     services: Service;
     news: News;
@@ -96,6 +97,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    authors: AuthorsSelect<false> | AuthorsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
@@ -247,6 +249,10 @@ export interface Post {
    */
   slugEn?: string | null;
   date: string;
+  authorRef?: (number | null) | Author;
+  /**
+   * O que veio do site antigo. Fica para conferência; quem manda é o campo acima.
+   */
   author?: string | null;
   readingMinutes?: number | null;
   category?: (number | null) | Category;
@@ -296,6 +302,28 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors".
+ */
+export interface Author {
+  id: number;
+  name: string;
+  /**
+   * Como aparece debaixo do nome: «CEO», «Head of Paid Media».
+   */
+  role?: string | null;
+  /**
+   * De rosto e quadrada, se possível: é assim que sai no artigo.
+   */
+  photo?: (number | null) | Media;
+  /**
+   * Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo.
+   */
+  bio?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1075,6 +1103,10 @@ export interface PayloadLockedDocument {
         value: number | Category;
       } | null)
     | ({
+        relationTo: 'authors';
+        value: number | Author;
+      } | null)
+    | ({
         relationTo: 'projects';
         value: number | Project;
       } | null)
@@ -1209,6 +1241,7 @@ export interface PostsSelect<T extends boolean = true> {
   slug?: T;
   slugEn?: T;
   date?: T;
+  authorRef?: T;
   author?: T;
   readingMinutes?: T;
   category?: T;
@@ -1235,6 +1268,18 @@ export interface CategoriesSelect<T extends boolean = true> {
   titlePt?: T;
   titleEn?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors_select".
+ */
+export interface AuthorsSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  photo?: T;
+  bio?: T;
   updatedAt?: T;
   createdAt?: T;
 }

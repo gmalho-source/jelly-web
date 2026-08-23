@@ -73,7 +73,7 @@ export default async function BlogIndexPage({
             />
           ) : null}
           <div className="flex flex-col gap-1 lg:items-end">
-            <span>{featured.author}</span>
+            <span>{featured.author.name}</span>
             <span>{formatter.format(new Date(featured.date))}</span>
             <span>
               {featured.readingMinutes} {t("minutes")}
@@ -116,7 +116,7 @@ export default async function BlogIndexPage({
               {post.title[locale]}
             </h3>
             <p className="mt-1 text-sm text-fg-soft">
-              {post.category[locale]} · {t("by")} {post.author}
+              {post.category[locale]} · {t("by")} {post.author.name}
             </p>
           </div>
           <span className="self-baseline text-right text-sm tabular-nums text-fg-soft">

@@ -31,7 +31,9 @@
     "copy:contacts": "tsx scripts/copy-fix-contacts.mjs",
     "video:prep": "node scripts/video-prep.mjs",
     "applications:import": "tsx scripts/import-applications.mjs",
-    "carta:exemplo": "tsx scripts/carta-exemplo.mjs"
+    "carta:exemplo": "tsx scripts/carta-exemplo.mjs",
+    "autores": "tsx scripts/autores.mjs",
+    "md:check": "tsx scripts/check-markdown.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

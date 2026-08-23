@@ -109,7 +109,7 @@ function fromMigrated(post: MigratedPost): Post {
     slug: post.slug,
     date: post.date,
     category: { pt: post.category, en: post.category },
-    author: post.author,
+    author: { name: post.author },
     readingMinutes: post.readingMinutes,
     title: { pt: post.title, en: post.title },
     excerpt: { pt: post.excerpt, en: post.excerpt },

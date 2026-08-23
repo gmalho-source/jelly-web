@@ -10,7 +10,7 @@ export const posts: Post[] = [
     slug: "ia-no-marketing-digital",
     date: "2026-07-17",
     category: { pt: "Inteligência artificial", en: "Artificial intelligence" },
-    author: "Gonçalo Malho Rodrigues",
+    author: { name: "Gonçalo Malho Rodrigues" },
     readingMinutes: 7,
     title: {
       pt: "Como a IA está a transformar o marketing digital",
@@ -40,7 +40,7 @@ export const posts: Post[] = [
     slug: "agentes-de-ia-no-atendimento-24h",
     date: "2026-08-04",
     category: { pt: "Inteligência artificial", en: "Artificial intelligence" },
-    author: "Equipa Jelly",
+    author: { name: "Equipa Jelly" },
     readingMinutes: 9,
     title: {
       pt: "Agentes de IA no atendimento ao cliente 24h: guia prático",
@@ -56,7 +56,7 @@ export const posts: Post[] = [
     slug: "trafego-pago-para-e-commerce",
     date: "2026-07-20",
     category: { pt: "Performance", en: "Performance" },
-    author: "Equipa Jelly",
+    author: { name: "Equipa Jelly" },
     readingMinutes: 8,
     title: {
       pt: "Tráfego pago para e-commerce: guia prático para vender mais",
@@ -72,7 +72,7 @@ export const posts: Post[] = [
     slug: "imunidade-algoritmica",
     date: "2026-07-10",
     category: { pt: "SEO e GEO", en: "SEO and GEO" },
-    author: "Equipa Jelly",
+    author: { name: "Equipa Jelly" },
     readingMinutes: 6,
     title: {
       pt: "Imunidade algorítmica: quando a autoridade da marca torna o SEO inevitável",
@@ -88,7 +88,7 @@ export const posts: Post[] = [
     slug: "seo-sem-cliques",
     date: "2026-07-05",
     category: { pt: "SEO e GEO", en: "SEO and GEO" },
-    author: "Equipa Jelly",
+    author: { name: "Equipa Jelly" },
     readingMinutes: 5,
     title: {
       pt: "SEO sem cliques: o que a evidência diz e como reagir",
@@ -104,7 +104,7 @@ export const posts: Post[] = [
     slug: "como-gerar-leads-qualificados",
     date: "2026-07-08",
     category: { pt: "Performance", en: "Performance" },
-    author: "Equipa Jelly",
+    author: { name: "Equipa Jelly" },
     readingMinutes: 6,
     title: {
       pt: "Como gerar leads qualificados com marketing digital",
