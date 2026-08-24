@@ -200,7 +200,10 @@ export function ContactForm({ copy }: { copy: Copy }) {
         />
         <span className="text-xs text-fg-soft">{copy.briefHint}</span>
       </div>
-      <button type="submit" disabled={state === "sending"} className="btn w-fit disabled:opacity-40">
+      {/* A pastilha da casa, e não o botão vermelho de cantos redondos que veio
+          do site antigo. Esta página é tinta, por isso leva a pílula de papel —
+          a que acende a vermelho ao passar o rato. */}
+      <button type="submit" disabled={state === "sending"} className="btn-pill w-fit disabled:opacity-40">
         {state === "sending" ? copy.sending : copy.submit} <span aria-hidden="true">→</span>
       </button>
       {state === "invalid" || state === "error" || state === "grande" ? (

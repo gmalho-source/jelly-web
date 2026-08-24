@@ -191,7 +191,8 @@
   "contact": {
     "eyebrow": "Contactos",
     "description": "Fale com a Jelly. Conte-nos o que precisa de mudar e um elemento da equipa responde.",
-    "title": "Diga-nos o que precisa de mudar.",
+    "title": "Tem um desafio?",
+    "lead": "Fale-nos sobre ele e vamos mudar as coisas juntos.",
     "name": "Nome",
     "company": "Empresa ou marca",
     "email": "Email",
@@ -199,7 +200,7 @@
     "phoneHint": "915 098 769",
     "message": "O que precisa",
     "messageHint": "Em duas linhas: onde está o problema e o que já tentou.",
-    "submit": "Enviar briefing",
+    "submit": "Enviar desafio",
     "sending": "A enviar…",
     "sent": "A mudança está prestes a começar, {nome}!",
     "error": "Não foi possível enviar. Tente outra vez ou escreva para hello@jelly.pt.",

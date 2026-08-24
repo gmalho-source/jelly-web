@@ -19,12 +19,13 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <section data-pagina="contactos" className="surface-ink mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-      {/* Sem a frase da direita, o título fica sozinho na linha. A largura é a
-          da coluna que ele ocupava antes — em ch partia-se palavra a palavra,
-          porque a fonte do display é enorme e 16 caracteres não chegam a duas. */}
+      {/* A largura é a da coluna que o título ocupava antes — em `ch` partia-se
+          palavra a palavra, porque a fonte do display é enorme e dezasseis
+          caracteres não chegam a duas palavras. */}
       <div className="lg:max-w-[62%]">
         <span className="eyebrow">{t("eyebrow")}</span>
         <h1 className="mt-5 text-display">{t("title")}</h1>
+        <p className="subtitle mt-5 max-w-[42ch] text-fg-soft">{t("lead")}</p>
       </div>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[minmax(0,52%)_minmax(0,40%)] lg:justify-between">

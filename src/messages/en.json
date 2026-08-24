@@ -191,7 +191,8 @@
   "contact": {
     "eyebrow": "Contact",
     "description": "Talk to Jelly. Tell us what needs to change and someone from the team will answer.",
-    "title": "Tell us what needs to change.",
+    "title": "Got a challenge?",
+    "lead": "Tell us about it and let's change things together.",
     "name": "Name",
     "company": "Company or brand",
     "email": "Email",
@@ -199,7 +200,7 @@
     "phoneHint": "912 345 678",
     "message": "What you need",
     "messageHint": "In two lines: where the problem is and what you have already tried.",
-    "submit": "Send briefing",
+    "submit": "Send the challenge",
     "sending": "Sending…",
     "sent": "The change is about to start, {nome}!",
     "error": "We could not send it. Try again or write to hello@jelly.pt.",

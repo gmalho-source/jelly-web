@@ -256,6 +256,9 @@ export interface Post {
   author?: string | null;
   readingMinutes?: number | null;
   category?: (number | null) | Category;
+  /**
+   * A primeira linha do artigo na página e a description que sai no Google. Até 155 caracteres.
+   */
   excerpt?: {
     pt?: string | null;
     en?: string | null;
