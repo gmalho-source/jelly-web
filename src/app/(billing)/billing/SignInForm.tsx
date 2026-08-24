@@ -76,7 +76,9 @@ export function SignInForm({ copy }: { copy: Copy }) {
       <button
         type="submit"
         disabled={state === "sending"}
-        className="btn w-fit disabled:opacity-40"
+        /* A pastilha da casa, de papel: fui medir o fundo desta página e é
+           tinta, como o resto do site — os campos brancos enganam. */
+        className="btn-pill w-fit disabled:opacity-40"
       >
         {state === "sending" ? copy.sending : copy.submit}
       </button>

@@ -49,11 +49,19 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             brief: t("brief"),
             briefHint: t("briefHint"),
             submit: t("submit"),
+            erros: {
+              name: t("erros.name"),
+              company: t("erros.company"),
+              email: t("erros.email"),
+              emailInvalid: t("erros.emailInvalid"),
+              phone: t("erros.phone"),
+              phoneShort: t("erros.phoneShort"),
+              message: t("erros.message"),
+            },
             sending: t("sending"),
             sent: t("sent"),
             sentBody: t("sentBody"),
             error: t("error"),
-            invalid: t("invalid"),
             tooBig: t("tooBig"),
           }}
         />

@@ -221,6 +221,15 @@
       "dois-tres": "Dentro de dois a três meses",
       "mais-tarde": "Mais para a frente",
       "nao-sei": "Ainda não sei"
+    },
+    "erros": {
+      "name": "Diga-nos como se chama.",
+      "company": "Falta a empresa ou marca.",
+      "email": "Falta o email.",
+      "emailInvalid": "Este email não parece válido.",
+      "phone": "Falta o telefone.",
+      "phoneShort": "Este número parece curto.",
+      "message": "Diga-nos o que precisa."
     }
   },
   "legal": {

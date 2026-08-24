@@ -318,7 +318,7 @@ export function ApplicationForm({
         {copy.newsletter}
       </label>
 
-      <button type="submit" disabled={estado === "a-enviar"} className="btn mt-2 w-fit disabled:opacity-40">
+      <button type="submit" disabled={estado === "a-enviar"} className="btn-pill mt-2 w-fit disabled:opacity-40">
         {estado === "a-enviar" ? copy.sending : copy.submit} <span aria-hidden="true">→</span>
       </button>
 

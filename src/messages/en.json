@@ -221,6 +221,15 @@
       "dois-tres": "In two to three months",
       "mais-tarde": "Further out",
       "nao-sei": "Not sure yet"
+    },
+    "erros": {
+      "name": "Tell us your name.",
+      "company": "The company or brand is missing.",
+      "email": "The email is missing.",
+      "emailInvalid": "This email does not look valid.",
+      "phone": "The phone number is missing.",
+      "phoneShort": "This number looks short.",
+      "message": "Tell us what you need."
     }
   },
   "legal": {
