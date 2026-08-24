@@ -4,7 +4,7 @@ import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangePill } from "./ChangePill";
 import { JellyWordmark } from "./JellyLogo";
 
@@ -14,6 +14,16 @@ export type SheetTile = {
   href: string;
   image?: string;
   tone?: string;
+  /** Banda onde o mosaico vive: «Serviços», «Trabalho», «A casa». */
+  group?: string;
+  /**
+   * Fora da folha, mas dentro da procura.
+   *
+   * O índice mostra o site em três bandas curtas — mas continua a encontrar
+   * qualquer projeto ou artigo pelo nome. Um mosaico escondido não aparece com
+   * a folha em repouso e aparece à primeira letra escrita.
+   */
+  hidden?: boolean;
 };
 
 export type SheetCopy = {
@@ -89,11 +99,32 @@ export function IndexSheet({
 
   const results = useMemo(() => {
     const term = normalize(query.trim());
-    if (!term) return tiles;
+    // Em repouso, a folha mostra as bandas; a escrever, procura tudo o que há.
+    if (!term) return tiles.filter((tile) => !tile.hidden);
     return tiles.filter((tile) =>
       normalize(`${tile.label} ${tile.kind}`).includes(term),
     );
   }, [query, tiles]);
+
+  /*
+   * As bandas, com o índice de cada mosaico na lista de resultados: é esse
+   * índice que as setas do teclado percorrem, e por isso ele não pode ser o da
+   * banda. A escrever não há bandas — os resultados são uma folha só, porque
+   * agrupar dois resultados debaixo de um título é dar-lhes uma arrumação que
+   * eles não têm.
+   */
+  const bands = useMemo(() => {
+    const itens = results.map((tile, index) => ({ tile, index }));
+    if (query.trim()) return [{ name: null as string | null, itens }];
+    const saida: { name: string | null; itens: typeof itens }[] = [];
+    for (const item of itens) {
+      const name = item.tile.group ?? null;
+      const ultima = saida[saida.length - 1];
+      if (!ultima || ultima.name !== name) saida.push({ name, itens: [item] });
+      else ultima.itens.push(item);
+    }
+    return saida;
+  }, [results, query]);
 
   const active = results.length
     ? ((cursor % results.length) + results.length) % results.length
@@ -264,15 +295,32 @@ export function IndexSheet({
           </div>
 
           <div className="grid flex-1 grid-cols-2 content-start gap-px overflow-y-auto bg-paper/10 lg:grid-cols-4">
-            {results.map((tile, index) => (
+            {bands.map((band) => (
+              <Fragment key={band.name ?? "tudo"}>
+                {band.name ? (
+                  <p className="col-span-full bg-ink px-5 pb-2 pt-7 text-[11px] font-semibold uppercase tracking-[0.14em] text-paper/35 sm:px-8">
+                    {band.name}
+                  </p>
+                ) : null}
+                {band.itens.map(({ tile, index }) => (
               <Link
                 key={tile.href + tile.label}
                 href={tile.href}
                 onClick={() => setOpenedOn(null)}
                 onMouseEnter={() => setCursor(index)}
-                className="group relative block bg-ink"
+                className="group relative flex flex-col bg-ink"
               >
-                <span className="block aspect-[4/3] overflow-hidden">
+                {/*
+                  Um mosaico com fotografia tem a proporção da fotografia; um
+                  mosaico de cor não precisa dela — é uma etiqueta, e ocupa a
+                  altura mínima. É isso que faz caber as três bandas num ecrã em
+                  vez de duas e meia. Numa linha com as duas coisas, a cor
+                  estica-se (`flex-1`) até à altura da fotografia, senão ficava
+                  um buraco por baixo dela.
+                */}
+                <span
+                  className={`block overflow-hidden ${tile.image ? "aspect-[4/3]" : "min-h-[104px] flex-1"}`}
+                >
                   {tile.image ? (
                     <Image
                       src={tile.image}
@@ -303,6 +351,8 @@ export function IndexSheet({
                   </span>
                 </span>
               </Link>
+                ))}
+              </Fragment>
             ))}
             {!results.length ? (
               <p className="col-span-full bg-ink px-5 py-16 text-center text-paper/50">
