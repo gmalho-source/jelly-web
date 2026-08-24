@@ -45,6 +45,9 @@ export async function GET(request: NextRequest) {
     remetentes: "senders",
     dominios: "senders/domains",
     eventos: "smtp/statistics/events?limit=20&sort=desc",
+    // A entrada dos CV: sem isto registado, o Brevo recusa o correio para o
+    // cvs.jelly.pt à porta, e a recusa só se vê no email devolvido.
+    entrada: "webhooks?type=inbound",
     agregado: "smtp/statistics/aggregatedReport",
   };
 
