@@ -325,5 +325,52 @@
       "consent": "We need your permission to keep the application.",
       "tooBig": "This file is over 4 MB."
     }
+  },
+  "confirmacao": {
+    "eyebrow": "Application",
+    "title": "Can you confirm your details?",
+    "lead": "Your CV reached us outside the site form. Check that everything is right, fix what is not, and tell us whether we can keep your application.",
+    "name": "Name",
+    "email": "Email",
+    "emailHint": "This is the address this link was sent to. If it is wrong, write to talent@jelly.pt.",
+    "phone": "Phone",
+    "city": "City",
+    "country": "Country",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio",
+    "experience": "Experience",
+    "contract": "Preferred arrangement",
+    "choose": "Choose",
+    "experienceOptions": {
+      "nenhuma": "No experience",
+      "menos-de-um": "Less than a year",
+      "um-dois": "1 to 2 years",
+      "tres-cinco": "3 to 5 years",
+      "mais-de-cinco": "More than 5 years"
+    },
+    "contractOptions": {
+      "contrato": "Employment contract",
+      "estagio": "Internship",
+      "freelancer": "Freelance"
+    },
+    "consent": "I allow Jelly to keep my application for twelve months and to look at it when something close to my profile opens up.",
+    "newsletter": "I want to receive Jelly's communications.",
+    "submit": "Confirm",
+    "sending": "Saving…",
+    "done": "Confirmed. Thank you, {nome}.",
+    "doneLead": "Your application stays with us for twelve months. If you change your mind, reply to the email we sent and it is deleted the same day.",
+    "erros": {
+      "name": "Your name is missing.",
+      "consent": "Without this permission we cannot keep anything.",
+      "geral": "We could not save it. Please try again in a moment."
+    },
+    "deleteTitle": "Would you rather we deleted it?",
+    "deleteLead": "We delete the application and the CV, right now, with nobody in between.",
+    "delete": "Delete everything",
+    "deleteConfirm": "This deletes the application and the CV. There is no way back. Continue?",
+    "deleted": "Deleted.",
+    "deletedLead": "We kept nothing of yours. If one day you want to apply, the door is open at jelly.pt.",
+    "expiredTitle": "This link no longer stands",
+    "expiredLead": "Confirmation links last fourteen days, and this one is past that — or has been used already. If you still want your application to stay with us, write to talent@jelly.pt and we will send another."
   }
 }

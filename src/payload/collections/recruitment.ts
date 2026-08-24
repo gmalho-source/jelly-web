@@ -2,6 +2,7 @@ import type { Access, CollectionConfig } from "payload";
 import { locale, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
 import { readCv } from "../endpoints/read-cv";
+import { requestConfirmation } from "../endpoints/request-confirmation";
 import { scoreApplication, setRetention } from "../hooks/rating";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 
@@ -299,6 +300,8 @@ export const Applications: CollectionConfig = {
     { path: "/:id/email", method: "post", handler: sendCandidateEmail },
     // Um CV a preencher a ficha. Não grava a candidatura — devolve os campos.
     { path: "/ler-cv", method: "post", handler: readCv },
+    // O pedido de confirmação ao candidato: a terceira via, pedida à mão.
+    { path: "/:id/confirmacao", method: "post", handler: requestConfirmation },
   ],
   access: {
     read: recruiterOnly,
@@ -326,6 +329,12 @@ export const Applications: CollectionConfig = {
               name: "lerCv",
               type: "ui",
               admin: { components: { Field: "@/payload/components/LerCV#LerCV" } },
+            },
+            {
+              // Só se mostra nas fichas por confirmar — o componente decide.
+              name: "pedirConfirmacao",
+              type: "ui",
+              admin: { components: { Field: "@/payload/components/PedirConfirmacao#PedirConfirmacao" } },
             },
             {
               type: "row",
@@ -578,6 +587,34 @@ export const Applications: CollectionConfig = {
                   },
                 },
               ],
+            },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "confirmSentAt",
+                  label: "Confirmação pedida em",
+                  type: "date",
+                  admin: {
+                    readOnly: true,
+                    description: "Quando saiu o pedido para o candidato confirmar os dados. O link vale catorze dias.",
+                  },
+                },
+                {
+                  name: "confirmedAt",
+                  label: "Confirmada em",
+                  type: "date",
+                  admin: { readOnly: true, description: "Quando o candidato confirmou. É esta confirmação que traz o consentimento." },
+                },
+              ],
+            },
+            {
+              // O resumo da chave que vai no link. A chave não se guarda: quem
+              // puser os olhos na base de dados não fica com a porta de ninguém.
+              name: "confirmTokenHash",
+              type: "text",
+              index: true,
+              admin: { hidden: true },
             },
             {
               name: "sourceEmail",

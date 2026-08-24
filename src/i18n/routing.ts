@@ -26,6 +26,8 @@ export const routing = defineRouting({
     "/recrutamento": { pt: "/recrutamento", en: "/careers" },
     "/recrutamento/[slug]": { pt: "/recrutamento/[slug]", en: "/careers/[slug]" },
     "/legal/[slug]": { pt: "/legal/[slug]", en: "/legal/[slug]" },
+    // O link que vai na carta a quem se candidatou por fora do formulário.
+    "/confirmar-candidatura/[token]": { pt: "/confirmar-candidatura/[token]", en: "/confirm-application/[token]" },
   },
 });
 

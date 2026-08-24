@@ -146,9 +146,18 @@ que também não vem. O que se exige, portanto, é: remetente `@jelly.pt` e uma
 `DKIM-Signature` do domínio que assina o correio da casa — presença, não
 verificação. Se o cabeçalho de veredicto aparecer um dia, é ele que manda.
 
-Some-se a isso o endereço ser secreto e sorteado, e o facto de uma ficha que
-entre por aqui nascer «Por confirmar», sem nada decidido sobre ela sem uma
-pessoa. Se isto passar a valer mais do que vale, o passo seguinte está escrito
+Uma ficha que entre por aqui — ou pelo botão «Ler um CV» no painel — nasce «Por
+confirmar» e recebe, por email, um link só dela: a **terceira via**. Nessa
+página o candidato vê o que ficou registado, corrige o que estiver errado, e
+decide — autoriza que se guarde, e a ficha passa a «Nova» com data de
+consentimento; ou manda apagar, e a candidatura e o currículo desaparecem no
+momento. O link vale catorze dias, morre quando é usado, e o que fica guardado
+é o resumo criptográfico da chave, não a chave. Na porta do email o pedido sai
+sozinho; no painel fica a um clique, porque um currículo entregue em mão pode
+já ter vindo com autorização.
+
+Some-se a isso o endereço ser secreto e sorteado, e o facto de nada se decidir
+sobre uma candidatura sem uma pessoa. Se isto passar a valer mais do que vale, o passo seguinte está escrito
 no código: combinar uma palavra que a equipa escreve no reenvio — conhecimento
 que não anda em cabeçalhos e não se adivinha de fora.
 

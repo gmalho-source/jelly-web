@@ -7,6 +7,7 @@ import { env } from "@/lib/env";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { leituraEscrita, lerCurriculo } from "@/lib/cv-leitura";
+import { pedeConfirmacao } from "@/lib/pede-confirmacao";
 
 export const runtime = "nodejs";
 // Ler um currículo leva dezenas de segundos, e o Brevo espera pela resposta.
@@ -371,11 +372,24 @@ async function trata(item: Item, caixa: string): Promise<string> {
     },
   });
 
+  // A terceira via, automática nesta porta: ninguém falou com a pessoa, e o
+  // consentimento tem de vir dela. Se falhar, a ficha fica na mesma e o colega
+  // sabe que tem de pedir à mão pelo botão do painel.
+  let pedido: { ok: boolean; erro?: string } = { ok: false, erro: "sem email do candidato" };
+  if (emailCandidato) {
+    pedido = await pedeConfirmacao(payload, { ...ficha, email: emailCandidato } as never);
+    if (!pedido.ok) console.error(`[cvs] o pedido de confirmação não saiu: ${pedido.erro}`);
+  }
+
   await responde(
     campos?.name ? `Ficha criada: ${campos.name}` : "Ficha criada, por confirmar",
     [
       "Recebi o currículo que reenviaste e criei a ficha.",
-      emailCandidato ? "" : "Não consegui encontrar o email da pessoa no currículo — sem ele não dá para lhe pedir a confirmação, por isso escreve-o à mão na ficha.",
+      pedido.ok
+        ? `Pedi a confirmação dos dados a ${emailCandidato}. Enquanto ele não confirmar, a ficha fica por confirmar e sem consentimento.`
+        : emailCandidato
+          ? `Não consegui pedir-lhe a confirmação (${pedido.erro}). Podes voltar a pedir pelo botão na ficha.`
+          : "Não consegui encontrar o email da pessoa no currículo — sem ele não há a quem pedir a confirmação. Escreve-o à mão na ficha e carrega em «Pedir confirmação».",
       "A vaga fica por escolher: é a única coisa que um currículo não diz.",
       "",
       `Ficha: ${painel(`/collections/applications/${ficha.id}`)}`,

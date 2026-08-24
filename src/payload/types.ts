@@ -1015,6 +1015,15 @@ export interface Application {
    */
   retentionUntil?: string | null;
   /**
+   * Quando saiu o pedido para o candidato confirmar os dados. O link vale catorze dias.
+   */
+  confirmSentAt?: string | null;
+  /**
+   * Quando o candidato confirmou. É esta confirmação que traz o consentimento.
+   */
+  confirmedAt?: string | null;
+  confirmTokenHash?: string | null;
+  /**
    * Quando a candidatura entrou por reenvio: quem reenviou, quando, e o que o email dizia. Fica como estava — é o que permite perceber de onde veio isto, meses depois.
    */
   sourceEmail?: string | null;
@@ -1876,6 +1885,9 @@ export interface ApplicationsSelect<T extends boolean = true> {
   consentAt?: T;
   source?: T;
   retentionUntil?: T;
+  confirmSentAt?: T;
+  confirmedAt?: T;
+  confirmTokenHash?: T;
   sourceEmail?: T;
   emails?:
     | T
