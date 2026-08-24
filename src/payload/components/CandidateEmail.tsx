@@ -2,6 +2,7 @@
 
 import { toast, useDocumentInfo, useField } from "@payloadcms/ui";
 import { useState } from "react";
+import { leResposta } from "./resposta";
 
 type Rascunho = { status: string; to?: string; subject: string; body: string; jaEnviado?: boolean; error?: string };
 
@@ -33,7 +34,7 @@ export function CandidateEmail() {
     setOcupado(true);
     try {
       const resposta = await fetch(`/api/applications/${id}/email`, { credentials: "include" });
-      const corpo = (await resposta.json()) as Rascunho;
+      const corpo = await leResposta<Rascunho>(resposta);
       if (!resposta.ok) throw new Error(corpo?.error ?? `erro ${resposta.status}`);
       setRascunho(corpo);
     } catch (erro) {
@@ -53,7 +54,7 @@ export function CandidateEmail() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ subject: rascunho.subject, body: rascunho.body }),
       });
-      const corpo = (await resposta.json()) as { ok?: boolean; error?: string; simulado?: boolean };
+      const corpo = await leResposta<{ ok?: boolean; error?: string; simulado?: boolean }>(resposta);
       if (!resposta.ok) throw new Error(corpo?.error ?? `erro ${resposta.status}`);
       toast.success(
         corpo.simulado

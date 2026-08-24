@@ -2,6 +2,7 @@
 
 import { toast, useField } from "@payloadcms/ui";
 import { useState } from "react";
+import { leResposta } from "./resposta";
 
 /**
  * Botão debaixo do campo do resumo: pede ao Claude um resumo do artigo, na
@@ -43,7 +44,7 @@ export function ResumoIA({ lingua }: { lingua: "pt" | "en" }) {
           corpo: corpo.value ?? corpoPt.value,
         }),
       });
-      const body = (await response.json()) as { resumo?: string; error?: string };
+      const body = await leResposta<{ resumo?: string; error?: string }>(response);
       if (!response.ok || !body.resumo) throw new Error(body?.error ?? `erro ${response.status}`);
       resumo.setValue(body.resumo);
       toast.success("Resumo escrito. Lê antes de gravar.");

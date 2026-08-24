@@ -1,6 +1,7 @@
 "use client";
 
 import { toast, useField } from "@payloadcms/ui";
+import { leResposta } from "./resposta";
 import { useRef, useState } from "react";
 
 /**
@@ -40,12 +41,12 @@ export function LerCV() {
         headers: { "content-type": ficheiro.type || "application/octet-stream" },
         body: ficheiro,
       });
-      const corpo = (await resposta.json()) as {
+      const corpo = await leResposta<{
         documento?: number | string;
         campos?: Record<string, unknown>;
         aviso?: string;
         error?: string;
-      };
+      }>(resposta);
       if (!resposta.ok) throw new Error(corpo?.error ?? `erro ${resposta.status}`);
 
       if (corpo.documento) cv.setValue(corpo.documento);

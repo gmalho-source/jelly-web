@@ -2,6 +2,7 @@
 
 import { toast, useDocumentInfo, useField } from "@payloadcms/ui";
 import { useState } from "react";
+import { leResposta } from "./resposta";
 
 /**
  * Botão ao lado do texto alternativo: pede ao Claude uma descrição da imagem e
@@ -55,7 +56,7 @@ export function DescribeImage() {
     setBusy(true);
     try {
       const response = await pedido();
-      const body = (await response.json()) as { title?: string; alt?: string; caption?: string; error?: string };
+      const body = await leResposta<{ title?: string; alt?: string; caption?: string; error?: string }>(response);
       if (!response.ok) throw new Error(body?.error ?? `erro ${response.status}`);
 
       if (body.title) title.setValue(body.title);

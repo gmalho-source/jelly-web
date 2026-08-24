@@ -8,6 +8,13 @@ import {
   REST_PUT,
 } from "@payloadcms/next/routes";
 
+// Os pedidos que passam por um modelo — ler um CV, escrever o resumo de um
+// artigo, descrever uma imagem — demoram dezenas de segundos, e o tempo que a
+// Vercel dá por defeito a uma função é curto. Sem isto, um currículo de três
+// páginas morre a meio e o painel recebe uma página de erro do serviço, não a
+// resposta do Payload: um minuto chega para todos, e quem não precisa não paga.
+export const maxDuration = 60;
+
 export const GET = REST_GET(config);
 export const POST = REST_POST(config);
 export const DELETE = REST_DELETE(config);
