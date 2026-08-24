@@ -130,13 +130,27 @@ está no Google Workspace, não é tocado.
 4. **Contactos**: guardar o endereço no Gmail da equipa como «CV → Sistema
    Jelly». Não se publica no site, não vai para assinaturas.
 
-São quatro verificações, e a ordem decide quem fica a saber. As duas primeiras
-— o segredo no URL e o destinatário igual ao `CV_INBOUND_ADDRESS` — e a
-autenticação do reenviador (`@jelly.pt`, com DKIM ou SPF a passar) tratam-se em
-silêncio: fica registo no log e mais nada, porque responder a um remetente
-forjado é falar com quem o forjou. Passadas essas, do outro lado está um colega
-à espera, e aí tudo o que corra mal — sem anexo, anexo grande de mais, ficheiro
-recusado — vai ter com ele por email, com o que fazer a seguir.
+São quatro verificações, e a ordem decide quem fica a saber. As três primeiras
+— o segredo no endereço, o destinatário igual ao `CV_INBOUND_ADDRESS`, e o
+reenviador ser da casa — tratam-se em silêncio: fica registo no log e mais nada,
+porque responder a um remetente forjado é falar com quem o forjou. Passadas
+essas, do outro lado está um colega à espera, e aí tudo o que corra mal — sem
+anexo, anexo grande de mais, ficheiro recusado — vai ter com ele por email, com
+o que fazer a seguir. Há ainda um travão de vinte reenvios por hora.
+
+Sobre a terceira, o que se pode e o que não se pode: **o Brevo entrega os
+cabeçalhos do email como vieram e não acrescenta veredicto nenhum** — não há
+`Authentication-Results` nem `Received-SPF`. A assinatura do Google vem lá, mas
+ninguém diz se foi verificada, e verificá-la exigia a mensagem original inteira,
+que também não vem. O que se exige, portanto, é: remetente `@jelly.pt` e uma
+`DKIM-Signature` do domínio que assina o correio da casa — presença, não
+verificação. Se o cabeçalho de veredicto aparecer um dia, é ele que manda.
+
+Some-se a isso o endereço ser secreto e sorteado, e o facto de uma ficha que
+entre por aqui nascer «Por confirmar», sem nada decidido sobre ela sem uma
+pessoa. Se isto passar a valer mais do que vale, o passo seguinte está escrito
+no código: combinar uma palavra que a equipa escreve no reenvio — conhecimento
+que não anda em cabeçalhos e não se adivinha de fora.
 
 Uma candidatura que entre por aqui nasce em **«Por confirmar»**, com o CV
 anexado, os campos lidos do currículo e o email original guardado na ficha. A

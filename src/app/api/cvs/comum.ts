@@ -5,6 +5,7 @@ import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
 import { env } from "@/lib/env";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
+import { withinRateLimit } from "@/lib/billing/store";
 import { leituraEscrita, lerCurriculo } from "@/lib/cv-leitura";
 
 export const runtime = "nodejs";
@@ -117,27 +118,46 @@ function retratoDosCabecalhos(cabecalhos: Item["Headers"]): string {
 /**
  * O reenvio veio mesmo de casa?
  *
- * O remetente é o colega que reenviou, e o Workspace assina o que sai do
- * jelly.pt. Se a assinatura não bater certo, qualquer pessoa que soubesse o
- * endereço podia escrever fichas na base de dados.
+ * Aqui há uma limitação que vale a pena escrever, porque não é evidente: o
+ * Brevo entrega os cabeçalhos do email tal como vieram e não acrescenta
+ * veredicto nenhum — não há `Authentication-Results` nem `Received-SPF`. A
+ * assinatura do Google vem lá (`DKIM-Signature`, com o `d=` do domínio que
+ * assina o correio da casa), mas ninguém nos diz se foi verificada, e verificar
+ * uma assinatura DKIM exige a mensagem original inteira, que também não vem.
+ *
+ * O que fica, então, são quatro coisas que se somam: o endereço da caixa é
+ * secreto e sorteado; o destinatário tem de ser exactamente ele; o remetente
+ * tem de ser da casa; e a mensagem tem de trazer assinatura do domínio que
+ * assina o correio da casa. A última é presença, não verificação — quem
+ * soubesse o endereço podia forjar as duas.
+ *
+ * É por isso que uma ficha que entre por aqui nasce «Por confirmar» e nada se
+ * decide sobre ela sem uma pessoa. Se um dia isto passar a valer mais do que
+ * vale — a lista de candidatos é dado pessoal, não é dinheiro —, o passo
+ * seguinte é combinar uma palavra que a equipa escreve no reenvio: conhecimento
+ * que não anda em cabeçalhos e que não se adivinha de fora.
  */
+const ASSINA_A_CASA = /d=(?:[\w.-]+\.)?jelly\.pt|d=jelly-pt\.[\w.-]*gappssmtp\.com/i;
+
 function autenticado(item: Item): { ok: boolean; razao: string } {
   const de = endereco(item.From);
   if (!de.endsWith("@jelly.pt")) return { ok: false, razao: `remetente de fora: ${de || "desconhecido"}` };
 
+  // Se algum dia o cabeçalho de veredicto aparecer, é ele que manda: é o único
+  // dos dois que prova alguma coisa.
   const linha = cabecalho(item.Headers, "authentication-results");
   const recebido = cabecalho(item.Headers, "received-spf");
-  if (!linha && !recebido) return { ok: false, razao: "sem cabeçalho de autenticação" };
-
   const dkim = /dkim=pass/.test(linha) && /header\.[di]=@?(?:[\w.-]+\.)?jelly\.pt/.test(linha);
   const spf = /spf=pass/.test(linha) && /jelly\.pt|google\.com/.test(linha);
-  // Nem todos os servidores escrevem o mesmo cabeçalho. O `Received-SPF` é o
-  // mais antigo dos dois e serve de rede: diz o mesmo por outras palavras.
   const spfAntigo = /^\s*pass/.test(recebido) && /jelly\.pt|google\.com/.test(recebido);
-  if (!dkim && !spf && !spfAntigo) {
-    return { ok: false, razao: `autenticação não passou: ${(linha || recebido).slice(0, 200)}` };
+  if (dkim || spf || spfAntigo) return { ok: true, razao: dkim ? "dkim=pass" : "spf=pass" };
+  if (linha || recebido) return { ok: false, razao: `autenticação não passou: ${(linha || recebido).slice(0, 200)}` };
+
+  const assinatura = cabecalho(item.Headers, "dkim-signature");
+  if (assinatura && ASSINA_A_CASA.test(assinatura)) {
+    return { ok: true, razao: "assinatura da casa (presença, não verificação)" };
   }
-  return { ok: true, razao: dkim ? "dkim" : spf ? "spf" : "received-spf" };
+  return { ok: false, razao: assinatura ? "assinatura de outro domínio" : "sem assinatura nenhuma" };
 }
 
 /** O email original, arrumado para ficar na ficha. */
@@ -207,7 +227,18 @@ async function trata(item: Item, caixa: string): Promise<string> {
     return "spam";
   }
 
-  console.log(`[cvs] aceite de ${de}, autenticado por ${prova.razao}`);
+  // O `Received` fica no registo — é por onde o Brevo diz de que servidor
+  // recebeu a mensagem, e é o que permitirá um dia apertar isto sem adivinhar.
+  console.log(
+    `[cvs] aceite de ${de}, por ${prova.razao} ·· recebido: ${cabecalho(item.Headers, "received").slice(0, 200) || "nada"}`,
+  );
+
+  // Um travão, não uma tranca: vinte por hora chega para o trabalho de uma
+  // equipa e não chega para inundar a base de dados a quem descubra o endereço.
+  if (!withinRateLimit("cvs:entrada", 20, 60 * 60)) {
+    console.warn("[cvs] travado: mais de vinte reenvios na última hora");
+    return "demasiados";
+  }
 
   // Daqui para baixo é um colega à espera: o que correr mal, ele fica a saber.
   const responde = async (assunto: string, texto: string) => {
