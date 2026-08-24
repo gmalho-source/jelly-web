@@ -20,6 +20,11 @@ export const maxDuration = 60;
  *   curl -sS https://…/api/cvs -H "authorization: Bearer $REVALIDATE_SECRET"
  */
 export async function GET(request: NextRequest) {
+  // Qual das versões está a responder. Três vezes hoje se correu um comando
+  // contra um deploy que ainda não era o novo, e a resposta não tinha como o
+  // dizer. A Vercel põe o commit no ambiente; é dele que se trata.
+  const versao = env(process.env.VERCEL_GIT_COMMIT_SHA)?.slice(0, 7) ?? "local";
+
   const dono = env(process.env.REVALIDATE_SECRET);
   const dado = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
   if (!dono || dado !== dono) return NextResponse.json({ ok: false }, { status: 401 });
@@ -27,8 +32,8 @@ export async function GET(request: NextRequest) {
   const segredo = env(process.env.CV_INBOUND_SECRET);
   const caixa = env(process.env.CV_INBOUND_ADDRESS);
   const brevoKey = env(process.env.BREVO_API_KEY);
-  if (!segredo || !caixa) return NextResponse.json({ erro: "faltam CV_INBOUND_SECRET ou CV_INBOUND_ADDRESS" }, { status: 400 });
-  if (!brevoKey) return NextResponse.json({ erro: "falta BREVO_API_KEY" }, { status: 400 });
+  if (!segredo || !caixa) return NextResponse.json({ versao, erro: "faltam CV_INBOUND_SECRET ou CV_INBOUND_ADDRESS" }, { status: 400 });
+  if (!brevoKey) return NextResponse.json({ versao, erro: "falta BREVO_API_KEY" }, { status: 400 });
 
   // O endereço por onde esta chamada entrou, e não o do `NEXT_PUBLIC_SITE_URL`:
   // essa variável aponta ao domínio público, que enquanto o site não for ao ar
@@ -64,6 +69,7 @@ export async function GET(request: NextRequest) {
   if (jaLa) {
     return NextResponse.json({
       ok: true,
+      versao,
       estado: "já existia",
       id: jaLa.id,
       url: disfarce(String(jaLa.url)),
@@ -76,7 +82,7 @@ export async function GET(request: NextRequest) {
   // «Enter valid notify url», que é a queixa errada e faz perder uma tarde. É o
   // domínio da caixa: o que tem os MX apontados para lá.
   const dominio = caixa.split("@")[1] ?? "";
-  if (!dominio) return NextResponse.json({ erro: "CV_INBOUND_ADDRESS não parece um endereço" }, { status: 400 });
+  if (!dominio) return NextResponse.json({ versao, erro: "CV_INBOUND_ADDRESS não parece um endereço" }, { status: 400 });
 
   const criado = await brevo("webhooks", {
     type: "inbound",
@@ -95,6 +101,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       {
         ok: false,
+        versao,
         estado: "o Brevo recusou",
         brevo: resposta,
         enviado: { url: disfarce(alvo), domain: dominio, type: "inbound", events: ["inboundEmailProcessed"] },
@@ -110,6 +117,7 @@ export async function GET(request: NextRequest) {
   }
   return NextResponse.json({
     ok: true,
+    versao,
     estado: "criado agora",
     id: resposta.id,
     url: disfarce(alvo),
