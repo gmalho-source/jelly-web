@@ -53,7 +53,7 @@ type Item = {
   RawTextBody?: string;
   ExtractedMarkdownMessage?: string;
   Attachments?: Anexo[];
-  Headers?: Record<string, string | string[]>;
+  Headers?: Record<string, string | string[]> | { Name?: string; Value?: string }[];
   SpamScore?: number;
 };
 
@@ -62,6 +62,25 @@ const endereco = (valor: unknown): string => {
   if (valor && typeof valor === "object" && "Address" in valor) return normalizeEmail(String((valor as { Address?: string }).Address ?? ""));
   return "";
 };
+
+/**
+ * Um cabeçalho do email, venha ele como mapa (`{"From": "..."}`) ou como lista
+ * (`[{"Name": "From", "Value": "..."}]`). O Brevo documenta o primeiro, mas um
+ * formato de entrada não é sítio para se apostar: se a leitura falhasse, tudo o
+ * que a equipa reenviasse era recusado sem se perceber porquê.
+ */
+function cabecalho(cabecalhos: Item["Headers"], nome: string): string {
+  if (!cabecalhos) return "";
+  const junta = (valor: unknown) => (Array.isArray(valor) ? valor.join(" ") : String(valor ?? ""));
+  if (Array.isArray(cabecalhos)) {
+    const achado = (cabecalhos as { Name?: string; Value?: unknown }[]).find(
+      (linha) => String(linha?.Name ?? "").toLowerCase() === nome,
+    );
+    return junta(achado?.Value).toLowerCase().trim();
+  }
+  const chave = Object.keys(cabecalhos).find((k) => k.toLowerCase() === nome);
+  return chave ? junta(cabecalhos[chave]).toLowerCase().trim() : "";
+}
 
 /**
  * O reenvio veio mesmo de casa?
@@ -74,16 +93,19 @@ function autenticado(item: Item): { ok: boolean; razao: string } {
   const de = endereco(item.From);
   if (!de.endsWith("@jelly.pt")) return { ok: false, razao: `remetente de fora: ${de || "desconhecido"}` };
 
-  const cabecalhos = item.Headers ?? {};
-  const chave = Object.keys(cabecalhos).find((nome) => nome.toLowerCase() === "authentication-results");
-  const bruto = chave ? cabecalhos[chave] : undefined;
-  const linha = (Array.isArray(bruto) ? bruto.join(" ") : String(bruto ?? "")).toLowerCase();
-  if (!linha) return { ok: false, razao: "sem cabeçalho de autenticação" };
+  const linha = cabecalho(item.Headers, "authentication-results");
+  const recebido = cabecalho(item.Headers, "received-spf");
+  if (!linha && !recebido) return { ok: false, razao: "sem cabeçalho de autenticação" };
 
   const dkim = /dkim=pass/.test(linha) && /header\.[di]=@?(?:[\w.-]+\.)?jelly\.pt/.test(linha);
   const spf = /spf=pass/.test(linha) && /jelly\.pt|google\.com/.test(linha);
-  if (!dkim && !spf) return { ok: false, razao: `autenticação não passou: ${linha.slice(0, 200)}` };
-  return { ok: true, razao: dkim ? "dkim" : "spf" };
+  // Nem todos os servidores escrevem o mesmo cabeçalho. O `Received-SPF` é o
+  // mais antigo dos dois e serve de rede: diz o mesmo por outras palavras.
+  const spfAntigo = /^\s*pass/.test(recebido) && /jelly\.pt|google\.com/.test(recebido);
+  if (!dkim && !spf && !spfAntigo) {
+    return { ok: false, razao: `autenticação não passou: ${(linha || recebido).slice(0, 200)}` };
+  }
+  return { ok: true, razao: dkim ? "dkim" : spf ? "spf" : "received-spf" };
 }
 
 /** O email original, arrumado para ficar na ficha. */
@@ -145,6 +167,8 @@ async function trata(item: Item, caixa: string): Promise<string> {
     return "spam";
   }
 
+  console.log(`[cvs] aceite de ${de}, autenticado por ${prova.razao}`);
+
   // Daqui para baixo é um colega à espera: o que correr mal, ele fica a saber.
   const responde = async (assunto: string, texto: string) => {
     const saiu = await enviaEmail({ to: de, subject: assunto, text: texto, voz: "talento" }).catch((erro) => ({
@@ -183,9 +207,15 @@ async function trata(item: Item, caixa: string): Promise<string> {
     const resposta = await fetch(`${BREVO}/inbound/attachments/${token}`, { headers: { "api-key": brevoKey } });
     if (!resposta.ok) throw new Error(`o Brevo respondeu ${resposta.status}`);
     bytes = Buffer.from(await resposta.arrayBuffer());
+    // O tamanho anunciado pode não vir, e o verdadeiro só se sabe aqui.
+    if (bytes.length > MAX_ANEXO) throw new Error(`o ficheiro tem ${Math.round(bytes.length / 1_000_000)} MB`);
   } catch (erro) {
-    console.error("[cvs] anexo não veio", erro);
-    await responde("Não consegui ir buscar o currículo", "Recebi o teu reenvio mas o anexo não veio. Cria a ficha no painel e usa o botão «Ler um CV».");
+    const razao = erro instanceof Error ? erro.message : "sem razão conhecida";
+    console.error("[cvs] anexo não veio:", razao);
+    await responde(
+      "Não consegui ir buscar o currículo",
+      `Recebi o teu reenvio mas não consegui ficar com o anexo — ${razao}. Cria a ficha no painel e usa o botão «Ler um CV».`,
+    );
     return "anexo não veio";
   }
 
