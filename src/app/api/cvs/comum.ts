@@ -97,6 +97,24 @@ function cabecalho(cabecalhos: Item["Headers"], nome: string): string {
 }
 
 /**
+ * Os nomes dos cabeçalhos que vieram, para o registo.
+ *
+ * Só os nomes, e os valores do que é de autenticação: um email reenviado leva
+ * dados de quem se candidatou, e um registo não é sítio para eles.
+ */
+function retratoDosCabecalhos(cabecalhos: Item["Headers"]): string {
+  if (!cabecalhos) return "nenhum";
+  const nomes = Array.isArray(cabecalhos)
+    ? (cabecalhos as { Name?: string }[]).map((l) => String(l?.Name ?? ""))
+    : Object.keys(cabecalhos);
+  const interessa = nomes.filter((n) => /auth|spf|dkim|dmarc|arc/i.test(n));
+  const valores = interessa
+    .map((n) => `${n}=${cabecalho(cabecalhos, n.toLowerCase()).slice(0, 160)}`)
+    .join(" | ");
+  return `${Array.isArray(cabecalhos) ? "lista" : "mapa"} com ${nomes.length}: ${nomes.slice(0, 40).join(", ")}${valores ? ` ·· ${valores}` : ""}`;
+}
+
+/**
  * O reenvio veio mesmo de casa?
  *
  * O remetente é o colega que reenviou, e o Workspace assina o que sai do
@@ -179,7 +197,9 @@ async function trata(item: Item, caixa: string): Promise<string> {
   }
   const prova = autenticado(item);
   if (!prova.ok) {
-    console.warn(`[cvs] recusado: ${prova.razao}`);
+    // Com o retrato dos cabeçalhos ao lado: sem ele, «não autenticado» é uma
+    // parede, e a regra corrige-se a adivinhar.
+    console.warn(`[cvs] recusado: ${prova.razao} ·· ${retratoDosCabecalhos(item.Headers)}`);
     return "não autenticado";
   }
   if (typeof item.SpamScore === "number" && item.SpamScore >= 5) {
