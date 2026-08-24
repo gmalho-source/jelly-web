@@ -949,7 +949,7 @@ export interface Application {
   /**
    * Mudar o estado prepara o email para o candidato. Nada sai sem alguém carregar em enviar.
    */
-  status?: ('nova' | 'em_avaliacao' | 'entrevista' | 'aprovado' | 'rejeitado') | null;
+  status?: ('por_confirmar' | 'nova' | 'em_avaliacao' | 'entrevista' | 'aprovado' | 'rejeitado') | null;
   evaluations?:
     | {
         interviewer?: (number | null) | User;
@@ -1014,6 +1014,10 @@ export interface Application {
    * Doze meses a contar da candidatura, e um trabalho diário apaga o que passou desta data. Editável de propósito: se houver razão para guardar mais tempo, quem decide é uma pessoa — e a razão escreve-se na nota da decisão.
    */
   retentionUntil?: string | null;
+  /**
+   * Quando a candidatura entrou por reenvio: quem reenviou, quando, e o que o email dizia. Fica como estava — é o que permite perceber de onde veio isto, meses depois.
+   */
+  sourceEmail?: string | null;
   emails?:
     | {
         kind?: string | null;
@@ -1872,6 +1876,7 @@ export interface ApplicationsSelect<T extends boolean = true> {
   consentAt?: T;
   source?: T;
   retentionUntil?: T;
+  sourceEmail?: T;
   emails?:
     | T
     | {

@@ -458,6 +458,11 @@ export const Applications: CollectionConfig = {
               type: "select",
               defaultValue: "nova",
               options: [
+                // Antes de «Nova»: a ficha existe, os dados vieram de um CV ou
+                // de um email reenviado, e ainda não passaram pelos olhos da
+                // pessoa a quem pertencem. É o pedido de confirmação que a
+                // promove — e que recolhe o consentimento.
+                { label: "Por confirmar", value: "por_confirmar" },
                 { label: "Nova", value: "nova" },
                 { label: "Em avaliação", value: "em_avaliacao" },
                 { label: "Entrevista", value: "entrevista" },
@@ -573,6 +578,16 @@ export const Applications: CollectionConfig = {
                   },
                 },
               ],
+            },
+            {
+              name: "sourceEmail",
+              label: "Email de onde veio",
+              type: "textarea",
+              admin: {
+                readOnly: true,
+                description:
+                  "Quando a candidatura entrou por reenvio: quem reenviou, quando, e o que o email dizia. Fica como estava — é o que permite perceber de onde veio isto, meses depois.",
+              },
             },
             {
               name: "emails",

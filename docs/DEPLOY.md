@@ -121,12 +121,23 @@ está no Google Workspace, não é tocado.
 4. **Contactos**: guardar o endereço no Gmail da equipa como «CV → Sistema
    Jelly». Não se publica no site, não vai para assinaturas.
 
-O endpoint recusa em silêncio — com registo, sem resposta ao remetente — tudo o
-que não passe as quatro verificações: o segredo no URL, o destinatário igual ao
-`CV_INBOUND_ADDRESS`, o reenviador num endereço `@jelly.pt` com SPF ou DKIM
-válido, e a pontuação de spam abaixo do limite. Uma candidatura que entre por
-aqui nasce em **«Por confirmar»**: é o candidato que confirma os dados e dá o
-consentimento, pelo link da terceira via.
+São quatro verificações, e a ordem decide quem fica a saber. As duas primeiras
+— o segredo no URL e o destinatário igual ao `CV_INBOUND_ADDRESS` — e a
+autenticação do reenviador (`@jelly.pt`, com DKIM ou SPF a passar) tratam-se em
+silêncio: fica registo no log e mais nada, porque responder a um remetente
+forjado é falar com quem o forjou. Passadas essas, do outro lado está um colega
+à espera, e aí tudo o que corra mal — sem anexo, anexo grande de mais, ficheiro
+recusado — vai ter com ele por email, com o que fazer a seguir.
+
+Uma candidatura que entre por aqui nasce em **«Por confirmar»**, com o CV
+anexado, os campos lidos do currículo e o email original guardado na ficha. A
+vaga fica por escolher: é a única coisa que um currículo não diz. O
+consentimento fica vazio até o candidato confirmar os dados pelo link da
+terceira via — e se o currículo não trouxer email, o colega é avisado de que
+tem de o escrever à mão, senão não há a quem pedir.
+
+Duas pessoas a reenviar o mesmo currículo não fazem duas fichas: pelo email do
+candidato, o segundo reenvio junta-se à ficha que já existe.
 
 Se o endereço alguma vez andar por onde não devia, troca-se numa variável e no
 painel do Brevo — não há nada no código a depender dele.
