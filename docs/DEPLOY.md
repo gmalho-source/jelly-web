@@ -112,12 +112,21 @@ está no Google Workspace, não é tocado.
 1. **DNS**: dois registos MX em `cvs.jelly.pt` para os servidores de entrada do
    Brevo (`inbound1.sendinblue.com` e `inbound2.sendinblue.com`, prioridades 10
    e 20 — confirmar os valores no painel do Brevo, que é a fonte).
-2. **Brevo**: o domínio autenticado, e o webhook de entrada registado (tipo
-   `inbound`, evento `inboundEmailProcessed`) a apontar para
-   `https://<host>/api/cvs?chave=<CV_INBOUND_SECRET>`.
-3. **Vercel**: `CV_INBOUND_ADDRESS` com o endereço completo e `CV_INBOUND_SECRET`
-   com uma cadeia aleatória (`openssl rand -hex 24`). O segredo tem de ser o
-   mesmo que está no URL do webhook.
+2. **Vercel**: `CV_INBOUND_ADDRESS` com o endereço completo e `CV_INBOUND_SECRET`
+   com uma cadeia aleatória (`openssl rand -hex 24`).
+3. **Brevo**: o domínio autenticado (o subdomínio, não o `jelly.pt`), e o
+   webhook de entrada registado. O registo faz-se com uma chamada ao próprio
+   site, que junta o endereço onde está a correr ao segredo que tem em
+   ambiente — não há URL para montar à mão nem segredo para copiar:
+
+   ```bash
+   curl -sS https://<host>/api/cvs -H "authorization: Bearer $REVALIDATE_SECRET"
+   ```
+
+   É idempotente, e a resposta traz o `id` do webhook com o segredo tapado.
+   O segredo vai **no caminho** (`/api/cvs/<segredo>`), não numa query string:
+   o Brevo recusa um endereço com interrogação, com um «Enter valid notify url»
+   que não explica nada.
 4. **Contactos**: guardar o endereço no Gmail da equipa como «CV → Sistema
    Jelly». Não se publica no site, não vai para assinaturas.
 
