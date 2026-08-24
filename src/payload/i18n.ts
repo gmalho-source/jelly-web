@@ -43,6 +43,11 @@ const casa = {
     unsavedChanges: "Tens alterações que não estão guardadas. Guarda ou descarta antes de sair.",
     changesNotSaved: "As tuas alterações não estão guardadas. Se saíres agora, perdem-se.",
     aboutToDelete: "Vais apagar {{label}} <1>{{title}}</1>. Tens a certeza?",
+    creatingNewLabel: "A criar {{label}}",
+  },
+  error: {
+    notAllowedToAccessPage: "Esta página não é para o teu perfil.",
+    notAllowedToPerformAction: "O teu perfil não permite esta ação.",
   },
   authentication: {
     login: "Entrar",

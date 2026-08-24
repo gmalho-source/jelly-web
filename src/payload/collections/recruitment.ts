@@ -1,6 +1,7 @@
 import type { Access, CollectionConfig } from "payload";
 import { locale, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
+import { readCv } from "../endpoints/read-cv";
 import { scoreApplication, setRetention } from "../hooks/rating";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 
@@ -296,14 +297,20 @@ export const Applications: CollectionConfig = {
     // rejeição enviada por engano ao mudar um menu não se desfaz.
     { path: "/:id/email", method: "get", handler: candidateEmailDraft },
     { path: "/:id/email", method: "post", handler: sendCandidateEmail },
+    // Um CV a preencher a ficha. Não grava a candidatura — devolve os campos.
+    { path: "/ler-cv", method: "post", handler: readCv },
   ],
   access: {
     read: recruiterOnly,
     update: recruiterOnly,
     delete: recruiterOnly,
-    // Quem se candidata não escreve na coleção: passa pelo endpoint do site,
-    // que valida, guarda o consentimento e avisa a casa.
-    create: () => false,
+    // Quem se candidata não escreve na coleção: passa pelo endpoint do site, que
+    // valida, guarda o consentimento e avisa a casa. Quem recruta passa a poder
+    // criar uma ficha à mão — é o que permite dar entrada a um currículo que
+    // chegou por fora do formulário, com o botão «Ler um CV» a fazer a
+    // dactilografia. O consentimento não se inventa: fica vazio, e é o pedido de
+    // confirmação ao candidato que o recolhe.
+    create: recruiterOnly,
   },
   fields: [
     {
@@ -312,6 +319,14 @@ export const Applications: CollectionConfig = {
         {
           label: "Candidatura",
           fields: [
+            {
+              // Um campo sem dados, só para pôr o botão no topo da ficha: é o
+              // primeiro gesto de quem dá entrada a um currículo que chegou por
+              // fora do formulário.
+              name: "lerCv",
+              type: "ui",
+              admin: { components: { Field: "@/payload/components/LerCV#LerCV" } },
+            },
             {
               type: "row",
               fields: [
@@ -405,6 +420,15 @@ export const Applications: CollectionConfig = {
               ],
             },
             {
+              name: "cvReading",
+              label: "Leitura do CV",
+              type: "textarea",
+              admin: {
+                description:
+                  "Escrita por um modelo a partir do currículo, não pela pessoa: fica aqui, ao lado do ficheiro de onde saiu, e não se confunde com as notas de quem entrevista. Serve para ler a ficha de relance — o que conta é o CV.",
+              },
+            },
+            {
               name: "newsletterOptIn",
               label: "Quer receber as comunicações da Jelly",
               type: "checkbox",
@@ -414,6 +438,7 @@ export const Applications: CollectionConfig = {
               name: "answers",
               label: "Respostas",
               type: "array",
+              labels: { singular: "Resposta", plural: "Respostas" },
               admin: { description: "As perguntas do formulário, como foram feitas, e o que a pessoa escreveu." },
               fields: [
                 { name: "question", label: "Pergunta", type: "text" },

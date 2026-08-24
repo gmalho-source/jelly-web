@@ -929,6 +929,10 @@ export interface Application {
   cv?: (number | null) | Document;
   letter?: (number | null) | Document;
   /**
+   * Escrita por um modelo a partir do currículo, não pela pessoa: fica aqui, ao lado do ficheiro de onde saiu, e não se confunde com as notas de quem entrevista. Serve para ler a ficha de relance — o que conta é o CV.
+   */
+  cvReading?: string | null;
+  /**
    * Consentimento separado do da candidatura, como tem de ser.
    */
   newsletterOptIn?: boolean | null;
@@ -1830,6 +1834,7 @@ export interface ApplicationsSelect<T extends boolean = true> {
   contractWanted?: T;
   cv?: T;
   letter?: T;
+  cvReading?: T;
   newsletterOptIn?: T;
   answers?:
     | T

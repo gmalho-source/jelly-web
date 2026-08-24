@@ -24,6 +24,7 @@ import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { MarkdownImport as MarkdownImport_244644c11481654cefffd374751bd598 } from '@/payload/components/MarkdownImport'
+import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/components/LerCV'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
 import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
@@ -62,6 +63,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/payload/components/MarkdownImport#MarkdownImport": MarkdownImport_244644c11481654cefffd374751bd598,
+  "@/payload/components/LerCV#LerCV": LerCV_37586454364dce41f3253d2b9fc6c8bf,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,
   "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,

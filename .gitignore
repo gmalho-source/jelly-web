@@ -24,6 +24,9 @@ content-import/*.xml
 # `git add` dizer nada — foi assim que a fotografia do recrutamento não chegou
 # ao site, e o defeito só se vê em produção.
 /media/
+# O mesmo para os CV e os anexos, que em desenvolvimento caem aqui.
+/documents/
+/attachments/
 
 # Registo de ids do Payload: um por base de dados, nunca partilhado
 content-import/payload-media.*.json

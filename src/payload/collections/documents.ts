@@ -13,7 +13,10 @@ export const Documents: CollectionConfig = {
   slug: "documents",
   labels: { singular: "Documento", plural: "Documentos" },
   admin: { useAsTitle: "filename", group: "Recrutamento", hidden: true },
-  access: { read: recruiterOnly, create: () => false, update: recruiterOnly, delete: recruiterOnly },
+  // Criar: quem recruta. O formulário público cria por dentro do servidor, com
+  // as verificações dele; no painel, é o botão «Ler um CV» que precisa disto —
+  // e quem já apaga um CV bem pode acrescentar outro.
+  access: { read: recruiterOnly, create: recruiterOnly, update: recruiterOnly, delete: recruiterOnly },
   upload: {
     mimeTypes: [
       "application/pdf",

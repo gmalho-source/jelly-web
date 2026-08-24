@@ -86,5 +86,11 @@ export const setRetention: CollectionBeforeChangeHook = ({ data, operation }) =>
   if (operation !== "create" || data.retentionUntil) return data;
   const doze = new Date();
   doze.setMonth(doze.getMonth() + 12);
-  return { ...data, retentionUntil: doze.toISOString(), consentAt: data.consentAt ?? new Date().toISOString() };
+  // A data de consentimento não se põe aqui. Quem a tem é quem a recolheu: o
+  // formulário do site grava-a quando a pessoa marca a caixa, e a importação
+  // trouxe a do registo antigo. Uma ficha dada à entrada no painel — um CV que
+  // chegou por email — fica com o campo vazio, e é o pedido de confirmação ao
+  // candidato que o preenche. Inventá-la aqui era escrever que houve
+  // consentimento sem ninguém o ter dado.
+  return { ...data, retentionUntil: doze.toISOString() };
 };
