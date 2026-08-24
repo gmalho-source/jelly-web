@@ -75,6 +75,9 @@ correspondentes funcionarem.
 | `PAYLOAD_SECRET` | runtime | As sessões do painel não são assinadas: o login falha |
 | `BLOB_READ_WRITE_TOKEN` | runtime | Uploads no painel falham em produção (não há disco persistente) |
 | `REVALIDATE_SECRET` | runtime | `POST /api/revalidate` responde 404; a purga automática ao gravar continua a funcionar |
+| `ANTHROPIC_API_KEY` | runtime | Os assistentes do painel (resumo do artigo, descrição da imagem, leitura do CV) respondem a dizer que falta a chave |
+| `CV_INBOUND_ADDRESS` | runtime | A entrada de CV por email recusa tudo (ver abaixo) |
+| `CV_INBOUND_SECRET` | runtime | O mesmo: o webhook do Brevo não é reconhecido |
 
 ## Staging não é indexável
 
@@ -95,6 +98,38 @@ gerado para este projeto é outro: confirmar em Project → Domains e testar por
 esse. Para o subdomínio de faturação funcionar em preview é preciso apontar
 `NEXT_PUBLIC_BILLING_HOST` para o host de preview, senão o middleware
 redireciona `/billing` para `billing.jelly.pt`.
+
+## Entrada de CV por email (porta B)
+
+A equipa recebe candidaturas em `talent@jelly.pt` e reenvia **à mão** as que
+valem a pena para um endereço que o sistema lê. O que não é reenviado não
+acontece: spam e phishing morrem na caixa de entrada, como devem.
+
+O endereço vive num subdomínio próprio, `cvs.jelly.pt`, porque o domínio que
+recebe tem de ser diferente do que envia — e assim o correio do `jelly.pt`, que
+está no Google Workspace, não é tocado.
+
+1. **DNS**: dois registos MX em `cvs.jelly.pt` para os servidores de entrada do
+   Brevo (`inbound1.sendinblue.com` e `inbound2.sendinblue.com`, prioridades 10
+   e 20 — confirmar os valores no painel do Brevo, que é a fonte).
+2. **Brevo**: o domínio autenticado, e o webhook de entrada registado (tipo
+   `inbound`, evento `inboundEmailProcessed`) a apontar para
+   `https://<host>/api/cvs?chave=<CV_INBOUND_SECRET>`.
+3. **Vercel**: `CV_INBOUND_ADDRESS` com o endereço completo e `CV_INBOUND_SECRET`
+   com uma cadeia aleatória (`openssl rand -hex 24`). O segredo tem de ser o
+   mesmo que está no URL do webhook.
+4. **Contactos**: guardar o endereço no Gmail da equipa como «CV → Sistema
+   Jelly». Não se publica no site, não vai para assinaturas.
+
+O endpoint recusa em silêncio — com registo, sem resposta ao remetente — tudo o
+que não passe as quatro verificações: o segredo no URL, o destinatário igual ao
+`CV_INBOUND_ADDRESS`, o reenviador num endereço `@jelly.pt` com SPF ou DKIM
+válido, e a pontuação de spam abaixo do limite. Uma candidatura que entre por
+aqui nasce em **«Por confirmar»**: é o candidato que confirma os dados e dá o
+consentimento, pelo link da terceira via.
+
+Se o endereço alguma vez andar por onde não devia, troca-se numa variável e no
+painel do Brevo — não há nada no código a depender dele.
 
 ## Depois de o deploy ficar verde
 

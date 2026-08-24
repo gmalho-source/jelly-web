@@ -191,6 +191,12 @@ propósito. Portanto uma mudança de campos aplica-se correndo um script da
 máquina contra a base, **antes** do deploy que a usa; quando a mudança apaga uma
 coluna, o drizzle pergunta e há que confirmar.
 
+Desde que a base de produção deixou de ser alcançável de fora da Vercel, a
+mudança vai como SQL escrito à mão em `scripts/sql/`, um ficheiro por deploy,
+corrido no SQL Editor da Neon **antes** do deploy. É aditivo por regra — juntar
+colunas e valores de enum, nunca apagar — e o ficheiro fica no repositório a
+dizer a que mudança pertence.
+
 Isto serve enquanto somos poucos a mexer. A forma certa, quando o site estiver
 no ar a sério, é gerar migrações com `payload migrate:create`, guardá-las no
 repositório e corrê-las no build.
