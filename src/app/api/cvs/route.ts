@@ -69,10 +69,17 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  // O `domain` é obrigatório num webhook de entrada — sem ele o Brevo responde
+  // «Enter valid notify url», que é a queixa errada e faz perder uma tarde. É o
+  // domínio da caixa: o que tem os MX apontados para lá.
+  const dominio = caixa.split("@")[1] ?? "";
+  if (!dominio) return NextResponse.json({ erro: "CV_INBOUND_ADDRESS não parece um endereço" }, { status: 400 });
+
   const criado = await brevo("webhooks", {
     type: "inbound",
     events: ["inboundEmailProcessed"],
     url: alvo,
+    domain: dominio,
     description: `Entrada de CV reenviados - ${caixa}`,
   });
   const resposta = (await criado.json()) as { id?: number; message?: string; code?: string };
@@ -85,6 +92,7 @@ export async function GET(request: NextRequest) {
     id: resposta.id,
     url: disfarce(alvo),
     caixa,
+    dominio,
     ...(outros.length ? { outros } : {}),
   });
 }
