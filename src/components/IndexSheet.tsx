@@ -294,7 +294,26 @@ export function IndexSheet({
             </button>
           </div>
 
-          <div className="grid flex-1 grid-cols-2 content-start gap-px overflow-y-auto bg-paper/10 lg:grid-cols-4">
+          {/*
+            `overflow-x-hidden` não é decoração: uma caixa com `overflow-y: auto`
+            fica com `overflow-x: auto` também, e sete pixels a mais numa
+            etiqueta comprida davam à folha uma gaveta lateral. No telefone,
+            isso sentia-se como o menu a dançar para os lados a cada gesto.
+          */}
+          {/*
+            `grid-auto-rows: min-content` é o que faz a linha ter a altura do
+            mosaico. Com linhas `auto`, e o índice a ter altura definida (ocupa o
+            ecrã), o browser reparte a altura disponível pelas linhas: medi 162px
+            onde tinham de estar 360, e o mosaico transbordava. `min-content`
+            nunca estica — e os títulos das bandas continuam a medir-se pelo
+            texto, 54px, porque a altura deles é o texto deles.
+
+            `overflow-x-hidden` também não é decoração: uma caixa com
+            `overflow-y: auto` fica com `overflow-x: auto` de tabela, e sete
+            pixels a mais numa etiqueta comprida davam à folha uma gaveta
+            lateral. No telefone sentia-se como o menu a dançar para os lados.
+          */}
+          <div className="grid flex-1 grid-cols-2 content-start gap-px overflow-y-auto overflow-x-hidden bg-paper/10 [grid-auto-rows:min-content] lg:grid-cols-4">
             {bands.map((band) => (
               <Fragment key={band.name ?? "tudo"}>
                 {band.name ? (
@@ -303,54 +322,78 @@ export function IndexSheet({
                   </p>
                 ) : null}
                 {band.itens.map(({ tile, index }) => (
-              <Link
-                key={tile.href + tile.label}
-                href={tile.href}
-                onClick={() => setOpenedOn(null)}
-                onMouseEnter={() => setCursor(index)}
-                className="group relative flex flex-col bg-ink"
-              >
-                {/*
-                  Um mosaico com fotografia tem a proporção da fotografia; um
-                  mosaico de cor não precisa dela — é uma etiqueta, e ocupa a
-                  altura mínima. É isso que faz caber as três bandas num ecrã em
-                  vez de duas e meia. Numa linha com as duas coisas, a cor
-                  estica-se (`flex-1`) até à altura da fotografia, senão ficava
-                  um buraco por baixo dela.
-                */}
-                <span
-                  className={`block overflow-hidden ${tile.image ? "aspect-[4/3]" : "min-h-[104px] flex-1"}`}
-                >
-                  {tile.image ? (
-                    <Image
-                      src={tile.image}
-                      alt=""
-                      width={640}
-                      height={480}
-                      sizes="(max-width: 1024px) 50vw, 25vw"
-                      className="h-full w-full object-cover opacity-75 transition-[opacity,transform] duration-360 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
-                    />
-                  ) : (
+                  <Link
+                    key={tile.href + tile.label}
+                    href={tile.href}
+                    onClick={() => setOpenedOn(null)}
+                    onMouseEnter={() => setCursor(index)}
+                    className="group relative block overflow-hidden bg-ink"
+                  >
+                    {/*
+                      A altura de um mosaico é a largura de uma coluna — duas
+                      colunas no telefone, quatro no desktop — e está escrita
+                      assim, em `vw`, e não com `aspect-square`.
+                      Experimentei-o das duas maneiras: a proporção não resolve
+                      aqui. Uma coluna `fr` só tem largura depois de a linha
+                      estar medida, e para medir a linha o browser usa a largura
+                      intrínseca do conteúdo, que é zero quando tudo dentro do
+                      mosaico está em posição absoluta. Resultado: o quadrado
+                      ficava com 162px de altura em vez de 359, e os mosaicos
+                      passavam por cima dos de baixo a esconder-lhes o nome.
+                      Uma medida definida não tem esse problema — e não afecta os
+                      títulos das bandas, que continuam a medir-se pelo texto.
+                    */}
+                    <span aria-hidden="true" className="block h-[50vw] lg:h-[25vw]" />
+
+                    {tile.image ? (
+                      <Image
+                        src={tile.image}
+                        alt=""
+                        width={640}
+                        height={640}
+                        sizes="(max-width: 1024px) 50vw, 25vw"
+                        className="mosaico-zoom absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className={`absolute inset-0 ${tile.tone ?? "bg-slate"}`} />
+                    )}
+
+                    {/* O nome vive sobre o quadrado, e por isso precisa de chão:
+                        um véu de tinta em baixo, que numa cor plana se lê como
+                        faixa e numa fotografia como sombra. O `z` é explícito
+                        porque a imagem, promovida ao seu próprio plano pelo
+                        `will-change`, passava à frente de quem vem depois. */}
                     <span
-                      className={`block h-full w-full ${tile.tone ?? "bg-slate"}`}
+                      aria-hidden="true"
+                      className={`absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t to-transparent ${
+                        tile.image
+                          ? "h-1/2 from-ink via-ink/65"
+                          : // Sobre uma cor da marca o véu é mais curto e mais
+                            // leve: o suficiente para o nome se ler, sem
+                            // apagar o vermelho ou o verde que ali estão a
+                            // fazer o seu trabalho.
+                            "h-2/5 from-ink/85 via-ink/45"
+                      }`}
                     />
-                  )}
-                </span>
-                <span
-                  className={`flex items-baseline justify-between gap-3 border-t-2 px-4 py-3 transition-colors duration-120 ${
-                    index === active
-                      ? "border-red bg-red/10"
-                      : "border-transparent"
-                  }`}
-                >
-                  <span className="font-display text-lg leading-tight">
-                    {tile.label}
-                  </span>
-                  <span className="shrink-0 text-[11px] uppercase tracking-[0.08em] text-paper/40">
-                    {tile.kind}
-                  </span>
-                </span>
-              </Link>
+
+                    <span className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-1 px-4 pb-4">
+                      <span className="text-[10px] uppercase tracking-[0.12em] text-paper/50">
+                        {tile.kind}
+                      </span>
+                      <span className="font-display text-lg leading-tight text-paper">
+                        {tile.label}
+                      </span>
+                    </span>
+
+                    {/* Onde está o cursor do teclado: um contorno, e não um
+                        fundo — o fundo do mosaico é a imagem. */}
+                    {index === active ? (
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-30 ring-2 ring-inset ring-red"
+                      />
+                    ) : null}
+                  </Link>
                 ))}
               </Fragment>
             ))}
