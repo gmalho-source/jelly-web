@@ -122,7 +122,7 @@ export type Block =
   | { type: "h3"; text: string }
   | { type: "quote"; text: string }
   | { type: "list"; ordered?: boolean; items: string[] }
-  | { type: "image"; src: string; alt?: string; caption?: string; width?: number; height?: number }
+  | { type: "image"; src: string; alt?: string; caption?: string; width?: number; height?: number; float?: "left" | "right" }
   /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
   | { type: "gallery"; images: { src: string; alt?: string }[] }
   | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean }

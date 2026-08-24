@@ -98,8 +98,25 @@ function fromLexical(root: unknown): Block[] {
       if (items.length) blocks.push({ type: "list", ordered: node.listType === "number" || undefined, items });
     } else if (type === "upload") {
       const media = image((node.value ?? null) as MediaDoc);
+      // A posição e a legenda são campos do próprio nó, escolhidos imagem a
+      // imagem no editor. Só «esquerda» e «direita» contam: qualquer outra
+      // coisa — incluindo as imagens que já lá estavam, sem campo nenhum — é a
+      // largura do texto, que era o que havia antes.
+      const campos = (node.fields ?? {}) as Doc;
+      const posicao = text(campos.align);
+      const legenda = text(campos.caption);
       // Com as medidas reais, uma infografia alta não é cortada a 16:9.
-      if (media) blocks.push({ type: "image", src: media.src, alt: media.alt, width: media.width, height: media.height });
+      if (media) {
+        blocks.push({
+          type: "image",
+          src: media.src,
+          alt: media.alt,
+          width: media.width,
+          height: media.height,
+          ...(posicao === "left" || posicao === "right" ? { float: posicao } : {}),
+          ...(legenda ? { caption: legenda } : {}),
+        });
+      }
     } else if (type === "block") {
       // O bloco de vídeo do editor. O endereço é que manda: quem desenha
       // decide-se mais tarde, pelo que ele é.

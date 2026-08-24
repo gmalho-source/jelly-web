@@ -41,7 +41,10 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
   const dropCapIndex = body.findIndex((block) => block.type === "p");
 
   return (
-    <div className="max-w-[66ch]">
+    // `flow-root` para uma imagem a contornar no fim do artigo não escapar
+    // para o que vem a seguir; `@container` para o contorno ser decidido pela
+    // largura desta coluna e não pela da janela.
+    <div className="@container max-w-[66ch] flow-root">
       {body.map((block, index) => {
         if (block.type === "p") {
           const isFirst = index === dropCapIndex;
@@ -56,14 +59,14 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
         }
         if (block.type === "h2") {
           return (
-            <h2 key={index} className="mt-12 text-chapter">
+            <h2 key={index} className="mt-12 clear-both text-chapter">
               {block.text}
             </h2>
           );
         }
         if (block.type === "h3") {
           return (
-            <h3 key={index} className="mt-10 text-xl">
+            <h3 key={index} className="mt-10 clear-both text-xl">
               {block.text}
             </h3>
           );
@@ -89,8 +92,17 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
           );
         }
         if (block.type === "image" && block.src) {
+          // A contornar: pouco menos de metade da coluna, e só a partir de 30rem
+          // de coluna — abaixo disso volta a ocupar a largura toda.
+          const contorno =
+            block.float === "left"
+              ? "my-6 @[30rem]:float-left @[30rem]:my-2 @[30rem]:mr-8 @[30rem]:w-[40%]"
+              : block.float === "right"
+                ? "my-6 @[30rem]:float-right @[30rem]:my-2 @[30rem]:ml-8 @[30rem]:w-[40%]"
+                : "my-10";
+          const medidas = block.float ? "(max-width: 640px) 100vw, 320px" : "(max-width: 900px) 100vw, 720px";
           return (
-            <figure key={index} className="my-10">
+            <figure key={index} className={contorno}>
               {/* As medidas vêm da imagem: cortar uma infografia a 16:9 é
                   perder metade do que ela diz. Quando não as sabemos — um SVG,
                   um ficheiro que o CMS não mediu — vale mais deixar o browser
@@ -103,7 +115,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
                   width={block.width}
                   height={block.height}
                   className="h-auto w-full rounded-[20px]"
-                  sizes="(max-width: 900px) 100vw, 720px"
+                  sizes={medidas}
                 />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element

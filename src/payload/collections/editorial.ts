@@ -1,5 +1,5 @@
 import type { Block, CollectionConfig } from "payload";
-import { BlocksFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
+import { BlocksFeature, UploadFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
 import {
   revalidateEverythingOnChange,
   revalidateEverythingOnDelete,
@@ -54,8 +54,49 @@ const videoBlock: Block = {
  * as listas, os links e as imagens continuam todos lá quando o Payload lhes
  * mexer.
  */
+/*
+ * A imagem no meio do texto ganha dois campos próprios, escolhidos imagem a
+ * imagem: onde fica e o que diz por baixo.
+ *
+ * O contorno só acontece quando a coluna de texto tem largura para duas coisas
+ * lado a lado — e quem decide isso é a coluna, não o tamanho do ecrã. Num
+ * telemóvel a imagem volta sozinha à largura toda, que é o que se quer: texto a
+ * contornar uma imagem numa medida de trinta caracteres não se lê.
+ */
+const imagemDoCorpo = UploadFeature({
+  collections: {
+    media: {
+      fields: [
+        {
+          name: "align",
+          label: "Posição",
+          type: "select",
+          defaultValue: "full",
+          options: [
+            { label: "Na largura do texto", value: "full" },
+            { label: "À esquerda, com o texto a contornar", value: "left" },
+            { label: "À direita, com o texto a contornar", value: "right" },
+          ],
+          admin: {
+            description:
+              "A contornar, a imagem fica com pouco menos de metade da coluna. Em ecrãs estreitos volta à largura toda — não há contorno que se leia numa coluna de telemóvel.",
+          },
+        },
+        {
+          name: "caption",
+          label: "Legenda",
+          type: "text",
+          admin: { description: "Aparece debaixo da imagem, em letra pequena. O texto alternativo continua a ser o da biblioteca." },
+        },
+      ],
+    },
+  },
+});
+
 const corpoDeArtigo = lexicalEditor({
-  features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ blocks: [videoBlock] })],
+  // A funcionalidade das imagens vem depois das de origem de propósito: é a
+  // mesma, com os campos acrescentados, e a última é a que fica.
+  features: ({ defaultFeatures }) => [...defaultFeatures, imagemDoCorpo, BlocksFeature({ blocks: [videoBlock] })],
 });
 
 /*
