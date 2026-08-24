@@ -52,9 +52,21 @@ export async function formCopy(locale: Locale) {
     sent: t("sent"),
     sentBody: t("sentBody"),
     error: t("error"),
-    invalid: t("invalid"),
     tooBig: t("tooBig"),
-    needConsent: t("needConsent"),
+    // O que falta, campo a campo. O aviso genérico («invalid», «needConsent»)
+    // deixou de servir: dizia que faltava alguma coisa num formulário de vinte
+    // perguntas e mandava a pessoa procurá-la.
+    erros: {
+      name: t("erros.name"),
+      email: t("erros.email"),
+      emailInvalid: t("erros.emailInvalid"),
+      phone: t("erros.phone"),
+      phoneShort: t("erros.phoneShort"),
+      cv: t("erros.cv"),
+      question: t("erros.question"),
+      consent: t("erros.consent"),
+      tooBig: t("erros.tooBig"),
+    },
   };
 }
 

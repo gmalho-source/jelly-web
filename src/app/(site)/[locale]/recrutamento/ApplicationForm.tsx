@@ -15,6 +15,8 @@ export type Pergunta = {
 /** Quatro megabytes: é o que o servidor recebe num pedido. */
 const LIMITE = 4_000_000;
 
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 /**
  * O formulário de candidatura, um só para os dois casos.
  *
@@ -38,11 +40,20 @@ export function ApplicationForm({
   jobTitle?: string;
   questions?: Pergunta[];
 }) {
-  const [estado, setEstado] = useState<
-    "parado" | "a-enviar" | "enviado" | "erro" | "invalido" | "grande" | "consentimento" | "cv-recusado"
-  >("parado");
+  const [estado, setEstado] = useState<"parado" | "a-enviar" | "enviado" | "erro">("parado");
   const [nome, setNome] = useState("");
+  /*
+   * Um erro por campo. Este formulário chega a ter vinte perguntas quando a vaga
+   * traz as suas, e um aviso no fim a dizer «falta alguma coisa» obrigava quem se
+   * candidata a procurá-la de cima a baixo.
+   *
+   * Pelo caminho fechou-se um buraco: as perguntas obrigatórias da vaga tinham o
+   * atributo `required`, mas o formulário leva `noValidate` — ou seja, ninguém as
+   * verificava. Passavam vazias e ficavam vazias na candidatura.
+   */
+  const [erros, setErros] = useState<Record<string, string>>({});
   const aviso = useRef<HTMLParagraphElement>(null);
+  const forma = useRef<HTMLFormElement>(null);
 
   // Depois de enviar, a confirmação ficava fora do ecrã num formulário deste
   // tamanho: quem carregou em enviar não via nada acontecer.
@@ -58,33 +69,61 @@ export function ApplicationForm({
     const digitos = valor("phone").replace(/\D/g, "").length;
     const cv = dados.get("cv");
 
-    if (!dados.get("consent")) {
-      setEstado("consentimento");
+    const falta: Record<string, string> = {};
+    if (!valor("name")) falta.name = copy.erros.name;
+    if (!valor("email")) falta.email = copy.erros.email;
+    else if (!EMAIL.test(valor("email"))) falta.email = copy.erros.emailInvalid;
+    if (!valor("phone")) falta.phone = copy.erros.phone;
+    else if (digitos < 6) falta.phone = copy.erros.phoneShort;
+    if (!(cv instanceof File && cv.size > 0)) falta.cv = copy.erros.cv;
+
+    // As perguntas da vaga que são obrigatórias. Uma pergunta de várias escolhas
+    // cumpre-se com uma caixa marcada, não com um valor.
+    questions.forEach((pergunta, indice) => {
+      if (!pergunta.required) return;
+      const chave = `q${indice}`;
+      const respondida = pergunta.type === "varias" ? dados.getAll(chave).length > 0 : Boolean(valor(chave));
+      if (!respondida) falta[chave] = copy.erros.question;
+    });
+
+    // Um ficheiro grande demais é um problema daquele campo, não do formulário.
+    for (const chave of ["cv", "letter"] as const) {
+      const ficheiro = dados.get(chave);
+      if (ficheiro instanceof File && ficheiro.size > LIMITE) falta[chave] = copy.erros.tooBig;
+    }
+
+    if (!dados.get("consent")) falta.consent = copy.erros.consent;
+
+    if (Object.keys(falta).length) {
+      setErros(falta);
+      // Pela ordem do formulário, e não pela ordem em que o código verificou.
+      const ordem = ["name", "email", "phone", ...questions.map((_, i) => `q${i}`), "cv", "letter", "consent"];
+      const primeiro = ordem.find((chave) => falta[chave]);
+      const alvo = primeiro ? forma.current?.querySelector<HTMLElement>(`[name="${primeiro}"]`) : undefined;
+      alvo?.focus();
+      alvo?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    if (
-      !valor("name") ||
-      digitos < 6 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor("email")) ||
-      !(cv instanceof File && cv.size > 0)
-    ) {
-      setEstado("invalido");
-      return;
-    }
-    for (const ficheiro of [dados.get("cv"), dados.get("letter")]) {
-      if (ficheiro instanceof File && ficheiro.size > LIMITE) {
-        setEstado("grande");
-        return;
-      }
-    }
+
+    setErros({});
 
     setNome(valor("name").split(/\s+/)[0] ?? "");
     setEstado("a-enviar");
     try {
       const resposta = await fetch("/api/candidatura", { method: "POST", body: dados });
-      // 415 é o servidor a dizer que o ficheiro não serve — outra mensagem, e
-      // outra acção da parte de quem se candidata.
-      setEstado(resposta.ok ? "enviado" : resposta.status === 415 ? "cv-recusado" : "erro");
+      // 415 é o servidor a dizer que o ficheiro não serve. Também isso é do
+      // campo do currículo: é lá que a pessoa tem de agir.
+      if (resposta.ok) {
+        setEstado("enviado");
+      } else if (resposta.status === 415) {
+        setErros({ cv: copy.cvRejected });
+        setEstado("parado");
+        const alvo = forma.current?.querySelector<HTMLElement>('[name="cv"]');
+        alvo?.focus();
+        alvo?.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        setEstado("erro");
+      }
     } catch {
       setEstado("erro");
     }
@@ -109,8 +148,37 @@ export function ApplicationForm({
     "w-full min-w-0 rounded-[4px] border border-line bg-white px-3.5 py-3 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red";
   const etiqueta = "eyebrow text-fg-soft";
 
+  /** O campo em falta: contorno vermelho, e um fio vermelho por dentro. */
+  const marca = (chave: string) =>
+    erros[chave] ? `${campo} border-red shadow-[inset_0_0_0_1px_var(--color-red)]` : campo;
+
+  /* Em coral e não em vermelho: sobre a tinta desta secção o vermelho da marca
+     fica em 4:1 e o coral em 9:1, e um aviso que não se lê não é um aviso. */
+  const recado = (chave: string) =>
+    erros[chave] ? (
+      <p id={`erro-${chave}`} className="text-xs text-coral" role="alert">
+        {erros[chave]}
+      </p>
+    ) : null;
+
+  /** Ao mexer no campo, a marca sai: o erro é de quando se enviou. */
+  const limpa = (chave: string) =>
+    setErros((atual) => {
+      if (!atual[chave]) return atual;
+      const { [chave]: _, ...resto } = atual;
+      return resto;
+    });
+
+  /** O que se repete em cada campo marcável. */
+  const liga = (chave: string) => ({
+    className: marca(chave),
+    "aria-invalid": Boolean(erros[chave]),
+    "aria-describedby": erros[chave] ? `erro-${chave}` : undefined,
+    onInput: () => limpa(chave),
+  });
+
   return (
-    <form onSubmit={submeter} className="grid gap-4" noValidate>
+    <form ref={forma} onSubmit={submeter} className="grid gap-4" noValidate>
       {jobSlug ? <input type="hidden" name="job" value={jobSlug} /> : null}
       {jobTitle ? <input type="hidden" name="jobTitle" value={jobTitle} /> : null}
 
@@ -118,14 +186,16 @@ export function ApplicationForm({
         <label htmlFor="c-name" className={etiqueta}>
           {copy.name}
         </label>
-        <input id="c-name" name="name" required autoComplete="name" className={campo} />
+        <input id="c-name" name="name" required autoComplete="name" {...liga("name")} />
+        {recado("name")}
       </div>
 
       <div className="grid gap-1.5">
         <label htmlFor="c-email" className={etiqueta}>
           {copy.email}
         </label>
-        <input id="c-email" name="email" type="email" required autoComplete="email" className={campo} />
+        <input id="c-email" name="email" type="email" required autoComplete="email" {...liga("email")} />
+        {recado("email")}
       </div>
 
       <div className="grid gap-1.5">
@@ -148,9 +218,10 @@ export function ApplicationForm({
             inputMode="tel"
             autoComplete="tel-national"
             placeholder={copy.phoneHint}
-            className={campo}
+            {...liga("phone")}
           />
         </div>
+        {recado("phone")}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -244,7 +315,7 @@ export function ApplicationForm({
                 <input type="hidden" name={`${nomeCampo}-label`} value={pergunta.label} />
 
                 {pergunta.type === "escolha" ? (
-                  <select id={id} name={nomeCampo} required={pergunta.required} defaultValue="" className={campo}>
+                  <select id={id} name={nomeCampo} required={pergunta.required} defaultValue="" {...liga(nomeCampo)} onChange={() => limpa(nomeCampo)}>
                     <option value="">{copy.pickOne}</option>
                     {pergunta.options.map((opcao) => (
                       <option key={opcao} value={opcao}>
@@ -253,25 +324,34 @@ export function ApplicationForm({
                     ))}
                   </select>
                 ) : pergunta.type === "varias" ? (
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <div
+                    className={`grid gap-2 sm:grid-cols-2 ${erros[nomeCampo] ? "rounded-[4px] p-2 shadow-[inset_0_0_0_1px_var(--color-red)]" : ""}`}
+                  >
                     {pergunta.options.map((opcao) => (
                       <label key={opcao} className="flex items-center gap-2 text-sm text-fg">
-                        <input type="checkbox" name={nomeCampo} value={opcao} className="accent-red" />
+                        <input
+                          type="checkbox"
+                          name={nomeCampo}
+                          value={opcao}
+                          className="accent-red"
+                          onChange={() => limpa(nomeCampo)}
+                        />
                         {opcao}
                       </label>
                     ))}
                   </div>
                 ) : pergunta.type === "longo" ? (
-                  <textarea id={id} name={nomeCampo} required={pergunta.required} rows={4} className={campo} />
+                  <textarea id={id} name={nomeCampo} required={pergunta.required} rows={4} {...liga(nomeCampo)} />
                 ) : (
                   <input
                     id={id}
                     name={nomeCampo}
                     type={pergunta.type === "numero" ? "number" : "text"}
                     required={pergunta.required}
-                    className={campo}
+                    {...liga(nomeCampo)}
                   />
                 )}
+                {recado(nomeCampo)}
               </div>
             );
           })}
@@ -288,9 +368,13 @@ export function ApplicationForm({
           type="file"
           required
           accept=".pdf,.doc,.docx"
-          className={`${campo} file:mr-3 file:rounded-[4px] file:border-0 file:bg-ink file:px-3 file:py-1.5 file:text-xs file:font-semibold file:uppercase file:tracking-[0.08em] file:text-paper`}
+          aria-invalid={Boolean(erros.cv)}
+          aria-describedby={erros.cv ? "erro-cv" : undefined}
+          onChange={() => limpa("cv")}
+          className={`${marca("cv")} file:mr-3 file:rounded-[4px] file:border-0 file:bg-ink file:px-3 file:py-1.5 file:text-xs file:font-semibold file:uppercase file:tracking-[0.08em] file:text-paper`}
         />
         <span className="text-xs text-fg-soft">{copy.cvHint}</span>
+        {recado("cv")}
       </div>
 
       <div className="grid gap-1.5">
@@ -302,17 +386,32 @@ export function ApplicationForm({
           name="letter"
           type="file"
           accept=".pdf,.doc,.docx"
-          className={`${campo} file:mr-3 file:rounded-[4px] file:border-0 file:bg-ink file:px-3 file:py-1.5 file:text-xs file:font-semibold file:uppercase file:tracking-[0.08em] file:text-paper`}
+          aria-invalid={Boolean(erros.letter)}
+          aria-describedby={erros.letter ? "erro-letter" : undefined}
+          onChange={() => limpa("letter")}
+          className={`${marca("letter")} file:mr-3 file:rounded-[4px] file:border-0 file:bg-ink file:px-3 file:py-1.5 file:text-xs file:font-semibold file:uppercase file:tracking-[0.08em] file:text-paper`}
         />
         <span className="text-xs text-fg-soft">{copy.letterHint}</span>
+        {recado("letter")}
       </div>
 
       {/* Dois consentimentos separados, como tem de ser: guardar a candidatura é
           uma coisa, mandar comunicações é outra. */}
-      <label className="mt-2 flex items-start gap-3 text-sm text-fg">
-        <input type="checkbox" name="consent" required className="mt-1 accent-red" />
-        {copy.consent}
-      </label>
+      <div className="mt-2 grid gap-1.5">
+        <label className="flex items-start gap-3 text-sm text-fg">
+          <input
+            type="checkbox"
+            name="consent"
+            required
+            aria-invalid={Boolean(erros.consent)}
+            aria-describedby={erros.consent ? "erro-consent" : undefined}
+            onChange={() => limpa("consent")}
+            className="mt-1 accent-red"
+          />
+          {copy.consent}
+        </label>
+        {recado("consent")}
+      </div>
       <label className="flex items-start gap-3 text-sm text-fg-soft">
         <input type="checkbox" name="newsletter" className="mt-1 accent-red" />
         {copy.newsletter}
@@ -322,17 +421,10 @@ export function ApplicationForm({
         {estado === "a-enviar" ? copy.sending : copy.submit} <span aria-hidden="true">→</span>
       </button>
 
-      {estado !== "parado" && estado !== "a-enviar" ? (
+      {/* Só o que não pertence a nenhum campo: a falha de rede ou do servidor. */}
+      {estado === "erro" ? (
         <p className="text-sm text-coral" role="alert">
-          {estado === "invalido"
-            ? copy.invalid
-            : estado === "grande"
-              ? copy.tooBig
-              : estado === "consentimento"
-                ? copy.needConsent
-                : estado === "cv-recusado"
-                  ? copy.cvRejected
-                  : copy.error}
+          {copy.error}
         </p>
       ) : null}
     </form>

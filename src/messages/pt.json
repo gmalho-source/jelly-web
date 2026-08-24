@@ -204,7 +204,6 @@
     "sending": "A enviar…",
     "sent": "A mudança está prestes a começar, {nome}!",
     "error": "Não foi possível enviar. Tente outra vez ou escreva para hello@jelly.pt.",
-    "invalid": "Preencha o nome, a empresa, o telefone, um email válido e o que precisa.",
     "office": "Escritório",
     "careers": "Trabalhar na Jelly",
     "careersApply": "ou <aqui>candidata-te aqui</aqui>.",
@@ -285,9 +284,7 @@
     "sent": "Recebemos a tua candidatura, {nome}.",
     "sentBody": "Vamos ler tudo o que nos enviaste — e lemos mesmo, não é uma triagem automática. Damos notícias, seja qual for a decisão.",
     "error": "Não foi possível enviar. Tenta outra vez ou escreve para talent@jelly.pt.",
-    "invalid": "Preenche o nome, o telefone, um email válido, o CV e o consentimento.",
     "tooBig": "O ficheiro é grande demais. Até 4 MB, por favor.",
-    "needConsent": "Sem o consentimento não podemos guardar a tua candidatura.",
     "experienceOptions": {
       "nenhuma": "Sem experiência",
       "menos-de-um": "Menos de um ano",
@@ -316,6 +313,17 @@
     "area": "Área",
     "role": "Função",
     "cvRejected": "O CV não foi aceite. Tenta outra vez, em PDF ou Word.",
-    "photoAlt": "Uma pessoa da equipa Jelly no escritório, a olhar para a câmara"
+    "photoAlt": "Uma pessoa da equipa Jelly no escritório, a olhar para a câmara",
+    "erros": {
+      "name": "Diz-nos como te chamas.",
+      "email": "Falta o email.",
+      "emailInvalid": "Este email não parece válido.",
+      "phone": "Falta o telefone.",
+      "phoneShort": "Este número parece curto.",
+      "cv": "O currículo é obrigatório.",
+      "question": "Esta pergunta é obrigatória.",
+      "consent": "Precisamos da tua autorização para guardar a candidatura.",
+      "tooBig": "Este ficheiro passa dos 4 MB."
+    }
   }
 }
