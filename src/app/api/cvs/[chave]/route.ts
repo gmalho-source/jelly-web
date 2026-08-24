@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { recebe } from "../comum";
+import { fichaDaPorta, recebe } from "../comum";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -24,6 +24,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ chave: string }> }) {
   const { chave } = await params;
   const segredo = process.env.CV_INBOUND_SECRET?.trim();
-  if (!segredo || chave !== segredo) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!segredo || (chave !== segredo && chave !== fichaDaPorta(segredo))) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
   return NextResponse.json({ ok: true, estado: "porta aberta, à espera de correio" });
 }

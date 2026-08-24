@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { timingSafeEqual } from "node:crypto";
+import { createHash, timingSafeEqual } from "node:crypto";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
@@ -36,6 +36,20 @@ export const BREVO = env(process.env.BREVO_API_BASE) ?? "https://api.brevo.com/v
 const MAX_ANEXO = 8_000_000;
 const PDF = /pdf/i;
 const DOCUMENTOS = /(pdf|msword|officedocument|rtf)/i;
+
+/**
+ * A ficha da porta: o que vai no endereço em vez do segredo.
+ *
+ * O segredo pode ter o que lhe apetecer — quem o gera não tem de saber que ele
+ * vai acabar num URL — e um `+` ou uma barra pelo meio fazem um endereço que o
+ * Brevo recusa. Isto é o resumo criptográfico dele, em hexadecimal: sempre
+ * seguro de pôr num caminho, e não devolve o segredo a quem o veja.
+ *
+ * Metade do resumo chega e sobra: 128 bits não se adivinham, e o endereço fica
+ * curto o suficiente para caber em qualquer campo alheio.
+ */
+export const fichaDaPorta = (segredo: string) =>
+  createHash("sha256").update(segredo).digest("hex").slice(0, 32);
 
 /** Comparação sem dar pistas pelo tempo que demora. */
 function iguais(a: string, b: string) {
@@ -129,7 +143,11 @@ export async function recebe(request: NextRequest, chaveDada: string | null) {
   // configurar é uma porta aberta.
   if (!segredo || !caixa) return NextResponse.json({ ok: false }, { status: 404 });
 
-  if (!iguais(chaveDada ?? "", segredo)) return NextResponse.json({ ok: false }, { status: 401 });
+  // Serve o segredo (quem experimenta à mão) e a ficha dele (o que o Brevo tem).
+  const dado = chaveDada ?? "";
+  if (!iguais(dado, segredo) && !iguais(dado, fichaDaPorta(segredo))) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
 
   // Um pedido sem corpo legível é uma sonda — o Brevo verifica o endereço
   // antes de registar um webhook, e um 400 valia-lhe uma recusa. Quem chegou

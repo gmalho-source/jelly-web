@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { env } from "@/lib/env";
-import { BREVO, recebe } from "./comum";
+import { BREVO, fichaDaPorta, recebe } from "./comum";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -38,10 +38,10 @@ export async function GET(request: NextRequest) {
   // O segredo vai no caminho, e não numa interrogação: o Brevo recusa um
   // endereço com query string («Enter valid notify url»), e um webhook sem
   // segredo nenhum era uma porta aberta a quem soubesse o endereço.
-  // O segredo vai codificado: se lá tiver um espaço, um acento ou um sinal de
-  // pontuação, o endereço deixa de ser um endereço válido e é recusado sem se
-  // perceber porquê. Ao voltar, o Next devolve-o decifrado e bate certo.
-  const alvo = `${base}/api/cvs/${encodeURIComponent(segredo)}`;
+  // No endereço vai a ficha da porta, não o segredo: assim o caminho é sempre
+  // hexadecimal — nada que um URL recuse — e o segredo não fica guardado em
+  // casa alheia. A porta aceita as duas coisas.
+  const alvo = `${base}/api/cvs/${fichaDaPorta(segredo)}`;
   // O segredo nunca sai daqui, nem para quem tem o direito de perguntar.
   const disfarce = (url: string) => url.replace(/\/api\/cvs\/[^/?#]+/, "/api/cvs/•••").replace(/chave=[^&]+/, "chave=•••");
 
