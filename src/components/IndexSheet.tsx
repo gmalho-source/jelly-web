@@ -284,13 +284,29 @@ export function IndexSheet({
                 {copy.language}
               </Link>
             ) : null}
+            {/*
+              Uma cruz, e não a palavra «esc»: quem está com o rato na mão não
+              tem de saber que a tecla existe (continua a fechar, e o `aria-label`
+              diz o que o botão faz). A área de toque é maior do que o desenho —
+              44px, que é o mínimo para um dedo — e a cruz é traço, não ícone
+              carregado de fora. */}
             <button
               type="button"
               onClick={close}
               aria-label={copy.close}
-              className="text-sm text-paper/60 hover:text-paper"
+              className="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-full text-paper/60 transition-colors duration-200 hover:bg-paper/10 hover:text-paper focus-visible:bg-paper/10 focus-visible:text-paper"
             >
-              esc
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-[18px] w-[18px]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              >
+                <path d="M5 5 19 19M19 5 5 19" />
+              </svg>
             </button>
           </div>
 
