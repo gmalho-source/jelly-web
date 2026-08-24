@@ -38,7 +38,10 @@ export async function GET(request: NextRequest) {
   // O segredo vai no caminho, e não numa interrogação: o Brevo recusa um
   // endereço com query string («Enter valid notify url»), e um webhook sem
   // segredo nenhum era uma porta aberta a quem soubesse o endereço.
-  const alvo = `${base}/api/cvs/${segredo}`;
+  // O segredo vai codificado: se lá tiver um espaço, um acento ou um sinal de
+  // pontuação, o endereço deixa de ser um endereço válido e é recusado sem se
+  // perceber porquê. Ao voltar, o Next devolve-o decifrado e bate certo.
+  const alvo = `${base}/api/cvs/${encodeURIComponent(segredo)}`;
   // O segredo nunca sai daqui, nem para quem tem o direito de perguntar.
   const disfarce = (url: string) => url.replace(/\/api\/cvs\/[^/?#]+/, "/api/cvs/•••").replace(/chave=[^&]+/, "chave=•••");
 
@@ -84,7 +87,26 @@ export async function GET(request: NextRequest) {
   });
   const resposta = (await criado.json()) as { id?: number; message?: string; code?: string };
   if (!criado.ok) {
-    return NextResponse.json({ ok: false, estado: "o Brevo recusou", brevo: resposta }, { status: 502 });
+    // Uma recusa sem se ver o que foi enviado é uma adivinha. Vai tudo, menos o
+    // segredo: o endereço com ele tapado, e as pistas que costumam explicar um
+    // URL recusado — o comprimento, e se o segredo tem caracteres que num
+    // endereço não podem andar à solta.
+    const seguro = /^[A-Za-z0-9._~-]+$/.test(segredo);
+    return NextResponse.json(
+      {
+        ok: false,
+        estado: "o Brevo recusou",
+        brevo: resposta,
+        enviado: { url: disfarce(alvo), domain: dominio, type: "inbound", events: ["inboundEmailProcessed"] },
+        pistas: {
+          host: base,
+          comprimentoDoEndereco: alvo.length,
+          comprimentoDoSegredo: segredo.length,
+          segredoSoComCaracteresDeEndereco: seguro,
+        },
+      },
+      { status: 502 },
+    );
   }
   return NextResponse.json({
     ok: true,
