@@ -8,6 +8,7 @@ import {
 } from "../hooks/revalidate";
 import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
+import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
 
@@ -146,7 +147,12 @@ export const Posts: CollectionConfig = {
   hooks: { afterChange: [revalidateOnChange(postPaths)], afterDelete: [revalidateOnDelete(postPaths)] },
   // Um Markdown a povoar o artigo. O trabalho é do servidor porque é lá que as
   // imagens entram na biblioteca.
-  endpoints: [{ path: "/markdown", method: "post", handler: importMarkdown }],
+  endpoints: [
+    { path: "/markdown", method: "post", handler: importMarkdown },
+    // O resumo escrito pelo Claude. Não leva id: o corpo do artigo vem do
+    // editor, para isto servir também um artigo ainda por gravar.
+    { path: "/resumo", method: "post", handler: writeExcerpt },
+  ],
   fields: [
     {
       type: "row",
@@ -175,7 +181,41 @@ export const Posts: CollectionConfig = {
       ],
     },
     { name: "category", label: "Categoria", type: "relationship", relationTo: "categories" },
-    locale("excerpt", "Resumo", { long: true }),
+    {
+      name: "excerpt",
+      label: "Resumo",
+      type: "group",
+      admin: {
+        description:
+          "A primeira linha do artigo na página e a description que sai no Google. Até 155 caracteres.",
+      },
+      fields: [
+        {
+          name: "pt",
+          label: "Português",
+          type: "textarea",
+          admin: {
+            components: {
+              afterInput: [
+                { path: "@/payload/components/ResumoIA#ResumoIA", clientProps: { lingua: "pt" } },
+              ],
+            },
+          },
+        },
+        {
+          name: "en",
+          label: "English",
+          type: "textarea",
+          admin: {
+            components: {
+              afterInput: [
+                { path: "@/payload/components/ResumoIA#ResumoIA", clientProps: { lingua: "en" } },
+              ],
+            },
+          },
+        },
+      ],
+    },
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
     {
       name: "body",
