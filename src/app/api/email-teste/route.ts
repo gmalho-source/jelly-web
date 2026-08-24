@@ -48,6 +48,9 @@ export async function GET(request: NextRequest) {
     // A entrada dos CV: sem isto registado, o Brevo recusa o correio para o
     // cvs.jelly.pt à porta, e a recusa só se vê no email devolvido.
     entrada: "webhooks?type=inbound",
+    // O que o Brevo fez com o correio que lhe chegou à caixa dos CV: se o
+    // entregou à nossa porta, se falhou a entregar, se o pôs de lado.
+    entradas: "inbound/events?limit=20&sort=desc",
     agregado: "smtp/statistics/aggregatedReport",
   };
 
