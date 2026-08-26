@@ -372,5 +372,36 @@
     "deletedLead": "We kept nothing of yours. If one day you want to apply, the door is open at jelly.pt.",
     "expiredTitle": "This link no longer stands",
     "expiredLead": "Confirmation links last fourteen days, and this one is past that — or has been used already. If you still want your application to stay with us, write to talent@jelly.pt and we will send another."
+  },
+  "subscricao": {
+    "eyebrow": "Communications",
+    "title": "What we do, told by the people doing it.",
+    "lead": "Every so often we write about what we learn at work — artificial intelligence that actually does something, brands that changed shape, campaigns that went well and others that did not. No fixed calendar: only when there is something worth your time.",
+    "email": "Email",
+    "emailHint": "Your email, nothing else. We do not ask for a name or a company.",
+    "lingua": "You will receive it in English.",
+    "trocar": "I prefer Portuguese",
+    "linguaOutra": "You will receive it in Portuguese.",
+    "voltar": "I prefer English",
+    "consent": "I allow Jelly to send me these communications and to keep my email for that. I can leave whenever I want, in one click, from any email.",
+    "submit": "Subscribe",
+    "sending": "Sending…",
+    "sent": "One step left: confirm in your inbox.",
+    "sentBody": "We sent a message to {email}. Click the link in it and you are subscribed — without that we keep nothing.",
+    "erros": {
+      "email": "Your email is missing.",
+      "emailInvalid": "This email does not look right.",
+      "consent": "Without this permission we cannot send anything.",
+      "geral": "That did not work. Please try again in a moment."
+    },
+    "confirmTitle": "Confirm your subscription?",
+    "confirmLead": "Press the button and you will start receiving Jelly's communications. This is the last step.",
+    "confirmButton": "Confirm subscription",
+    "confirmDone": "Done. Welcome.",
+    "confirmDoneBody": "From now on you get our communications. Every email has a link to leave — no questions, no forms.",
+    "confirmExpiredTitle": "This link no longer stands",
+    "confirmExpiredLead": "Confirmation links last seven days, and this one is past that. Subscribe again and we will send a new one.",
+    "blogTitle": "Get what we write",
+    "blogLead": "No fixed calendar: only when there is something worth your time."
   }
 }

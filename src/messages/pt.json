@@ -372,5 +372,36 @@
     "deletedLead": "Não guardámos nada teu. Se um dia quiseres candidatar-te, a porta está aberta em jelly.pt.",
     "expiredTitle": "Este link já não está de pé",
     "expiredLead": "Os links de confirmação valem catorze dias, e este passou disso — ou já foi usado. Se ainda quiseres que a tua candidatura fique connosco, escreve-nos para talent@jelly.pt e enviamos outro."
+  },
+  "subscricao": {
+    "eyebrow": "Comunicações",
+    "title": "O que fazemos, contado por quem faz.",
+    "lead": "De vez em quando escrevemos sobre o que aprendemos a trabalhar — inteligência artificial que serve para alguma coisa, marcas que mudaram de forma, campanhas que correram bem e outras que não. Sem calendário fixo: só quando há alguma coisa que valha o teu tempo.",
+    "email": "Email",
+    "emailHint": "O teu email, e mais nada. Não pedimos nome nem empresa.",
+    "lingua": "Vais receber em português.",
+    "trocar": "Prefiro em inglês",
+    "linguaOutra": "Vais receber em inglês.",
+    "voltar": "Prefiro em português",
+    "consent": "Autorizo que a Jelly me envie estas comunicações e guarde o meu email para isso. Saio quando quiser, num clique, em qualquer email.",
+    "submit": "Subscrever",
+    "sending": "A enviar…",
+    "sent": "Falta um passo: confirma no teu email.",
+    "sentBody": "Enviámos-te uma mensagem para {email}. Carrega no link que vem lá e ficas subscrito — sem isso não guardamos nada.",
+    "erros": {
+      "email": "Falta o teu email.",
+      "emailInvalid": "Este email não parece estar bem escrito.",
+      "consent": "Sem esta autorização não podemos enviar nada.",
+      "geral": "Não foi possível. Tenta outra vez daqui a pouco."
+    },
+    "confirmTitle": "Confirmas a subscrição?",
+    "confirmLead": "Carrega no botão e ficas a receber as comunicações da Jelly. É o último passo.",
+    "confirmButton": "Confirmar subscrição",
+    "confirmDone": "Está feito. Bem-vindo.",
+    "confirmDoneBody": "A partir de agora recebes as nossas comunicações. Em qualquer email tens um link para sair — sem perguntas e sem formulários.",
+    "confirmExpiredTitle": "Este link já não está de pé",
+    "confirmExpiredLead": "Os links de confirmação valem sete dias, e este passou disso. Subscreve outra vez e enviamos um novo.",
+    "blogTitle": "Recebe o que escrevemos",
+    "blogLead": "Sem calendário fixo: só quando há alguma coisa que valha o teu tempo."
   }
 }

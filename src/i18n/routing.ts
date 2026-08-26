@@ -26,6 +26,10 @@ export const routing = defineRouting({
     "/recrutamento": { pt: "/recrutamento", en: "/careers" },
     "/recrutamento/[slug]": { pt: "/recrutamento/[slug]", en: "/careers/[slug]" },
     "/legal/[slug]": { pt: "/legal/[slug]", en: "/legal/[slug]" },
+    // As comunicações da Jelly: a página onde se subscreve, e o link que
+    // confirma a subscrição.
+    "/subscrever": { pt: "/subscrever", en: "/subscribe" },
+    "/subscrever/[token]": { pt: "/subscrever/[token]", en: "/subscribe/[token]" },
     // O link que vai na carta a quem se candidatou por fora do formulário.
     "/confirmar-candidatura/[token]": { pt: "/confirmar-candidatura/[token]", en: "/confirm-application/[token]" },
   },

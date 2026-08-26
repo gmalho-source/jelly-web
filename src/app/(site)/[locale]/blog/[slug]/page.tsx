@@ -3,6 +3,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { ArticleBody } from "@/components/ArticleBody";
+import { SubscribeForm } from "@/app/(site)/[locale]/subscrever/SubscribeForm";
+import { copyDaSubscricao } from "@/app/(site)/[locale]/subscrever/copy";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -55,6 +57,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   }
 
   const t = await getTranslations("blog");
+  const tSub = await getTranslations("subscricao");
   const nav = await getTranslations("nav");
   const related = await getRelatedPosts(slug);
   const formatter = new Intl.DateTimeFormat(locale === "pt" ? "pt-PT" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -160,6 +163,17 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             ) : (
               <p className="reading max-w-[66ch]">{resumo}</p>
             )}
+          </div>
+
+          {/* A subscrição no fim do artigo: é aqui que a intenção está no
+              máximo — alguém que acabou de ler tudo. A página de subscrição
+              continua a existir, para quem chega por outro sítio. */}
+          <div className="mt-12 max-w-[42ch] border-t border-line pt-8">
+            <h2 className="editorial text-lg">{tSub("blogTitle")}</h2>
+            <p className="mt-2 text-sm text-fg-soft">{tSub("blogLead")}</p>
+            <div className="mt-6">
+              <SubscribeForm copy={copyDaSubscricao(tSub)} lingua={locale} origem={`artigo:${slug}`} compacto superficie="papel" />
+            </div>
           </div>
 
           {post.author.bio ? (

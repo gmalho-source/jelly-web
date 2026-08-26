@@ -76,6 +76,7 @@ correspondentes funcionarem.
 | `BLOB_READ_WRITE_TOKEN` | runtime | Uploads no painel falham em produção (não há disco persistente) |
 | `REVALIDATE_SECRET` | runtime | `POST /api/revalidate` responde 404; a purga automática ao gravar continua a funcionar |
 | `ANTHROPIC_API_KEY` | runtime | Os assistentes do painel (resumo do artigo, descrição da imagem, leitura do CV) respondem a dizer que falta a chave |
+| `BREVO_LIST_ID` | runtime | A subscrição das comunicações falha ao confirmar: o contacto não tem lista onde entrar |
 | `CV_INBOUND_ADDRESS` | runtime | A entrada de CV por email recusa tudo (ver abaixo) |
 | `CV_INBOUND_SECRET` | runtime | O mesmo: o webhook do Brevo não é reconhecido |
 
@@ -98,6 +99,29 @@ gerado para este projeto é outro: confirmar em Project → Domains e testar por
 esse. Para o subdomínio de faturação funcionar em preview é preciso apontar
 `NEXT_PUBLIC_BILLING_HOST` para o host de preview, senão o middleware
 redireciona `/billing` para `billing.jelly.pt`.
+
+## Comunicações da Jelly (subscrição)
+
+A lista vive no **Brevo**, não na nossa base de dados: é ele que tem a supressão,
+as devoluções e a saída num clique. Guardar os subscritores dos dois lados era
+ter duas verdades — alguém sai pelo link do email, ele sabe, nós não.
+
+O que o site faz é a porta de entrada, com dupla confirmação **nossa**: a pessoa
+escreve o email, recebe uma carta com o papel da casa, e **só quando carrega no
+link é que o contacto nasce no Brevo**. Antes disso não há registo nenhum, nem
+aqui nem lá — o link leva o email assinado lá dentro, e sem clique não existe
+nada para apagar. A confirmação acontece num botão e não ao abrir a página: há
+filtros de segurança que abrem todos os links de um email, e sem o botão
+subscreviam pessoas que nunca carregaram em nada.
+
+A língua não se pergunta: vem da página onde a pessoa estava, mostra-se numa
+linha («vais receber em português») e troca-se ali ao lado. No Brevo fica no
+atributo `LINGUA`, com a `ORIGEM` (a página ou o artigo por onde entrou) e a
+data do `CONSENTIMENTO`. Com uma lista só, é por esses atributos que se segmenta
+na hora de escrever.
+
+Falta configurar: `BREVO_LIST_ID` com o número da lista. O formulário está na
+página `/subscrever` (`/en/subscribe`) e no fim de cada artigo do blog.
 
 ## Entrada de CV por email (porta B)
 
