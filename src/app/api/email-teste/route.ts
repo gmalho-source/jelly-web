@@ -51,6 +51,10 @@ export async function GET(request: NextRequest) {
     // O que o Brevo fez com o correio que lhe chegou à caixa dos CV: se o
     // entregou à nossa porta, se falhou a entregar, se o pôs de lado.
     entradas: "inbound/events?limit=20&sort=desc",
+    // As listas de contactos, com o número de cada uma: é o que a subscrição
+    // precisa em BREVO_LIST_ID, e evita ir buscá-lo ao painel com a chave na
+    // mão.
+    listas: "contacts/lists?limit=50",
     agregado: "smtp/statistics/aggregatedReport",
   };
 
