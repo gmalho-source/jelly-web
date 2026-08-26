@@ -231,6 +231,7 @@ export const Clients: CollectionConfig = {
         { label: "Arquitetura e construção", value: "construcao" },
         { label: "Transportes & Logística", value: "transportes" },
         { label: "Serviços", value: "servicos" },
+        { label: "ONG", value: "ong" },
         { label: "Arte e coleccionismo", value: "arte" },
         { label: "Eventos e espaços", value: "eventos" },
         { label: "Turismo e lazer", value: "lazer" },

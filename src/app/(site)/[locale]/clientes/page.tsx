@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return { title: t("eyebrow"), description: t("lead"), alternates: alternates("/clientes", locale) };
 }
 
-const order: Client["sector"][] = ["financeiro", "saude", "bebidas", "consumo", "retalho", "industria", "construcao", "transportes", "servicos", "arte", "eventos", "lazer", "tecnologia"];
+const order: Client["sector"][] = ["financeiro", "saude", "bebidas", "consumo", "retalho", "industria", "construcao", "transportes", "servicos", "ong", "arte", "eventos", "lazer", "tecnologia"];
 
 export default async function ClientsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;

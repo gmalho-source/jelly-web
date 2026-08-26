@@ -648,6 +648,7 @@ export interface Client {
     | 'construcao'
     | 'transportes'
     | 'servicos'
+    | 'ong'
     | 'arte'
     | 'eventos'
     | 'lazer'
