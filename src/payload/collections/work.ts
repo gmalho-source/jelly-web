@@ -214,7 +214,28 @@ export const Clients: CollectionConfig = {
       label: "Setor",
       type: "select",
       required: true,
-      options: ["financeiro", "saude", "bebidas", "consumo", "retalho", "industria", "construcao", "servicos", "arte", "eventos", "lazer", "tecnologia"],
+      // Com etiqueta e valor: o valor é o que fica gravado e o que a página
+      // usa para ordenar e traduzir; a etiqueta é o que quem escolhe lê — e
+      // «Saúde» com acento vale mais do que «Saude».
+      //
+      // A lista é fechada de propósito. Acrescentar um setor é acrescentá-lo
+      // aqui, no tipo do conteúdo, na ordem da página e nas duas traduções — e
+      // correr um `alter type` na base, porque isto é um enum em Postgres.
+      options: [
+        { label: "Financeiro e seguros", value: "financeiro" },
+        { label: "Saúde e estética", value: "saude" },
+        { label: "Bebidas e espirituosas", value: "bebidas" },
+        { label: "Produtos de consumo", value: "consumo" },
+        { label: "Retalho", value: "retalho" },
+        { label: "Indústria", value: "industria" },
+        { label: "Arquitetura e construção", value: "construcao" },
+        { label: "Transportes & Logística", value: "transportes" },
+        { label: "Serviços", value: "servicos" },
+        { label: "Arte e coleccionismo", value: "arte" },
+        { label: "Eventos e espaços", value: "eventos" },
+        { label: "Turismo e lazer", value: "lazer" },
+        { label: "Tecnologia", value: "tecnologia" },
+      ],
     },
     { name: "logo", label: "Logo", type: "upload", relationTo: "media" },
     { name: "gallery", label: "Parede", type: "text", admin: { description: "Nome da galeria a que pertence." } },

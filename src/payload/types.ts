@@ -646,6 +646,7 @@ export interface Client {
     | 'retalho'
     | 'industria'
     | 'construcao'
+    | 'transportes'
     | 'servicos'
     | 'arte'
     | 'eventos'

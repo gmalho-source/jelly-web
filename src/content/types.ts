@@ -55,7 +55,7 @@ export type Service = {
   closing?: { question: Localized; answer: Localized };
 };
 
-export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "consumo" | "retalho" | "industria" | "construcao" | "servicos" | "arte" | "eventos" | "lazer" | "tecnologia" };
+export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "consumo" | "retalho" | "industria" | "construcao" | "transportes" | "servicos" | "arte" | "eventos" | "lazer" | "tecnologia" };
 
 export type TeamMember = { name: string; role?: Localized };
 
