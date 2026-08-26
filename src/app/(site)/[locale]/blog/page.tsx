@@ -17,7 +17,11 @@ export async function generateMetadata({
   return {
     title: t("eyebrow"),
     description: t("lead"),
-    alternates: alternates("/blog", locale),
+    alternates: {
+      ...alternates("/blog", locale),
+      // Para o browser e os leitores de feeds encontrarem o feed sem o adivinhar.
+      types: { "application/rss+xml": locale === "en" ? "/en/rss.xml" : "/rss.xml" },
+    },
   };
 }
 

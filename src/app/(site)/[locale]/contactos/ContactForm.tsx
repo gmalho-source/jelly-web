@@ -289,6 +289,18 @@ export function ContactForm({ copy }: { copy: Copy }) {
       {/* A pastilha da casa, e não o botão vermelho de cantos redondos que veio
           do site antigo. Esta página é tinta, por isso leva a pílula de papel —
           a que acende a vermelho ao passar o rato. */}
+      {/* A armadilha: fora do ecrã e fora do foco. Quem a preenche não é gente,
+          e do outro lado responde-se como se tivesse corrido bem — dizer
+          «apanhei-te» é ensinar a fugir. */}
+      <input
+        type="text"
+        name="empresa_"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
       <button type="submit" disabled={state === "sending"} className="btn-pill w-fit disabled:opacity-40">
         {state === "sending" ? copy.sending : copy.submit} <span aria-hidden="true">→</span>
       </button>

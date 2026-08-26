@@ -34,6 +34,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
+  // A armadilha do formulário: um campo que ninguém vê e que só um robô
+  // preenche. Responde-se com um sim — um «apanhei-te» é uma aula de como
+  // passar à próxima.
+  if (String(dados.get("empresa_") ?? "").trim()) return NextResponse.json({ ok: true });
+
   const texto = (chave: string, limite: number) => String(dados.get(chave) ?? "").trim().slice(0, limite);
   const name = texto("name", 120);
   const company = texto("company", 120);
