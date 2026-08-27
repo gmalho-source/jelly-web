@@ -1,6 +1,7 @@
 import type { Block, CollectionConfig } from "payload";
 import { slugDaPessoa } from "@/lib/equipa";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
 import { translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, slugEnField, slugField } from "../fields";
 
@@ -282,7 +283,14 @@ export const TeamMembers: CollectionConfig = {
   //
   // A lista do painel segue a mesma ordem, com a cara ao lado do nome: por
   // ordem de criação, encontrar alguém obriga a percorrer três páginas.
-  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "photo"] },
+  admin: {
+    useAsTitle: "name",
+    group: "Casa",
+    defaultColumns: ["name", "photo"],
+    // O aviso por cima da lista, enquanto houver fichas sem conteúdo. Desaparece
+    // sozinho quando não houver nada a fazer.
+    components: { beforeListTable: ["@/payload/components/PreencherEquipa#PreencherEquipa"] },
+  },
   defaultSort: "name",
   access: { read: () => true },
   hooks: {
@@ -297,6 +305,10 @@ export const TeamMembers: CollectionConfig = {
     // leva id: o texto vem do formulário, para isto servir também uma pessoa
     // ainda por gravar.
     { path: "/traduzir", method: "post", handler: translateBio },
+    // Encher as fichas a partir do ficheiro do repositório, do botão que está
+    // por cima da lista. Uma pessoa por chamada.
+    { path: "/preencher", method: "get", handler: teamPlan },
+    { path: "/preencher", method: "post", handler: fillTeamMember },
   ],
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },

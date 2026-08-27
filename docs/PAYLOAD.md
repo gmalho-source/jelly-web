@@ -281,12 +281,28 @@ visível de uma imagem é a legenda.
 As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o resto
 — função, apresentação, LinkedIn e os dois retratos — a `src/content/team.ts`.
 Serve quem lê o site, mas quem abre a ficha no painel encontra um formulário
-vazio e não tem por onde corrigir nada. `npm run equipa` passa o conteúdo para
-lá.
+vazio e não tem por onde corrigir nada.
 
-Corre na máquina de quem o corre, não na Vercel: é um script de linha de
-comandos que fala com a base de dados de produção pela `DATABASE_URL`. No
-terminal, dentro da pasta do repositório:
+**Pelo painel**, que é o caminho curto: em **Casa → Equipa**, enquanto houver
+fichas sem conteúdo aparece um aviso por cima da lista — *«21 fichas sem
+conteúdo»* — com o botão **«Preencher a partir do repositório»**. Carrega-se, ele
+vai pessoa a pessoa e diz por onde vai, e no fim a lista aparece já com as caras.
+O aviso desaparece sozinho quando não houver nada a fazer: é um andaime, não um
+móvel.
+
+Chama o servidor uma vez por pessoa e não uma vez por todas. Cada pessoa traz
+dois retratos para descarregar e subir, e quarenta e dois numa só chamada não
+caberiam no tempo que uma função tem para responder; é também o que faz uma falha
+a meio deixar atrás o que já ficou feito, em vez de desfazer tudo. Os retratos
+vêm do próprio site pela rede e não do disco: em produção a pasta `public/` é
+servida pelo CDN e não vai dentro da função, por isso não há lá ficheiro para
+abrir.
+
+**Pela linha de comandos**, que é o mesmo trabalho com as mesmas regras — vivem
+em `src/lib/equipa-fichas.ts`, e é o que garante que os dois caminhos chegam ao
+mesmo resultado. Corre na máquina de quem o corre, não na Vercel: fala com a base
+de dados de produção pela `DATABASE_URL`. No terminal, dentro da pasta do
+repositório:
 
 ```bash
 npm install                       # a primeira vez, e só a primeira

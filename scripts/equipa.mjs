@@ -27,6 +27,7 @@ import path from "node:path";
 import { getPayload } from "payload";
 import config from "../payload.config.ts";
 import { team } from "../src/content/team.ts";
+import { camposEmFalta } from "../src/lib/equipa-fichas.ts";
 
 const seco = process.argv.includes("--seco");
 const semRetratos = process.argv.includes("--sem-retratos");
@@ -61,28 +62,30 @@ const noPainel = new Map(existentes.map((doc) => [String(doc.name ?? "").trim().
  * deixar quarenta e duas imagens repetidas na biblioteca.
  */
 const subidos = new Map();
-async function retrato(fonte, alt, titulo) {
-  if (!fonte?.src) return null;
-  if (subidos.has(fonte.src)) return subidos.get(fonte.src);
+async function retrato({ src, alt, titulo }) {
+  if (subidos.has(src)) return subidos.get(src);
 
-  const nome = path.basename(fonte.src);
-  const { docs } = await payload.find({ collection: "media", where: { filename: { equals: nome } }, limit: 1 });
+  const nome = path.basename(src);
+  // Pelo nome sem extensão: o Payload acrescenta `-1` a um ficheiro que já
+  // exista no armazenamento, e a procura exacta não o encontrava.
+  const raiz = nome.replace(/\.\w+$/, "");
+  const { docs } = await payload.find({ collection: "media", where: { filename: { like: raiz } }, limit: 1 });
   if (docs[0]) {
-    subidos.set(fonte.src, docs[0].id);
+    subidos.set(src, docs[0].id);
     return docs[0].id;
   }
   if (seco) {
-    subidos.set(fonte.src, `(nova) ${nome}`);
+    subidos.set(src, `(nova) ${nome}`);
     return `(nova) ${nome}`;
   }
 
-  const dados = await readFile(path.join(RAIZ, "public", fonte.src.replace(/^\//, "")));
+  const dados = await readFile(path.join(RAIZ, "public", src.replace(/^\//, "")));
   const criada = await payload.create({
     collection: "media",
     data: { title: titulo, alt: alt || titulo },
     file: { name: nome, data: dados, mimetype: "image/webp", size: dados.byteLength },
   });
-  subidos.set(fonte.src, criada.id);
+  subidos.set(src, criada.id);
   return criada.id;
 }
 
@@ -93,32 +96,12 @@ let intactas = 0;
 for (const pessoa of team) {
   const ficha = noPainel.get(pessoa.name.trim().toLowerCase());
 
-  // O que falta nesta ficha. Um campo com valor no painel nunca é tocado: quem
-  // o escreveu lá sabia mais do que este ficheiro.
-  const novo = {};
-  const vazio = (valor) => !String(valor ?? "").trim();
-
-  if (ficha ? vazio(ficha.role?.pt) && vazio(ficha.role?.en) : true) {
-    if (pessoa.role) novo.role = pessoa.role;
-  }
-  if (ficha ? vazio(ficha.bio?.pt) && vazio(ficha.bio?.en) : true) {
-    // Só o português: a apresentação inglesa faz-se no painel, com o botão de
-    // traduzir, e por quem a lê antes de gravar.
-    if (pessoa.bio?.pt) novo.bio = { pt: pessoa.bio.pt };
-  }
-  if (ficha ? vazio(ficha.linkedin) : true) {
-    if (pessoa.linkedin) novo.linkedin = pessoa.linkedin;
-  }
+  // As regras de o que preencher são as mesmas do botão do painel, e vivem em
+  // src/lib/equipa-fichas.ts: um campo com valor no painel nunca é tocado.
+  const { dados: novo, retratos } = camposEmFalta(pessoa, ficha);
 
   if (!semRetratos) {
-    if (!ficha?.photo) {
-      const id = await retrato(pessoa.photo, pessoa.photo?.alt, `${pessoa.name} (preto e branco)`);
-      if (id) novo.photo = id;
-    }
-    if (!ficha?.photoColor) {
-      const id = await retrato(pessoa.photoColor, pessoa.photoColor?.alt, `${pessoa.name} (cor)`);
-      if (id) novo.photoColor = id;
-    }
+    for (const fonte of retratos) novo[fonte.campo] = await retrato(fonte);
   }
 
   const campos = Object.keys(novo);
