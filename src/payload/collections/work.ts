@@ -1,5 +1,7 @@
 import type { Block, CollectionConfig } from "payload";
+import { slugDaPessoa } from "@/lib/equipa";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import { translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, slugEnField, slugField } from "../fields";
 
 const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/projetos/${doc.slug ?? ""}`];
@@ -265,15 +267,30 @@ export const Logos: CollectionConfig = {
   ],
 };
 
+/** Onde uma pessoa aparece, nas duas línguas. */
+function paginasDaPessoa(doc: Record<string, unknown>) {
+  const slug = slugDaPessoa(String(doc.name ?? ""));
+  return ["/", "/sobre", "/equipa", "/team", `/equipa/${slug}`, `/team/${slug}`];
+}
+
 export const TeamMembers: CollectionConfig = {
   slug: "team",
   labels: { singular: "Pessoa", plural: "Equipa" },
   admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "order"] },
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateOnChange(() => ["/", "/sobre", "/equipa"])],
-    afterDelete: [revalidateOnDelete(() => ["/", "/sobre", "/equipa"])],
+    // Mexer numa pessoa refaz a grelha, a página dela e o cartaz do Sobre. O
+    // endereço inglês da grelha e da pessoa é outro (/team), e por isso vai
+    // escrito: a purga põe a língua à frente do caminho, não traduz o caminho.
+    afterChange: [revalidateOnChange((doc) => paginasDaPessoa(doc))],
+    afterDelete: [revalidateOnDelete((doc) => paginasDaPessoa(doc))],
   },
+  endpoints: [
+    // A apresentação inglesa, escrita pelo Claude a partir da portuguesa. Não
+    // leva id: o texto vem do formulário, para isto servir também uma pessoa
+    // ainda por gravar.
+    { path: "/traduzir", method: "post", handler: translateBio },
+  ],
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },
     locale("role", "Função"),
@@ -281,7 +298,28 @@ export const TeamMembers: CollectionConfig = {
     // se vê na grelha, o de cor aparece quando se abre a pessoa.
     { name: "photo", label: "Retrato (preto e branco)", type: "upload", relationTo: "media" },
     { name: "photoColor", label: "Retrato (cor)", type: "upload", relationTo: "media" },
-    locale("bio", "Apresentação", { long: true }),
+    {
+      name: "bio",
+      label: "Apresentação",
+      type: "group",
+      admin: {
+        description:
+          "O texto que aparece na página da pessoa. Uma linha por parágrafo — o site separa-os por onde a linha acaba.",
+      },
+      fields: [
+        { name: "pt", label: "Português", type: "textarea" },
+        {
+          name: "en",
+          label: "English",
+          type: "textarea",
+          admin: {
+            components: {
+              afterInput: [{ path: "@/payload/components/TraduzirIA#TraduzirIA" }],
+            },
+          },
+        },
+      ],
+    },
     { name: "linkedin", label: "LinkedIn", type: "text" },
     { name: "order", label: "Ordem", type: "number" },
   ],

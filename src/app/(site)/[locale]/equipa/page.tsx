@@ -16,9 +16,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
  * A página da equipa.
  *
  * Herdada da do site antigo — os retratos, os nomes, as funções e as
- * apresentações são os que a casa já tinha escrito. O que muda é a forma: a cor
- * chega ao passar o rato em vez de só no clique, e a apresentação abre num
- * diálogo em vez de em ecrã cheio.
+ * apresentações são os que a casa já tinha escrito, e a grelha mantém a forma
+ * que lá estava: dez pixels entre mosaicos, retratos a preto e branco, e a cor
+ * a acender ao passar o rato.
+ *
+ * A apresentação de cada pessoa tem página própria e ecrã cheio, com endereço
+ * seu — o retrato voa daqui para lá e volta. Era um diálogo, e um diálogo não
+ * se partilha nem se encontra no Google.
  */
 export default async function EquipaPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -30,12 +34,7 @@ export default async function EquipaPage({ params }: { params: Promise<{ locale:
   const pessoas: Pessoa[] = team.map((membro) => ({
     nome: membro.name,
     funcao: membro.role?.[locale] || membro.role?.pt || undefined,
-    // Uma língua para as apresentações: o inglês serve o português enquanto
-    // ninguém as traduzir. Um texto traduzido à pressa é pior do que o original.
-    apresentacao: membro.bio?.[locale] || membro.bio?.pt || undefined,
     pb: membro.photo,
-    cor: membro.photoColor,
-    linkedin: membro.linkedin,
   }));
 
   return (
@@ -51,10 +50,7 @@ export default async function EquipaPage({ params }: { params: Promise<{ locale:
       </section>
 
       <section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-8">
-        <EquipaGrelha
-          pessoas={pessoas}
-          copy={{ open: t("open"), close: t("close"), linkedin: t("linkedin"), noBio: t("noBio") }}
-        />
+        <EquipaGrelha pessoas={pessoas} />
       </section>
 
       <section className="surface-red">

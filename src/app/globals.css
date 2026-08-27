@@ -1128,3 +1128,91 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
     transition: opacity 200ms ease-out;
   }
 }
+
+/* ── A equipa: a cor chega com a pessoa ─────────────────────────────────────
+   Dois gestos, um por página.
+
+   Na grelha, a cor da pessoa acende ao passar o rato. Onde não há rato — um
+   telefone, um tablet — não há forma de acender nada, e um mosaico sem nome é
+   uma cara anónima. Daí esta variante: `sem-rato:` escreve a regra para os
+   ecrãs que não sabem o que é passar por cima, e lá os nomes ficam sempre à
+   vista. É preciso porque o `hover:` do Tailwind 4 já vem fechado dentro de
+   `@media (hover: hover)` — sem isto, metade das visitas via uma grelha muda.
+
+   Na passagem para a página da pessoa, o retrato voa: os dois retratos, o
+   mosaico e o de ecrã cheio, têm o mesmo nome de transição, e o browser
+   encarrega-se do resto. O desfoque a meio do caminho não é enfeite — é o que
+   esconde a fotografia a ser esticada de um formato para o outro, que sem ele
+   se vê aos quadrados. */
+@custom-variant sem-rato (@media (hover: none));
+
+/* Um clique durante a passagem não se perde: a camada da transição deixa passar
+   o rato para a página que está por baixo. */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(.retrato) {
+  animation-duration: 520ms;
+  /* A mesma curva do resto da casa: sai depressa, assenta devagar. */
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-image-pair(.retrato) {
+  animation-name: retrato-a-voar;
+}
+
+@keyframes retrato-a-voar {
+  30% {
+    filter: blur(4px);
+  }
+}
+
+/* O resto da página troca por cruzamento, e num quarto de segundo: a atenção
+   está no retrato, e uma página inteira a desvanecer atrás dele durante meio
+   segundo lê-se como lentidão. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+}
+
+/* ── O texto do perfil entra atrás do retrato ───────────────────────────────
+   Primeiro assenta o retrato, depois chega o texto — função, nome, apresentação,
+   LinkedIn — cada linha um pouco depois da anterior. A ordem é a da leitura, e
+   o atraso inicial é o tempo que o retrato leva a chegar. */
+@keyframes perfil-entra {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.perfil-entra > * {
+  animation: perfil-entra 560ms var(--ease-out) both;
+}
+
+.perfil-entra > *:nth-child(1) { animation-delay: 180ms; }
+.perfil-entra > *:nth-child(2) { animation-delay: 250ms; }
+.perfil-entra > *:nth-child(3) { animation-delay: 330ms; }
+.perfil-entra > *:nth-child(4) { animation-delay: 410ms; }
+
+/* Quem pediu menos movimento não leva nem o voo nem a entrada: a página aparece
+   feita, que é o que o browser faz sem ninguém lhe pedir nada. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+
+  .perfil-entra > * {
+    animation: none;
+  }
+}

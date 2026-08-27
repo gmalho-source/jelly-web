@@ -24,6 +24,7 @@ import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b99
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { MarkdownImport as MarkdownImport_244644c11481654cefffd374751bd598 } from '@/payload/components/MarkdownImport'
+import { TraduzirIA as TraduzirIA_76986ef82f82fecba03ec6985bd66336 } from '@/payload/components/TraduzirIA'
 import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/components/LerCV'
 import { PedirConfirmacao as PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c } from '@/payload/components/PedirConfirmacao'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
@@ -64,6 +65,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/payload/components/MarkdownImport#MarkdownImport": MarkdownImport_244644c11481654cefffd374751bd598,
+  "@/payload/components/TraduzirIA#TraduzirIA": TraduzirIA_76986ef82f82fecba03ec6985bd66336,
   "@/payload/components/LerCV#LerCV": LerCV_37586454364dce41f3253d2b9fc6c8bf,
   "@/payload/components/PedirConfirmacao#PedirConfirmacao": PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,

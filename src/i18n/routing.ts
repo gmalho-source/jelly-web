@@ -24,6 +24,7 @@ export const routing = defineRouting({
     "/contactos": { pt: "/contactos", en: "/contact" },
     "/imunidade-algoritmica": { pt: "/imunidade-algoritmica", en: "/algorithmic-immunity" },
     "/equipa": { pt: "/equipa", en: "/team" },
+    "/equipa/[slug]": { pt: "/equipa/[slug]", en: "/team/[slug]" },
     "/recrutamento": { pt: "/recrutamento", en: "/careers" },
     "/recrutamento/[slug]": { pt: "/recrutamento/[slug]", en: "/careers/[slug]" },
     "/legal/[slug]": { pt: "/legal/[slug]", en: "/legal/[slug]" },

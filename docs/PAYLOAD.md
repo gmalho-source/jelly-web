@@ -276,6 +276,27 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
+## Traduzir a apresentação de uma pessoa da equipa
+
+Em **Casa → Equipa**, cada pessoa tem a apresentação em duas línguas e um botão
+**"Traduzir do português"** debaixo do campo inglês. Passa a apresentação
+portuguesa a inglês britânico e põe o resultado no campo. **Não grava** — a
+apresentação de uma pessoa é a única coisa daquela página que ela escreveu, e a
+versão inglesa dela não deve aparecer sem alguém a ter lido.
+
+O que a instrução pede ao modelo: manter a voz do original (a maioria está na
+primeira pessoa, escrita pela própria), manter os parágrafos linha a linha, e não
+traduzir nomes de pessoas, de terras nem funções — "Content Marketing Manager"
+fica, "Aveiro" fica. Se já houver texto em inglês, pergunta antes de escrever por
+cima.
+
+Como funciona: `POST /api/team/traduzir`, um endpoint da coleção que só responde a
+quem tem sessão no painel. O texto vai do formulário e não é lido na base pelo
+id, o que faz isto funcionar também numa pessoa ainda por gravar. Precisa da
+`ANTHROPIC_API_KEY` no ambiente; sem ela o botão diz que falta a chave.
+
+As funções não têm botão: já estão em inglês nas duas colunas.
+
 ## Tradução automática dos artigos
 
 Os 179 artigos vieram do WordPress em português e o site em inglês servia o
