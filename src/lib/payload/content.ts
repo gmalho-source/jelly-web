@@ -385,8 +385,25 @@ export function fetchClients(fallback: Client[]) {
 
 export function fetchTeam(fallback: TeamMember[]) {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "team", sort: "order", ...all });
-    return (docs as unknown as Doc[]).map((raw): TeamMember => ({ name: text(raw.name), role: localized(raw.role) }));
+    const { docs } = await payload.find({ collection: "team", sort: "order", ...all, depth: 1 });
+    // O painel manda no que tiver, e o ficheiro do repositório preenche o resto
+    // pessoa a pessoa: enquanto os retratos e as apresentações não passarem para
+    // o CMS, uma pessoa criada no painel não aparece sem cara nem texto.
+    const doRepositorio = new Map(fallback.map((pessoa) => [pessoa.name.trim().toLowerCase(), pessoa]));
+    return (docs as unknown as Doc[]).map((raw): TeamMember => {
+      const name = text(raw.name);
+      const base = doRepositorio.get(name.trim().toLowerCase());
+      const papel = localized(raw.role);
+      const apresentacao = localized(raw.bio);
+      return {
+        name,
+        role: papel.pt || papel.en ? papel : base?.role,
+        bio: apresentacao.pt || apresentacao.en ? apresentacao : base?.bio,
+        photo: image(raw.photo as MediaDoc) ?? base?.photo,
+        photoColor: image(raw.photoColor as MediaDoc) ?? base?.photoColor,
+        linkedin: text(raw.linkedin) || base?.linkedin,
+      };
+    });
   }, fallback);
 }
 

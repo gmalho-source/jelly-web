@@ -689,6 +689,12 @@ export interface Team {
     en?: string | null;
   };
   photo?: (number | null) | Media;
+  photoColor?: (number | null) | Media;
+  bio?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  linkedin?: string | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1640,6 +1646,14 @@ export interface TeamSelect<T extends boolean = true> {
         en?: T;
       };
   photo?: T;
+  photoColor?: T;
+  bio?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  linkedin?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

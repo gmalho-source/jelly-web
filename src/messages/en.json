@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "about": "About",
+    "team": "Team",
     "immunity": "Algorithmic Immunity",
     "services": "Services",
     "work": "Work",
@@ -133,8 +134,9 @@
     "actionBody": "Digital is an extension of our lives: behind every click there are real people, concrete challenges and dreams waiting to happen. The trouble with strategies is that they rest on logical assumptions rarely found in practice. So we put our faith in a solid tactical plan — and answer for what it changes.",
     "video": "https://www.youtube.com/watch?v=jaSn5ww3liU",
     "videoLabel": "The house, on film",
-    "timeline": "Timeline",
-    "team": "Who does it",
+    "teamTitle": "Who does it",
+    "teamLead": "Twenty-one people, each with a name and a job. A company is not a logo.",
+    "teamLink": "Meet the team",
     "method": "How we work",
     "methodBody": "Diagnose, decide, deliver, measure. Short cycles, one person accountable per front, and a report that says what changes next week.",
     "careersTitle": "Working at Jelly",
@@ -422,5 +424,17 @@
     "confirmExpiredLead": "Confirmation links last seven days, and this one is past that. Subscribe again and we will send a new one.",
     "blogTitle": "Get what we write",
     "blogLead": "No fixed calendar: only when there is something worth your time."
+  },
+  "equipa": {
+    "eyebrow": "Team",
+    "title": "The people who do it.",
+    "lead": "Every face has a role and a story. Click any of them to read it.",
+    "open": "See who this is",
+    "close": "Close",
+    "linkedin": "View on LinkedIn",
+    "noBio": "This person's introduction is on its way.",
+    "ctaTitle": "Want to be part of it?",
+    "ctaLead": "We look for people who would rather decide than wait.",
+    "ctaButton": "See the roles"
   }
 }

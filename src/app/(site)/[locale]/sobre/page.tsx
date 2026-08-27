@@ -3,7 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { getMilestones, getTeam } from "@/lib/cms";
+import Image from "next/image";
+import { getTeam } from "@/lib/cms";
 import { fonteDeVideo } from "@/lib/video";
 import { VideoEmbed } from "@/components/VideoEmbed";
 
@@ -21,7 +22,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   setRequestLocale(locale);
 
   const t = await getTranslations("about");
-  const [team, milestones] = await Promise.all([getTeam(), getMilestones()]);
+  const team = await getTeam();
+
+  // Seis caras para a chamada da equipa. As primeiras da lista, que é a ordem
+  // que o painel define.
+  const caras = team
+    .filter((membro) => membro.photo?.src)
+    .slice(0, 6)
+    .map((membro) => ({ nome: membro.name, src: membro.photo?.src }));
 
   const stats = [
     // Contado, não escrito: em janeiro passava a estar errado sem ninguém notar.
@@ -100,35 +108,33 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </section>
       ) : null}
 
-      {/* Linha do tempo: a sequência é informação, por isso o ano manda. */}
+      {/* A equipa tem página própria: aqui fica a chamada, com as caras a
+          servirem de convite. A lista de nomes que estava aqui era uma lista. */}
       <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
-        <h2 className="eyebrow">{t("timeline")}</h2>
-        <ol className="mt-6 border-t border-line">
-          {milestones.map((milestone) => (
-            <li
-              key={milestone.year}
-              className="grid grid-cols-[70px_minmax(0,1fr)] items-baseline gap-5 border-b border-line py-5 sm:grid-cols-[120px_minmax(0,1fr)]"
-            >
-              <span className="font-display text-xl tabular-nums text-red">{milestone.year}</span>
-              <p className="max-w-[60ch] text-md text-fg-soft">{locale === "pt" ? milestone.pt : milestone.en}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* Equipa: nomes reais. Os cargos entram pelo CMS quando existirem. */}
-      <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
-        <h2 className="text-chapter">{t("team")}</h2>
-        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6">
-          {team.map((member) => (
-            <li key={member.name} className="font-display text-lg lg:text-xl">
-              {member.name}
-              {member.role ? (
-                <span className="ml-2 font-sans text-xs uppercase tracking-[0.08em] text-red">{member.role[locale]}</span>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        <Link href="/equipa" className="group block border-t border-line pt-14">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <h2 className="text-chapter">{t("teamTitle")}</h2>
+              <p className="mt-3 max-w-[46ch] text-md text-fg-soft">{t("teamLead")}</p>
+            </div>
+            <span className="text-sm font-semibold text-red group-hover:underline">{t("teamLink")} →</span>
+          </div>
+          <ul aria-hidden="true" className="mt-8 grid grid-cols-3 gap-px bg-paper-3 sm:grid-cols-6">
+            {caras.map((cara) => (
+              <li key={cara.nome} className="relative aspect-square overflow-clip bg-paper-3">
+                {cara.src ? (
+                  <Image
+                    src={cara.src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 33vw, 16vw"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                  />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Link>
       </section>
 
       {/* Três saídas, e duas delas são portas: quem lê isto até ao fim quer ver

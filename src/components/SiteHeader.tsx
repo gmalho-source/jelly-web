@@ -71,6 +71,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     { group: casa, label: nav("newsroom"), kind: pt ? "página" : "page", href: url("/newsroom"), tone: "bg-slate" },
     { group: casa, label: nav("careers"), kind: pt ? "página" : "page", href: url("/recrutamento"), tone: "bg-chartreuse" },
     { group: casa, label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },
+    // A equipa fecha a banda: eram sete quadrados e uma célula vazia.
+    { group: casa, label: nav("team"), kind: pt ? "página" : "page", href: url("/equipa"), tone: "bg-slate" },
     { group: casa, label: nav("clients"), kind: pt ? "página" : "page", href: url("/clientes"), tone: "bg-coral" },
     {
       group: casa,

@@ -5,7 +5,8 @@ import generated from "@/content/generated/posts.json";
 import archived from "@/content/generated/projects.json";
 import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
-import { clients, milestones, services, team } from "@/content/site";
+import { clients, milestones, services } from "@/content/site";
+import { team } from "@/content/team";
 import type { ArchivedProject, Department, Job, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
 import { findBySlug } from "@/lib/slugs";
 import {

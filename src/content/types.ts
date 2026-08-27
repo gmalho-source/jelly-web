@@ -57,7 +57,17 @@ export type Service = {
 
 export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "consumo" | "retalho" | "industria" | "construcao" | "transportes" | "servicos" | "ong" | "arte" | "eventos" | "lazer" | "tecnologia" };
 
-export type TeamMember = { name: string; role?: Localized };
+export type TeamMember = {
+  name: string;
+  role?: Localized;
+  /** A apresentação que a casa escreveu. Uma língua, servida às duas. */
+  bio?: Localized;
+  /** O retrato a preto e branco: o que se vê na grelha. */
+  photo?: { src: string; alt?: string; width?: number; height?: number };
+  /** O retrato a cores: o que aparece quando se abre a pessoa. */
+  photoColor?: { src: string; alt?: string; width?: number; height?: number };
+  linkedin?: string;
+};
 
 /**
  * Quem assina um artigo.

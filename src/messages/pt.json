@@ -2,6 +2,7 @@
   "nav": {
     "home": "Início",
     "about": "Sobre",
+    "team": "Equipa",
     "immunity": "Imunidade Algorítmica",
     "services": "Serviços",
     "work": "Projetos",
@@ -133,8 +134,9 @@
     "actionBody": "O digital é uma extensão das nossas vidas: por trás de cada clique há pessoas reais, desafios concretos e sonhos por realizar. O problema das estratégias é assentarem em pressupostos lógicos que raramente se encontram na prática. Por isso valorizamos um plano tático sólido — e respondemos pelo que ele muda.",
     "video": "https://www.youtube.com/watch?v=jaSn5ww3liU",
     "videoLabel": "A casa, em vídeo",
-    "timeline": "Linha do tempo",
-    "team": "Quem faz",
+    "teamTitle": "Quem faz",
+    "teamLead": "Vinte e uma pessoas, cada uma com um nome e uma função. A casa não é um logótipo.",
+    "teamLink": "Conhecer a equipa",
     "method": "Como trabalhamos",
     "methodBody": "Diagnóstico, decisão, entrega, medição. Ciclos curtos, uma pessoa responsável por cada frente e relatório que diz o que muda na semana seguinte.",
     "careersTitle": "Trabalhar na Jelly",
@@ -422,5 +424,17 @@
     "confirmExpiredLead": "Os links de confirmação valem sete dias, e este passou disso. Subscreve outra vez e enviamos um novo.",
     "blogTitle": "Recebe o que escrevemos",
     "blogLead": "Sem calendário fixo: só quando há alguma coisa que valha o teu tempo."
+  },
+  "equipa": {
+    "eyebrow": "Equipa",
+    "title": "As pessoas que fazem.",
+    "lead": "Cada cara tem uma função e uma história. Clica em qualquer uma para a ler.",
+    "open": "Ver quem é",
+    "close": "Fechar",
+    "linkedin": "Ver no LinkedIn",
+    "noBio": "A apresentação desta pessoa está a caminho.",
+    "ctaTitle": "Queres fazer parte?",
+    "ctaLead": "Procuramos pessoas que preferem decidir a esperar.",
+    "ctaButton": "Ver as vagas"
   }
 }

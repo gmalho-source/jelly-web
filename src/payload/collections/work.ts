@@ -270,11 +270,19 @@ export const TeamMembers: CollectionConfig = {
   labels: { singular: "Pessoa", plural: "Equipa" },
   admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "order"] },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateOnChange(() => ["/", "/sobre"])], afterDelete: [revalidateOnDelete(() => ["/", "/sobre"])] },
+  hooks: {
+    afterChange: [revalidateOnChange(() => ["/", "/sobre", "/equipa"])],
+    afterDelete: [revalidateOnDelete(() => ["/", "/sobre", "/equipa"])],
+  },
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },
     locale("role", "Função"),
-    { name: "photo", label: "Retrato", type: "upload", relationTo: "media" },
+    // Dois retratos por pessoa, como na página antiga: o preto e branco é o que
+    // se vê na grelha, o de cor aparece quando se abre a pessoa.
+    { name: "photo", label: "Retrato (preto e branco)", type: "upload", relationTo: "media" },
+    { name: "photoColor", label: "Retrato (cor)", type: "upload", relationTo: "media" },
+    locale("bio", "Apresentação", { long: true }),
+    { name: "linkedin", label: "LinkedIn", type: "text" },
     { name: "order", label: "Ordem", type: "number" },
   ],
 };

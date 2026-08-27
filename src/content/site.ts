@@ -164,29 +164,6 @@ export const clients: Client[] = [
  * Equipa a partir da página pública /equipa-jelly/. Os cargos entram pelo CMS —
  * só o do CEO está afirmado aqui.
  */
-export const team: TeamMember[] = [
-  { name: "Gonçalo Malho Rodrigues", role: { pt: "CEO", en: "CEO" } },
-  { name: "Alícia Coquim" },
-  { name: "Ana Ventura" },
-  { name: "Anderson Carlos" },
-  { name: "Caroline Lima" },
-  { name: "Cristina Craveiro" },
-  { name: "Daniela Costa" },
-  { name: "Fausto Pinto" },
-  { name: "Filipa Barata" },
-  { name: "Filipa Santos" },
-  { name: "Frederico Pereira" },
-  { name: "Frederico Teopisto" },
-  { name: "Hugo Costa" },
-  { name: "Joana Bon de Sousa" },
-  { name: "Letícia Lemos" },
-  { name: "Maria Felix da Costa" },
-  { name: "Nuno Baptista Marques" },
-  { name: "Paulo Cleto Duarte" },
-  { name: "Paulo Pereira" },
-  { name: "Rafaela Barros" },
-  { name: "Raquel Reis" },
-];
 
 /** Linha de tempo da casa. Marcos a confirmar com a Jelly antes de publicar. */
 export const milestones = [
