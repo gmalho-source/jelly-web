@@ -276,6 +276,35 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
+## Passar a equipa para o painel
+
+As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o resto
+— função, apresentação, LinkedIn e os dois retratos — a `src/content/team.ts`.
+Serve quem lê o site, mas quem abre a ficha no painel encontra um formulário
+vazio e não tem por onde corrigir nada. `npm run equipa` passa o conteúdo para
+lá:
+
+```bash
+npm run equipa -- --seco          # só diz o que faria
+npm run equipa                    # escreve, e sobe os 42 retratos
+npm run equipa -- --sem-retratos  # só função, apresentação e LinkedIn
+```
+
+Não escreve por cima de nada: um campo que já tenha valor no painel fica como
+está, e correr o script duas vezes não tem trabalho na segunda. Os retratos
+entram na biblioteca de imagens pelo nome do ficheiro e são reaproveitados, por
+isso também não duplicam. Precisa da `BLOB_READ_WRITE_TOKEN` para os subir em
+produção; sem ela, corre com `--sem-retratos`.
+
+As cópias em `public/media/equipa` ficam onde estão: são o chão de que o site
+vive se o CMS estiver vazio ou em baixo. E a apresentação inglesa fica de fora de
+propósito — faz-se no painel, com o botão de traduzir, por quem a lê.
+
+A ordem da grelha é do nome, de A a Z, com comparação portuguesa: «Alícia» antes
+de «Ana». Não há campo de ordem — uma ordem à mão numa lista de vinte e uma
+pessoas é uma coisa que alguém tem de manter e que ninguém lê. A coluna `order`
+continua na base de dados, sem ninguém a ler.
+
 ## Traduzir a apresentação de uma pessoa da equipa
 
 Em **Casa → Equipa**, cada pessoa tem a apresentação em duas línguas e um botão

@@ -383,14 +383,29 @@ export function fetchClients(fallback: Client[]) {
   }, fallback);
 }
 
+/**
+ * A equipa de A a Z.
+ *
+ * A ordem é do nome e não de um campo: uma grelha de vinte e uma caras sem
+ * ordem visível obriga a percorrê-la toda para encontrar alguém, e qualquer
+ * outra ordem — antiguidade, hierarquia, a ordem por que foram criados no
+ * painel — é uma ordem que alguém tem de manter à mão e que ninguém lê.
+ *
+ * Comparação portuguesa, para os acentos ficarem no lugar: «Alícia» antes de
+ * «Ana», e não onde a tabela de códigos os punha.
+ */
+function deAaZ(pessoas: TeamMember[]) {
+  return [...pessoas].sort((uma, outra) => uma.name.localeCompare(outra.name, "pt"));
+}
+
 export function fetchTeam(fallback: TeamMember[]) {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "team", sort: "order", ...all, depth: 1 });
+    const { docs } = await payload.find({ collection: "team", ...all, depth: 1 });
     // O painel manda no que tiver, e o ficheiro do repositório preenche o resto
     // pessoa a pessoa: enquanto os retratos e as apresentações não passarem para
     // o CMS, uma pessoa criada no painel não aparece sem cara nem texto.
     const doRepositorio = new Map(fallback.map((pessoa) => [pessoa.name.trim().toLowerCase(), pessoa]));
-    return (docs as unknown as Doc[]).map((raw): TeamMember => {
+    return deAaZ((docs as unknown as Doc[]).map((raw): TeamMember => {
       const name = text(raw.name);
       const base = doRepositorio.get(name.trim().toLowerCase());
       const papel = localized(raw.role);
@@ -403,8 +418,8 @@ export function fetchTeam(fallback: TeamMember[]) {
         photoColor: image(raw.photoColor as MediaDoc) ?? base?.photoColor,
         linkedin: text(raw.linkedin) || base?.linkedin,
       };
-    });
-  }, fallback);
+    }));
+  }, deAaZ(fallback));
 }
 
 type Milestone = { year: string; pt: string; en: string };

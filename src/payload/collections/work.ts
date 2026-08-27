@@ -276,7 +276,14 @@ function paginasDaPessoa(doc: Record<string, unknown>) {
 export const TeamMembers: CollectionConfig = {
   slug: "team",
   labels: { singular: "Pessoa", plural: "Equipa" },
-  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "order"] },
+  // Sem campo de ordem: a grelha do site é de A a Z, pelo nome. Uma ordem à mão
+  // numa lista de vinte e uma pessoas é uma coisa que alguém tem de manter e que
+  // ninguém lê — e um campo que o site ignora é pior do que campo nenhum.
+  //
+  // A lista do painel segue a mesma ordem, com a cara ao lado do nome: por
+  // ordem de criação, encontrar alguém obriga a percorrer três páginas.
+  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "photo"] },
+  defaultSort: "name",
   access: { read: () => true },
   hooks: {
     // Mexer numa pessoa refaz a grelha, a página dela e o cartaz do Sobre. O
@@ -321,7 +328,6 @@ export const TeamMembers: CollectionConfig = {
       ],
     },
     { name: "linkedin", label: "LinkedIn", type: "text" },
-    { name: "order", label: "Ordem", type: "number" },
   ],
 };
 

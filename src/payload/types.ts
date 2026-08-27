@@ -690,12 +690,14 @@ export interface Team {
   };
   photo?: (number | null) | Media;
   photoColor?: (number | null) | Media;
+  /**
+   * O texto que aparece na página da pessoa. Uma linha por parágrafo — o site separa-os por onde a linha acaba.
+   */
   bio?: {
     pt?: string | null;
     en?: string | null;
   };
   linkedin?: string | null;
-  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1654,7 +1656,6 @@ export interface TeamSelect<T extends boolean = true> {
         en?: T;
       };
   linkedin?: T;
-  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
