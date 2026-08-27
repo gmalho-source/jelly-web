@@ -282,13 +282,34 @@ As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o rest
 — função, apresentação, LinkedIn e os dois retratos — a `src/content/team.ts`.
 Serve quem lê o site, mas quem abre a ficha no painel encontra um formulário
 vazio e não tem por onde corrigir nada. `npm run equipa` passa o conteúdo para
-lá:
+lá.
+
+Corre na máquina de quem o corre, não na Vercel: é um script de linha de
+comandos que fala com a base de dados de produção pela `DATABASE_URL`. No
+terminal, dentro da pasta do repositório:
 
 ```bash
+npm install                       # a primeira vez, e só a primeira
+vercel link                       # a primeira vez: liga a pasta ao projeto
+vercel env pull .env.producao.local --environment=production
+set -a; . ./.env.producao.local; set +a   # DATABASE_URL, BLOB_READ_WRITE_TOKEN e o resto, no ambiente
+
 npm run equipa -- --seco          # só diz o que faria
 npm run equipa                    # escreve, e sobe os 42 retratos
 npm run equipa -- --sem-retratos  # só função, apresentação e LinkedIn
 ```
+
+O nome tem de acabar em `.local`: é o que o `.gitignore` desta casa apanha
+(`.env*.local`), e o ficheiro tem as chaves todas de produção lá dentro. Fica na
+máquina, e apagá-lo depois de usar é boa ideia.
+
+Uma base de dados que não é a da máquina não leva alterações de esquema: o
+adaptador do Payload sincroniza o esquema por omissão fora de produção, e este
+script corre precisamente na situação em que essa sincronização apontaria à
+produção. Quando a `DATABASE_URL` não é local, o script liga-se com o mesmo
+sinal que o Payload usa nas suas migrações e diz-o na primeira linha —
+`base de dados remota: liga-se sem tocar no esquema`. Vale o mesmo para os
+outros scripts desta pasta: nenhum deve correr contra a produção sem isto.
 
 Não escreve por cima de nada: um campo que já tenha valor no painel fica como
 está, e correr o script duas vezes não tem trabalho na segunda. Os retratos

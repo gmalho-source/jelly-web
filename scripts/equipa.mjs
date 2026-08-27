@@ -33,6 +33,22 @@ const semRetratos = process.argv.includes("--sem-retratos");
 
 const RAIZ = path.resolve(import.meta.dirname, "..");
 
+/*
+ * Uma base de dados que não é a da máquina não leva alterações de esquema.
+ *
+ * O adaptador do Payload sincroniza o esquema por omissão fora de produção, e
+ * este script corre na máquina de alguém com a `DATABASE_URL` da produção — ou
+ * seja, exactamente na situação em que a sincronização apontaria à produção e
+ * poderia largar uma coluna que já lá não está na configuração. Este sinal é o
+ * mesmo que o Payload usa nas suas migrações, e diz só isso: liga-te, não mexas
+ * no esquema.
+ */
+const local = /(^|@|\/\/)(localhost|127\.0\.0\.1)([:/]|$)/.test(process.env.DATABASE_URL ?? "");
+if (!local) {
+  process.env.PAYLOAD_MIGRATING = "true";
+  console.log("· base de dados remota: liga-se sem tocar no esquema\n");
+}
+
 const payload = await getPayload({ config });
 
 /** O que já está no painel, por nome em minúsculas. */
