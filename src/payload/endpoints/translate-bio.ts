@@ -37,8 +37,46 @@ function porta(req: Parameters<PayloadHandler>[0]) {
   return { key };
 }
 
+/** O texto que se aceita traduzir. Devolve a queixa, ou nada se estiver bem. */
+function queixa(texto: string) {
+  if (texto.length < 20) return "Escreve primeiro a apresentação em português.";
+  // Uma apresentação são três parágrafos. Vinte mil caracteres é folga com
+  // margem, e evita que um erro de campo mande um artigo inteiro para tradução.
+  if (texto.length > 20000) return "Texto grande demais para uma apresentação.";
+  return null;
+}
+
+/** A tradução, do Claude. Levanta se vier vazia. */
+async function traduz(key: string, texto: string, nome: string) {
+  const claude = new Anthropic({ apiKey: key });
+  const response = await claude.messages.create({
+    model: MODEL,
+    max_tokens: 4096,
+    system: REGRAS,
+    messages: [{ role: "user", content: nome ? `This is the bio of ${nome}.\n\n${texto}` : texto }],
+  });
+
+  const traducao = response.content
+    .filter((bloco) => bloco.type === "text")
+    .map((bloco) => bloco.text)
+    .join("")
+    .trim();
+
+  if (!traducao) throw new Error("a resposta veio vazia");
+
+  // Uma linha por parágrafo, como no português. Apesar de a instrução o pedir,
+  // o modelo escreve por vezes uma linha em branco entre parágrafos — e como o
+  // site parte o texto em cada quebra de linha, isso dava parágrafos vazios
+  // pelo meio da apresentação. Cinco das vinte e uma vieram assim.
+  return traducao
+    .split("\n")
+    .map((linha) => linha.trim())
+    .filter(Boolean)
+    .join("\n");
+}
+
 /**
- * Traduz a apresentação.
+ * Traduz a apresentação e devolve-a. Não grava.
  *
  * POST /api/team/traduzir
  * { texto, nome? }
@@ -51,40 +89,67 @@ export const translateBio: PayloadHandler = async (req) => {
   const texto = (pedido?.texto ?? "").trim();
   const nome = (pedido?.nome ?? "").trim();
 
-  if (texto.length < 20) {
-    return Response.json({ error: "Escreve primeiro a apresentação em português." }, { status: 422 });
-  }
-  // Uma apresentação são três parágrafos. Vinte mil caracteres é folga com
-  // margem, e evita que um erro de campo mande um artigo inteiro para tradução.
-  if (texto.length > 20000) {
-    return Response.json({ error: "Texto grande demais para uma apresentação." }, { status: 413 });
-  }
+  const problema = queixa(texto);
+  if (problema) return Response.json({ error: problema }, { status: texto.length < 20 ? 422 : 413 });
 
   try {
-    const claude = new Anthropic({ apiKey: key });
-    const response = await claude.messages.create({
-      model: MODEL,
-      max_tokens: 4096,
-      system: REGRAS,
-      messages: [
-        {
-          role: "user",
-          content: nome ? `This is the bio of ${nome}.\n\n${texto}` : texto,
-        },
-      ],
-    });
-
-    const traducao = response.content
-      .filter((bloco) => bloco.type === "text")
-      .map((bloco) => bloco.text)
-      .join("")
-      .trim();
-
-    if (!traducao) return Response.json({ error: "A resposta veio vazia." }, { status: 502 });
-    return Response.json({ traducao, model: response.model });
+    return Response.json({ traducao: await traduz(key!, texto, nome) });
   } catch (error) {
     const message = error instanceof Error ? error.message : "erro desconhecido";
     req.payload.logger.error(`traduzir apresentação: ${message}`);
+    return Response.json({ error: message }, { status: 502 });
+  }
+};
+
+/**
+ * Traduz a apresentação de uma pessoa e grava-a.
+ *
+ * Esta grava, ao contrário do botão que está dentro da ficha, e a diferença é
+ * de propósito: dentro da ficha há alguém a olhar para o texto e a última
+ * palavra é dessa pessoa; aqui não há ficha aberta nenhuma, o pedido é para
+ * traduzir as vinte e uma de uma vez, e sem gravar não sobrava nada.
+ *
+ * Nunca escreve por cima de um inglês que já lá esteja: quem o escreveu sabia
+ * mais do que o modelo.
+ *
+ * POST /api/team/traduzir-e-gravar
+ * { nome }
+ */
+export const translateAndSaveBio: PayloadHandler = async (req) => {
+  const { key, erro } = porta(req);
+  if (erro) return erro;
+
+  const pedido = (await req.json?.()) as { nome?: string } | undefined;
+  const nome = (pedido?.nome ?? "").trim();
+
+  const { docs } = await req.payload.find({
+    collection: "team",
+    where: { name: { equals: nome } },
+    limit: 1,
+    depth: 0,
+  });
+  const ficha = docs[0];
+  if (!ficha) return Response.json({ error: `«${nome}» não está na equipa.` }, { status: 404 });
+
+  const apresentacao = (ficha.bio ?? {}) as { pt?: string | null; en?: string | null };
+  const portuguesa = (apresentacao.pt ?? "").trim();
+  if ((apresentacao.en ?? "").trim()) return Response.json({ nome, estado: "já tinha inglês" });
+
+  const problema = queixa(portuguesa);
+  if (problema) return Response.json({ nome, estado: "sem português" });
+
+  try {
+    const traducao = await traduz(key!, portuguesa, nome);
+    await req.payload.update({
+      collection: "team",
+      id: ficha.id,
+      data: { bio: { pt: apresentacao.pt, en: traducao } } as never,
+      overrideAccess: true,
+    });
+    return Response.json({ nome, estado: "traduzida" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "erro desconhecido";
+    req.payload.logger.error(`traduzir e gravar «${nome}»: ${message}`);
     return Response.json({ error: message }, { status: 502 });
   }
 };

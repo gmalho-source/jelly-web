@@ -60,8 +60,13 @@ export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" 
 export type TeamMember = {
   name: string;
   role?: Localized;
-  /** A apresentação que a casa escreveu. Uma língua, servida às duas. */
-  bio?: Localized;
+  /**
+   * A apresentação que a pessoa escreveu, em português. O inglês não está aqui:
+   * faz-se no painel, com o botão de traduzir, e é de lá que o site o serve.
+   * Sem ele, o site inglês serve o português — mais vale isso do que uma página
+   * vazia, e melhor do que um campo `en` a dizer que o português é inglês.
+   */
+  bio?: Partial<Localized>;
   /** O retrato a preto e branco: o que se vê na grelha. */
   photo?: { src: string; alt?: string; width?: number; height?: number };
   /** O retrato a cores: o que aparece quando se abre a pessoa. */

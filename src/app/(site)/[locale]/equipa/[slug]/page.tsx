@@ -121,9 +121,16 @@ export default async function PessoaPage({ params }: { params: Promise<Params> }
           <p className="eyebrow">{pessoa.funcao ?? t("eyebrow")}</p>
           <h1 className="mt-4 text-[clamp(38px,4.4vw,68px)] leading-[1.02]">{pessoa.nome}</h1>
           <div className="mt-7 space-y-4 text-md leading-relaxed text-fg-soft">
-            {(pessoa.apresentacao ?? t("noBio")).split("\n").map((paragrafo, indice) => (
-              <p key={indice}>{paragrafo}</p>
-            ))}
+            {/* Uma linha, um parágrafo. As vazias caem: um texto escrito no
+                painel com linha em branco entre parágrafos não deve abrir
+                buracos na página. */}
+            {(pessoa.apresentacao ?? t("noBio"))
+              .split("\n")
+              .map((paragrafo) => paragrafo.trim())
+              .filter(Boolean)
+              .map((paragrafo, indice) => (
+                <p key={indice}>{paragrafo}</p>
+              ))}
           </div>
           {pessoa.linkedin ? (
             <a

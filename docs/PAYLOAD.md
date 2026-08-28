@@ -283,12 +283,17 @@ As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o rest
 Serve quem lê o site, mas quem abre a ficha no painel encontra um formulário
 vazio e não tem por onde corrigir nada.
 
-**Pelo painel**, que é o caminho curto: em **Casa → Equipa**, enquanto houver
-fichas sem conteúdo aparece um aviso por cima da lista — *«21 fichas sem
-conteúdo»* — com o botão **«Preencher a partir do repositório»**. Carrega-se, ele
-vai pessoa a pessoa e diz por onde vai, e no fim a lista aparece já com as caras.
-O aviso desaparece sozinho quando não houver nada a fazer: é um andaime, não um
-móvel.
+**Pelo painel**, que é o caminho curto: em **Casa → Equipa**, por cima da lista
+aparece o que dá para fazer de uma vez, e só enquanto houver o que fazer.
+
+*«21 fichas sem conteúdo»* → **«Preencher a partir do repositório»** passa para
+o painel a função, a apresentação portuguesa, o LinkedIn e os dois retratos.
+
+*«20 apresentações sem inglês»* → **«Traduzir todas»** traduz e grava as que só
+existem em português, três de cada vez. As vinte demoram cerca de meio minuto.
+
+Carrega-se, o botão diz por onde vai, e no fim a lista refaz-se sozinha. Os
+avisos desaparecem quando não houver nada a fazer: são um andaime, não um móvel.
 
 Chama o servidor uma vez por pessoa e não uma vez por todas. Cada pessoa traz
 dois retratos para descarregar e subir, e quarenta e dois numa só chamada não
@@ -346,15 +351,26 @@ continua na base de dados, sem ninguém a ler.
 
 Em **Casa → Equipa**, cada pessoa tem a apresentação em duas línguas e um botão
 **"Traduzir do português"** debaixo do campo inglês. Passa a apresentação
-portuguesa a inglês britânico e põe o resultado no campo. **Não grava** — a
-apresentação de uma pessoa é a única coisa daquela página que ela escreveu, e a
-versão inglesa dela não deve aparecer sem alguém a ter lido.
+portuguesa a inglês britânico e põe o resultado no campo. **Não grava** — dentro
+de uma ficha há alguém a olhar para o texto, e a última palavra é dessa pessoa.
+
+O botão **«Traduzir todas»**, no aviso por cima da lista, faz o mesmo às que
+faltarem e **grava**: sem ficha aberta não há onde deixar o texto à espera, e o
+pedido é justamente para não fazer vinte e uma à mão. Vale a pena ler o que saiu
+— são textos que as próprias pessoas escreveram, e alguns têm piadas.
 
 O que a instrução pede ao modelo: manter a voz do original (a maioria está na
 primeira pessoa, escrita pela própria), manter os parágrafos linha a linha, e não
 traduzir nomes de pessoas, de terras nem funções — "Content Marketing Manager"
-fica, "Aveiro" fica. Se já houver texto em inglês, pergunta antes de escrever por
-cima.
+fica, "Aveiro" fica. Se já houver texto em inglês, o botão da ficha pergunta
+antes de escrever por cima, e o de traduzir todas salta essa pessoa.
+
+Apesar de a instrução pedir uma linha por parágrafo, o modelo escreve por vezes
+uma linha em branco entre parágrafos — cinco em vinte e uma, medido. Como o site
+parte o texto em cada quebra de linha, isso dava parágrafos vazios pelo meio da
+apresentação, e por isso a resposta é limpa antes de sair: linhas vazias fora, e
+o que sobra colado com uma quebra só. A página faz o mesmo ao desenhar, para uma
+apresentação escrita à mão no painel não abrir buracos.
 
 Como funciona: `POST /api/team/traduzir`, um endpoint da coleção que só responde a
 quem tem sessão no painel. O texto vai do formulário e não é lido na base pelo

@@ -59,6 +59,17 @@ export const teamPlan: PayloadHandler = async (req) => {
     faltam: nomesDoQueFalta(pessoa, noPainel.get(pessoa.name.trim().toLowerCase())),
   }));
 
+  // Quem tem apresentação em português e não a tem em inglês. Conta-se sobre o
+  // que está no painel e não sobre o ficheiro: é lá que a tradução vai ficar, e
+  // é de lá que o site a serve.
+  const semIngles = [...noPainel.values()]
+    .filter((doc) => {
+      const apresentacao = (doc.bio ?? {}) as { pt?: string | null; en?: string | null };
+      return String(apresentacao.pt ?? "").trim() && !String(apresentacao.en ?? "").trim();
+    })
+    .map((doc) => String(doc.name ?? ""))
+    .sort((um, outro) => um.localeCompare(outro, "pt"));
+
   // Quem está no painel e não está no ficheiro fica como está: pode ser alguém
   // que entrou na casa depois de o ficheiro ter sido escrito.
   const doFicheiro = pessoasDoFicheiro();
@@ -69,6 +80,7 @@ export const teamPlan: PayloadHandler = async (req) => {
   return Response.json({
     pessoas,
     porFazer: pessoas.filter((pessoa) => pessoa.faltam.length).length,
+    semIngles,
     soNoPainel,
   });
 };

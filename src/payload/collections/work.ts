@@ -2,7 +2,7 @@ import type { Block, CollectionConfig } from "payload";
 import { slugDaPessoa } from "@/lib/equipa";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
-import { translateBio } from "../endpoints/translate-bio";
+import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, slugEnField, slugField } from "../fields";
 
 const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/projetos/${doc.slug ?? ""}`];
@@ -305,6 +305,9 @@ export const TeamMembers: CollectionConfig = {
     // leva id: o texto vem do formulário, para isto servir também uma pessoa
     // ainda por gravar.
     { path: "/traduzir", method: "post", handler: translateBio },
+    // A mesma tradução, mas gravada: é o que o botão de traduzir todas usa,
+    // onde não há ficha aberta para receber o texto.
+    { path: "/traduzir-e-gravar", method: "post", handler: translateAndSaveBio },
     // Encher as fichas a partir do ficheiro do repositório, do botão que está
     // por cima da lista. Uma pessoa por chamada.
     { path: "/preencher", method: "get", handler: teamPlan },
