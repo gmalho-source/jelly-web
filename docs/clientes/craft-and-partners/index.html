@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Craft &amp; Partners — Coming soon</title>
+<meta name="description" content="Craft &amp; Partners — Crafting a Better World. Our website is coming soon. Lisbon and Luanda. Get in touch at contact@craftandpartners.com.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.craftandpartners.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Craft &amp; Partners">
+<meta property="og:title" content="Craft &amp; Partners — Coming soon">
+<meta property="og:description" content="Crafting a Better World. Our website is on its way — until then, a conversation is the fastest way to reach us.">
+<meta property="og:url" content="https://www.craftandpartners.com/">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+
+<!-- Favicon tipográfico. Substituir por /favicon.svg oficial quando existir. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23fff'/%3E%3Ctext x='32' y='43' font-family='Helvetica,Arial,sans-serif' font-size='30' letter-spacing='-1' text-anchor='middle' fill='%23000'%3EC%26amp;P%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root{
+    color-scheme: light;
+    --ink:#000;
+    --paper:#fff;
+    --muted:#8a8a8a;
+    --rule:#000;
+    --pad: clamp(28px, 5.5vw, 88px);
+    --font: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", system-ui, sans-serif;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; }
+
+  html{ -webkit-text-size-adjust:100%; }
+
+  body{
+    margin:0;
+    min-height:100svh;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font);
+    font-weight:400;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .page{
+    flex:1;
+    width:100%;
+    max-width:1280px;
+    margin-inline:auto;
+    display:flex;
+    flex-direction:column;
+    padding:var(--pad);
+    gap:clamp(48px, 8vw, 88px);
+  }
+
+  /* ---------- Lockup: marca à esquerda, mensagem à direita (eco do cartão) ---------- */
+
+  .lockup{
+    flex:1;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:clamp(40px, 6vw, 72px);
+    align-content:center;
+  }
+
+  /* Duas colunas separadas por um filete vertical de altura total: a mesma
+     leitura do cartão de visita — marca à esquerda, informação à direita. */
+  @media (min-width:880px){
+    .lockup{
+      grid-template-columns:clamp(200px, 22vw, 280px) 1fr;
+      align-items:stretch;
+    }
+    .message{
+      border-left:1px solid var(--rule);
+      padding-left:clamp(40px, 5vw, 72px);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .brand{ padding-block:clamp(8px, 1.5vw, 20px); }
+  }
+
+  .brand{ display:flex; flex-direction:column; gap:clamp(20px, 2.4vw, 28px); }
+
+  /* Slot do logótipo: se logo.svg não existir, o bloco remove-se e fica só o wordmark. */
+  .mark{ line-height:0; }
+  .mark img{
+    display:block;
+    width:clamp(96px, 13vw, 148px);
+    height:auto;
+  }
+
+  .wordmark{
+    margin:0;
+    font-size:clamp(13px, 1.45vw, 17px);
+    font-weight:400;
+    line-height:1.35;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+  }
+  .wordmark .amp{ letter-spacing:.14em; }
+
+  /* ---------- Mensagem ---------- */
+
+  .eyebrow{
+    margin:0 0 clamp(20px, 3vw, 32px);
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  h1{
+    margin:0;
+    max-width:20ch;
+    font-size:clamp(30px, 4.6vw, 56px);
+    font-weight:400;
+    line-height:1.08;
+    letter-spacing:-.015em;
+  }
+
+  .lede{
+    margin:clamp(20px, 2.6vw, 30px) 0 0;
+    max-width:44ch;
+    font-size:clamp(15px, 1.3vw, 18px);
+    line-height:1.6;
+    color:#3d3d3d;
+  }
+
+  /* ---------- Contactos ---------- */
+
+  .contacts{
+    margin:clamp(40px, 5vw, 64px) 0 0;
+    padding:clamp(28px, 3.4vw, 40px) 0 0;
+    border-top:1px solid var(--rule);
+    display:grid;
+    gap:clamp(20px, 2.6vw, 28px);
+    grid-template-columns:1fr;
+  }
+
+  @media (min-width:600px){
+    .contacts{ grid-template-columns:repeat(3, minmax(0,1fr)); gap:clamp(24px, 3vw, 40px); }
+  }
+
+  .contact dt{
+    font-size:10px;
+    letter-spacing:.26em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+
+  .contact dd{
+    margin:10px 0 0;
+    font-size:clamp(14px, 1.15vw, 16px);
+    letter-spacing:.01em;
+  }
+
+  a{
+    color:inherit;
+    text-decoration:none;
+    border-bottom:1px solid rgba(0,0,0,.22);
+    padding-bottom:2px;
+    transition:border-color .25s ease, opacity .25s ease;
+  }
+  a:hover, a:focus-visible{ border-bottom-color:var(--ink); }
+  a:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; border-radius:1px; }
+
+  /* ---------- Rodapé ---------- */
+
+  .foot{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:12px 32px;
+    font-size:10px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .foot a{ border-bottom:none; color:var(--muted); }
+  .foot a:hover{ color:var(--ink); }
+
+  /* ---------- Entrada ---------- */
+
+  .reveal{
+    opacity:0;
+    transform:translateY(14px);
+    animation:rise .9s cubic-bezier(.22,.61,.36,1) forwards;
+  }
+  .reveal.d1{ animation-delay:.10s; }
+  .reveal.d2{ animation-delay:.22s; }
+  .reveal.d3{ animation-delay:.34s; }
+  .reveal.d4{ animation-delay:.46s; }
+
+  @keyframes rise{ to{ opacity:1; transform:none; } }
+
+  @media (prefers-reduced-motion:reduce){
+    .reveal{ opacity:1; transform:none; animation:none; }
+    a{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="page">
+
+    <main class="lockup">
+
+      <div class="brand reveal">
+        <!--
+          LOGÓTIPO — colocar o ficheiro oficial como "logo.svg" nesta mesma pasta.
+          Se o ficheiro não existir, este bloco desaparece sozinho e fica apenas o wordmark.
+        -->
+        <div class="mark" id="mark">
+          <img src="logo.svg" alt="Craft &amp; Partners"
+               onerror="document.getElementById('mark').remove()">
+        </div>
+
+        <p class="wordmark">Craft <span class="amp">&amp;</span> Partners</p>
+      </div>
+
+      <div class="message">
+        <p class="eyebrow reveal d1">Coming soon</p>
+
+        <h1 class="reveal d2">Crafting a<br>Better World</h1>
+
+        <p class="lede reveal d2">
+          Our website is on its way. Until then, a conversation is the fastest
+          way to reach us — in Lisbon, in Luanda, or wherever the work takes us.
+        </p>
+
+        <dl class="contacts reveal d3">
+          <div class="contact">
+            <dt>Email</dt>
+            <dd><a href="mailto:contact@craftandpartners.com">contact@craftandpartners.com</a></dd>
+          </div>
+          <div class="contact">
+            <dt>Lisbon</dt>
+            <dd><a href="tel:+351913375564">+351 913 375 564</a></dd>
+          </div>
+          <div class="contact">
+            <dt>Luanda</dt>
+            <dd><a href="tel:+244926007164">+244 926 007 164</a></dd>
+          </div>
+        </dl>
+      </div>
+
+    </main>
+
+    <footer class="foot reveal d4">
+      <span>&copy; <span id="year">2026</span> Craft &amp; Partners</span>
+      <span>Lisbon &middot; Luanda</span>
+      <span>craftandpartners.com</span>
+    </footer>
+
+  </div>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
