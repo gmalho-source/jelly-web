@@ -107,7 +107,7 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
           competir com ela — é o momento da página. */}
       <section className="surface-paper">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-          <h2 className="text-chapter max-w-[24ch]">{imunidade.definicao.titulo[locale]}</h2>
+          <h2 className="entra text-chapter max-w-[24ch]">{imunidade.definicao.titulo[locale]}</h2>
           <div className="mt-8 statement-in">
             <div>{imunidade.definicao.paragrafos.map((item) => paragrafo(item[locale]))}</div>
             <hr className="my-12 border-line" />
@@ -118,7 +118,7 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
 
           {/* Um conceito cunhado tem autor, e dizê-lo é meio argumento. */}
           {autor ? (
-            <div className="mt-14 flex items-start gap-5 border-t border-line pt-8">
+            <div className="entra mt-14 flex items-start gap-5 border-t border-line pt-8">
               {autor.photo?.src ? (
                 <Image
                   src={autor.photo.src}
@@ -144,19 +144,26 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
 
       {/* A tempestade por fora, a calma por dentro. A imagem tem coluna própria e
           não fundo: é vertical, e numa faixa larga o corte deixava de fora a
-          pessoa serena e os alertas na janela — ou seja, a metáfora toda.
-          Mostrada inteira, faz o trabalho que um diagrama faria pior. */}
+          pessoa serena e os alertas na janela — ou seja, a metáfora toda. Quase
+          inteira, faz o trabalho que um diagrama faria pior: a deriva come-lhe
+          três por cento em cima e três em baixo, e o que fica de fora é céu e
+          chão. */}
       <section className="surface-ink">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,36%)] lg:gap-16 lg:py-28">
           <div>
-            <h2 className="text-chapter max-w-[26ch]">{imunidade.contraste.titulo[locale]}</h2>
+            <h2 className="entra text-chapter max-w-[26ch]">{imunidade.contraste.titulo[locale]}</h2>
+            {/* As duas colunas estão à mesma altura e chegariam ao mesmo tempo.
+                Chegam por ordem: primeiro o que se fazia, depois o que se faz —
+                é a ordem em que o contraste se lê. O fio do lado novo é
+                vermelho e desenha-se; o do lado velho já lá está. */}
             <div className="mt-10 grid gap-8 sm:grid-cols-2">
               {[imunidade.contraste.velho, imunidade.contraste.novo].map((lado, indice) => (
-                <div
-                  key={lado.rotulo.pt}
-                  className={`border-t pt-6 ${indice === 0 ? "border-line" : "border-red"}`}
-                >
-                  <span className={`eyebrow ${indice === 0 ? "text-fg-soft" : "text-red"}`}>
+                <div key={lado.rotulo.pt} className={indice === 0 ? "entra" : "entra-tarde"}>
+                  <span
+                    aria-hidden="true"
+                    className={`block h-px ${indice === 0 ? "bg-line" : "varre bg-red"}`}
+                  />
+                  <span className={`eyebrow mt-6 block ${indice === 0 ? "text-fg-soft" : "text-red"}`}>
                     {lado.rotulo[locale]}
                   </span>
                   <p className="mt-3 text-md text-fg">{lado.texto[locale]}</p>
@@ -165,18 +172,22 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
             </div>
           </div>
 
-          <Image
-            src="/media/imunidade-tempestade.webp"
-            alt={
-              locale === "pt"
-                ? "Alguém a trabalhar com calma num escritório enquanto, do outro lado da janela, ecrãs anunciam alterações de algoritmo e alertas de mercado."
-                : "Someone working calmly in an office while, beyond the window, screens announce algorithm changes and market alerts."
-            }
-            width={941}
-            height={1672}
-            sizes="(max-width: 1024px) 100vw, 420px"
-            className="w-full rounded-[20px] object-cover"
-          />
+          {/* A fotografia deriva devagar dentro da moldura enquanto se desce.
+              É o único movimento contínuo da página, e é a tempestade. */}
+          <div className="deriva rounded-[20px]">
+            <Image
+              src="/media/imunidade-tempestade.webp"
+              alt={
+                locale === "pt"
+                  ? "Alguém a trabalhar com calma num escritório enquanto, do outro lado da janela, ecrãs anunciam alterações de algoritmo e alertas de mercado."
+                  : "Someone working calmly in an office while, beyond the window, screens announce algorithm changes and market alerts."
+              }
+              width={941}
+              height={1672}
+              sizes="(max-width: 1024px) 100vw, 420px"
+              className="w-full object-cover"
+            />
+          </div>
         </div>
       </section>
 
@@ -227,8 +238,8 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
           argumento que a página tem e que não caberiam nas camadas. */}
       <section className="surface-paper">
         <div className="mx-auto grid max-w-[1200px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-2 lg:gap-16 lg:py-24">
-          {[imunidade.camadasIntro, imunidade.tecnica].map((bloco) => (
-            <div key={bloco.titulo.pt}>
+          {[imunidade.camadasIntro, imunidade.tecnica].map((bloco, indice) => (
+            <div key={bloco.titulo.pt} className={indice === 0 ? "entra" : "entra-tarde"}>
               <h2 className="editorial text-xl lg:text-2xl">{bloco.titulo[locale]}</h2>
               <div className="mt-4">{bloco.paragrafos.map((item) => paragrafo(item[locale]))}</div>
             </div>
@@ -239,10 +250,14 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
       {/* Dez perguntas abertas de uma vez são um muro; fechadas, um convite. */}
       <section className="surface-paper border-t border-line">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-          <h2 className="text-chapter">{imunidade.faqTitulo[locale]}</h2>
+          <h2 className="entra text-chapter">{imunidade.faqTitulo[locale]}</h2>
+          {/* Sem escalonamento escrito: cada pergunta tem a sua linha do tempo,
+              e por isso entram pela ordem em que estão na página. `entra-linha`
+              e não `entra` porque esta lista cresce quando alguém abre uma
+              pergunta — ver o comentário no globals.css. */}
           <div className="mt-10 border-t border-line">
             {imunidade.faq.map((item) => (
-              <details key={item.pergunta.pt} className="group border-b border-line py-5">
+              <details key={item.pergunta.pt} className="entra-linha group border-b border-line py-5">
                 <summary className="flex cursor-pointer list-none items-baseline gap-4 text-md font-semibold text-ink transition-colors duration-200 group-hover:text-red">
                   <span className="flex-1">{item.pergunta[locale]}</span>
                   <span
@@ -261,11 +276,14 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
 
       <section className="surface-ink">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-8 px-5 py-16 sm:px-8 lg:py-24">
-          <h2 className="text-chapter max-w-[26ch]">{imunidade.fecho.titulo[locale]}</h2>
-          <Link href="/contactos" className="btn-pill">
+          {/* `entra-perto` e não `entra`: isto está a poucos ecrãs do fundo do
+              documento e nunca chega a subir o suficiente para fechar uma
+              janela medida em `cover`. */}
+          <h2 className="entra-perto text-chapter max-w-[26ch]">{imunidade.fecho.titulo[locale]}</h2>
+          <Link href="/contactos" className="btn-pill entra-perto">
             {imunidade.fecho.cta[locale]} <span aria-hidden="true">→</span>
           </Link>
-          <p className="w-full text-sm text-fg-soft">hello@jelly.pt</p>
+          <p className="entra-perto w-full text-sm text-fg-soft">hello@jelly.pt</p>
         </div>
       </section>
     </>

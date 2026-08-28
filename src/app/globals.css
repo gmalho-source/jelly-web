@@ -1216,3 +1216,97 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
     animation: none;
   }
 }
+
+/* ── A página lida a descer ─────────────────────────────────────────────────
+   O mesmo gesto das camadas, alargado ao resto da página da Imunidade: cada
+   bloco chega quando é a vez dele, e nenhum chega de muito longe.
+
+   Tudo isto é a linha do tempo do próprio elemento (`view()`), e não um
+   `IntersectionObserver`: não há javascript, não há classe a ser posta e tirada,
+   e o progresso é o da leitura — quem sobe vê o gesto ao contrário, que é o que
+   um leitor espera de uma página e nunca do javascript.
+
+   Uma lista ganha o escalonamento de graça: cada linha tem a sua linha do
+   tempo, e por isso entram pela ordem em que se lêem. O escalonamento só se
+   escreve à mão onde os elementos estão lado a lado, que é o único sítio onde a
+   posição na página não os separa — daí `entra-tarde`.
+
+   Nada disto é o desenho: sem `animation-timeline`, ou a quem pediu menos
+   movimento, a página fica inteira e no lugar. É a regra da casa e a razão de
+   as animações entrarem sempre dentro do `@supports`. */
+
+@keyframes entra-e-assenta {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
+}
+
+/* A deriva da fotografia.
+   A imagem entra 6% maior do que a moldura para a deriva nunca mostrar uma
+   borda: 2% para cada lado gasta 4 dos 6 que sobram. Seis por cento e não doze
+   porque isto corta a fotografia — três por cento em cima e três em baixo, uns
+   cinquenta pixéis de céu e de chão numa imagem de 1672 de altura. A pessoa
+   serena, a janela e os alertas continuam todos dentro. */
+@keyframes deriva-lenta {
+  from { transform: translate3d(0, -2%, 0) scale(1.06); }
+  to { transform: translate3d(0, 2%, 0) scale(1.06); }
+}
+
+.deriva {
+  overflow: clip;
+}
+
+.deriva > img {
+  transform: scale(1.06);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .entra,
+    .entra-tarde,
+    .entra-perto,
+    .entra-linha {
+      animation: entra-e-assenta var(--ease-out) both;
+      animation-timeline: view();
+    }
+
+    /* A janela de base é a das camadas: começa mal o bloco assoma e acaba muito
+       antes de ele estar a meio do ecrã. */
+    .entra { animation-range: entry 8% cover 28%; }
+
+    /* Um compasso depois, para o que está ao lado de outra coisa: duas colunas
+       à mesma altura chegam ao mesmo tempo, e chegar ao mesmo tempo não é
+       chegar por ordem. */
+    .entra-tarde { animation-range: entry 20% cover 42%; }
+
+    /* Uma linha de uma lista que se abre. Fecha muito cedo — mal a linha esteja
+       a menos de meia altura dentro do ecrã — porque a lista cresce quando
+       alguém abre uma pergunta, e o que cresce empurra para baixo o que está
+       por baixo. Numa janela medida ao meio do ecrã, esse empurrão fazia recuar
+       o progresso de duas ou três linhas já assentes: carregava-se numa pergunta
+       e as de baixo esmoreciam. Medido, e é por isto que esta janela é outra. */
+    .entra-linha { animation-range: entry 0% entry 45%; }
+
+    /* Para o fim do documento. Um bloco a poucos ecrãs do fundo nunca chega a
+       subir o suficiente para completar uma janela medida em `cover` — ficava a
+       meio, meio transparente, para sempre. Medida só em `entry`, fecha assim
+       que o bloco acaba de entrar. */
+    .entra-perto { animation-range: entry 10% entry 95%; }
+
+    /* O fio que se desenha da esquerda, como o da frase de impacto. */
+    .varre {
+      animation: rule-sweep var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+      transform-origin: left center;
+    }
+
+    /* A fotografia deriva ao longo de toda a passagem dela pelo ecrã: é o único
+       movimento da página que dura o tempo inteiro de um bloco, e é de
+       propósito — a tempestade lá fora não tem princípio nem fim. */
+    .deriva > img {
+      animation: deriva-lenta linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
