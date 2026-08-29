@@ -201,11 +201,14 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
           <h2 className="text-chapter">{imunidade.comoIntro.titulo[locale]}</h2>
           <p className="subtitle mt-4 max-w-[48ch]">{imunidade.comoIntro.texto[locale]}</p>
 
-          <ol className="relative mt-16 grid gap-14 sm:pl-10">
-            {/* O fio, atrás de tudo, tão alto quanto a lista. */}
+          <ol className="relative mt-16 grid gap-14 pl-7 sm:pl-10">
+            {/* O fio, atrás de tudo, tão alto quanto a lista. Também no
+                telemóvel: estava escondido por não haver goteira à esquerda, e a
+                goteira custa vinte e oito pixéis de largura ao texto — que é o
+                preço de um fio que é o argumento desta secção. */}
             <span
               aria-hidden="true"
-              className="camada-fio absolute left-0 top-2 hidden h-[calc(100%-1rem)] w-px bg-gradient-to-b from-red via-lavender to-paper/60 sm:block"
+              className="camada-fio absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-red via-lavender to-paper/60"
             />
 
             {imunidade.camadas.map((camada) => {
