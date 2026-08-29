@@ -107,7 +107,10 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
           competir com ela — é o momento da página. */}
       <section className="surface-paper">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-          <h2 className="entra text-chapter max-w-[24ch]">{imunidade.definicao.titulo[locale]}</h2>
+          {/* Sem `entra`: este título já está no ecrã quando a página abre, e um
+              título a 34% de opacidade à chegada não é um efeito, é um defeito.
+              Medido. O que anima nesta secção começa mais abaixo. */}
+          <h2 className="text-chapter max-w-[24ch]">{imunidade.definicao.titulo[locale]}</h2>
           <div className="mt-8 statement-in">
             <div>{imunidade.definicao.paragrafos.map((item) => paragrafo(item[locale]))}</div>
             <hr className="my-12 border-line" />
@@ -144,10 +147,10 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
 
       {/* A tempestade por fora, a calma por dentro. A imagem tem coluna própria e
           não fundo: é vertical, e numa faixa larga o corte deixava de fora a
-          pessoa serena e os alertas na janela — ou seja, a metáfora toda. Quase
-          inteira, faz o trabalho que um diagrama faria pior: a deriva come-lhe
-          três por cento em cima e três em baixo, e o que fica de fora é céu e
-          chão. */}
+          pessoa serena e os alertas na janela — ou seja, a metáfora toda.
+          Mostrada inteira, faz o trabalho que um diagrama faria pior: a deriva
+          mexe a moldura dentro da secção, não a imagem dentro da moldura, e por
+          isso não lhe corta nada. */}
       <section className="surface-ink">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,36%)] lg:gap-16 lg:py-28">
           <div>
@@ -172,9 +175,10 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
             </div>
           </div>
 
-          {/* A fotografia deriva devagar dentro da moldura enquanto se desce.
-              É o único movimento contínuo da página, e é a tempestade. */}
-          <div className="deriva rounded-[20px]">
+          {/* A fotografia deriva devagar enquanto se desce, contra o texto ao
+              lado, que anda com a página. É o único movimento contínuo da
+              página, e é a tempestade. */}
+          <div className="paralaxe">
             <Image
               src="/media/imunidade-tempestade.webp"
               alt={
@@ -185,7 +189,7 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
               width={941}
               height={1672}
               sizes="(max-width: 1024px) 100vw, 420px"
-              className="w-full object-cover"
+              className="w-full rounded-[20px] object-cover"
             />
           </div>
         </div>
@@ -251,13 +255,17 @@ export default async function ImunidadePage({ params }: { params: Promise<{ loca
       <section className="surface-paper border-t border-line">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
           <h2 className="entra text-chapter">{imunidade.faqTitulo[locale]}</h2>
-          {/* Sem escalonamento escrito: cada pergunta tem a sua linha do tempo,
-              e por isso entram pela ordem em que estão na página. `entra-linha`
-              e não `entra` porque esta lista cresce quando alguém abre uma
-              pergunta — ver o comentário no globals.css. */}
-          <div className="mt-10 border-t border-line">
+          {/* A lista entra como um bloco e não pergunta a pergunta, ao
+              contrário do resto da página. As linhas escalonadas eram mais
+              bonitas e tinham um defeito medido: a lista cresce quando alguém
+              abre uma pergunta, e o que cresce empurra para baixo o que está por
+              baixo — o progresso de duas linhas já assentes e à vista recuava, e
+              elas esmoreciam para 0,95 e 0,80 à frente de quem tinha acabado de
+              carregar. Uma lista que se abre não é sítio para uma animação
+              ligada à posição. */}
+          <div className="entra mt-10 border-t border-line">
             {imunidade.faq.map((item) => (
-              <details key={item.pergunta.pt} className="entra-linha group border-b border-line py-5">
+              <details key={item.pergunta.pt} className="group border-b border-line py-5">
                 <summary className="flex cursor-pointer list-none items-baseline gap-4 text-md font-semibold text-ink transition-colors duration-200 group-hover:text-red">
                   <span className="flex-1">{item.pergunta[locale]}</span>
                   <span

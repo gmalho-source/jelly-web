@@ -1233,80 +1233,84 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 
    Nada disto é o desenho: sem `animation-timeline`, ou a quem pediu menos
    movimento, a página fica inteira e no lugar. É a regra da casa e a razão de
-   as animações entrarem sempre dentro do `@supports`. */
+   as animações entrarem sempre dentro do `@supports`.
+
+   ── Sobre os números, que já estiveram errados ─────────────────────────────
+   A primeira versão disto não se via, e o defeito foi meu em dois sítios ao
+   mesmo tempo. Medido: o título da definição passava de transparente a opaco em
+   oitenta pixéis de scroll e deslocava-se três; a fotografia derivava vinte e um
+   pixéis ao longo de mil e duzentos.
+
+   A causa foi a curva. Uma curva `ease-out` numa animação ligada ao scroll gasta
+   quase todo o efeito no primeiro terço do percurso — e o resto do percurso não
+   tem nada para mostrar. Numa animação de tempo isso é o que se quer; aqui, o
+   scroll já é o compasso, e a curva só lhe rouba percurso. Por isso agora é
+   `linear`, e é por isso que a mesma janela de antes rende o triplo.
+
+   A segunda causa foi o tamanho: doze pixéis de deslocação não se vêem numa
+   página com secções de novecentos. Trinta e dois vêem-se, e continuam longe de
+   um carrossel. */
 
 @keyframes entra-e-assenta {
-  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  from { opacity: 0; transform: translate3d(0, 32px, 0); }
   to { opacity: 1; transform: none; }
 }
 
 /* A deriva da fotografia.
-   A imagem entra 6% maior do que a moldura para a deriva nunca mostrar uma
-   borda: 2% para cada lado gasta 4 dos 6 que sobram. Seis por cento e não doze
-   porque isto corta a fotografia — três por cento em cima e três em baixo, uns
-   cinquenta pixéis de céu e de chão numa imagem de 1672 de altura. A pessoa
-   serena, a janela e os alertas continuam todos dentro. */
-@keyframes deriva-lenta {
-  from { transform: translate3d(0, -2%, 0) scale(1.06); }
-  to { transform: translate3d(0, 2%, 0) scale(1.06); }
-}
-
-.deriva {
-  overflow: clip;
-}
-
-.deriva > img {
-  transform: scale(1.06);
+   Move a moldura inteira dentro da secção e não a imagem dentro da moldura: a
+   secção tem 112 pixéis de respiro em cima e em baixo da fotografia, e mexer 48
+   para cada lado gasta menos de metade disso. Assim há paralaxe a sério —
+   noventa e seis pixéis de diferença entre a fotografia e o texto ao lado, que
+   se lê como profundidade — e a fotografia continua inteira. A versão anterior
+   crescia a imagem dentro de uma moldura fixa: cortava-lhe as pontas para
+   render vinte pixéis de movimento. */
+@keyframes paralaxe {
+  from { transform: translate3d(0, 48px, 0); }
+  to { transform: translate3d(0, -48px, 0); }
 }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .entra,
     .entra-tarde,
-    .entra-perto,
-    .entra-linha {
-      animation: entra-e-assenta var(--ease-out) both;
+    .entra-perto {
+      animation: entra-e-assenta linear both;
       animation-timeline: view();
     }
 
-    /* A janela de base é a das camadas: começa mal o bloco assoma e acaba muito
-       antes de ele estar a meio do ecrã. */
-    .entra { animation-range: entry 8% cover 28%; }
+    /* Começa mal o bloco assome e acaba quando ele vai a meio do ecrã. Em
+       pixéis de scroll: cerca de quatrocentos, que é tempo de se ver acontecer
+       sem ser tempo de se esperar por ele. */
+    .entra { animation-range: entry 0% cover 32%; }
 
     /* Um compasso depois, para o que está ao lado de outra coisa: duas colunas
        à mesma altura chegam ao mesmo tempo, e chegar ao mesmo tempo não é
        chegar por ordem. */
-    .entra-tarde { animation-range: entry 20% cover 42%; }
+    .entra-tarde { animation-range: entry 12% cover 46%; }
 
-    /* Uma linha de uma lista que se abre. Fecha muito cedo — mal a linha esteja
-       a menos de meia altura dentro do ecrã — porque a lista cresce quando
-       alguém abre uma pergunta, e o que cresce empurra para baixo o que está
-       por baixo. Numa janela medida ao meio do ecrã, esse empurrão fazia recuar
-       o progresso de duas ou três linhas já assentes: carregava-se numa pergunta
-       e as de baixo esmoreciam. Medido, e é por isto que esta janela é outra. */
-    .entra-linha { animation-range: entry 0% entry 45%; }
-
-    /* Para o fim do documento. Um bloco a poucos ecrãs do fundo nunca chega a
-       subir o suficiente para completar uma janela medida em `cover` — ficava a
-       meio, meio transparente, para sempre. Medida só em `entry`, fecha assim
-       que o bloco acaba de entrar. */
-    .entra-perto { animation-range: entry 10% entry 95%; }
+    /* Para o fim do documento, onde o scroll que sobra é pouco. Uma janela
+       larga como a das outras não fecharia — o bloco ficaria a meio, meio
+       transparente, para sempre. Esta é a maior que cabe no que resta de página
+       depois do fecho, e ainda assim rende trezentos pixéis de percurso. Medido:
+       no fundo do documento, zero elementos transparentes. */
+    .entra-perto { animation-range: entry 0% cover 30%; }
 
     /* O fio que se desenha da esquerda, como o da frase de impacto. */
     .varre {
-      animation: rule-sweep var(--ease-out) both;
+      animation: rule-sweep linear both;
       animation-timeline: view();
-      animation-range: entry 10% cover 30%;
+      animation-range: entry 6% cover 34%;
       transform-origin: left center;
     }
 
     /* A fotografia deriva ao longo de toda a passagem dela pelo ecrã: é o único
-       movimento da página que dura o tempo inteiro de um bloco, e é de
-       propósito — a tempestade lá fora não tem princípio nem fim. */
-    .deriva > img {
-      animation: deriva-lenta linear both;
+       movimento contínuo da página, e é de propósito — a tempestade lá fora não
+       tem princípio nem fim. */
+    .paralaxe {
+      animation: paralaxe linear both;
       animation-timeline: view();
       animation-range: cover 0% cover 100%;
+      will-change: transform;
     }
   }
 }

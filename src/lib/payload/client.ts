@@ -18,9 +18,14 @@ export const getCms = cache(async (): Promise<Payload | null> => (payloadConfigu
  * quase sempre uma migração a meio: nos dois casos cai no conteúdo local.
  */
 export async function fromCms<T>(load: (payload: Payload) => Promise<T[]>, fallback: T[]): Promise<T[]> {
-  const payload = await getCms();
-  if (!payload) return fallback;
   try {
+    // A ligação está dentro do `try` e não antes dele. Estava antes, e por isso
+    // a promessa deste comentário não se cumpria no caso que mais importa: uma
+    // base de dados que não atende não dava conteúdo local, dava exceção — e
+    // durante a compilação isso é uma compilação falhada, não uma página com o
+    // conteúdo do repositório. Aconteceu aqui, com a Postgres local em baixo.
+    const payload = await getCms();
+    if (!payload) return fallback;
     const rows = await load(payload);
     return rows.length ? rows : fallback;
   } catch (error) {
