@@ -77,9 +77,33 @@ não se viam a olho:
    menos de 250px ou menos de 20px, não se vê.
 3. **Com `reducedMotion: "reduce"`** e sem suporte: zero elementos transparentes.
 
+## Duas armadilhas de medida
+
+**`entry` mede-se contra a altura do elemento.** Um fio de um pixel tem uma
+janela de um pixel: a frase de impacto tinha o fio a passar de nada a tudo em
+zero pixéis de scroll, e ninguém percebia porquê. Para coisas baixas — um fio,
+um rótulo, uma linha — a janela mede-se em `cover`, que conta também a altura do
+ecrã.
+
+**A mesma janela dá resultados diferentes conforme o comprimento da lista.** As
+camadas da Imunidade têm 1495 pixéis e o fio cresce ao longo da leitura toda; as
+fases de um serviço têm 658, e com a mesma janela o fio chegava aos 100% com a
+segunda fase ainda por ler. Daí `camada-fio-curto`.
+
+## Verificar contra o conteúdo verdadeiro, não o de recurso
+
+Esta casa serve conteúdo do CMS e cai no ficheiro do repositório quando ele não
+responde. Numa base de dados local vazia, a página que se vê **não é a que está
+em produção** — faltam-lhe as secções que só existem no CMS. Já aconteceu medir
+uma página de serviço sem a frase de impacto, sem as áreas e sem o ensaio, e
+concluir que estava tudo bem.
+
+Antes de medir uma página que tem conteúdo no painel, pôr esse conteúdo na base
+local. Se não der, dizer que a medição foi feita na versão de recurso.
+
 ## O que ainda não está feito
 
-O vocabulário está aplicado à Imunidade Algorítmica. As páginas de serviço, os
-projetos e o Sobre continuam paradas. Quando lá se chegar, é para reutilizar
-estas classes e não inventar outras — uma casa com dois sistemas de movimento
-lê-se como duas casas.
+O vocabulário está aplicado à Imunidade Algorítmica e às cinco páginas de
+serviço. Os projetos, o Sobre e a homepage continuam parados. Quando lá se
+chegar, é para reutilizar estas classes e não inventar outras — uma casa com
+dois sistemas de movimento lê-se como duas casas.

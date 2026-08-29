@@ -579,15 +579,26 @@
       animation-timeline: view();
     }
 
-    /* Cada peça tem a sua janela: a afirmação, o fio, a volta. */
-    .statement-in > :nth-child(1) { animation-range: entry 6% cover 22%; }
+    /* Cada peça tem a sua janela: a afirmação, o fio, a volta.
+
+       As três janelas medem-se em `cover` e não em `entry`. Medido, com as
+       janelas antigas: a primeira linha e o fio passavam de nada a tudo em zero
+       pixéis de scroll. A razão é que `entry` se mede contra a altura do próprio
+       elemento — e o fio tem um pixel de altura, por isso a janela dele tinha um
+       pixel. `cover` conta também a altura do ecrã, e por isso dá a mesma
+       janela a uma linha de texto e a um fio.
+
+       A curva do fio é `linear` pela mesma razão que o resto: numa animação
+       ligada ao scroll, uma curva que trava no fim gasta o efeito no princípio
+       e deixa o resto do percurso sem nada para mostrar. */
+    .statement-in > :nth-child(1) { animation-range: cover 5% cover 30%; }
     .statement-in > :nth-child(2) {
-      animation: rule-sweep var(--ease-out) both;
+      animation: rule-sweep linear both;
       animation-timeline: view();
-      animation-range: entry 14% cover 32%;
+      animation-range: cover 14% cover 36%;
       transform-origin: left center;
     }
-    .statement-in > :nth-child(3) { animation-range: entry 24% cover 42%; }
+    .statement-in > :nth-child(3) { animation-range: cover 24% cover 48%; }
   }
 }
 
@@ -617,6 +628,18 @@
       animation: fio-desce linear both;
       animation-timeline: view();
       animation-range: entry 30% cover 70%;
+    }
+
+    /* O mesmo fio numa lista mais curta.
+       As percentagens de `view()` medem-se contra a altura do próprio elemento,
+       e por isso a mesma janela dá resultados diferentes conforme a lista. Nas
+       camadas da Imunidade, que têm 1495 pixéis, o fio cresce ao longo da
+       leitura toda; nas fases de um serviço, que têm 658, chegava aos 100% com
+       a segunda fase ainda por ler — e um fio que acaba antes da lista não é o
+       argumento, é um enfeite que ficou para trás. Medido: 20, 41, 62, 83 e 100
+       por cento ao longo da lista. */
+    .camada-fio-curto {
+      animation-range: entry 70% cover 88%;
     }
 
     .camada {
