@@ -276,6 +276,28 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
+## Mudar um slug não parte o endereço antigo
+
+Mudar um slug no painel é mudar o endereço de uma página que já anda por aí: em
+emails, em publicações, nos resultados do Google, no site de um cliente. O
+endereço antigo passava a dar 404 sem ninguém dar por isso — e um 404 não avisa
+quem o causou, avisa quem clicou.
+
+Agora o endereço antigo fica guardado na própria ficha, num campo **Endereços
+antigos** na barra lateral, só de leitura. Quem chegar por ele leva **308** para
+o atual, que é o que o Google entende como "mudou de casa" em vez de
+"desapareceu". Vale para projetos, artigos, serviços e vagas, e para os dois
+endereços de cada um — o português e o inglês.
+
+Na ficha e não numa tabela de redirecionamentos, de propósito: apagar a peça leva
+os endereços dela atrás, e nunca fica um redirecionamento órfão a apontar para
+uma página que já não existe. Voltar a pôr o slug antigo tira-o da lista, para a
+página não se redirecionar a si própria em ciclo.
+
+Se um endereço antigo tiver de ser reutilizado noutra peça, tira-se da lista à
+mão — está à vista para isso. Entre uma peça que tem o endereço agora e outra que
+o teve, ganha quem o tem agora.
+
 ## Carregar vídeos
 
 Um pedido a uma função da Vercel não pode passar de **4,5 MB**. É esse, e não
@@ -327,6 +349,30 @@ fundo.
 
 A base de dados precisa de `scripts/sql/2026-08-31-videos.sql` e de
 `scripts/sql/2026-08-31-colunas-e-modo-do-video.sql` antes do deploy.
+
+## A história de um caso em inglês
+
+O título, o resumo e a equipa de um projeto sempre tiveram os dois idiomas lado
+a lado. A **História** — os blocos, que são o corpo da página — era uma só, e a
+página inglesa mostrava o texto português.
+
+Agora cada bloco de texto tem **Título da secção (EN)** e **Texto (EN)** ao lado
+dos portugueses, e o botão tem **Texto (EN)**. Uma história, dois idiomas: a
+estrutura é a mesma nas duas línguas — muda a língua, não o alinhamento — e duas
+estruturas a manter divergem no primeiro dia em que alguém acrescenta um bloco
+só de um lado. Cada bloco por traduzir serve o português: mais vale um caso em
+português do que uma página com buracos.
+
+Debaixo da história há o botão **"Traduzir a história para inglês"**. Junta o que
+está em português e ainda não tem inglês, manda tudo numa ida ao modelo, e
+escreve o resultado nos campos ingleses. **Não grava e não escreve por cima** —
+um caso é a peça comercial da casa, e um texto que alguém escreveu à mão ganha
+sempre.
+
+O que vai e volta é uma lista numerada de textos, não a árvore de blocos: a
+estrutura da história nunca sai do servidor, e por isso não há nada nela que o
+modelo possa partir. Se voltarem menos textos do que os que foram, o painel diz
+que não deu em vez de escrever o texto errado no bloco errado.
 
 ## Categoria e etiquetas
 

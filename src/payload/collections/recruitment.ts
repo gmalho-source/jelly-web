@@ -1,10 +1,11 @@
 import type { Access, CollectionConfig } from "payload";
-import { locale, slugEnField, slugField } from "../fields";
+import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
 import { readCv } from "../endpoints/read-cv";
 import { requestConfirmation } from "../endpoints/request-confirmation";
 import { scoreApplication, setRetention } from "../hooks/rating";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 
 /**
  * Recrutamento: departamentos, funções, vagas e candidaturas.
@@ -122,7 +123,7 @@ export const Jobs: CollectionConfig = {
   // duas noções de rascunho no mesmo documento davam pelo mesmo nome ao
   // mesmo tipo na base de dados.
   access: { read: () => true, create: recruiterOnly, update: recruiterOnly, delete: recruiterOnly },
-  hooks: { afterChange: [revalidateOnChange(jobPaths)], afterDelete: [revalidateOnDelete(jobPaths)] },
+  hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(jobPaths)], afterDelete: [revalidateOnDelete(jobPaths)] },
   fields: [
     {
       type: "row",
@@ -133,6 +134,7 @@ export const Jobs: CollectionConfig = {
     },
     slugField,
     slugEnField,
+    oldSlugsField,
     {
       name: "function",
       label: "Função",

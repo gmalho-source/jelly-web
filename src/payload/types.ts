@@ -252,6 +252,10 @@ export interface Post {
    * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
    */
   slugEn?: string | null;
+  /**
+   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
+   */
+  oldSlugs?: string[] | null;
   date: string;
   authorRef?: (number | null) | Author;
   /**
@@ -381,6 +385,10 @@ export interface Project {
    * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
    */
   slugEn?: string | null;
+  /**
+   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
+   */
+  oldSlugs?: string[] | null;
   year?: string | null;
   date?: string | null;
   order?: number | null;
@@ -411,8 +419,10 @@ export interface Project {
     | (
         | {
             heading?: string | null;
+            headingEn?: string | null;
             level?: ('h2' | 'h3') | null;
             body?: string | null;
+            bodyEn?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -457,6 +467,7 @@ export interface Project {
           }
         | {
             label: string;
+            labelEn?: string | null;
             href: string;
             id?: string | null;
             blockName?: string | null;
@@ -472,8 +483,10 @@ export interface Project {
                     | (
                         | {
                             heading?: string | null;
+                            headingEn?: string | null;
                             level?: ('h2' | 'h3') | null;
                             body?: string | null;
+                            bodyEn?: string | null;
                             id?: string | null;
                             blockName?: string | null;
                             blockType: 'text';
@@ -518,6 +531,7 @@ export interface Project {
                           }
                         | {
                             label: string;
+                            labelEn?: string | null;
                             href: string;
                             id?: string | null;
                             blockName?: string | null;
@@ -621,6 +635,10 @@ export interface Service {
    * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
    */
   slugEn?: string | null;
+  /**
+   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
+   */
+  oldSlugs?: string[] | null;
   order?: number | null;
   claim?: {
     pt?: string | null;
@@ -950,6 +968,10 @@ export interface Job {
    * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
    */
   slugEn?: string | null;
+  /**
+   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
+   */
+  oldSlugs?: string[] | null;
   /**
    * De onde vem o departamento, e por onde as candidaturas se agrupam.
    */
@@ -1411,6 +1433,7 @@ export interface PostsSelect<T extends boolean = true> {
   titleEn?: T;
   slug?: T;
   slugEn?: T;
+  oldSlugs?: T;
   date?: T;
   authorRef?: T;
   author?: T;
@@ -1474,6 +1497,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   client?: T;
   slug?: T;
   slugEn?: T;
+  oldSlugs?: T;
   year?: T;
   date?: T;
   order?: T;
@@ -1507,8 +1531,10 @@ export interface ProjectsSelect<T extends boolean = true> {
           | T
           | {
               heading?: T;
+              headingEn?: T;
               level?: T;
               body?: T;
+              bodyEn?: T;
               id?: T;
               blockName?: T;
             };
@@ -1549,6 +1575,7 @@ export interface ProjectsSelect<T extends boolean = true> {
           | T
           | {
               label?: T;
+              labelEn?: T;
               href?: T;
               id?: T;
               blockName?: T;
@@ -1566,8 +1593,10 @@ export interface ProjectsSelect<T extends boolean = true> {
                             | T
                             | {
                                 heading?: T;
+                                headingEn?: T;
                                 level?: T;
                                 body?: T;
+                                bodyEn?: T;
                                 id?: T;
                                 blockName?: T;
                               };
@@ -1608,6 +1637,7 @@ export interface ProjectsSelect<T extends boolean = true> {
                             | T
                             | {
                                 label?: T;
+                                labelEn?: T;
                                 href?: T;
                                 id?: T;
                                 blockName?: T;
@@ -1674,6 +1704,7 @@ export interface ServicesSelect<T extends boolean = true> {
   nameEn?: T;
   slug?: T;
   slugEn?: T;
+  oldSlugs?: T;
   order?: T;
   claim?:
     | T
@@ -1969,6 +2000,7 @@ export interface JobsSelect<T extends boolean = true> {
   titleEn?: T;
   slug?: T;
   slugEn?: T;
+  oldSlugs?: T;
   function?: T;
   status?: T;
   contract?: T;

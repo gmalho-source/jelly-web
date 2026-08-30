@@ -1,9 +1,11 @@
 import type { Block, CollectionConfig } from "payload";
 import { slugDaPessoa } from "@/lib/equipa";
+import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
+import { translateStory } from "../endpoints/translate-story";
 import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
-import { kpiField, locale, slugEnField, slugField } from "../fields";
+import { kpiField, locale, oldSlugsField, slugEnField, slugField } from "../fields";
 
 const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/projetos/${doc.slug ?? ""}`];
 const servicePaths = (doc: Record<string, unknown>) => ["/", "/servicos", `/servicos/${doc.slug ?? ""}`];
@@ -19,9 +21,15 @@ const blocosSimples: Block[] = [
     slug: "text",
     labels: { singular: "Texto", plural: "Textos" },
     fields: [
+      // O inglês entra ao lado do português e não numa segunda história.
+      // A estrutura de um caso é a mesma nas duas línguas — muda a língua, não
+      // o alinhamento — e duas estruturas a manter divergem no primeiro dia em
+      // que alguém acrescenta um bloco só de um lado.
       { name: "heading", label: "Título da secção", type: "text" },
+      { name: "headingEn", label: "Título da secção (EN)", type: "text" },
       { name: "level", label: "Nível", type: "select", options: ["h2", "h3"], defaultValue: "h2" },
       { name: "body", label: "Texto", type: "textarea" },
+      { name: "bodyEn", label: "Texto (EN)", type: "textarea" },
     ],
   },
   {
@@ -86,6 +94,7 @@ const blocosSimples: Block[] = [
     labels: { singular: "Botão", plural: "Botões" },
     fields: [
       { name: "label", label: "Texto", type: "text", required: true },
+      { name: "labelEn", label: "Texto (EN)", type: "text" },
       { name: "href", label: "Endereço", type: "text", required: true },
     ],
   },
@@ -138,11 +147,17 @@ export const Projects: CollectionConfig = {
   },
   versions: { drafts: true },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateOnChange(projectPaths)], afterDelete: [revalidateOnDelete(projectPaths)] },
+  hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(projectPaths)], afterDelete: [revalidateOnDelete(projectPaths)] },
+  endpoints: [
+    // A história em inglês, escrita pelo Claude. Vai e volta uma lista de
+    // textos: a estrutura da história nunca sai daqui.
+    { path: "/traduzir-historia", method: "post", handler: translateStory },
+  ],
   fields: [
     { name: "client", label: "Cliente", type: "text", required: true },
     slugField,
     slugEnField,
+    oldSlugsField,
     {
       type: "row",
       fields: [
@@ -173,6 +188,13 @@ export const Projects: CollectionConfig = {
       },
     },
     { name: "story", label: "História", type: "blocks", blocks: storyBlocks },
+    // O botão que passa a história a inglês, debaixo dela. Anda pelos campos do
+    // formulário, e por isso serve também uma história ainda por gravar.
+    {
+      name: "traduzirHistoria",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/TraduzirHistoria#TraduzirHistoria" } },
+    },
     {
       name: "numbersValidated",
       label: "Números validados com o cliente",
@@ -196,7 +218,7 @@ export const Services: CollectionConfig = {
   labels: { singular: "Serviço", plural: "Serviços" },
   admin: { useAsTitle: "namePt", group: "Trabalho", defaultColumns: ["namePt", "order"] },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateOnChange(servicePaths)], afterDelete: [revalidateOnDelete(servicePaths)] },
+  hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(servicePaths)], afterDelete: [revalidateOnDelete(servicePaths)] },
   fields: [
     {
       type: "row",
@@ -207,6 +229,7 @@ export const Services: CollectionConfig = {
     },
     slugField,
     slugEnField,
+    oldSlugsField,
     { name: "order", label: "Ordem", type: "number", defaultValue: 100 },
     locale("claim", "Claim", { long: true }),
     locale("link", "Nome curto"),

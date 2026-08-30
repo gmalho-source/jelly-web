@@ -6,10 +6,11 @@ import {
   revalidateOnChange,
   revalidateOnDelete,
 } from "../hooks/revalidate";
-import { locale, slugEnField, slugField } from "../fields";
+import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 import { categoryCounts, tagCounts } from "../endpoints/category-counts";
 import { slugDaEtiqueta } from "../hooks/slug-etiqueta";
+import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
@@ -258,7 +259,7 @@ export const Posts: CollectionConfig = {
   },
   versions: { drafts: true },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateOnChange(postPaths)], afterDelete: [revalidateOnDelete(postPaths)] },
+  hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(postPaths)], afterDelete: [revalidateOnDelete(postPaths)] },
   // Um Markdown a povoar o artigo. O trabalho é do servidor porque é lá que as
   // imagens entram na biblioteca.
   endpoints: [
@@ -277,6 +278,7 @@ export const Posts: CollectionConfig = {
     },
     slugField,
     slugEnField,
+    oldSlugsField,
     {
       type: "row",
       fields: [

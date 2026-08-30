@@ -9,6 +9,8 @@ export type Project = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
+  /** Endereços que esta peça já teve. Quem chega por um leva 308 para o atual. */
+  oldSlugs?: string[];
   client: string;
   year: string;
   order: number;
@@ -29,6 +31,8 @@ export type Service = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
+  /** Endereços que esta peça já teve. Quem chega por um leva 308 para o atual. */
+  oldSlugs?: string[];
   name: Localized;
   claim: Localized;
   link: Localized;
@@ -92,6 +96,8 @@ export type Post = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
+  /** Endereços que esta peça já teve. Quem chega por um leva 308 para o atual. */
+  oldSlugs?: string[];
   date: string;
   category: Localized;
   /**
@@ -171,6 +177,8 @@ export type MigratedPost = {
 /** Projeto migrado do portfolio antigo: sem narrativa nem número — arquivo. */
 export type ArchivedProject = {
   slug: string;
+  /** Endereços que este projeto já teve. Quem chega por um leva 308 para o atual. */
+  oldSlugs?: string[];
   legacyPath: string | null;
   client: string;
   /**
@@ -191,6 +199,11 @@ export type ArchivedProject = {
   body: string[];
   /** Narrativa do caso, como estava no construtor de páginas do site antigo. */
   story: Block[];
+  /**
+   * A mesma história, com os textos em inglês. A estrutura é a mesma — sai do
+   * mesmo sítio no painel — e cada bloco por traduzir serve o português.
+   */
+  storyEn?: Block[];
   cover?: { src: string; alt?: string; title?: string } | null;
   images: string[];
 };
@@ -214,6 +227,8 @@ export type Job = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
+  /** Endereços que esta peça já teve. Quem chega por um leva 308 para o atual. */
+  oldSlugs?: string[];
   title: Localized;
   department: { slug: string; name: Localized };
   functionName: Localized;

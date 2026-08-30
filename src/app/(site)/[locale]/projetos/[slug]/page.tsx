@@ -62,7 +62,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   // A capa continua a ser a capa em toda a parte; aqui decide-se só se ela
   // entra no corpo desta página.
   const capaNoCorpo = Boolean(cover) && !archived?.hideCoverInBody;
-  const story = archived?.story ?? [];
+  // A história inglesa sai do mesmo sítio no painel: é a mesma estrutura com os
+  // textos na outra língua, e cada bloco por traduzir serve o português.
+  const story = (locale === "en" ? archived?.storyEn : archived?.story) ?? archived?.story ?? [];
 
   const facts = [
     { term: t("client"), value: client },

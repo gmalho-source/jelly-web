@@ -50,6 +50,25 @@ export const slugEnField: Field = {
   },
 };
 
+/**
+ * Os endereços que esta peça já teve.
+ *
+ * Escreve-se sozinho — o gancho `guardaSlugsAntigos` trata disso — e está à
+ * vista para se poder tirar um à mão no dia em que alguém quiser reutilizar um
+ * endereço antigo noutra peça.
+ */
+export const oldSlugsField: Field = {
+  name: "oldSlugs",
+  label: "Endereços antigos",
+  type: "text",
+  hasMany: true,
+  admin: {
+    position: "sidebar",
+    readOnly: true,
+    description: "Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.",
+  },
+};
+
 export function kpiField(name: string, label: string, many = false): Field {
   const fields: Field[] = [
     { name: "value", label: "Valor", type: "text", admin: { description: "Como sai para o ecrã: +38%, 2,4x, 11 dias." } },

@@ -134,15 +134,28 @@ function fromLexical(root: unknown): Block[] {
   return blocks;
 }
 
-/** Blocos de caso do Payload → os blocos que o CaseStory desenha. */
-function fromStory(story: unknown): Block[] {
+/**
+ * Blocos de caso do Payload → os blocos que o CaseStory desenha, numa língua.
+ *
+ * A história é uma só no painel, com os textos nas duas línguas lado a lado, e
+ * sai daqui duas vezes: uma em português e outra em inglês. O que se guarda é a
+ * estrutura, que é a mesma; o que muda é a língua de cada texto.
+ *
+ * Sem inglês, serve o português. Mais vale um caso em português do que uma
+ * página com buracos — e um bloco por traduzir não deve fazer desaparecer a
+ * imagem que está a seguir.
+ */
+function fromStory(story: unknown, lingua: "pt" | "en" = "pt"): Block[] {
   const blocks: Block[] = [];
   for (const raw of (story ?? []) as Doc[]) {
     const kind = raw.blockType as string;
+    /** O texto na língua pedida, com o português a servir de rede. */
+    const naLingua = (campo: string) =>
+      (lingua === "en" ? text(raw[`${campo}En`]) : "") || text(raw[campo]);
     if (kind === "text") {
-      const heading = text(raw.heading);
+      const heading = naLingua("heading");
       if (heading) blocks.push({ type: raw.level === "h3" ? "h3" : "h2", text: heading });
-      for (const paragraph of text(raw.body).split(/\n{2,}/)) {
+      for (const paragraph of naLingua("body").split(/\n{2,}/)) {
         if (paragraph.trim()) blocks.push({ type: "p", text: paragraph.trim() });
       }
     } else if (kind === "image") {
@@ -182,12 +195,12 @@ function fromStory(story: unknown): Block[] {
       // Uma coluna vazia não conta — duas colunas com uma delas em branco é uma
       // coluna com um buraco ao lado.
       const colunas = ((raw.colunas ?? []) as Doc[])
-        .map((coluna) => fromStory(coluna.blocos))
+        .map((coluna) => fromStory(coluna.blocos, lingua))
         .filter((coluna) => coluna.length);
       if (colunas.length > 1) blocks.push({ type: "columns", columns: colunas });
     } else if (kind === "link") {
       const href = text(raw.href);
-      const label = text(raw.label);
+      const label = naLingua("label");
       if (href && label) blocks.push({ type: "link", label, href });
     }
   }
@@ -259,6 +272,7 @@ export function fetchPosts(fallback: Post[]) {
       return {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
+      oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         date: text(raw.date).slice(0, 10),
         author: autor(raw),
         readingMinutes: typeof raw.readingMinutes === "number" ? raw.readingMinutes : 4,
@@ -321,6 +335,7 @@ export function fetchProjects(fallback: Project[]) {
       return {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
+      oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         client: text(raw.client),
         year: text(raw.year),
         order: typeof raw.order === "number" ? raw.order : 100,
@@ -345,6 +360,7 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
     return docs.map(
       (raw): ArchivedProject => ({
         slug: text(raw.slug),
+        oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         legacyPath: text(raw.legacyPath) || null,
         client: text(raw.client),
         hideCoverInBody: raw.hideCoverInBody === true,
@@ -354,7 +370,8 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         subtitle: text(raw.subtitle) || undefined,
         summary: localized(raw.summary).pt,
         body: [],
-        story: fromStory(raw.story),
+        story: fromStory(raw.story, "pt"),
+        storyEn: fromStory(raw.story, "en"),
         cover: image(raw.cover as MediaDoc) ?? null,
         images: [],
       }),
@@ -368,6 +385,7 @@ export function fetchServices(fallback: Service[]) {
     return (docs as unknown as Doc[]).map((raw): Service => ({
       slug: text(raw.slug),
       slugEn: text(raw.slugEn) || undefined,
+      oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
       name: { pt: text(raw.namePt), en: text(raw.nameEn) || text(raw.namePt) },
       claim: localized(raw.claim),
       link: localized(raw.link, text(raw.namePt)),
@@ -567,6 +585,7 @@ export function fetchJobs(fallback: Job[]) {
       return {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
+      oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         title: localized({ pt: raw.titlePt, en: raw.titleEn }),
         department:
           departamento && typeof departamento === "object"
