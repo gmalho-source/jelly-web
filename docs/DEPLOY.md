@@ -57,6 +57,27 @@ não deve existir — o código já sabe o que fazer sem ela.
    produção. Se o Production Branch estiver noutro nome, o deploy fica sempre
    em preview.
 
+## Um commit com `scripts/sql/` corre-se na base antes de chegar ao ar
+
+O deploy é automático no push, e a base de dados não muda sozinha. Quando um
+commit traz um ficheiro novo em `scripts/sql/`, há uma janela entre o deploy e o
+SQL em que o painel fica em branco nas coleções afectadas — não dá erro, fica
+em branco, que é a pior maneira de avisar.
+
+Aconteceu com as etiquetas: a coleção foi ao ar antes da tabela existir, e as
+listas de Artigos e de Etiquetas ficaram brancas. Diagnostica-se em dez segundos
+de fora, sem entrar no painel:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://…/api/tags?limit=1
+```
+
+500 numa coleção e 200 noutra é sempre isto: falta a tabela ou a coluna.
+
+**A ordem certa é: correr o SQL na Neon primeiro, e só depois fazer o push.** E
+quem escrever o commit diz o SQL na primeira linha da mensagem a quem o vai
+correr, não na última — foi o que falhou desta vez, e não foi o SQL.
+
 ## Variáveis de ambiente
 
 Nenhuma é necessária para o **build**. As de runtime são-no para as funções
