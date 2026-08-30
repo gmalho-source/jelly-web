@@ -9,6 +9,7 @@ import {
 import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 import { categoryCounts, tagCounts } from "../endpoints/category-counts";
+import { slugDaEtiqueta } from "../hooks/slug-etiqueta";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
@@ -171,7 +172,26 @@ export const Tags: CollectionConfig = {
         { name: "titleEn", label: "Nome (EN)", type: "text" },
       ],
     },
-    slugField,
+    {
+      name: "slug",
+      label: "Slug",
+      type: "text",
+      required: true,
+      unique: true,
+      index: true,
+      // Não se pergunta: sai do nome. Uma etiqueta escreve-se no meio de um
+      // artigo, e pedir a quem está a escrever que invente um endereço para a
+      // palavra «tecnologia» é fricção por nada — ainda por cima quando a
+      // etiqueta ainda não tem página nenhuma. Fica à vista, e só de leitura,
+      // porque no dia em que a pesquisa do blog o puser no endereço convém que
+      // se saiba qual é.
+      admin: {
+        readOnly: true,
+        position: "sidebar",
+        description: "Sai do nome. Vai ao endereço quando a pesquisa do blog existir.",
+      },
+      hooks: { beforeValidate: [slugDaEtiqueta] },
+    },
     {
       name: "artigos",
       label: "Artigos",
@@ -284,6 +304,11 @@ export const Posts: CollectionConfig = {
       admin: {
         description:
           "Aquilo de que o artigo fala. A categoria é uma só — a prateleira; as etiquetas são quantas forem precisas.",
+        // Escreve-se aqui, com vírgula ou enter, e a etiqueta é criada se ainda
+        // não existir. O campo de relação normal abre uma gaveta por cada
+        // etiqueta nova, e uma gaveta a meio de escrever um artigo é o que faz
+        // com que ninguém etiquete nada.
+        components: { Field: "@/payload/components/CampoEtiquetas#CampoEtiquetas" },
       },
     },
     {

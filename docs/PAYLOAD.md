@@ -294,10 +294,30 @@ do WordPress também não: o que as torna úteis lá é a árvore de endereços
 (`/blog/marketing/seo/`) e o menu que a acompanha, e aqui não há nem uma coisa
 nem outra — a categoria não gera endereço nenhum.
 
-No painel, o campo **Etiquetas** está debaixo da Categoria, na ficha do artigo, e
-o **+** cria uma etiqueta nova sem sair de lá. A lista das etiquetas está em
-**Editorial → Etiquetas**, com a mesma coluna de contagens que as categorias
-têm.
+No painel, o campo **Etiquetas** está debaixo da Categoria, na ficha do artigo.
+**Escreve-se lá dentro**: o nome, e enter ou vírgula. Se a etiqueta já existir é
+essa que entra; se não existir, é criada. Colar «marketing, tecnologia, dados»
+põe as três. Apagar com o campo vazio tira a última.
+
+Enquanto se escreve aparecem as que já existem, e isso não é enfeite: sem
+sugestões, três pessoas a escrever à mão dão «Marketing», «marketing» e
+«marketing digital» em três artigos seguidos, e uma etiqueta que se escreve de
+três maneiras não serve para procurar nada. A comparação é feita sem dar pelas
+maiúsculas nem pelos acentos, e criar é o último recurso.
+
+O campo de relação que o Payload dá de origem abre uma gaveta por cada etiqueta
+nova, e por isso foi substituído. Numa relação a sério — o autor de um artigo, o
+projeto de um caso — a gaveta é o que se quer, porque do outro lado há uma ficha
+com campos. Uma etiqueta é uma palavra: a gaveta custa mais do que a coisa vale.
+
+**O slug não é pedido.** Sai do nome, no servidor, e fica à vista mas só de
+leitura na barra lateral da etiqueta. Dois nomes diferentes que dessem o mesmo
+slug — «Análise» e «Analise» — não rebentam: procura-se o primeiro número livre
+(`analise`, `analise-2`). E renomear uma etiqueta não lhe muda o slug, que uma
+etiqueta renomeada continua a ser a mesma etiqueta.
+
+A lista das etiquetas está em **Editorial → Etiquetas**, com a mesma coluna de
+contagens que as categorias têm.
 
 No site, as etiquetas aparecem no fim do artigo, debaixo de "Temas". **Não são
 links**, e é de propósito: não há página por etiqueta, e um link que não leva a

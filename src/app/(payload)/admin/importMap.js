@@ -1,3 +1,4 @@
+import { CampoEtiquetas as CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1 } from '@/payload/components/CampoEtiquetas'
 import { ResumoIA as ResumoIA_615993207b8485cba1987d35775acf71 } from '@/payload/components/ResumoIA'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -42,6 +43,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/payload/components/CampoEtiquetas#CampoEtiquetas": CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1,
   "@/payload/components/ResumoIA#ResumoIA": ResumoIA_615993207b8485cba1987d35775acf71,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
