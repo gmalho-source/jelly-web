@@ -16,6 +16,7 @@ import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
 import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
+import { Videos } from "./src/payload/collections/videos";
 import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -83,6 +84,7 @@ export default buildConfig({
     Jobs,
     Applications,
     Media,
+    Videos,
     Documents,
     Users,
   ],
@@ -111,6 +113,26 @@ export default buildConfig({
           // As imagens são públicas; os documentos não. Sem esta distinção, um
           // CV ficava com endereço no CDN, sem sessão pelo meio.
           collections: { media: { disablePayloadAccessControl: true }, documents: {}, attachments: {} },
+          token: blobToken,
+        }),
+        // ── Os vídeos, pelo caminho contrário ──────────────────────────────
+        // Segunda instância do mesmo adaptador, com `clientUploads` ligado e só
+        // para os vídeos. Aqui o ficheiro vai do browser direito ao Blob, com
+        // uma senha de curta duração que o servidor assina, e por isso não há o
+        // tecto de 4,5 MB da função. É o que permite carregar um vídeo de 34 MB
+        // pelo painel em vez de o pôr no armazenamento à mão e colar o
+        // endereço.
+        //
+        // O que se perde é o que os vídeos não precisam: o servidor nunca vê os
+        // bytes, e por isso não há conversão nenhuma. Nas imagens isso seria
+        // perder o WebP e os três tamanhos; num MP4 não há nada a fazer.
+        //
+        // Quem assina a senha decide quem pode carregar: só quem tem sessão no
+        // painel. Sem esta guarda, o endpoint que assina ficava aberto a
+        // qualquer pessoa que soubesse o endereço.
+        vercelBlobStorage({
+          collections: { videos: { disablePayloadAccessControl: true } },
+          clientUploads: { access: ({ req }) => Boolean(req.user) },
           token: blobToken,
         }),
       ]

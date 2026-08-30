@@ -276,6 +276,38 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
+## Carregar vídeos
+
+Um pedido a uma função da Vercel não pode passar de **4,5 MB**. É esse, e não
+outro, o tecto com que alguém bate ao tentar carregar um vídeo de 34 MB pelo
+painel — não é uma definição que se levante.
+
+As imagens têm de passar pelo servidor: é lá que o sharp as converte para WebP e
+gera os três tamanhos. Um vídeo não tem nada a converter, e por isso vai **do
+browser direito ao armazenamento**, com uma senha de curta duração que o servidor
+assina. O tecto passa a ser o do próprio Blob, que são terabytes.
+
+Daí uma coleção separada, **Casa → Vídeos**, com a sua própria instância do
+adaptador e o `clientUploads` ligado só para ela. As imagens ficam como estavam:
+o caminho antigo continua a ser o certo para elas, e uma coleção só obrigaria a
+escolher um dos dois caminhos para ambas.
+
+Quem pode carregar: quem tem sessão no painel. É o que a função `access` do
+`clientUploads` decide — sem ela, o endpoint que assina a senha ficava aberto a
+quem soubesse o endereço.
+
+**Num caso de portfólio**, o bloco de Vídeo passou a ter o campo **Vídeo**, onde
+se arrasta o ficheiro. Os campos de endereço continuam lá por baixo, para os
+trinta e quatro vídeos que ainda vivem no site antigo — com ficheiro carregado,
+o endereço é ignorado.
+
+**O tamanho continua a ser problema de quem carrega.** O painel deixa entrar 34
+MB, mas 34 MB é muito para servir a um telemóvel: `npm run video:prep` encolhe um
+MP4 sem se notar (o fundo da Imunidade foi de 6,1 MB para 407 KB). A regra
+prática está na descrição do campo — abaixo dos 10 MB para um vídeo de caso.
+
+A base de dados precisa de `scripts/sql/2026-08-31-videos.sql` antes do deploy.
+
 ## Categoria e etiquetas
 
 **A categoria é a prateleira**: uma por artigo, exclusiva. É ela que aparece na

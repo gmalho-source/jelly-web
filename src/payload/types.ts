@@ -86,6 +86,7 @@ export interface Config {
     jobs: Job;
     applications: Application;
     media: Media;
+    videos: Video;
     documents: Document;
     users: User;
     'payload-kv': PayloadKv;
@@ -114,6 +115,7 @@ export interface Config {
     jobs: JobsSelect<false> | JobsSelect<true>;
     applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -358,7 +360,7 @@ export interface Tag {
   titlePt: string;
   titleEn?: string | null;
   /**
-   * Entra no URL. Mudar isto parte links que já existem.
+   * Sai do nome. Vai ao endereço quando a pesquisa do blog existir.
    */
   slug: string;
   updatedAt: string;
@@ -429,7 +431,11 @@ export interface Project {
           }
         | {
             /**
-             * Endereço do ficheiro.
+             * Arrasta o ficheiro para aqui. Vai direito ao armazenamento, sem o limite de 4,5 MB que trava as imagens. Um vídeo de caso deve ficar abaixo dos 10 MB — `npm run video:prep` encolhe-o sem se notar.
+             */
+            ficheiro?: (number | null) | Video;
+            /**
+             * Só para um vídeo que já esteja noutro sítio. Com ficheiro carregado acima, isto é ignorado.
              */
             mp4?: string | null;
             webm?: string | null;
@@ -496,6 +502,34 @@ export interface Project {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Vídeos dos casos e fundos de topo. Vão do browser direito ao armazenamento, sem passar pelo servidor — por isso não há o limite de 4,5 MB que trava as imagens.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  /**
+   * Como este vídeo se chama no painel. Não vai para o site.
+   */
+  title?: string | null;
+  /**
+   * Para quem vier a seguir: de onde veio, que corte é, o que não se pode voltar a usar.
+   */
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1222,6 +1256,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'videos';
+        value: number | Video;
+      } | null)
+    | ({
         relationTo: 'documents';
         value: number | Document;
       } | null)
@@ -1417,6 +1455,7 @@ export interface ProjectsSelect<T extends boolean = true> {
         video?:
           | T
           | {
+              ficheiro?: T;
               mp4?: T;
               webm?: T;
               poster?: T;
@@ -2011,6 +2050,25 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  title?: T;
+  note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

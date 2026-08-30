@@ -33,8 +33,26 @@ const storyBlocks: Block[] = [
     slug: "video",
     labels: { singular: "Vídeo", plural: "Vídeos" },
     fields: [
-      { name: "mp4", label: "MP4", type: "text", admin: { description: "Endereço do ficheiro." } },
-      { name: "webm", label: "WebM", type: "text" },
+      {
+        name: "ficheiro",
+        label: "Vídeo",
+        type: "upload",
+        relationTo: "videos",
+        admin: {
+          description:
+            "Arrasta o ficheiro para aqui. Vai direito ao armazenamento, sem o limite de 4,5 MB que trava as imagens. Um vídeo de caso deve ficar abaixo dos 10 MB — `npm run video:prep` encolhe-o sem se notar.",
+        },
+      },
+      // Os endereços à mão continuam a valer: há trinta e quatro vídeos de casos
+      // ainda servidos do site antigo, e um vídeo que já está algures não tem de
+      // ser carregado outra vez só para mudar de campo.
+      {
+        name: "mp4",
+        label: "MP4 (endereço)",
+        type: "text",
+        admin: { description: "Só para um vídeo que já esteja noutro sítio. Com ficheiro carregado acima, isto é ignorado." },
+      },
+      { name: "webm", label: "WebM (endereço)", type: "text" },
       { name: "poster", label: "Primeiro fotograma", type: "upload", relationTo: "media" },
       { name: "portrait", label: "Vertical (9:16)", type: "checkbox" },
     ],

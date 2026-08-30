@@ -155,8 +155,15 @@ function fromStory(story: unknown): Block[] {
         .map(({ src, alt }) => ({ src, alt }));
       if (images.length) blocks.push({ type: "gallery", images });
     } else if (kind === "video") {
-      const mp4 = text(raw.mp4);
-      const webm = text(raw.webm);
+      // O ficheiro carregado ganha ao endereço escrito à mão: quem arrastou um
+      // vídeo para o campo quer esse, e não o que lá estava antes. O endereço
+      // continua a servir os vídeos que vivem noutro sítio — são trinta e
+      // quatro, ainda no site antigo.
+      const carregado = raw.ficheiro;
+      const doArmazenamento =
+        carregado && typeof carregado === "object" ? text((carregado as Doc).url) : "";
+      const mp4 = doArmazenamento || text(raw.mp4);
+      const webm = doArmazenamento ? "" : text(raw.webm);
       if (mp4 || webm) {
         blocks.push({
           type: "video",
