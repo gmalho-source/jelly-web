@@ -276,6 +276,29 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
+## Quantos artigos usa cada categoria
+
+Em **Editorial → Categorias**, a lista tem uma coluna **Artigos** com o número de
+artigos de cada categoria. O número é um link: leva à lista dos artigos já
+filtrada por essa categoria, com o filtro à vista e editável — não é uma pesquisa
+escondida no endereço. Quando há rascunhos, a coluna di-lo ao lado («4 · 2 por
+publicar»), que é a diferença entre uma categoria viva e uma categoria com
+trabalho parado. Sem nenhum artigo, diz «nenhum» — e é essa a linha que interessa
+a quem anda a arrumar categorias.
+
+Como funciona: `GET /api/categories/contagens`, um pedido só para a página
+inteira e não um por linha. As dez células partilham a mesma promessa: a primeira
+a ser desenhada faz o pedido, as outras nove esperam por ele, e a resposta é
+esquecida ao fim de meio minuto — gravar um artigo muda as contagens.
+
+A contagem é feita em memória sobre uma leitura dos artigos com `select` de duas
+colunas, `category` e `_status`. Sem o `select` vinha o corpo de cada artigo — uma
+árvore do Lexical por cada um, cento e tal delas — para contar dois números.
+
+A leitura é feita sem `draft: true` de propósito: com ele o Payload devolve a
+última versão de cada artigo, que pode ter uma categoria diferente da publicada,
+e a coluna passava a contar o que alguém ainda está a pensar em vez do que está.
+
 ## Passar a equipa para o painel
 
 As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o resto

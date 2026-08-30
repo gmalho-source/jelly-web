@@ -8,6 +8,7 @@ import {
 } from "../hooks/revalidate";
 import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
+import { categoryCounts } from "../endpoints/category-counts";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
@@ -113,9 +114,10 @@ export const Categories: CollectionConfig = {
   labels: { singular: "Categoria", plural: "Categorias" },
   // O título tem de ser texto simples: o painel desenha-o em colunas e num
   // grupo { pt, en } o React recebia um objeto onde esperava uma string.
-  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug"] },
+  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug", "artigos"] },
   access: { read: () => true },
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
+  endpoints: [{ path: "/contagens", method: "get", handler: categoryCounts }],
   fields: [
     {
       type: "row",
@@ -125,6 +127,16 @@ export const Categories: CollectionConfig = {
       ],
     },
     slugField,
+    // Quantos artigos usam esta categoria, e o link para eles. É `ui` porque não
+    // é um campo: não se grava nem se edita, lê-se dos artigos. Só existe na
+    // lista — dentro da ficha de uma categoria não acrescentava nada que a lista
+    // não diga melhor.
+    {
+      name: "artigos",
+      label: "Artigos",
+      type: "ui",
+      admin: { components: { Cell: "@/payload/components/ContagemArtigos#ContagemArtigos" } },
+    },
   ],
 };
 
