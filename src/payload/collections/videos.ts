@@ -36,6 +36,14 @@ export const Videos: CollectionConfig = {
     mimeTypes: ["video/mp4", "video/webm", "video/quicktime"],
   },
   fields: [
+    // O peso, logo a seguir ao ficheiro, com aviso quando é muito. Não há aqui
+    // compressão nenhuma — o servidor nunca vê os bytes, e a Vercel não tem
+    // ffmpeg — mas há a informação, que era o que faltava.
+    {
+      name: "peso",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/PesoDoVideo#PesoDoVideo" } },
+    },
     {
       name: "title",
       label: "Título",

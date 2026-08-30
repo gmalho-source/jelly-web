@@ -33,6 +33,7 @@ import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/compo
 import { PedirConfirmacao as PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c } from '@/payload/components/PedirConfirmacao'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
+import { PesoDoVideo as PesoDoVideo_a9741b34d3164464267faa6032c6f6b7 } from '@/payload/components/PesoDoVideo'
 import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
@@ -78,6 +79,7 @@ export const importMap = {
   "@/payload/components/PedirConfirmacao#PedirConfirmacao": PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,
+  "@/payload/components/PesoDoVideo#PesoDoVideo": PesoDoVideo_a9741b34d3164464267faa6032c6f6b7,
   "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelMarca#PainelLogo": PainelLogo_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,

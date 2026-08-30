@@ -171,11 +171,20 @@ function fromStory(story: unknown): Block[] {
           webm: webm || undefined,
           poster: image(raw.poster as MediaDoc)?.src,
           portrait: Boolean(raw.portrait),
+          modo: raw.modo === "filme" ? "filme" : undefined,
         });
       }
     } else if (kind === "embed") {
       const url = text(raw.url);
       if (url) blocks.push({ type: "embed", url });
+    } else if (kind === "colunas") {
+      // Cada coluna é uma história pequena: o mesmo leitor, chamado outra vez.
+      // Uma coluna vazia não conta — duas colunas com uma delas em branco é uma
+      // coluna com um buraco ao lado.
+      const colunas = ((raw.colunas ?? []) as Doc[])
+        .map((coluna) => fromStory(coluna.blocos))
+        .filter((coluna) => coluna.length);
+      if (colunas.length > 1) blocks.push({ type: "columns", columns: colunas });
     } else if (kind === "link") {
       const href = text(raw.href);
       const label = text(raw.label);

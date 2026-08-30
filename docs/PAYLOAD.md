@@ -301,12 +301,32 @@ se arrasta o ficheiro. Os campos de endereço continuam lá por baixo, para os
 trinta e quatro vídeos que ainda vivem no site antigo — com ficheiro carregado,
 o endereço é ignorado.
 
-**O tamanho continua a ser problema de quem carrega.** O painel deixa entrar 34
-MB, mas 34 MB é muito para servir a um telemóvel: `npm run video:prep` encolhe um
-MP4 sem se notar (o fundo da Imunidade foi de 6,1 MB para 407 KB). A regra
-prática está na descrição do campo — abaixo dos 10 MB para um vídeo de caso.
+**Não há compressão.** O servidor nunca vê os bytes de um vídeo — é essa a
+razão de ele poder ter 34 MB — e a Vercel não tem ffmpeg. Encolher é trabalho de
+quem carrega, **antes** de carregar: `npm run video:prep` encolhe um MP4 sem se
+notar (o fundo da Imunidade foi de 6,1 MB para 407 KB). A ficha do vídeo mostra o
+peso por baixo do ficheiro e fica vermelha acima dos 10 MB, com o comando à
+frente. Encolhe-se e volta a carregar-se por cima.
 
-A base de dados precisa de `scripts/sql/2026-08-31-videos.sql` antes do deploy.
+**O vídeo de um caso tem dois modos**, no bloco da história:
+
+- **Ambiente** — corre sozinho, sem som, em ciclo, sem controlos. É o que o site
+  antigo fazia e é o que se quer num fundo de sete segundos.
+- **Filme** — começa parado, com controlos e com som. Para uma peça que alguém
+  se senta a ver. Não repete: um filme acaba. E não começa sozinho — um vídeo com
+  som que arranca à chegada é a coisa mais próxima de gritar com quem entra, e os
+  browsers bloqueiam-no de qualquer maneira.
+
+**Blocos lado a lado.** O bloco **Colunas** põe duas a quatro colunas na
+história, e dentro de cada uma os blocos do costume — texto, imagem, vídeo,
+lista. Serve para um antes e um depois, ou três ecrãs de uma aplicação em fila.
+No telemóvel empilham-se, pela ordem em que estão. Não se aninha: uma coluna só
+aceita blocos simples, de propósito — uma história que precise de duas grelhas
+encaixadas está a pedir outra coisa, e essa outra coisa não é um editor mais
+fundo.
+
+A base de dados precisa de `scripts/sql/2026-08-31-videos.sql` e de
+`scripts/sql/2026-08-31-colunas-e-modo-do-video.sql` antes do deploy.
 
 ## Categoria e etiquetas
 

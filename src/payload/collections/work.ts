@@ -9,7 +9,12 @@ const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/proj
 const servicePaths = (doc: Record<string, unknown>) => ["/", "/servicos", `/servicos/${doc.slug ?? ""}`];
 
 /** Blocos da narrativa de um caso: é disto que uma página de projeto é feita. */
-const storyBlocks: Block[] = [
+/**
+ * Os blocos simples de um caso. Chamam-se simples porque não contêm outros: é
+ * isto que a coluna aceita lá dentro, e é o que impede uma coluna dentro de uma
+ * coluna dentro de uma coluna.
+ */
+const blocosSimples: Block[] = [
   {
     slug: "text",
     labels: { singular: "Texto", plural: "Textos" },
@@ -55,6 +60,20 @@ const storyBlocks: Block[] = [
       { name: "webm", label: "WebM (endereço)", type: "text" },
       { name: "poster", label: "Primeiro fotograma", type: "upload", relationTo: "media" },
       { name: "portrait", label: "Vertical (9:16)", type: "checkbox" },
+      {
+        name: "modo",
+        label: "Como se vê",
+        type: "select",
+        defaultValue: "ambiente",
+        options: [
+          { label: "Ambiente — corre sozinho, sem som, em ciclo, sem controlos", value: "ambiente" },
+          { label: "Filme — começa parado, com controlos e com som", value: "filme" },
+        ],
+        admin: {
+          description:
+            "Ambiente é para um fundo de sete segundos que se repete. Filme é para uma peça que alguém se senta a ver — e uma peça com som nunca deve começar sozinha.",
+        },
+      },
     ],
   },
   {
@@ -71,6 +90,42 @@ const storyBlocks: Block[] = [
     ],
   },
 ];
+
+/**
+ * Blocos lado a lado.
+ *
+ * Duas a quatro colunas, e dentro de cada uma os blocos do costume — texto,
+ * imagem, vídeo, lista. É o que faltava para pôr um antes e um depois lado a
+ * lado, ou três ecrãs de uma aplicação em fila.
+ *
+ * Não se aninha: uma coluna só aceita blocos simples, e por isso não há maneira
+ * de meter colunas dentro de colunas. É uma limitação de propósito — uma
+ * história de um caso que precise de duas grelhas encaixadas está a pedir outra
+ * coisa, e essa outra coisa não é um editor mais fundo.
+ *
+ * No telemóvel não há colunas: empilham-se. Três imagens lado a lado num ecrã de
+ * 390 são três selos.
+ */
+const colunasBlock: Block = {
+  slug: "colunas",
+  labels: { singular: "Colunas", plural: "Colunas" },
+  fields: [
+    {
+      name: "colunas",
+      label: "Colunas",
+      type: "array",
+      minRows: 2,
+      maxRows: 4,
+      admin: {
+        description: "Duas a quatro. No telemóvel empilham-se, por esta ordem.",
+        initCollapsed: false,
+      },
+      fields: [{ name: "blocos", label: "Conteúdo", type: "blocks", blocks: blocosSimples }],
+    },
+  ],
+};
+
+const storyBlocks: Block[] = [...blocosSimples, colunasBlock];
 
 export const Projects: CollectionConfig = {
   slug: "projects",

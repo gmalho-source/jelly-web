@@ -145,9 +145,11 @@ export type Block =
   | { type: "image"; src: string; alt?: string; caption?: string; width?: number; height?: number; float?: "left" | "right" }
   /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
   | { type: "gallery"; images: { src: string; alt?: string }[] }
-  | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean }
+  | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean; modo?: "ambiente" | "filme" }
   | { type: "embed"; url: string; caption?: string }
-  | { type: "link"; label: string; href: string };
+  | { type: "link"; label: string; href: string }
+  /** Dois a quatro conjuntos de blocos lado a lado. Não se aninha em si mesmo. */
+  | { type: "columns"; columns: Block[][] };
 
 /** Artigo migrado do jelly.pt. Uma língua por registo (hoje só PT). */
 export type MigratedPost = {

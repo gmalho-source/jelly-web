@@ -441,6 +441,10 @@ export interface Project {
             webm?: string | null;
             poster?: (number | null) | Media;
             portrait?: boolean | null;
+            /**
+             * Ambiente é para um fundo de sete segundos que se repete. Filme é para uma peça que alguém se senta a ver — e uma peça com som nunca deve começar sozinha.
+             */
+            modo?: ('ambiente' | 'filme') | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'video';
@@ -457,6 +461,76 @@ export interface Project {
             id?: string | null;
             blockName?: string | null;
             blockType: 'link';
+          }
+        | {
+            /**
+             * Duas a quatro. No telemóvel empilham-se, por esta ordem.
+             */
+            colunas?:
+              | {
+                  blocos?:
+                    | (
+                        | {
+                            heading?: string | null;
+                            level?: ('h2' | 'h3') | null;
+                            body?: string | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            image: number | Media;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'image';
+                          }
+                        | {
+                            images: (number | Media)[];
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'gallery';
+                          }
+                        | {
+                            /**
+                             * Arrasta o ficheiro para aqui. Vai direito ao armazenamento, sem o limite de 4,5 MB que trava as imagens. Um vídeo de caso deve ficar abaixo dos 10 MB — `npm run video:prep` encolhe-o sem se notar.
+                             */
+                            ficheiro?: (number | null) | Video;
+                            /**
+                             * Só para um vídeo que já esteja noutro sítio. Com ficheiro carregado acima, isto é ignorado.
+                             */
+                            mp4?: string | null;
+                            webm?: string | null;
+                            poster?: (number | null) | Media;
+                            portrait?: boolean | null;
+                            /**
+                             * Ambiente é para um fundo de sete segundos que se repete. Filme é para uma peça que alguém se senta a ver — e uma peça com som nunca deve começar sozinha.
+                             */
+                            modo?: ('ambiente' | 'filme') | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'video';
+                          }
+                        | {
+                            url: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'embed';
+                          }
+                        | {
+                            label: string;
+                            href: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'link';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'colunas';
           }
       )[]
     | null;
@@ -1460,6 +1534,7 @@ export interface ProjectsSelect<T extends boolean = true> {
               webm?: T;
               poster?: T;
               portrait?: T;
+              modo?: T;
               id?: T;
               blockName?: T;
             };
@@ -1475,6 +1550,71 @@ export interface ProjectsSelect<T extends boolean = true> {
           | {
               label?: T;
               href?: T;
+              id?: T;
+              blockName?: T;
+            };
+        colunas?:
+          | T
+          | {
+              colunas?:
+                | T
+                | {
+                    blocos?:
+                      | T
+                      | {
+                          text?:
+                            | T
+                            | {
+                                heading?: T;
+                                level?: T;
+                                body?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          image?:
+                            | T
+                            | {
+                                image?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          gallery?:
+                            | T
+                            | {
+                                images?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          video?:
+                            | T
+                            | {
+                                ficheiro?: T;
+                                mp4?: T;
+                                webm?: T;
+                                poster?: T;
+                                portrait?: T;
+                                modo?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          embed?:
+                            | T
+                            | {
+                                url?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          link?:
+                            | T
+                            | {
+                                label?: T;
+                                href?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };
