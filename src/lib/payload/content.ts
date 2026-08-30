@@ -227,6 +227,19 @@ export function fetchPosts(fallback: Post[]) {
     });
     return (docs as unknown as Doc[]).map((raw): Post => {
       const category = raw.category as Doc | number | null;
+      // As etiquetas chegam como documentos quando há profundidade e como
+      // números quando não há. Sem nome não servem para nada aqui, e por isso as
+      // que vierem por resolver caem.
+      const etiquetas = (Array.isArray(raw.tags) ? raw.tags : [])
+        .filter((etiqueta): etiqueta is Doc => Boolean(etiqueta) && typeof etiqueta === "object")
+        .map((etiqueta) => ({
+          slug: text(etiqueta.slug),
+          name: {
+            pt: text(etiqueta.titlePt),
+            en: text(etiqueta.titleEn) || text(etiqueta.titlePt),
+          },
+        }))
+        .filter((etiqueta) => etiqueta.name.pt);
       return {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
@@ -244,6 +257,7 @@ export function fetchPosts(fallback: Post[]) {
                 en: text((category as Doc).titleEn) || text((category as Doc).titlePt) || "Jelly",
               }
             : { pt: "Jelly", en: "Jelly" },
+        tags: etiquetas.length ? etiquetas : undefined,
         cover: image(raw.cover as MediaDoc),
       };
     });

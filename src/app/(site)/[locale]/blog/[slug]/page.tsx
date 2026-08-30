@@ -165,6 +165,27 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             )}
           </div>
 
+          {/* As etiquetas: aquilo de que o artigo falou.
+
+              Ainda não são links, e é de propósito — não há página por
+              etiqueta, e um link que não leva a lado nenhum é pior do que
+              nenhum. Passam a ser quando a pesquisa do blog existir; até lá são
+              contexto para quem acabou de ler, e é por elas que os artigos
+              relacionados aqui em baixo são escolhidos. */}
+          {post.tags?.length ? (
+            <div className="mt-12 flex flex-wrap items-baseline gap-x-2 gap-y-2 border-t border-line pt-8">
+              <span className="eyebrow mr-1 text-fg-soft">{t("tags")}</span>
+              {post.tags.map((etiqueta) => (
+                <span
+                  key={etiqueta.slug}
+                  className="rounded-full border border-line px-3 py-1 text-xs text-fg-soft"
+                >
+                  {etiqueta.name[locale]}
+                </span>
+              ))}
+            </div>
+          ) : null}
+
           {/* A subscrição no fim do artigo: é aqui que a intenção está no
               máximo — alguém que acabou de ler tudo. A página de subscrição
               continua a existir, para quem chega por outro sítio. */}

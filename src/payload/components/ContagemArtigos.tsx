@@ -23,33 +23,34 @@ type Resposta = { contagens?: Record<string, Contagem> };
  * que se volta a desenhar. Não vive para sempre: gravar um artigo muda as
  * contagens, e por isso ela é esquecida ao fim de meio minuto.
  */
-let pedido: { quando: number; promessa: Promise<Record<string, Contagem>> } | null = null;
+const pedidos = new Map<string, { quando: number; promessa: Promise<Record<string, Contagem>> }>();
 const VALIDADE = 30_000;
 
-function contagens() {
-  if (pedido && Date.now() - pedido.quando < VALIDADE) return pedido.promessa;
-  const promessa = fetch("/api/categories/contagens", { credentials: "include" })
+function contagens(colecao: string) {
+  const guardado = pedidos.get(colecao);
+  if (guardado && Date.now() - guardado.quando < VALIDADE) return guardado.promessa;
+  const promessa = fetch(`/api/${colecao}/contagens`, { credentials: "include" })
     .then((r): Promise<Resposta> => (r.ok ? (r.json() as Promise<Resposta>) : Promise.resolve({})))
     .then((corpo) => corpo.contagens ?? {})
     .catch(() => ({}) as Record<string, Contagem>);
-  pedido = { quando: Date.now(), promessa };
+  pedidos.set(colecao, { quando: Date.now(), promessa });
   return promessa;
 }
 
-export function ContagemArtigos({ rowData }: DefaultCellComponentProps) {
-  const id = rowData?.id;
+/** A célula, com a coleção a contar e a coleção a filtrar por parâmetro. */
+function Contagem({ id, colecao, campo }: { id: unknown; colecao: string; campo: string }) {
   const [conta, setConta] = useState<Contagem | null | undefined>(undefined);
 
   useEffect(() => {
     let vivo = true;
     void (async () => {
-      const todas = await contagens();
+      const todas = await contagens(colecao);
       if (vivo) setConta(todas[String(id)] ?? null);
     })();
     return () => {
       vivo = false;
     };
-  }, [id]);
+  }, [id, colecao]);
 
   // Enquanto não se sabe, não se diz nada: um zero que depois muda para doze é
   // pior do que uma célula vazia por um instante.
@@ -65,7 +66,7 @@ export function ContagemArtigos({ rowData }: DefaultCellComponentProps) {
 
   return (
     <a
-      href={`/admin/collections/posts?where[or][0][and][0][category][equals]=${encodeURIComponent(String(id))}`}
+      href={`/admin/collections/posts?where[or][0][and][0][${campo}][equals]=${encodeURIComponent(String(id))}`}
       title={rascunhos}
       style={{ fontVariantNumeric: "tabular-nums" }}
     >
@@ -73,6 +74,16 @@ export function ContagemArtigos({ rowData }: DefaultCellComponentProps) {
       {conta.rascunhos ? <span style={{ color: "var(--theme-elevation-500)" }}> · {conta.rascunhos} por publicar</span> : null}
     </a>
   );
+}
+
+/** Na lista das categorias. */
+export function ContagemArtigos({ rowData }: DefaultCellComponentProps) {
+  return <Contagem id={rowData?.id} colecao="categories" campo="category" />;
+}
+
+/** Na lista das etiquetas. */
+export function ContagemEtiqueta({ rowData }: DefaultCellComponentProps) {
+  return <Contagem id={rowData?.id} colecao="tags" campo="tags" />;
 }
 
 export default ContagemArtigos;

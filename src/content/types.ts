@@ -94,6 +94,11 @@ export type Post = {
   slugEn?: string;
   date: string;
   category: Localized;
+  /**
+   * Aquilo de que o artigo fala. A categoria é a prateleira — uma; estas são o
+   * assunto, e são quantas forem precisas.
+   */
+  tags?: { slug: string; name: Localized }[];
   author: Autor;
   readingMinutes: number;
   title: Localized;

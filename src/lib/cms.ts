@@ -138,12 +138,40 @@ export async function getPost(slug: string): Promise<Post | undefined> {
   return findBySlug(await getPosts(), slug);
 }
 
+/**
+ * Artigos parecidos com este.
+ *
+ * A parecença mede-se primeiro pelas etiquetas e só depois pela prateleira:
+ * dois artigos que partilham duas etiquetas são mais parecidos do que dois que
+ * partilham a categoria, porque a categoria é grossa por natureza — arruma
+ * dezenas de textos que só têm em comum o sítio onde estão.
+ *
+ * Quem não tiver etiquetas nenhumas continua a ser servido pela categoria, e
+ * quem não tiver nem uma coisa nem outra vem no fim: o objetivo é encher três
+ * lugares com o melhor que houver, não deixá-los vazios.
+ */
 export async function getRelatedPosts(slug: string, limit = 3): Promise<Post[]> {
   const all = await getPosts();
   const current = findBySlug(all, slug);
-  const sameCategory = all.filter((post) => post !== current && post.category.pt === current?.category.pt);
-  const rest = all.filter((post) => post !== current && post.category.pt !== current?.category.pt);
-  return [...sameCategory, ...rest].slice(0, limit);
+  if (!current) return all.slice(0, limit);
+
+  const minhas = new Set((current.tags ?? []).map((etiqueta) => etiqueta.slug));
+
+  const pontos = (post: Post) => {
+    const partilhadas = (post.tags ?? []).filter((etiqueta) => minhas.has(etiqueta.slug)).length;
+    // Cada etiqueta partilhada pesa mais do que a categoria, e a categoria
+    // continua a valer alguma coisa: é o desempate entre dois sem etiquetas.
+    return partilhadas * 10 + (post.category.pt === current.category.pt ? 1 : 0);
+  };
+
+  return all
+    .filter((post) => post !== current)
+    .map((post, ordem) => ({ post, pontos: pontos(post), ordem }))
+    // A ordem de origem é a da data, do mais recente para o mais antigo: entre
+    // dois igualmente parecidos, ganha o mais novo.
+    .sort((um, outro) => outro.pontos - um.pontos || um.ordem - outro.ordem)
+    .slice(0, limit)
+    .map((item) => item.post);
 }
 
 const localNews = [...news].sort((a, b) => b.date.localeCompare(a.date));

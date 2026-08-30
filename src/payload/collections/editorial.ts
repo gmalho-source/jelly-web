@@ -8,7 +8,7 @@ import {
 } from "../hooks/revalidate";
 import { locale, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
-import { categoryCounts } from "../endpoints/category-counts";
+import { categoryCounts, tagCounts } from "../endpoints/category-counts";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
@@ -141,6 +141,47 @@ export const Categories: CollectionConfig = {
 };
 
 /**
+ * Etiquetas: aquilo de que o artigo fala.
+ *
+ * A categoria é a prateleira — uma, exclusiva, e é ela que aparece na etiqueta
+ * do cartão e no último degrau da migalha de pão. As etiquetas são o assunto, e
+ * um artigo pode ter vários: um texto sobre automação de campanhas está na
+ * prateleira do Marketing e fala de marketing e de tecnologia.
+ *
+ * É esta a resposta a «e quando um artigo é as duas coisas?». A alternativa —
+ * várias categorias por artigo — parte a migalha de pão, que passaria a ter de
+ * escolher uma ao acaso, e transforma a categoria numa etiqueta com mais passos.
+ *
+ * Ainda não têm página própria, e por isso ainda não são links: aparecem no fim
+ * do artigo como contexto, e servem de critério aos artigos relacionados. É
+ * também sobre elas que a pesquisa do blog vai assentar.
+ */
+export const Tags: CollectionConfig = {
+  slug: "tags",
+  labels: { singular: "Etiqueta", plural: "Etiquetas" },
+  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug", "artigos"] },
+  access: { read: () => true },
+  hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
+  endpoints: [{ path: "/contagens", method: "get", handler: tagCounts }],
+  fields: [
+    {
+      type: "row",
+      fields: [
+        { name: "titlePt", label: "Nome (PT)", type: "text", required: true },
+        { name: "titleEn", label: "Nome (EN)", type: "text" },
+      ],
+    },
+    slugField,
+    {
+      name: "artigos",
+      label: "Artigos",
+      type: "ui",
+      admin: { components: { Cell: "@/payload/components/ContagemArtigos#ContagemEtiqueta" } },
+    },
+  ],
+};
+
+/**
  * Quem escreve.
  *
  * Tabela própria, sem relação com os utilizadores do painel — e isso é a
@@ -234,6 +275,17 @@ export const Posts: CollectionConfig = {
       ],
     },
     { name: "category", label: "Categoria", type: "relationship", relationTo: "categories" },
+    {
+      name: "tags",
+      label: "Etiquetas",
+      type: "relationship",
+      relationTo: "tags",
+      hasMany: true,
+      admin: {
+        description:
+          "Aquilo de que o artigo fala. A categoria é uma só — a prateleira; as etiquetas são quantas forem precisas.",
+      },
+    },
     {
       name: "excerpt",
       label: "Resumo",

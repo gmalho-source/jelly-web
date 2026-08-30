@@ -70,6 +70,7 @@ export interface Config {
     pages: Page;
     posts: Post;
     categories: Category;
+    tags: Tag;
     authors: Author;
     projects: Project;
     services: Service;
@@ -97,6 +98,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    tags: TagsSelect<false> | TagsSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
@@ -257,6 +259,10 @@ export interface Post {
   readingMinutes?: number | null;
   category?: (number | null) | Category;
   /**
+   * Aquilo de que o artigo fala. A categoria é uma só — a prateleira; as etiquetas são quantas forem precisas.
+   */
+  tags?: (number | Tag)[] | null;
+  /**
    * A primeira linha do artigo na página e a description que sai no Google. Até 155 caracteres.
    */
   excerpt?: {
@@ -333,6 +339,21 @@ export interface Author {
  * via the `definition` "categories".
  */
 export interface Category {
+  id: number;
+  titlePt: string;
+  titleEn?: string | null;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags".
+ */
+export interface Tag {
   id: number;
   titlePt: string;
   titleEn?: string | null;
@@ -1137,6 +1158,10 @@ export interface PayloadLockedDocument {
         value: number | Category;
       } | null)
     | ({
+        relationTo: 'tags';
+        value: number | Tag;
+      } | null)
+    | ({
         relationTo: 'authors';
         value: number | Author;
       } | null)
@@ -1279,6 +1304,7 @@ export interface PostsSelect<T extends boolean = true> {
   author?: T;
   readingMinutes?: T;
   category?: T;
+  tags?: T;
   excerpt?:
     | T
     | {
@@ -1299,6 +1325,17 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "categories_select".
  */
 export interface CategoriesSelect<T extends boolean = true> {
+  titlePt?: T;
+  titleEn?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tags_select".
+ */
+export interface TagsSelect<T extends boolean = true> {
   titlePt?: T;
   titleEn?: T;
   slug?: T;

@@ -276,9 +276,48 @@ O campo do topo, com o nome do ficheiro, fica de fora de propósito: mudá-lo mo
 o ficheiro no armazenamento e parte os endereços que já andam por aí. O título
 visível de uma imagem é a legenda.
 
-## Quantos artigos usa cada categoria
+## Categoria e etiquetas
 
-Em **Editorial → Categorias**, a lista tem uma coluna **Artigos** com o número de
+**A categoria é a prateleira**: uma por artigo, exclusiva. É ela que aparece na
+etiqueta por cima do título, no cartão e no artigo, e é o último degrau da
+migalha de pão — "Início · Blog · Marketing". Um artigo está numa prateleira e
+numa só.
+
+**As etiquetas são o assunto**: quantas forem precisas. É a resposta a "e quando
+um artigo é marketing e tecnologia ao mesmo tempo?" — prateleira Marketing,
+etiquetas `marketing` e `tecnologia`.
+
+A alternativa, várias categorias por artigo, foi posta de lado por duas razões:
+parte a migalha de pão, que passaria a ter de escolher uma ao acaso, e
+transforma a categoria numa etiqueta com mais passos. Sub-categorias ao estilo
+do WordPress também não: o que as torna úteis lá é a árvore de endereços
+(`/blog/marketing/seo/`) e o menu que a acompanha, e aqui não há nem uma coisa
+nem outra — a categoria não gera endereço nenhum.
+
+No painel, o campo **Etiquetas** está debaixo da Categoria, na ficha do artigo, e
+o **+** cria uma etiqueta nova sem sair de lá. A lista das etiquetas está em
+**Editorial → Etiquetas**, com a mesma coluna de contagens que as categorias
+têm.
+
+No site, as etiquetas aparecem no fim do artigo, debaixo de "Temas". **Não são
+links**, e é de propósito: não há página por etiqueta, e um link que não leva a
+lado nenhum é pior do que nenhum. Passam a ser quando a pesquisa do blog
+existir — é sobre elas que ela vai assentar.
+
+Onde já trabalham hoje: **nos artigos relacionados**. A parecença passou a
+medir-se primeiro pelas etiquetas partilhadas e só depois pela prateleira — cada
+etiqueta em comum pesa dez, a categoria em comum pesa um. Dois artigos que
+partilham duas etiquetas são mais parecidos do que dois que só partilham o sítio
+onde estão arrumados, e uma categoria arruma dezenas de textos.
+
+A base de dados precisa de `scripts/sql/2026-08-30-etiquetas.sql` antes do
+deploy: a tabela `tags`, as duas tabelas de ligação (`posts_rels` e
+`_posts_v_rels` — os artigos têm rascunhos, e um rascunho com etiquetas precisa
+de onde as guardar) e uma coluna em `payload_locked_documents_rels`.
+
+## Quantos artigos usa cada categoria, e cada etiqueta
+
+Em **Editorial → Categorias** e em **Editorial → Etiquetas**, a lista tem uma coluna **Artigos** com o número de
 artigos de cada categoria. O número é um link: leva à lista dos artigos já
 filtrada por essa categoria, com o filtro à vista e editável — não é uma pesquisa
 escondida no endereço. Quando há rascunhos, a coluna di-lo ao lado («4 · 2 por
