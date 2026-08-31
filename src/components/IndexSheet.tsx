@@ -4,7 +4,7 @@ import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangePill } from "./ChangePill";
 import { JellyWordmark } from "./JellyLogo";
 
@@ -88,14 +88,32 @@ export function IndexSheet({
   const [cursor, setCursor] = useState(0);
   const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const lista = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const pathname = usePathname();
   const open = openedOn === pathname;
 
+  /**
+   * Onde a janela abre em repouso.
+   *
+   * No primeiro item da lista está um serviço, que é uma cor plana; no primeiro
+   * com imagem está o projeto mais recente. A folha abre com uma fotografia e
+   * não com um rectângulo de cor. Calcula-se dos mosaicos e não dos resultados:
+   * assim não depende da procura, e pode ser usado onde a procura muda — que é
+   * o sítio certo para mexer no cursor. Corrigi-lo num efeito depois do render
+   * provoca renders em cascata.
+   */
+  const primeiraImagem = useMemo(() => {
+    const visiveis = tiles.filter((tile) => !tile.hidden);
+    const encontrado = visiveis.findIndex((tile) => tile.image);
+    return encontrado === -1 ? 0 : encontrado;
+  }, [tiles]);
+
   const openSheet = useCallback(() => {
     setOpenedOn(pathname);
+    setCursor(primeiraImagem);
     requestAnimationFrame(() => input.current?.focus());
-  }, [pathname]);
+  }, [pathname, primeiraImagem]);
 
   const results = useMemo(() => {
     const term = normalize(query.trim());
@@ -130,12 +148,42 @@ export function IndexSheet({
     ? ((cursor % results.length) + results.length) % results.length
     : 0;
 
+  /**
+   * A instrução da procura, sem os exemplos.
+   *
+   * Sai da própria frase — o que vem antes do travessão — em vez de ser uma
+   * tradução nova a manter em dois ficheiros. Se um dia a frase deixar de ter
+   * travessão, fica a frase inteira, que é o comportamento certo.
+   */
+  const convite = copy.placeholder.split("—")[0]!.trim() || copy.placeholder;
+
+  /** O que a janela mostra: o item onde o cursor está. */
+  const destaque = results.length ? results[active] : undefined;
+
   function close() {
     setOpenedOn(null);
     setQuery("");
+    // Zero, e não a primeira imagem: quem decide onde a folha abre é o
+    // `openSheet`. Pôr aqui um valor reativo só tornava esta função reativa.
     setCursor(0);
     trigger.current?.focus({ preventScroll: true });
   }
+
+  /*
+   * As setas podem levar o cursor para fora da parte visível da lista — no
+   * desktop os dezasseis destinos cabem no ecrã e não acontece, mas num
+   * telemóvel a lista rola, e navegar às cegas não é navegar.
+   *
+   * `block: "nearest"` é o que faz isto não ser incomodativo: uma linha que já
+   * está inteira à vista não provoca deslocação nenhuma. Por isso passar o rato
+   * — que também move o cursor — nunca puxa a lista debaixo do ponteiro.
+   */
+  useEffect(() => {
+    if (!open) return;
+    lista.current
+      ?.querySelector<HTMLElement>(`[data-indice="${active}"]`)
+      ?.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
 
   // Com a folha aberta, o fundo não deve rolar por trás dela.
   useEffect(() => {
@@ -166,12 +214,14 @@ export function IndexSheet({
       }
 
       if (!typing) return;
-      const columns = window.innerWidth >= 1024 ? 4 : 2;
+      // Uma lista, e não uma grelha: as quatro setas andam de um em um. Antes
+      // as verticais saltavam o número de colunas, que era o certo quando isto
+      // eram quadrados lado a lado e passou a ser um salto sem razão.
       const moves: Record<string, number> = {
         ArrowRight: 1,
         ArrowLeft: -1,
-        ArrowDown: columns,
-        ArrowUp: -columns,
+        ArrowDown: 1,
+        ArrowUp: -1,
       };
       if (event.key in moves) {
         event.preventDefault();
@@ -264,14 +314,41 @@ export function IndexSheet({
             <span aria-hidden="true" className="text-red">
               /
             </span>
-            <input
-              ref={input}
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={copy.placeholder}
-              aria-label={copy.filterLabel}
-              className="min-w-0 flex-1 bg-transparent py-1 font-display text-xl text-paper outline-none placeholder:font-sans placeholder:text-base placeholder:font-light placeholder:text-paper/35 sm:text-2xl"
-            />
+            {/*
+              O convite da procura é um rótulo por cima do campo, e não o
+              `placeholder` do campo.
+
+              A frase é «escreva para encontrar — cliente, serviço, artigo»:
+              num telemóvel de 390px não cabe ao lado do «English» e o browser
+              cortava-a a meio de uma palavra, encostada a ele, com ar de coisa
+              partida. Um `placeholder` não se deixa truncar com reticências
+              nem encurtar por media query — mas um elemento deixa-se. No
+              telemóvel fica a instrução; no desktop entram também os exemplos,
+              que são o que diz que isto procura projetos e artigos e não só
+              páginas.
+            */}
+            <span className="relative min-w-0 flex-1">
+              <input
+                ref={input}
+                value={query}
+                onChange={(event) => {
+                  const valor = event.target.value;
+                  setQuery(valor);
+                  setCursor(valor.trim() ? 0 : primeiraImagem);
+                }}
+                aria-label={copy.filterLabel}
+                className="w-full bg-transparent py-1 font-display text-xl text-paper outline-none sm:text-2xl"
+              />
+              {!query ? (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 left-0 flex items-center truncate text-base font-light text-paper/35"
+                >
+                  <span className="truncate sm:hidden">{convite}</span>
+                  <span className="hidden truncate sm:inline">{copy.placeholder}</span>
+                </span>
+              ) : null}
+            </span>
             <span className="hidden text-xs text-paper/40 sm:block">
               {results.length} {copy.of} {tiles.length}
             </span>
@@ -311,113 +388,127 @@ export function IndexSheet({
           </div>
 
           {/*
-            `overflow-x-hidden` não é decoração: uma caixa com `overflow-y: auto`
-            fica com `overflow-x: auto` também, e sete pixels a mais numa
-            etiqueta comprida davam à folha uma gaveta lateral. No telefone,
-            isso sentia-se como o menu a dançar para os lados a cada gesto.
+            Duas partes: a lista do que há, e uma janela que mostra o que se
+            está a apontar.
+
+            A folha era uma grelha de dezasseis quadrados de 360×360. Media
+            1,97 ecrãs de altura num portátil e 2,26 no telemóvel — nunca se via
+            o índice inteiro — e gastava 130 mil píxeis para dizer «Blog».
+            Metade dos quadrados eram `slate` sobre um fundo quase igual e liam-
+            se como buracos; a outra metade era chartreuse, coral e vermelho e
+            gritava. O resultado era um tabuleiro irregular de manchas, e é isso
+            que se lia como confusão.
+
+            A lista resolve a leitura: dezasseis destinos cabem num ecrã, sem
+            rolar, e a cor deixa de rodar por índice. A janela guarda a imagem,
+            que numa agência visual é o argumento — mas **uma** de cada vez, a do
+            que se aponta, em vez de dezasseis a competir.
+
+            No telemóvel não há rato, e uma janela que segue o ponteiro não faz
+            sentido: sobe para cima da lista, fica com altura fixa e mostra o
+            projeto mais recente até alguém escrever. A escrever passa a mostrar
+            o primeiro resultado, que é quando ela é mais útil num ecrã pequeno.
+
+            `min-h-0` nas duas colunas: sem isso um filho com `overflow-y-auto`
+            dentro de um flex herda `min-height:auto`, recusa-se a encolher, e a
+            lista empurra a folha para fora do ecrã em vez de rolar dentro dela.
           */}
-          {/*
-            `grid-auto-rows: min-content` é o que faz a linha ter a altura do
-            mosaico. Com linhas `auto`, e o índice a ter altura definida (ocupa o
-            ecrã), o browser reparte a altura disponível pelas linhas: medi 162px
-            onde tinham de estar 360, e o mosaico transbordava. `min-content`
-            nunca estica — e os títulos das bandas continuam a medir-se pelo
-            texto, 54px, porque a altura deles é o texto deles.
+          <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+            {/* A janela. `aria-hidden` e fora da ordem de tabulação: é a mesma
+                ligação que já está na lista, e um leitor de ecrã não tem de a
+                ouvir duas vezes. Quem tem dedo pode tocá-la. */}
+            {destaque ? (
+            <Link
+              href={destaque.href}
+              onClick={() => setOpenedOn(null)}
+              aria-hidden="true"
+              tabIndex={-1}
+              className="relative order-first h-[26svh] shrink-0 overflow-hidden bg-slate ecra-curto:hidden lg:order-last lg:h-auto lg:w-[46%]"
+            >
+              {destaque.image ? (
+                <Image
+                  key={destaque.image}
+                  src={destaque.image}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 46vw"
+                  className="object-cover"
+                />
+              ) : (
+                <span className={`absolute inset-0 ${destaque.tone ?? "bg-slate"}`} />
+              )}
 
-            `overflow-x-hidden` também não é decoração: uma caixa com
-            `overflow-y: auto` fica com `overflow-x: auto` de tabela, e sete
-            pixels a mais numa etiqueta comprida davam à folha uma gaveta
-            lateral. No telefone sentia-se como o menu a dançar para os lados.
-          */}
-          <div className="grid flex-1 grid-cols-2 content-start gap-px overflow-y-auto overflow-x-hidden bg-paper/10 [grid-auto-rows:min-content] lg:grid-cols-4">
-            {bands.map((band) => (
-              <Fragment key={band.name ?? "tudo"}>
-                {band.name ? (
-                  <p className="col-span-full bg-ink px-5 pb-2 pt-7 text-[11px] font-semibold uppercase tracking-[0.14em] text-paper/35 sm:px-8">
-                    {band.name}
-                  </p>
-                ) : null}
-                {band.itens.map(({ tile, index }) => (
-                  <Link
-                    key={tile.href + tile.label}
-                    href={tile.href}
-                    onClick={() => setOpenedOn(null)}
-                    onMouseEnter={() => setCursor(index)}
-                    className="group relative block overflow-hidden bg-ink"
-                  >
-                    {/*
-                      A altura de um mosaico é a largura de uma coluna — duas
-                      colunas no telefone, quatro no desktop — e está escrita
-                      assim, em `vw`, e não com `aspect-square`.
-                      Experimentei-o das duas maneiras: a proporção não resolve
-                      aqui. Uma coluna `fr` só tem largura depois de a linha
-                      estar medida, e para medir a linha o browser usa a largura
-                      intrínseca do conteúdo, que é zero quando tudo dentro do
-                      mosaico está em posição absoluta. Resultado: o quadrado
-                      ficava com 162px de altura em vez de 359, e os mosaicos
-                      passavam por cima dos de baixo a esconder-lhes o nome.
-                      Uma medida definida não tem esse problema — e não afecta os
-                      títulos das bandas, que continuam a medir-se pelo texto.
-                    */}
-                    <span aria-hidden="true" className="block h-[50vw] lg:h-[25vw]" />
+              {/* O nome precisa de chão: um véu em baixo, que numa fotografia se
+                  lê como sombra e numa cor plana como faixa. */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink via-ink/60 to-transparent"
+              />
+              <span className="absolute inset-x-0 bottom-0 flex flex-col gap-1.5 px-5 pb-5 sm:px-8 sm:pb-8">
+                <span className="text-[10px] uppercase tracking-[0.12em] text-paper/55">
+                  {destaque.kind}
+                </span>
+                <span className="font-display text-2xl leading-[1.06] text-paper lg:text-[clamp(28px,3vw,44px)]">
+                  {destaque.label}
+                </span>
+              </span>
+            </Link>
+            ) : null}
 
-                    {tile.image ? (
-                      <Image
-                        src={tile.image}
-                        alt=""
-                        width={640}
-                        height={640}
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="mosaico-zoom absolute inset-0 h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className={`absolute inset-0 ${tile.tone ?? "bg-slate"}`} />
-                    )}
+            {/* Duas colunas no desktop, e não porque duas colunas sejam
+                bonitas: dezasseis destinos em coluna única dão 904px, e num
+                portátil de 800px isso volta a ser uma lista que rola. Em duas,
+                a mais alta fica por 452px e o índice cabe mesmo no ecrã.
 
-                    {/* O nome vive sobre o quadrado, e por isso precisa de chão:
-                        um véu de tinta em baixo, que numa cor plana se lê como
-                        faixa e numa fotografia como sombra. O `z` é explícito
-                        porque a imagem, promovida ao seu próprio plano pelo
-                        `will-change`, passava à frente de quem vem depois. */}
-                    <span
-                      aria-hidden="true"
-                      className={`absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t to-transparent ${
-                        tile.image
-                          ? "h-1/2 from-ink via-ink/65"
-                          : // Sobre uma cor da marca o véu é mais curto e mais
-                            // leve: o suficiente para o nome se ler, sem
-                            // apagar o vermelho ou o verde que ali estão a
-                            // fazer o seu trabalho.
-                            "h-2/5 from-ink/85 via-ink/45"
+                `column-count` e não uma grelha: uma grelha põe o segundo item
+                à direita do primeiro, e a leitura passa a ser aos ziguezagues.
+                Com colunas de texto, cada banda cai inteira numa coluna
+                (`break-inside-avoid`) e lê-se de cima para baixo, como uma
+                lista. */}
+            <div
+              ref={lista}
+              className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden lg:[column-count:2] lg:[column-gap:2rem]"
+            >
+              {bands.map((band) => (
+                <div key={band.name ?? "tudo"} className="break-inside-avoid">
+                  {band.name ? (
+                    <p className="px-5 pb-1 pt-5 text-[11px] font-semibold uppercase tracking-[0.14em] text-paper/35 sm:px-8">
+                      {band.name}
+                    </p>
+                  ) : null}
+                  {band.itens.map(({ tile, index }) => (
+                    <Link
+                      key={tile.href + tile.label}
+                      href={tile.href}
+                      onClick={() => setOpenedOn(null)}
+                      data-indice={index}
+                      onMouseEnter={() => setCursor(index)}
+                      onFocus={() => setCursor(index)}
+                      className={`flex items-baseline justify-between gap-4 border-b border-paper/10 px-5 py-2.5 transition-colors duration-150 sm:px-8 ${
+                        index === active ? "bg-paper/[0.07] text-paper" : "text-paper/70 hover:text-paper"
                       }`}
-                    />
-
-                    <span className="absolute inset-x-0 bottom-0 z-20 flex flex-col gap-1 px-4 pb-4">
-                      <span className="text-[10px] uppercase tracking-[0.12em] text-paper/50">
+                    >
+                      <span className="font-display text-[19px] leading-[1.4]">{tile.label}</span>
+                      <span
+                        className={`shrink-0 text-[10px] uppercase tracking-[0.12em] ${
+                          index === active ? "text-red" : "text-paper/30"
+                        }`}
+                      >
                         {tile.kind}
                       </span>
-                      <span className="font-display text-lg leading-tight text-paper">
-                        {tile.label}
-                      </span>
-                    </span>
-
-                    {/* Onde está o cursor do teclado: um contorno, e não um
-                        fundo — o fundo do mosaico é a imagem. */}
-                    {index === active ? (
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 z-30 ring-2 ring-inset ring-red"
-                      />
-                    ) : null}
-                  </Link>
-                ))}
-              </Fragment>
-            ))}
-            {!results.length ? (
-              <p className="col-span-full bg-ink px-5 py-16 text-center text-paper/50">
-                {copy.empty}
-              </p>
-            ) : null}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+              {/* `column-span:all` para a frase não se partir ao meio entre as
+                  duas colunas do desktop — «Nada com esse nome. Apague» de um
+                  lado e «uma letra.» do outro, que foi o que aconteceu. */}
+              {!results.length ? (
+                <p className="px-5 py-16 text-center text-paper/50 [column-span:all] sm:px-8">
+                  {copy.empty}
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
       ) : null}

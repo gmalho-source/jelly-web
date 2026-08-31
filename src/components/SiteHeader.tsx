@@ -8,9 +8,10 @@ import { IndexSheet, type SheetTile } from "./IndexSheet";
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
 
 /**
- * Não há menu: há um índice em folha de contacto. Este componente monta os
- * mosaicos no servidor — páginas, serviços, projetos com capa e artigos — e a
- * interação vive no IndexSheet.
+ * Não há menu: há um índice. Este componente monta os destinos no servidor —
+ * páginas, serviços, projetos com capa e artigos — e a interação vive no
+ * IndexSheet: uma lista à esquerda e uma janela à direita que mostra o que se
+ * está a apontar.
  */
 export async function SiteHeader({ locale }: { locale: Locale }) {
   const nav = await getTranslations({ locale, namespace: "nav" });
@@ -23,10 +24,10 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
 
   /*
    * A folha em três bandas, e por esta ordem: o que a Jelly faz, o que a Jelly
-   * fez, e a casa. Antes eram trinta e cinco mosaicos numa lista só — cinco
+   * fez, e a casa. Antes eram trinta e cinco entradas numa lista só — cinco
    * serviços, doze projetos, doze artigos e sete páginas todos ao mesmo nível —
-   * e uma lista dessas não é um índice, é um monte. Agora são quinze, e cada um
-   * está debaixo de um título que diz o que é.
+   * e uma lista dessas não é um índice, é um monte. Agora são dezasseis, e cada
+   * uma está debaixo de um título que diz o que é.
    *
    * O que sai da folha não sai do índice: os restantes projetos e os artigos
    * ficam a ser procuráveis (`hidden`), e aparecem à primeira letra escrita. É
@@ -47,8 +48,9 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     })),
 
     // ── O que fizemos: três projetos e a porta para o arquivo ──────────────
-    // Três, e não quatro: no desktop a grelha tem quatro colunas, e o quarto
-    // lugar é do link para todos. Uma linha, sem sobras.
+    // Três, e o quarto lugar é do link para todos. Três chegam para dizer que
+    // há trabalho e dar uma imagem à janela; os outros noventa continuam a
+    // aparecer à primeira letra escrita.
     ...withCover.slice(0, 3).map((project) => ({
       group: trabalho,
       label: project.client,

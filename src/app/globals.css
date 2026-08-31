@@ -1169,6 +1169,13 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
    se vê aos quadrados. */
 @custom-variant sem-rato (@media (hover: none));
 
+/* Ecrã estreito e baixo — um telefone pequeno, ou um grande deitado.
+   O índice tem dezasseis destinos, e dezasseis linhas tocáveis são 768px:
+   num ecrã de 640 não cabem com uma imagem por cima. A imagem é o luxo, a
+   lista é o trabalho — por isso é a imagem que cede. Não vale para um ecrã
+   largo e baixo, onde a janela está ao lado e não rouba altura nenhuma. */
+@custom-variant ecra-curto (@media (max-width: 1023px) and (max-height: 700px));
+
 /* Um clique durante a passagem não se perde: a camada da transição deixa passar
    o rato para a página que está por baixo. */
 ::view-transition {
