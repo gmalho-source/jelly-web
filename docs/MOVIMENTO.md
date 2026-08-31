@@ -101,9 +101,23 @@ concluir que estava tudo bem.
 Antes de medir uma página que tem conteúdo no painel, pôr esse conteúdo na base
 local. Se não der, dizer que a medição foi feita na versão de recurso.
 
+## Um padrão não se muda de superfície sem o ver
+
+A grelha de fios que as áreas de um serviço usam — `gap-px` sobre `bg-line`,
+com cada célula a repor o fundo — é um padrão de papel. Passada tal e qual para
+uma secção em tinta, os fios ou desaparecem ou fazem uma gaiola à volta do
+texto, e as células ficam desalinhadas quando um título ocupa duas linhas e o
+outro uma. Sobre tinta, o que separa é o espaço e o fio vermelho que se desenha.
+
+O mesmo vale para o `card`: é branco, e sobre tinta desenha um retângulo claro
+no meio da secção escura. Uma ligação em fundo escuro é uma linha que se acende.
+
+E `type-outline-ink` só define a cor do contorno — sem `type-outline` ao lado
+não faz nada, e os números saem sólidos. Aconteceu, e só se viu na captura.
+
 ## O que ainda não está feito
 
-O vocabulário está aplicado à Imunidade Algorítmica e às cinco páginas de
-serviço. Os projetos, o Sobre e a homepage continuam parados. Quando lá se
-chegar, é para reutilizar estas classes e não inventar outras — uma casa com
-dois sistemas de movimento lê-se como duas casas.
+O vocabulário está aplicado à Imunidade Algorítmica, às cinco páginas de serviço
+e à pilar da pré-qualificação de leads. Os projetos, o Sobre e a homepage
+continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
+inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.

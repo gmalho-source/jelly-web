@@ -23,6 +23,14 @@ export const routing = defineRouting({
     "/newsroom": { pt: "/newsroom", en: "/newsroom" },
     "/contactos": { pt: "/contactos", en: "/contact" },
     "/imunidade-algoritmica": { pt: "/imunidade-algoritmica", en: "/algorithmic-immunity" },
+    // Página pilar: vive debaixo da Inteligência Artificial e chega-se lá por
+    // uma chamada nessa página. O endereço é de raiz, como o da Imunidade — as
+    // duas páginas longas desta casa vivem à mesma altura, e a hierarquia
+    // dizem-na as migalhas e não o caminho.
+    "/pre-qualificacao-leads-agentes-ia": {
+      pt: "/pre-qualificacao-leads-agentes-ia",
+      en: "/ai-lead-pre-qualification",
+    },
     "/equipa": { pt: "/equipa", en: "/team" },
     "/equipa/[slug]": { pt: "/equipa/[slug]", en: "/team/[slug]" },
     "/recrutamento": { pt: "/recrutamento", en: "/careers" },

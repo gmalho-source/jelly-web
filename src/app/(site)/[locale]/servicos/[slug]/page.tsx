@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ServiceHero } from "@/components/ServiceHero";
+import { pilaresDoServico } from "@/content/pilares";
 import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -46,6 +47,10 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   const t = await getTranslations("services");
   const [cases, all] = await Promise.all([getProjectsBySlugs(service.caseSlugs), getServices()]);
   const others = all.filter((item) => item.slug !== service.slug);
+  // As páginas pilar deste serviço: páginas longas sobre um assunto que vive
+  // dentro dele. Não estão no menu nem na lista de serviços — é por aqui que se
+  // chega a elas.
+  const pilares = pilaresDoServico(service.slug);
   const accent = service.accent === "lavender";
 
   /*
@@ -149,6 +154,35 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               </div>
             ))}
           </div>
+        </section>
+      ) : null}
+
+      {/* As páginas pilar deste serviço.
+
+          Fica a seguir às áreas de propósito: as áreas dizem onde se pode
+          ajudar, e uma pilar é uma dessas áreas com o texto todo, as perguntas
+          todas e os números. É a única porta para ela — uma pilar não entra no
+          menu, senão o menu passa a ser um índice. */}
+      {pilares.length ? (
+        <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
+          {pilares.map((pilar) => (
+            <Link
+              key={pilar.rota}
+              href={pilar.rota}
+              className="entra card group flex flex-col gap-6 border-l-2 border-l-red p-7 sm:p-9 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
+            >
+              <div>
+                <span className="eyebrow text-red">{pilar.eyebrow[locale]}</span>
+                <h2 className="mt-4 max-w-[26ch] font-display text-[clamp(24px,3.2vw,42px)] leading-[1.06] tracking-[-0.02em] transition-colors duration-200 group-hover:text-red">
+                  {pilar.titulo[locale]}
+                </h2>
+                <p className="mt-4 max-w-[48ch] text-md text-fg-soft">{pilar.resumo[locale]}</p>
+              </div>
+              <span className="btn-pill btn-pill-ink shrink-0">
+                {pilar.cta[locale]} <span aria-hidden="true">→</span>
+              </span>
+            </Link>
+          ))}
         </section>
       ) : null}
 

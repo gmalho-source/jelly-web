@@ -26,7 +26,10 @@ const SERVICES = {
   "/servicos/audiovisuais-producao-video/": "/servicos/marketing",
   "/servicos/producoes-3d/": "/servicos/marketing",
   "/inteligencia-artificial/": "/servicos/inteligencia-artificial",
-  "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia/": "/servicos/inteligencia-artificial",
+  // A pilar da pré-qualificação existe agora no site novo: o endereço antigo
+  // vai para ela e não para o serviço, senão quem chega por uma pesquisa perde
+  // a página que procurava.
+  "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia/": "/pre-qualificacao-leads-agentes-ia",
   "/servicos/web-design-criacao-de-sites/": "/servicos/tecnologia",
   "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia",
   "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia",
