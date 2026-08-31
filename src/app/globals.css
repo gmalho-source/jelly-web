@@ -106,6 +106,18 @@
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
+
+  /* Um botão que se pode carregar mostra que se pode carregar.
+     O preflight do Tailwind 4 deixou de dar `cursor: pointer` aos botões — a
+     seguir ao que o browser faz de origem — e os quinze botões deste site
+     ficaram todos com a seta de repouso: a cápsula do índice, a cruz que fecha
+     a folha, os «enviar» dos formulários. Ao lado, as ligações mostravam a mão,
+     e a diferença lê-se como se o botão não fizesse nada.
+     Um botão desativado fica de fora: aí a seta é a verdade. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
   body {
     /* O documento é escuro por omissão: as secções claras pedem-se com
        surface-paper. Sem isto, uma página sem superfície ficava com texto
