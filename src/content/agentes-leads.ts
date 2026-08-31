@@ -58,7 +58,6 @@ export const agentesLeads = {
       pt: "São 22h47. Um lead escreve: «Boa noite, queria mais informações.» A maioria das empresas responde na manhã seguinte. Ou nunca. O concorrente que respondeu em 30 segundos ficou com o cliente.",
       en: "It is 22:47. A lead writes: “Good evening, I would like more information.” Most companies answer the next morning. Or never. The competitor who answered in 30 seconds got the client.",
     },
-    imagem: { src: "/media/agentes-especialista.webp" },
   },
 
   numeros: [

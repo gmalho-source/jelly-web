@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import type React from "react";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Odometer } from "@/components/Odometer";
 import { ServiceHero } from "@/components/ServiceHero";
 import { agentesLeads } from "@/content/agentes-leads";
 import { getService } from "@/lib/cms";
@@ -127,37 +129,27 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
             ]}
           />
 
-          <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,34%)] lg:gap-16">
-            <div>
-              {/* Sem `entra`: com um topo de 78svh esta secção pode já estar à
-                  vista quando a página abre num portátil, e um título a 34% de
-                  opacidade à chegada não é um efeito, é um defeito. */}
-              <h2 className="text-chapter max-w-[24ch]">{agentesLeads.abertura.titulo[locale]}</h2>
+          {/* Duas colunas de texto e nenhuma imagem.
 
-              <p className="entra mt-10 max-w-[52ch] border-l-2 border-red pl-5 font-display text-[clamp(19px,2.2vw,28px)] leading-[1.24] text-ink">
+              Havia aqui um retrato de banco de imagens — o mesmo que o site
+              antigo usa — e não pertencia: um rosto sorridente sem nome não
+              ilustra «são 22h47 e ninguém respondeu», e ficava a ocupar um
+              terço da largura sem dizer nada. O que abre esta página é o
+              argumento, e o argumento tem duas partes: a virada, e a cena que a
+              prova. Uma de cada lado, à mesma altura. */}
+          <div className="mt-12 grid gap-10 border-t border-line pt-12 lg:grid-cols-[minmax(0,46%)_minmax(0,1fr)] lg:gap-20">
+            {/* Sem `entra`: com um topo de 78svh isto pode já estar à vista
+                quando a página abre num portátil, e um título a 34% de opacidade
+                à chegada não é um efeito, é um defeito. */}
+            <h2 className="max-w-[16ch] font-display text-[clamp(30px,4.2vw,60px)] leading-[0.98] tracking-[-0.03em] text-ink">
+              {agentesLeads.abertura.titulo[locale]}
+            </h2>
+
+            <div>
+              <span aria-hidden="true" className="block h-px w-full max-w-[72px] bg-red" />
+              <p className="reading mt-6 max-w-[46ch] font-display text-[clamp(20px,2.1vw,29px)] leading-[1.26] text-ink">
                 {agentesLeads.abertura.cena[locale]}
               </p>
-            </div>
-
-            {/* Decorativa, como no site antigo: um rosto que não é ninguém em
-                particular não leva descrição a dizer que é.
-
-                Sem moldura e sem cantos: o ficheiro é um recorte com
-                transparência, e um retângulo arredondado por cima cortava-lhe o
-                corpo a régua e dava-lhe o aspeto de um autocolante. Assente no
-                papel, lê-se pelo que é. */}
-            <div className="entra-tarde">
-              <Image
-                src={agentesLeads.abertura.imagem.src}
-                alt=""
-                width={1080}
-                height={1080}
-                sizes="(max-width: 1024px) 60vw, 380px"
-                /* O recorte vem com o corpo cortado a direito no fundo do
-                   próprio ficheiro. Uma máscara esbate os últimos 14% e o corte
-                   deixa de se ler como um golpe. */
-                className="mx-auto w-full max-w-[380px] object-contain [mask-image:linear-gradient(to_bottom,#000_86%,transparent)]"
-              />
             </div>
           </div>
         </div>
@@ -168,11 +160,28 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
           — fazem três coisas a acontecer ao mesmo tempo com mais código. */}
       <section className="surface-ink">
         <div className="mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
-          <div className="entra grid gap-10 border-t border-line pt-10 sm:grid-cols-3 sm:gap-8">
-            {agentesLeads.numeros.map((numero) => (
-              <div key={numero.valor}>
-                <p className="flex items-baseline gap-1 font-display leading-[0.86] tracking-[-0.03em] text-red">
-                  <span className="text-[clamp(56px,7vw,104px)]">{numero.valor}</span>
+          {/* Os números rodam até ao seu valor, como um contador mecânico. É o
+              `Odometer` da homepage e não um contador novo — a casa já tem este
+              gesto, e dois contadores diferentes leem-se como dois sites.
+
+              `--vez` escalona-os da esquerda para a direita: sem isso os três
+              param ao mesmo tempo e o efeito lê-se como um piscar. A unidade
+              (x, %, h) fica de fora do odómetro: não é um algarismo e não roda.
+
+              Sem `animation-timeline` — o Firefox, hoje — ou a quem pediu menos
+              movimento, a fita fica parada no dígito certo. Perde-se a rotação,
+              não o número. */}
+          <div className="grid gap-10 border-t border-line pt-10 sm:grid-cols-3 sm:gap-8">
+            {agentesLeads.numeros.map((numero, indice) => (
+              <div
+                key={numero.valor}
+                className="entra"
+                style={{ "--vez": indice } as React.CSSProperties}
+              >
+                <p className="flex items-baseline gap-1 font-display leading-none tracking-[-0.03em] tabular-nums text-red">
+                  <span className="text-[clamp(56px,7vw,104px)]">
+                    <Odometer value={numero.valor} />
+                  </span>
                   <span className="text-[clamp(24px,3vw,44px)]">{numero.unidade}</span>
                 </p>
                 <p className="mt-4 max-w-[30ch] text-md text-fg-soft">{numero.texto[locale]}</p>
