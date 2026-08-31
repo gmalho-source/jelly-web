@@ -326,9 +326,41 @@ o endereço é ignorado.
 **Não há compressão.** O servidor nunca vê os bytes de um vídeo — é essa a
 razão de ele poder ter 34 MB — e a Vercel não tem ffmpeg. Encolher é trabalho de
 quem carrega, **antes** de carregar: `npm run video:prep` encolhe um MP4 sem se
-notar (o fundo da Imunidade foi de 6,1 MB para 407 KB). A ficha do vídeo mostra o
-peso por baixo do ficheiro e fica vermelha acima dos 10 MB, com o comando à
-frente. Encolhe-se e volta a carregar-se por cima.
+notar (o fundo da Imunidade foi de 6,1 MB para 407 KB). Encolhe-se e volta a
+carregar-se por cima.
+
+### O codec importa mais do que o peso
+
+O spot do Slide & Splash foi carregado à mão, sem passar pelo script, e chegou em
+**HEVC (H.265)**. O Safari toca-o; o Chrome e o Firefox não descodificam HEVC em
+MP4. Na página o vídeo aparecia parado ou aos arrancos, e o único aviso que o
+painel dava era «43,8 MB» — que é verdade e não é o problema.
+
+Por isso a ficha de um vídeo lê agora o **próprio ficheiro**. Um MP4 declara os
+seus codecs dentro do `moov`, e num ficheiro bem feito o `moov` está à cabeça:
+pede-se o primeiro megabyte ao Blob — que aceita pedidos por intervalo e responde
+a qualquer origem — e leem-se as quatro letras. O mesmo megabyte diz se o `moov`
+vem antes do `mdat`, que é o que deixa um vídeo começar a tocar antes de estar
+todo descarregado.
+
+Três réguas, por baixo do ficheiro: **10 MB** de peso, **H.264** de codec, e o
+índice à cabeça. HEVC dá vermelho, e não amarelo, porque não é uma questão de
+grau: o vídeo não toca.
+
+O `video:prep` resolve isto de graça, seja qual for a entrada — a saída é sempre
+H.264 com `faststart`. Tem dois modos:
+
+```
+npm run video:prep -- fundo.mp4 --nome=ia-topo            # fundo: 1600 px, sem som, CRF 30
+npm run video:prep -- spot.mov  --nome=slide-spot --filme  # filme: 1920 px, com som, CRF 25
+```
+
+O `--filme` existe porque o script tirava o som a tudo com `-an`, o que está bem
+num fundo em ciclo e está errado num spot de televisão.
+
+Números medidos no spot: 43,8 MB de HEVC a 18,4 Mbps → **18,0 MB** de H.264 a
+7,5 Mbps, SSIM 0,972. A 100%, num fotograma de água e respingos, não há
+diferença visível. CRF 27 dá 14,0 MB com SSIM 0,965, se for preciso mais leve.
 
 **O vídeo de um caso tem dois modos**, no bloco da história:
 
@@ -338,6 +370,11 @@ frente. Encolhe-se e volta a carregar-se por cima.
   se senta a ver. Não repete: um filme acaba. E não começa sozinho — um vídeo com
   som que arranca à chegada é a coisa mais próxima de gritar com quem entra, e os
   browsers bloqueiam-no de qualquer maneira.
+
+Por omissão um bloco fica em **Ambiente** — incluindo os blocos criados antes de
+o campo existir, que herdaram o valor por omissão da coluna. Um vídeo antigo que
+devia ter controlos aparece sem eles até alguém abrir o bloco e escolher
+**Filme** em «Como se vê».
 
 **Blocos lado a lado.** O bloco **Colunas** põe duas a quatro colunas na
 história, e dentro de cada uma os blocos do costume — texto, imagem, vídeo,
