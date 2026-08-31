@@ -219,9 +219,14 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
               ))}
             </div>
             <hr className="my-14 border-line" />
-            {/* A tese ganha o corpo que merece: é a frase da página, e a 34ch
-                num ecrã largo ficava do tamanho de uma legenda. */}
-            <blockquote className="editorial max-w-[26ch] font-display text-[clamp(26px,4vw,56px)] leading-[1.06] tracking-[-0.025em] text-ink">
+            {/* A tese ocupa a largura toda da coluna de texto.
+
+                Estava a 34ch, e depois a 26ch: em qualquer dos casos, num ecrã
+                largo, ficava uma coluna estreita encostada à esquerda com meia
+                página vazia ao lado e oito linhas para ler. Sem limite de
+                medida, a mesma frase cabe em quatro linhas e ocupa o bloco
+                inteiro — que é o que uma frase de tese pede. */}
+            <blockquote className="editorial font-display text-[clamp(26px,3.6vw,54px)] leading-[1.06] tracking-[-0.025em] text-ink">
               {agentesLeads.definicao.tese[locale]}
             </blockquote>
           </div>
