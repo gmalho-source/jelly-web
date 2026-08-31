@@ -191,21 +191,37 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
         </div>
       </section>
 
-      {/* A definição, e a frase que é a tese. Em papel, medida larga, sem nada a
-          competir com ela. */}
+      {/* A definição, e a frase que é a tese.
+
+          Os dois parágrafos ficam lado a lado, e não é para encher a largura: é
+          que fazem par — o primeiro diz o que isto é, o segundo diz o que não
+          é, e começa mesmo por «convém ser claro sobre o que isto não é». Em
+          coluna única o contraste dissolve-se em texto corrido e sobra meia
+          página em branco à direita; lado a lado, lê-se de uma vez.
+
+          Não são colunas de CSS (`columns-2`): isso corta um parágrafo ao meio e
+          obriga o olho a subir outra vez. São dois parágrafos, cada um inteiro
+          na sua coluna, com o segundo marcado por um fio vermelho — a
+          desigualdade de altura entre eles passa a ser de propósito. */}
       <section className="surface-paper">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
-          <h2 className="entra text-chapter max-w-[28ch]">{agentesLeads.definicao.titulo[locale]}</h2>
-          <div className="mt-8 statement-in">
-            <div>
-              {agentesLeads.definicao.paragrafos.map((paragrafo) => (
-                <p key={paragrafo.pt.slice(0, 24)} className="reading mt-6 max-w-[64ch] text-md first:mt-0">
-                  {paragrafo[locale]}
-                </p>
+          <h2 className="entra text-chapter max-w-[24ch]">{agentesLeads.definicao.titulo[locale]}</h2>
+          <div className="mt-10 statement-in">
+            <div className="grid gap-10 border-t border-line pt-10 lg:grid-cols-2 lg:gap-16">
+              {agentesLeads.definicao.paragrafos.map((paragrafo, indice) => (
+                <div key={paragrafo.pt.slice(0, 24)}>
+                  <span
+                    aria-hidden="true"
+                    className={`block h-px w-full max-w-[72px] ${indice === 0 ? "bg-mute" : "bg-red"}`}
+                  />
+                  <p className="reading mt-6 max-w-[52ch] text-md">{paragrafo[locale]}</p>
+                </div>
               ))}
             </div>
-            <hr className="my-12 border-line" />
-            <blockquote className="editorial max-w-[34ch] font-display text-[clamp(24px,3.2vw,44px)] leading-[1.1] tracking-[-0.02em] text-ink">
+            <hr className="my-14 border-line" />
+            {/* A tese ganha o corpo que merece: é a frase da página, e a 34ch
+                num ecrã largo ficava do tamanho de uma legenda. */}
+            <blockquote className="editorial max-w-[26ch] font-display text-[clamp(26px,4vw,56px)] leading-[1.06] tracking-[-0.025em] text-ink">
               {agentesLeads.definicao.tese[locale]}
             </blockquote>
           </div>
