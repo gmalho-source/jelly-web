@@ -1356,3 +1356,89 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
     }
   }
 }
+
+/* ── A página de Branding ──────────────────────────────────────────────────
+   Três coisas que só existem lá: o manifesto que entra palavra a palavra, a
+   secção do trabalho que toma a cor da marca no ecrã, e o espécime da
+   anatomia, que se despe de decisão em decisão. */
+
+/* O manifesto entra palavra a palavra ao carregar — uma animação de tempo e
+   não de scroll, porque está acima da dobra e o scroll ainda não aconteceu.
+   Rápida e uma só vez; a quem pediu menos movimento fica a frase inteira. */
+@keyframes manifesto-palavra {
+  from { opacity: 0; transform: translate3d(0, 0.35em, 0); }
+  to { opacity: 1; transform: none; }
+}
+.manifesto-palavra { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .manifesto-palavra {
+    opacity: 0;
+    animation: manifesto-palavra 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--vez, 0) * 90ms + 200ms);
+  }
+}
+
+/* A cor viva da secção do trabalho. Em repouso é o vermelho da casa; o
+   ObrasComAcento escreve a da obra que está no ecrã. */
+.obras { --acento-vivo: var(--color-red); }
+.obras .acento-vivo { color: var(--acento-vivo); transition: color 0.6s; }
+.obras .acento-vivo-contorno {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--acento-vivo);
+  transition: -webkit-text-stroke-color 0.6s;
+}
+
+/* O interruptor das decisões. */
+.interruptor {
+  position: relative; width: 46px; height: 26px; border-radius: 999px;
+  background: var(--color-red); transition: background 0.25s; flex-shrink: 0;
+}
+.interruptor::after {
+  content: ""; position: absolute; top: 3px; left: 23px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff; transition: left 0.25s;
+}
+[aria-pressed="false"] .interruptor { background: var(--color-paper-3); }
+[aria-pressed="false"] .interruptor::after { left: 3px; }
+
+/* O espécime: um cartaz da casa feito só de variáveis, para cada decisão se
+   poder tirar mudando uma variável e não o desenho. */
+.especime {
+  --e-fundo: var(--color-ink); --e-texto: var(--color-paper); --e-acento: var(--color-red);
+  --e-display: var(--font-display); --e-sans: var(--font-sans);
+  --e-escala: 1; --e-gap: 1; --e-sat: 1;
+  aspect-ratio: 4 / 5; border-radius: 12px; overflow: hidden; position: relative;
+  display: flex; flex-direction: column; justify-content: space-between; padding: 8%;
+  background: var(--e-fundo); color: var(--e-texto);
+  filter: saturate(var(--e-sat));
+  box-shadow: var(--shadow-lg);
+  transition: background 0.5s, color 0.5s, filter 0.5s, padding 0.5s;
+}
+.especime .marca { display: flex; align-items: center; gap: 14px; }
+.especime .quad {
+  width: calc(44px * var(--e-escala)); height: calc(44px * var(--e-escala));
+  background: var(--e-acento); border-radius: 4px; display: grid; place-items: center;
+  font-family: var(--e-display); color: #fff; font-size: calc(15px * var(--e-escala)); transition: all 0.5s;
+}
+.especime .nome { font-family: var(--e-display); font-size: calc(22px * var(--e-escala)); transition: all 0.5s; }
+.especime .titulo {
+  font-family: var(--e-display); font-size: calc(clamp(30px, 4.2vw, 58px) * var(--e-escala));
+  line-height: calc(0.98 + (1 - var(--e-gap)) * 0.35); letter-spacing: calc(-0.03em * var(--e-escala));
+  max-width: 12ch; transition: all 0.5s;
+}
+.especime .titulo em { font-style: normal; color: var(--e-acento); transition: color 0.5s; }
+.especime .corpo {
+  font-family: var(--e-sans); font-size: calc(15px * var(--e-escala)); max-width: 36ch; opacity: 0.75;
+  margin-top: calc(22px * var(--e-gap)); transition: all 0.5s;
+}
+.especime .base { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.especime .pilula {
+  font-family: var(--e-sans); font-size: calc(11px * var(--e-escala)); letter-spacing: calc(0.1em * var(--e-escala));
+  text-transform: uppercase; font-weight: 600; background: var(--e-acento); color: #fff; border-radius: 999px;
+  padding: calc(10px * var(--e-escala)) calc(18px * var(--e-escala)); transition: all 0.5s;
+}
+.especime .url { font-family: var(--e-sans); font-size: 12px; opacity: 0.55; }
+/* As decisões desligadas. */
+.especime.sem-tipo { --e-display: Arial, Helvetica, sans-serif; --e-sans: Arial, Helvetica, sans-serif; }
+.especime.sem-cor { --e-fundo: #3a3d41; --e-texto: #d9dbdd; --e-acento: #8a8d91; --e-sat: 0; }
+.especime.sem-ritmo { --e-escala: 0.78; --e-gap: 0.25; padding: 5%; }
+.especime.sem-ritmo .titulo { max-width: none; letter-spacing: 0; }

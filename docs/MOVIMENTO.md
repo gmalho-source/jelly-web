@@ -117,7 +117,10 @@ não faz nada, e os números saem sólidos. Aconteceu, e só se viu na captura.
 
 ## O que ainda não está feito
 
-O vocabulário está aplicado à Imunidade Algorítmica, às cinco páginas de serviço
-e à pilar da pré-qualificação de leads. Os projetos, o Sobre e a homepage
+O vocabulário está aplicado à Imunidade Algorítmica, às cinco páginas de serviço,
+à pilar da pré-qualificação de leads e à página de Branding — que acrescenta
+duas coisas suas, documentadas no fim do `globals.css`: o manifesto que entra
+palavra a palavra ao carregar (animação de tempo, porque está acima da dobra) e
+a secção do trabalho que toma a cor da marca no ecrã. Os projetos, o Sobre e a homepage
 continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.
