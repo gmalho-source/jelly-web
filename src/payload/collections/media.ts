@@ -31,6 +31,13 @@ export const Media: CollectionConfig = {
     { path: "/descrever", method: "post", handler: describeUpload },
   ],
   fields: [
+    // Logo a seguir ao ficheiro: encolhe no browser o que passar dos 4,5 MB que
+    // a Vercel deixa entrar numa função, e diz o peso do que vai subir.
+    {
+      name: "peso",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/EncolheImagem#EncolheImagem" } },
+    },
     {
       name: "title",
       label: "Título",

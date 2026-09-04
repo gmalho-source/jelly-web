@@ -138,6 +138,19 @@ Quando este projeto passar a `cacheComponents`, isto troca-se pela diretiva
 
 ## Peso das imagens
 
+**Antes de tudo, o tecto.** Um pedido a uma função da Vercel não pode passar de
+4,5 MB, e uma imagem tem de passar pelo servidor — é lá que o sharp trabalha.
+Uma fotografia de telemóvel em PNG a 2000 px passa esse tecto com facilidade, e
+o painel devolvia um erro seco e o ficheiro não subia (aconteceu com dois
+retratos da equipa; o `curl` contra a produção dá `413 FUNCTION_PAYLOAD_TOO_LARGE`
+a partir dos 4,5 MB e chega ao Payload abaixo disso). Por isso a ficha de uma
+imagem **encolhe-a no browser** antes de a enviar: acima de 4 MB redesenha-a num
+canvas a 2400 px do lado maior — PNG sai em WebP para guardar a transparência, o
+resto em JPEG — troca-a no formulário e diz «6,2 MB → 1,1 MB» por baixo do
+ficheiro. Nada se perde que o site fosse usar, porque a coleção já travava tudo
+nos 2400 px. O que o browser não desenhar (um SVG, um formato raro) segue como
+está, e se for grande demais a linha diz-o a vermelho antes de gravar.
+
 Tudo o que entra pelo painel é convertido para **WebP** a 82 e travado nos 2400
 px do lado maior: uma fotografia de máquina traz 6 MB e 6000 px que nenhum ecrã
 usa. O site serve depois pelo otimizador do Next, que entrega **AVIF** a quem o
