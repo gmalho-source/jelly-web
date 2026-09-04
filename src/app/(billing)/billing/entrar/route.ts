@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   if (!payload) return fail;
 
   // Uso único: o mesmo link não abre duas vezes.
-  if (!consumeToken(payload.jti, MAGIC_LINK_TTL_SECONDS)) return fail;
+  if (!(await consumeToken(payload.jti, MAGIC_LINK_TTL_SECONDS))) return fail;
 
   // O registo pode ter sido revogado entre o pedido e o clique.
   if (!(await isRegisteredProvider(payload.email))) return fail;

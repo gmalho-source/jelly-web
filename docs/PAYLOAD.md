@@ -714,6 +714,44 @@ serve os dois — quem chega pelo da outra língua leva **308** para o certo, n�
 404 nem uma segunda página com o mesmo texto. O canónico, o hreflang e o sitemap
 apontam para o endereço da língua respetiva.
 
+## Prestadores e a área de faturação
+
+`billing.jelly.pt` é onde um prestador submete uma fatura: um formulário do
+Monday embutido numa página que só abre a quem está registado. Sem password. O
+prestador escreve o email, recebe um link de uso único válido 15 minutos, e o
+link abre-lhe uma sessão de **24 horas** — é uma página onde se submete uma
+fatura, não uma área onde se vive.
+
+**Quem é prestador decide-o o painel**, na coleção **Faturação → Prestadores**:
+existe uma ficha com aquele email e o estado é «qualificado». Um parado ou um
+desqualificado tem ficha e não entra, e a verificação faz-se no momento do
+clique, não só no pedido — desmarcar alguém fecha-lhe a porta no link seguinte.
+O site só pergunta o email e o estado; o IBAN, o NIF e a morada que estão na
+ficha nunca saem para esse lado, e só quem tem sessão no painel os lê.
+
+Os campos são os do quadro «Tabela freelancers» do Monday, 24 colunas: nome,
+email, estado, pool, fatura como (pessoa singular/empresa), rate à hora, quem
+avisar na Jelly, id no Monday; e, fechados por omissão, os dados fiscais (NIF,
+IBAN, regime) e pessoais (telefone, morada, nacionalidade, nascimento,
+documento, segurança social, estado civil, dependentes). O que era «Solteira» e
+«Casada» passou a valores sem género.
+
+**Importar do Monday:** exporta o quadro para Excel e corre
+`npm run prestadores:import -- ficheiro.xlsx` (com `--dry-run` primeiro). A
+exportação traz três linhas de cabeçalho e a mesma pessoa repetida entre grupos
+— 473 linhas para 302 emails; a chave é o email, e das repetidas fica a que tem
+mais campos. Idempotente: quem existe é atualizado, um campo vazio na folha não
+apaga o que já estava na ficha.
+
+**Os tokens gastos e os limites de pedido** vivem em duas coleções escondidas
+(`billing-tokens`, `billing-attempts`) e não em memória: na Vercel cada pedido
+pode cair numa instância diferente, e um link gasto numa podia abrir noutra. O
+uso único é uma restrição de unicidade na base, não uma leitura seguida de uma
+escrita. Sem base de dados configurada volta à memória, para desenvolver.
+
+A base precisa de `scripts/sql/2026-09-04-prestadores-e-billing.sql` antes do
+deploy. Foi verificado contra o esquema que o Payload empurra numa base vazia.
+
 ## Falta
 
 - **Vídeos**: 34 ficheiros, 546 MB, continuam a servir do jelly.pt. Precisam de

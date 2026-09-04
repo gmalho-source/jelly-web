@@ -34,7 +34,8 @@
     "carta:exemplo": "tsx scripts/carta-exemplo.mjs",
     "autores": "tsx scripts/autores.mjs",
     "equipa": "tsx scripts/equipa.mjs",
-    "md:check": "tsx scripts/check-markdown.mjs"
+    "md:check": "tsx scripts/check-markdown.mjs",
+    "prestadores:import": "tsx scripts/prestadores-import.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -62,6 +63,7 @@
     "csv-parse": "^7.0.2",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.3.1",
+    "exceljs": "^4.4.0",
     "https-proxy-agent": "^9.1.0",
     "node-html-parser": "^9.0.1",
     "playwright": "^1.56.1",

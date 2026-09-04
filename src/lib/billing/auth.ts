@@ -6,7 +6,9 @@ const MAGIC_AUDIENCE = "magic-link";
 const SESSION_AUDIENCE = "session";
 
 export const MAGIC_LINK_TTL_SECONDS = 15 * 60;
-export const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
+// Um dia. É uma página onde se submete uma fatura, não uma área onde se vive:
+// quem voltar na semana seguinte pede outro link, que chega em segundos.
+export const SESSION_TTL_SECONDS = 24 * 60 * 60;
 export const SESSION_COOKIE = "jelly_billing_session";
 
 function secret(): Uint8Array {

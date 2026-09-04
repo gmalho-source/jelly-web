@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "desconhecido";
   if (
-    !withinRateLimit(`email:${email}`, PER_EMAIL.limit, PER_EMAIL.windowSeconds) ||
-    !withinRateLimit(`ip:${ip}`, PER_IP.limit, PER_IP.windowSeconds)
+    !(await withinRateLimit(`email:${email}`, PER_EMAIL.limit, PER_EMAIL.windowSeconds)) ||
+    !(await withinRateLimit(`ip:${ip}`, PER_IP.limit, PER_IP.windowSeconds))
   ) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }

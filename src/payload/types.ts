@@ -67,6 +67,9 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    prestadores: Prestadore;
+    'billing-tokens': BillingToken;
+    'billing-attempts': BillingAttempt;
     pages: Page;
     posts: Post;
     categories: Category;
@@ -96,6 +99,9 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    prestadores: PrestadoresSelect<false> | PrestadoresSelect<true>;
+    'billing-tokens': BillingTokensSelect<false> | BillingTokensSelect<true>;
+    'billing-attempts': BillingAttemptsSelect<false> | BillingAttemptsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
@@ -156,6 +162,69 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * Quem fatura à Jelly. Só um prestador «qualificado» consegue entrar em billing.jelly.pt — o link de acesso verifica isto no momento em que é usado.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "prestadores".
+ */
+export interface Prestadore {
+  id: number;
+  nome: string;
+  /**
+   * É com este email que pede o link de acesso.
+   */
+  email: string;
+  /**
+   * Só «qualificado» entra em billing.jelly.pt.
+   */
+  estado: 'qualificado' | 'parado' | 'desqualificado';
+  pool?: ('design' | 'development' | 'marketing' | 'multimedia' | 'video') | null;
+  tipo?: ('singular' | 'empresa') | null;
+  mondayId?: string | null;
+  /**
+   * A pessoa da casa que acompanha este prestador.
+   */
+  emailNotificacao?: string | null;
+  rateHora?: number | null;
+  nif?: string | null;
+  iban?: string | null;
+  regimeFiscal?: ('iva' | 'isento' | 'retencao') | null;
+  telefone?: string | null;
+  morada?: string | null;
+  nacionalidade?: string | null;
+  dataNascimento?: string | null;
+  documento?: string | null;
+  segurancaSocial?: string | null;
+  estadoCivil?: ('solteiro' | 'casado' | 'uniao' | 'divorciado' | 'viuvo') | null;
+  dependentes?: number | null;
+  notas?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "billing-tokens".
+ */
+export interface BillingToken {
+  id: number;
+  jti: string;
+  expiresAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "billing-attempts".
+ */
+export interface BillingAttempt {
+  id: number;
+  chave: string;
+  count: number;
+  resetAt: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Os textos das páginas. Não se criam nem se apagam: editam-se.
@@ -1276,6 +1345,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'prestadores';
+        value: number | Prestadore;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -1404,6 +1477,55 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "prestadores_select".
+ */
+export interface PrestadoresSelect<T extends boolean = true> {
+  nome?: T;
+  email?: T;
+  estado?: T;
+  pool?: T;
+  tipo?: T;
+  mondayId?: T;
+  emailNotificacao?: T;
+  rateHora?: T;
+  nif?: T;
+  iban?: T;
+  regimeFiscal?: T;
+  telefone?: T;
+  morada?: T;
+  nacionalidade?: T;
+  dataNascimento?: T;
+  documento?: T;
+  segurancaSocial?: T;
+  estadoCivil?: T;
+  dependentes?: T;
+  notas?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "billing-tokens_select".
+ */
+export interface BillingTokensSelect<T extends boolean = true> {
+  jti?: T;
+  expiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "billing-attempts_select".
+ */
+export interface BillingAttemptsSelect<T extends boolean = true> {
+  chave?: T;
+  count?: T;
+  resetAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

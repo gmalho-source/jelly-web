@@ -1,15 +1,24 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { JellyWordmark } from "@/components/JellyLogo";
+import { findProvider } from "@/lib/billing/providers";
 import { currentProvider } from "@/lib/billing/session";
-import { env } from "@/lib/env";
+import { envOr } from "@/lib/env";
+
+// O formulário de submissão de faturas, no Monday. Não é segredo, por isso
+// vive aqui como valor por omissão; a variável de ambiente serve para o trocar
+// sem deploy.
+const FORMULARIO = "https://forms.monday.com/forms/embed/c18384d0498b636d3f3f38109d1337e7?r=use1";
 
 export default async function InvoicePage() {
   const provider = await currentProvider();
   if (!provider) redirect("/billing?erro=link");
 
   const t = await getTranslations("billing");
-  const formUrl = env(process.env.NEXT_PUBLIC_MONDAY_FORM_URL);
+  // A ficha pode ter sido desativada durante a sessão: sem ficha, sem página.
+  const ficha = await findProvider(provider);
+  if (!ficha) redirect("/billing?erro=link");
+  const formUrl = envOr(process.env.NEXT_PUBLIC_MONDAY_FORM_URL, FORMULARIO);
 
   // O formulário do Monday recebe o email autenticado por query string, para o
   // prestador não ter de o escrever outra vez (e para não poder trocá-lo).
@@ -22,7 +31,7 @@ export default async function InvoicePage() {
       <header className="flex items-center justify-between gap-4 border-b border-paper-3 px-5 py-5 sm:px-8">
         <JellyWordmark className="w-[72px] text-red" />
         <div className="flex items-center gap-3 text-sm text-slate">
-          <span>{provider}</span>
+          <span>{ficha.nome}</span>
           <form action="/billing/sair" method="post">
             <button type="submit" className="text-sm font-semibold text-red hover:underline">
               {t("signOut")}

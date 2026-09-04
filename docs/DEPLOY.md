@@ -88,8 +88,9 @@ correspondentes funcionarem.
 | `NEXT_PUBLIC_SITE_URL` | build | Canónicos e sitemap assumem `https://www.jelly.pt` |
 | `NEXT_PUBLIC_BILLING_HOST` | build | Assume `billing.jelly.pt` |
 | `BILLING_AUTH_SECRET` (32+ caracteres) | runtime | O magic link devolve erro ao ser pedido. `openssl rand -base64 48` |
-| `BILLING_ALLOWED_EMAILS` | runtime | Nenhum prestador reconhecido (a resposta é a mesma, por desenho) |
-| `RESEND_API_KEY` | runtime | O link não é enviado: fica no log do servidor |
+| `BILLING_ALLOWED_EMAILS` | runtime | Só vale sem base de dados: com ela, os prestadores vêm da coleção do painel |
+| `BREVO_API_KEY` | runtime | O link de acesso não é enviado: fica no log do servidor |
+| `NEXT_PUBLIC_MONDAY_FORM_URL` | build | Usa o formulário de faturas do Monday que está no código |
 | `BILLING_FROM_EMAIL` | runtime | `pagamentos@jelly.pt` |
 | `NEXT_PUBLIC_MONDAY_FORM_URL` | build | A área de faturação mostra o aviso em vez do formulário |
 | `DATABASE_URL` (Postgres, Neon) | build + runtime | O site serve o conteúdo local de `src/content` e o painel `/admin` não abre |
@@ -223,6 +224,9 @@ painel do Brevo — não há nada no código a depender dele.
 
 1. Apontar `NEXT_PUBLIC_SITE_URL` ao domínio de staging para os canónicos não
    mentirem enquanto o site não está em jelly.pt.
-2. Verificar o domínio de envio na Resend (`pagamentos@jelly.pt`).
-3. Trocar `src/lib/billing/store.ts` (em memória) por Upstash/KV — sem isso, os
+2. Verificar `pagamentos@jelly.pt` como remetente no Brevo — é dali que sai o link.
+3. Correr `scripts/sql/2026-09-04-prestadores-e-billing.sql` na Neon e depois
+   `npm run prestadores:import -- <exportação do Monday>.xlsx` com a `DATABASE_URL`
+   da Neon — é isso que enche a coleção de prestadores. Os tokens gastos e os limites
+   de pedido já vivem na base; o Upstash deixou de ser preciso. Notas antigas:
    tokens usados e os limites de pedido não sobrevivem a um restart da função.

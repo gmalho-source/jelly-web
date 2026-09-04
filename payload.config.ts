@@ -17,6 +17,7 @@ import { Attachments } from "./src/payload/collections/attachments";
 import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
+import { BillingAttempts, BillingTokens, Prestadores } from "./src/payload/collections/prestadores";
 import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -65,6 +66,9 @@ export default buildConfig({
     },
   },
   collections: [
+    Prestadores,
+    BillingTokens,
+    BillingAttempts,
     Pages,
     Posts,
     Categories,
