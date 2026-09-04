@@ -716,8 +716,10 @@ apontam para o endereço da língua respetiva.
 
 ## Prestadores e a área de faturação
 
-`billing.jelly.pt` é onde um prestador submete uma fatura: um formulário do
-Monday embutido numa página que só abre a quem está registado. Sem password. O
+`/billing` é onde um prestador submete uma fatura — em `billing.jelly.pt`
+aparece sem o prefixo, em qualquer outro host aparece com ele (ver
+`docs/DEPLOY.md`, «Domínios»). É um formulário do Monday embutido numa página
+que só abre a quem está registado. Sem password. O
 prestador escreve o email, recebe um link de uso único válido 15 minutos, e o
 link abre-lhe uma sessão de **24 horas** — é uma página onde se submete uma
 fatura, não uma área onde se vive.
@@ -737,7 +739,9 @@ documento, segurança social, estado civil, dependentes). O que era «Solteira»
 «Casada» passou a valores sem género.
 
 **Importar do Monday:** exporta o quadro para Excel e corre
-`npm run prestadores:import -- ficheiro.xlsx` (com `--dry-run` primeiro). A
+`npm run prestadores:import -- ficheiro.xlsx` (com `--dry-run` primeiro), com a
+`DATABASE_URL` da Neon no ambiente — sem isto a coleção fica vazia no painel:
+a lista aparece, mas sem uma linha. A
 exportação traz três linhas de cabeçalho e a mesma pessoa repetida entre grupos
 — 473 linhas para 302 emails; a chave é o email, e das repetidas fica a que tem
 mais campos. Idempotente: quem existe é atualizado, um campo vazio na folha não

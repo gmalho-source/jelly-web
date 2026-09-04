@@ -1,7 +1,7 @@
 import createMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
-import { BILLING_HOST, isBillingHost, isLocalHost } from "@/lib/hosts";
+import { isBillingHost } from "@/lib/hosts";
 import { legacyDestination } from "@/lib/legacy";
 
 const handleI18n = createMiddleware(routing);
@@ -18,16 +18,11 @@ export default function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  // Fora do subdomínio, /billing/* não existe: manda para o host certo.
-  if (pathname.startsWith("/billing")) {
-    if (isLocalHost(host)) return NextResponse.next();
-    const url = request.nextUrl.clone();
-    url.host = BILLING_HOST;
-    url.protocol = "https";
-    url.port = "";
-    url.pathname = pathname.replace(/^\/billing/, "") || "/";
-    return NextResponse.redirect(url);
-  }
+  // Em qualquer outro host a área de faturação responde aqui mesmo, em /billing.
+  // Não se redireciona para o subdomínio: enquanto billing.jelly.pt apontar para
+  // o site antigo, a página tem de existir neste; e quando ele apontar para aqui,
+  // um 301 de lá para /billing não pode encontrar um 302 a mandá-lo de volta.
+  if (pathname.startsWith("/billing")) return NextResponse.next();
 
   if (pathname.startsWith("/api")) return NextResponse.next();
 

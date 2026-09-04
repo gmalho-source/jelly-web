@@ -118,9 +118,15 @@ para mudar.
 `jelly-web.vercel.app` **já pertence a outro projeto** na Vercel (um "Jelly AI",
 sem relação com a Jelly) — os subdomínios `.vercel.app` são globais. O URL
 gerado para este projeto é outro: confirmar em Project → Domains e testar por
-esse. Para o subdomínio de faturação funcionar em preview é preciso apontar
-`NEXT_PUBLIC_BILLING_HOST` para o host de preview, senão o middleware
-redireciona `/billing` para `billing.jelly.pt`.
+esse.
+
+A área de faturação responde em **`/billing`** em qualquer host — preview,
+staging, jelly.pt — sem redirecionar para lado nenhum. Em `billing.jelly.pt`
+(o `NEXT_PUBLIC_BILLING_HOST`) o prefixo desaparece do URL: o middleware
+reescreve `/` para `/billing`. Enquanto o subdomínio apontar para o site antigo,
+a página existe aqui em `/billing`; quando apontar para a Vercel, passa a abrir
+limpa. É por isso que não há redirecionamento de `/billing` para o subdomínio —
+um 301 vindo de lá para `/billing` não pode encontrar um 302 a mandá-lo de volta.
 
 ## Comunicações da Jelly (subscrição)
 

@@ -9,8 +9,3 @@ export function isBillingHost(host: string): boolean {
   return clean === BILLING_HOST.toLowerCase() || clean === "billing.localhost";
 }
 
-/** Em local (dev ou build de produção corrido na máquina) /billing responde no próprio host. */
-export function isLocalHost(host: string): boolean {
-  const clean = host.split(":")[0].toLowerCase();
-  return clean === "localhost" || clean === "127.0.0.1" || clean.endsWith(".local");
-}
