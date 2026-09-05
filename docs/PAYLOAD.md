@@ -94,6 +94,34 @@ Neon — não depender do jelly.pt nem de nenhum CDN antigo.
 Três logos de 2018 ficam de fora: os URLs no export estão corrompidos
 (`/jelly/jelly/jelly/jelly/…`) e já não existem no site antigo.
 
+### Um artigo novo no WordPress, enquanto o site antigo estiver vivo
+
+O `upsert` **substitui** o que já existe com o mesmo slug — título, corpo,
+capa. Voltar a correr a migração dos artigos por inteiro apagava as traduções,
+as etiquetas e as correções feitas no painel. Por isso um artigo novo entra
+sozinho: o JSON versionado recebe só ele, à cabeça, e o `--limit=1` toca só
+nele.
+
+1. `npm run migrate -- --limit 1` reescreve `posts.json` e `pages.json` com um
+   registo cada — guardar os dois antes, pôr o artigo novo à cabeça do
+   `posts.json` original e repor o `pages.json`. Com `--limit 1` o script também
+   só lê uma categoria e um utilizador, e o artigo sai com «Jelly» nos dois:
+   acertar `category`/`categorySlug` e `author` à mão (o nome do autor tem de
+   ser o de uma ficha em **Editorial → Autores** para a ligação ser feita).
+2. Verificar o corpo. O WPBakery deixa o texto solto entre shortcodes, e o
+   conversor faz um parágrafo por nó — um `<strong>` a meio de uma frase parte
+   a frase em três. As imagens `[image_with_animation image_url="ID"]` não são
+   `<img>` e ficam de fora: resolvem-se em `/wp-json/wp/v2/media?include=ID`.
+   O excerpt do WordPress pode estar errado (o de setembro de 2026 trazia o do
+   artigo anterior); a descrição do Yoast em `yoast_head_json.description` é a
+   que a equipa escreveu.
+3. `npm run payload:migrate -- --only=posts --limit=1` com a `DATABASE_URL` da
+   Neon, o `PAYLOAD_SECRET` e o `BLOB_READ_WRITE_TOKEN`. Com `REVALIDATE_SECRET`
+   e `NEXT_PUBLIC_SITE_URL` no ambiente, purga o site no fim; sem eles, o
+   artigo só aparece depois de um `POST /api/revalidate` ou do próximo deploy.
+4. `npm run translate -- --slug=<slug>` para o inglês (precisa da
+   `ANTHROPIC_API_KEY`), e as etiquetas no painel.
+
 ## Pôr em produção
 
 Pela ordem, porque cada passo depende do anterior:

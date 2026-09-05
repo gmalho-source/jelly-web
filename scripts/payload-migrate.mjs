@@ -291,10 +291,22 @@ async function migratePages(payload) {
   }
 }
 
+/**
+ * A ficha de autor, se já existir uma com aquele nome. Os artigos antigos
+ * traziam «Jelly» ou «marketing» e foi o `autores.mjs` que os ligou; um artigo
+ * novo assinado por alguém da equipa liga-se logo aqui, sem segundo passo.
+ */
+async function authorRefFor(payload, name) {
+  if (!name || dryRun) return undefined;
+  const found = await payload.find({ collection: "authors", where: { name: { equals: name } }, limit: 1, depth: 0 });
+  return found.docs[0]?.id;
+}
+
 async function migratePosts(payload) {
   const posts = readJson("src/content/generated/posts.json").slice(0, limit);
   const categories = new Map();
   for (const post of posts) {
+    const authorRef = await authorRefFor(payload, post.author);
     if (!categories.has(post.categorySlug)) {
       const doc = await upsert(
         payload,
@@ -314,6 +326,7 @@ async function migratePosts(payload) {
         titlePt: post.title,
         date: post.date,
         author: post.author,
+        ...(authorRef ? { authorRef } : {}),
         readingMinutes: post.readingMinutes,
         lang: post.lang,
         legacyPath: post.legacyPath,

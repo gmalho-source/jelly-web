@@ -1,5 +1,196 @@
 [
  {
+  "slug": "shadow-ai-nas-empresas",
+  "legacyPath": "/shadow-ai-nas-empresas/inteligencia-artificial/",
+  "date": "2026-08-31",
+  "updated": "2026-08-31",
+  "lang": "pt",
+  "title": "Shadow AI: a inteligência artificial que a sua empresa já usa e não controla",
+  "excerpt": "A IA já está a ser usada na sua empresa, provavelmente sem inventário, sem responsável e sem avaliação de risco. Dois em cada três profissionais admitem tê-la usado acreditando violar a política interna. O que é Shadow AI, o que o AI Act já exige em 2026 e um roteiro de quatro passos para recuperar o controlo.",
+  "author": "Alícia Coquim",
+  "category": "Inteligência Artificial",
+  "categorySlug": "inteligencia-artificial",
+  "readingMinutes": 7,
+  "cover": {
+   "src": "https://www.jelly.pt/wp-content/uploads/2026/08/Shadow_IA.jpg",
+   "alt": "Shadow AI: a inteligência artificial que a sua empresa já usa e não controla",
+   "width": 1905,
+   "height": 749
+  },
+  "body": [
+   {
+    "type": "p",
+    "text": "Alguém na sua empresa usou hoje inteligência artificial. Resumiu uma ata, traduziu uma proposta, pediu ideias para uma campanha, colou uma folha de cálculo num chatbot para entender um desvio no orçamento. Não pediu autorização e, muito provavelmente, nem lhe passou pela cabeça que fosse necessário pedir."
+   },
+   {
+    "type": "p",
+    "text": "Isto não é um problema de disciplina. É o retrato de uma tecnologia que entrou nas organizações pela porta dos colaboradores, e não pela do departamento de TI. Num inquérito da PagerDuty conduzido pela Wakefield Research em abril de 2026 e divulgado em junho, dois em cada três profissionais admitiram ter usado ferramentas de IA no trabalho acreditando que isso violava a política da empresa."
+   },
+   {
+    "type": "p",
+    "text": "Um estudo da UpGuard chegou a valores acima dos 80% para o uso de ferramentas não aprovadas e apenas cerca de metade dos trabalhadores diz conhecer e compreender a política de IA da própria empresa. Muitas vezes porque essa política simplesmente não existe."
+   },
+   {
+    "type": "p",
+    "text": "Chama-se Shadow AI. E o problema nunca foi a tecnologia, é a invisibilidade."
+   },
+   {
+    "type": "h2",
+    "text": "O que é Shadow AI"
+   },
+   {
+    "type": "p",
+    "text": "Shadow AI é o uso de ferramentas, modelos ou agentes de inteligência artificial sem que a empresa saiba, autorize, registe ou avalie. É o equivalente, para a IA, do que o shadow IT foi para o software na década passada: adoção real, com valor real, a acontecer fora do perímetro de gestão da organização."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/01-o-que-e-shadow-ai.png",
+    "alt": "01 o que e shadow ai"
+   },
+   {
+    "type": "p",
+    "text": "A diferença face ao shadow IT clássico é a velocidade e o tipo de exposição. Instalar software não aprovado exigia esforço. Abrir um separador no browser, colar um contrato e pedir um resumo não exige nada  e leva informação da empresa para fora dela em segundos."
+   },
+   {
+    "type": "h2",
+    "text": "Não começa com má intenção. Começa com um prazo apertado."
+   },
+   {
+    "type": "p",
+    "text": "Vale a pena olhar para os números com atenção, porque desmontam a ideia de que se trata de um punhado de colaboradores imprudentes."
+   },
+   {
+    "type": "p",
+    "text": "No mesmo inquérito da PagerDuty, 89% dos profissionais já conheciam a ferramenta de IA da sua vida pessoal antes de a usarem no trabalho e 77% consideram que as restrições da empresa limitam o seu crescimento profissional. Proibir sem alternativa não elimina o uso: empurra-o para contas pessoais, onde a empresa deixa de ter qualquer visibilidade."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/02-o-que-vai-para-ia-publica.png",
+    "alt": "02 o que vai para ia publica"
+   },
+   {
+    "type": "p",
+    "text": "É aqui que o risco deixa de ser abstrato. Quando 34% dos profissionais admitem ter colocado dados de clientes numa ferramenta de IA pública e 31% informação financeira ou documentos confidenciais, o que está em causa não é apenas segurança informática. É o RGPD: dados pessoais tratados por um subcontratante que ninguém contratou, sem base legal identificada, sem saber onde ficam armazenados nem se alimentam o treino de um modelo. E é também propriedade intelectual – propostas, preços, código, estratégia – a sair da organização sem registo."
+   },
+   {
+    "type": "h2",
+    "text": "O fosso entre adotar e governar"
+   },
+   {
+    "type": "p",
+    "text": "A tentação é tratar isto como um tema de futuro. Os dados dizem o contrário: a adoção já aconteceu, a governance é que ficou atrás."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/03-adocao-vs-governance.png",
+    "alt": "03 adocao vs governance"
+   },
+   {
+    "type": "p",
+    "text": "Em Portugal, o retrato oficial é ainda mais desconfortável quando cruzado com estes números."
+   },
+   {
+    "type": "p",
+    "text": "Segundo o relatório State of the Digital Decade 2026 da Comissão Europeia, apenas 11,5% das empresas portuguesas declaram usar IA, contra 20% na média da UE, com as PME nos 10,7% e as grandes empresas nos 49%. Mas «declarar» é a palavra importante. Estes inquéritos medem adoção formal, reconhecida pela gestão. O uso real, feito nos browsers das equipas, é sistematicamente maior do que o uso reportado. O Shadow AI vive exatamente nessa diferença."
+   },
+   {
+    "type": "h2",
+    "text": "De assistente a agente: o risco muda de escala"
+   },
+   {
+    "type": "p",
+    "text": "Até aqui falámos de informação que sai. Com a chegada dos agentes de IA, o problema passa a ser o que é feito. Um assistente sugere um texto que alguém revê antes de enviar. Um agente acede a sistemas, envia mensagens, cria registos, atualiza folhas de cálculo e aciona integrações, muitas vezes com as credenciais de quem o configurou, sem que ninguém tenha desenhado os seus limites."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/04-agentes-permissoes.png",
+    "alt": "04 agentes permissoes"
+   },
+   {
+    "type": "p",
+    "text": "O impacto financeiro já é mensurável. No Cost of a Data Breach 2026 da IBM, o custo médio global de uma violação de dados foi de 4,99 milhões de dólares, mas as violações resultantes de ataques em que os atacantes usaram IA, já uma em cada quatro violações maliciosas, custaram, em média, 6 milhões. Do outro lado da equação, mais de 20% das organizações inquiridas reportaram uma violação que teve como alvo os seus próprios modelos ou aplicações de IA, sendo as causas principais APIs, aplicações ou plug-ins comprometidos (27%) e más configurações de cloud em cargas de trabalho de IA (27%)."
+   },
+   {
+    "type": "p",
+    "text": "São falhas de governance, não de algoritmo."
+   },
+   {
+    "type": "h2",
+    "text": "O AI Act já não é uma data no futuro"
+   },
+   {
+    "type": "p",
+    "text": "Muita gente ficou com a ideia de que o AI Act foi adiado. Foi, em parte, e é importante entender o que mudou e o que não mudou. O Regulamento (UE) 2026/1744, conhecido como Digital Omnibus on AI, entrou em vigor a 27 de julho de 2026 e empurrou as exigências técnicas dos sistemas de risco elevado do Anexo III para 2 de dezembro de 2027, e as do Anexo I para 2 de agosto de 2028."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/05-ai-act-calendario.png",
+    "alt": "05 ai act calendario"
+   },
+   {
+    "type": "p",
+    "text": "O que não foi adiado: as práticas proibidas e o dever de apoiar a literacia em IA aplicam-se desde fevereiro de 2025, as obrigações relativas aos modelos de uso geral desde agosto de 2025 e as obrigações de transparência do artigo 50 aplicam-se desde 2 de agosto de 2026, ou seja, se a sua empresa tem um chatbot a atender clientes ou publica conteúdo gerado por IA, a obrigação de o tornar claro já está em vigor hoje."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/06-ai-act-coimas.png",
+    "alt": "06 ai act coimas"
+   },
+   {
+    "type": "p",
+    "text": "Há aqui uma nuance que vale a pena fixar, porque circula muito mal explicada: o tecto de 35 milhões de euros ou 7% do volume de negócios aplica-se às práticas proibidas. Para a grande maioria das empresas, as que apenas utilizam sistemas de IA, o patamar relevante é o de 15 milhões de euros ou 3%, que cobre o incumprimento das obrigações de quem implementa e das obrigações de transparência. Para PME, startups e small mid-caps, aplica-se o valor mais baixo dos dois, e o Omnibus reforçou a proporcionalidade das sanções e simplificou a documentação exigida."
+   },
+   {
+    "type": "p",
+    "text": "Em Portugal, a ANACOM é a autoridade nacional de fiscalização do mercado e ponto de contacto único, e a proteção dos direitos fundamentais está distribuída por 14 entidades públicas designadas ao abrigo do artigo 77, com a ANACOM a assegurar a coordenação transversal e as autoridades setoriais a emitir orientações próprias. Não há um único interlocutor: há um mapa. Razão adicional para ter a casa arrumada antes de alguém perguntar."
+   },
+   {
+    "type": "h2",
+    "text": "O que está realmente em risco"
+   },
+   {
+    "type": "p",
+    "text": "Sem visibilidade, a empresa perde o controlo sobre cinco coisas ao mesmo tempo:"
+   },
+   {
+    "type": "list",
+    "ordered": false,
+    "items": [
+     "Dados: informação de clientes, colaboradores e negócio em plataformas sem contrato, sem localização conhecida e sem garantias sobre reutilização.",
+     "Acessos: ferramentas e agentes ligados a e-mail, CRM ou drive através de contas pessoais que ninguém revoga quando a pessoa muda de função ou sai.",
+     "Decisões: recomendações que influenciam recrutamento, crédito, preços ou prioridades comerciais sem rasto de como foram produzidas.",
+     "Conformidade: obrigações do AI Act e do RGPD que não podem ser demonstradas porque demonstrar exige registo, e o registo não existe.",
+     "Continuidade: processos críticos que passaram a depender de uma automação montada por uma pessoa, numa conta pessoal, sem documentação. É um risco operacional silencioso até ao dia em que essa pessoa sai."
+    ]
+   },
+   {
+    "type": "h2",
+    "text": "Por onde começar"
+   },
+   {
+    "type": "p",
+    "text": "A resposta útil não é um projeto de dois anos nem um comité que se reúne trimestralmente para produzir um manual que ninguém lê. É um ciclo curto, repetível, que começa por tornar visível o que já existe."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/08/07-roteiro-4-passos.png",
+    "alt": "07 roteiro 4 passos"
+   },
+   {
+    "type": "p",
+    "text": "O passo que muda tudo é o primeiro, e é mais simples do que parece: perguntar. Um formulário de cinco campos enviado às equipas que ferramenta usas, para que tarefa, com que dados, em que conta, com que frequência, devolve, tipicamente numa semana, um retrato que nenhuma auditoria técnica dá com a mesma rapidez. Não é uma caça às bruxas; é um inventário. E funciona muito melhor quando vem acompanhado da mensagem certa: o objetivo não é travar a IA, é poder autorizá-la com segurança."
+   },
+   {
+    "type": "p",
+    "text": "A partir daí, o resto encadeia-se: um responsável por cada sistema, uma classificação de risco por caso de uso, uma lista curta de ferramentas aprovadas para as tarefas mais comuns, um canal simples para pedir novas, e um ponto de revisão trimestral."
+   },
+   {
+    "type": "p",
+    "text": "Empresas que fazem isto descobrem quase sempre duas coisas ao mesmo tempo: riscos que não conheciam e casos de uso valiosos que estavam escondidos numa equipa e podiam servir toda a organização."
+   }
+  ]
+ },
+ {
   "slug": "agentes-de-ia-para-responder-clientes-automaticamente-24-horas",
   "legacyPath": "/agentes-de-ia-para-responder-clientes-automaticamente-24-horas/inteligencia-artificial/",
   "date": "2026-08-04",
