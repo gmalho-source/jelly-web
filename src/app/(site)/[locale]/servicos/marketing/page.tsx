@@ -221,7 +221,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
                     const tom = TONS[ordem % TONS.length];
                     const faixa = "relative block overflow-hidden border-b border-line";
                     const dentro = (
-                      <span className="relative grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center lg:py-7">
+                      <span className="relative grid gap-x-8 gap-y-2 px-4 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center sm:px-6 lg:py-7">
                         <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{s.nome[locale]}</span>
                         <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{s.linha[locale]}</span>
                         <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${s.href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
