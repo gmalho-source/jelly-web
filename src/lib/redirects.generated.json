@@ -4646,7 +4646,7 @@
   },
   {
     "source": "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db",
-    "destination": "/servicos/tecnologia",
+    "destination": "/servicos/marketing/lead-generation-b2b",
     "permanent": true
   },
   {
@@ -4661,7 +4661,7 @@
   },
   {
     "source": "/servicos/web-marketing-digital/seo-search-everywhere-optimization",
-    "destination": "/servicos/marketing",
+    "destination": "/servicos/marketing/seo-geo",
     "permanent": true
   },
   {

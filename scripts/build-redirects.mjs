@@ -21,7 +21,7 @@ const SERVICES = {
   "/servicos/design-ui-ux/": "/servicos/branding",
   "/servicos/web-marketing-digital/": "/servicos/marketing",
   "/sem-search-engine-marketing/": "/servicos/marketing",
-  "/servicos/web-marketing-digital/seo-search-everywhere-optimization/": "/servicos/marketing",
+  "/servicos/web-marketing-digital/seo-search-everywhere-optimization/": "/servicos/marketing/seo-geo",
   "/servicos/web-marketing-digital/live-video-shopping/": "/servicos/marketing",
   "/servicos/audiovisuais-producao-video/": "/servicos/marketing",
   "/servicos/producoes-3d/": "/servicos/marketing",
@@ -33,7 +33,7 @@ const SERVICES = {
   "/servicos/web-design-criacao-de-sites/": "/servicos/tecnologia",
   "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia",
   "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia",
-  "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db/": "/servicos/tecnologia",
+  "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db/": "/servicos/marketing/lead-generation-b2b",
   "/jellycare/": "/servicos/tecnologia",
 };
 

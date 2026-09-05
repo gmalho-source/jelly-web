@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { GraficoDeArea } from "@/components/GraficoDeArea";
 import { marketing } from "@/content/marketing";
+import { servicoDeMarketing } from "@/content/marketing-servicos";
 import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -90,10 +91,17 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
     ...m.titulo.vermelho[locale].split(" ").map((p) => ({ p, vermelha: true })),
   ];
 
+  // A página de um serviço, se já existir no registo: o mapa liga ao que há.
+  const paginaDe = (s: { sub?: string }) => {
+    const pagina = s.sub ? servicoDeMarketing(s.sub) : undefined;
+    return pagina ? ({ pathname: "/servicos/marketing/[sub]", params: { sub: pagina.slug[locale] } } as const) : undefined;
+  };
+
   const entradaDeServico = (s: (typeof m.lista)[number]["servicos"][number], classe: string) => {
     const corpo = <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{s.nome[locale]}</span>;
-    return s.href ? (
-      <Link key={s.nome.pt} href={s.href as "/contactos"} className={`${classe} group`}>
+    const href = paginaDe(s);
+    return href ? (
+      <Link key={s.nome.pt} href={href} className={`${classe} group`}>
         {corpo}
         <span aria-hidden="true" className="ms-auto text-red opacity-0 transition-opacity duration-200 group-hover:opacity-100">→</span>
       </Link>
@@ -221,13 +229,14 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
                 <div className="entra mt-12 border-t border-line">
                   {area.servicos.map((s) => {
                     const tom = TONS[ordem % TONS.length];
+                    const href = paginaDe(s);
                     const faixa = "relative block overflow-hidden border-b border-line";
                     const dentro = (
                       <span className="relative grid gap-x-8 gap-y-2 px-4 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center sm:px-6 lg:py-7">
                         <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{s.nome[locale]}</span>
                         <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{s.linha[locale]}</span>
-                        <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${s.href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
-                          {s.href ? "→" : "·"}
+                        <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
+                          {href ? "→" : "·"}
                         </span>
                       </span>
                     );
@@ -238,8 +247,8 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
                       />
                     );
                     const classe = `${faixa} group transition-colors duration-300 ${tom.texto}`;
-                    return s.href ? (
-                      <Link key={s.nome.pt} href={s.href as "/contactos"} className={classe}>
+                    return href ? (
+                      <Link key={s.nome.pt} href={href} className={classe}>
                         {varredura}
                         {dentro}
                       </Link>

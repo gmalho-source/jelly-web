@@ -9,16 +9,16 @@ import type { Localized } from "./types";
  * de atenção, menções, ciclos — porque é pela medida que se organiza o trabalho
  * e se prestam contas. As fases do método continuam a vir do serviço no painel.
  *
- * Os serviços sem `href` ainda não têm página: aparecem no mapa, mas não são
- * ligação. Quando a página nascer, basta pôr aqui o endereço. Nenhum leva a
+ * Os serviços sem `sub` ainda não têm página: aparecem no mapa, mas não são
+ * ligação. Quando a página nascer em `marketing-servicos.ts`, põe-se aqui o slug. Nenhum leva a
  * etiqueta «novo»: são serviços que é suposto a casa ter, não lançamentos.
  */
 
 export type ServicoDeArea = {
   nome: Localized;
   linha: Localized;
-  /** Endereço relativo dentro do site. Sem ele, não é ligação. */
-  href?: string;
+  /** O slug português da página em `marketing-servicos.ts`. Sem página, não é ligação. */
+  sub?: string;
 };
 
 export type Area = {
@@ -73,9 +73,9 @@ export const marketing = {
       titulo: { pt: "Comprar atenção e devolvê-la em receita.", en: "Buy attention and return it as revenue." },
       posicao: { pt: "Media paga, procura orgânica e leads B2B geridas como um só orçamento.", en: "Paid media, organic search and B2B leads run as one budget." },
       servicos: [
-        { nome: { pt: "Paid Media", en: "Paid Media" }, linha: { pt: "Google, Meta, LinkedIn e TikTok, full-funnel.", en: "Google, Meta, LinkedIn and TikTok, full-funnel." } },
-        { nome: { pt: "SEO e GEO", en: "SEO and GEO" }, linha: { pt: "Ser encontrado por pessoas e por agentes de IA.", en: "Be found by people and by AI agents." } },
-        { nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" }, linha: { pt: "Com os dados da Informa D&B.", en: "Powered by Informa D&B data." } },
+        { nome: { pt: "Paid Media", en: "Paid Media" }, linha: { pt: "Google, Meta, LinkedIn e TikTok, full-funnel.", en: "Google, Meta, LinkedIn and TikTok, full-funnel." }, sub: "paid-media" },
+        { nome: { pt: "SEO e GEO", en: "SEO and GEO" }, linha: { pt: "Ser encontrado por pessoas e por agentes de IA.", en: "Be found by people and by AI agents." }, sub: "seo-geo" },
+        { nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" }, linha: { pt: "Com os dados da Informa D&B.", en: "Powered by Informa D&B data." }, sub: "lead-generation-b2b" },
       ],
       legenda: { pt: "Custo por lead qualificada, por canal", en: "Cost per qualified lead, by channel" },
       alcance: { pt: "12 semanas", en: "12 weeks" },

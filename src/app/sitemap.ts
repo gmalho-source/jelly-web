@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { PILARES } from "@/content/pilares";
+import { SERVICOS_DE_MARKETING } from "@/content/marketing-servicos";
 import { getPosts, getProjects, getServices } from "@/lib/cms";
 import { SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -49,6 +50,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   for (const service of services) {
     add((locale) => ({ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }), 0.9);
+  }
+  // Os serviços de Marketing, debaixo da página-mãe.
+  for (const servico of SERVICOS_DE_MARKETING) {
+    add((locale) => ({ pathname: "/servicos/marketing/[sub]", params: { sub: servico.slug[locale] } }), 0.8);
   }
   for (const project of projects) {
     add((locale) => ({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }), 0.7);

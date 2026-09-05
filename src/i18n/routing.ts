@@ -15,6 +15,9 @@ export const routing = defineRouting({
     "/sobre": { pt: "/sobre", en: "/about" },
     "/servicos": { pt: "/servicos", en: "/services" },
     "/servicos/[slug]": { pt: "/servicos/[slug]", en: "/services/[slug]" },
+    // Os serviços de Marketing vivem debaixo da página-mãe, ao contrário das
+    // pilares: são dez páginas de uma família, e o caminho é que diz a família.
+    "/servicos/marketing/[sub]": { pt: "/servicos/marketing/[sub]", en: "/services/marketing/[sub]" },
     "/projetos": { pt: "/projetos", en: "/work" },
     "/projetos/[slug]": { pt: "/projetos/[slug]", en: "/work/[slug]" },
     "/clientes": { pt: "/clientes", en: "/clients" },
