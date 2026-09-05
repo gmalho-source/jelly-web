@@ -101,16 +101,16 @@ export default async function HomePage({
             {/* A palavra riscada sai do branco: já não é o que somos, e a cor
                 diz isso antes de o risco o dizer. */}
             <span className="relative inline-block text-fg-soft">
-              Estratégia
+              {t("heroStrike")}
               <span
                 aria-hidden="true"
                 className="absolute inset-x-[-3%] top-[50%] h-[5px] -rotate-[1.4deg] bg-red lg:h-[10px]"
               />
             </span>
             <br />
-            <span className="type-outline">Ação</span> é a
+            <span className="type-outline">{t("heroAction")}</span> {t("heroRest")}
             <br />
-            nossa estratégia.
+            {t("heroEnd")}
           </h1>
 
           {heroImages.length ? (
