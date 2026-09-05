@@ -31,12 +31,16 @@ const onlySlug = value("slug");
 const model = value("model") ?? "claude-opus-5";
 const concurrency = Math.max(1, Number(value("concurrency") ?? 3));
 
-if (!process.env.ANTHROPIC_API_KEY?.trim()) {
-  console.error("Falta ANTHROPIC_API_KEY. A chave cria-se em console.anthropic.com.");
+// A chave pode vir com outro nome: nos ambientes da Claude Code na nuvem, uma
+// variável chamada ANTHROPIC_API_KEY é retirada antes de a sessão nascer (as
+// sessões autenticam-se pela conta, não por chave), e o script ficava sem ela.
+const apiKey = (process.env.ANTHROPIC_API_KEY ?? process.env.JELLY_ANTHROPIC_API_KEY)?.trim();
+if (!apiKey) {
+  console.error("Falta ANTHROPIC_API_KEY (ou JELLY_ANTHROPIC_API_KEY). A chave cria-se em console.anthropic.com.");
   process.exit(1);
 }
 
-const claude = new Anthropic();
+const claude = new Anthropic({ apiKey });
 
 const SYSTEM = `Traduzes artigos de marketing digital de português europeu para inglês britânico.
 

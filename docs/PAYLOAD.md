@@ -119,8 +119,10 @@ nele.
    Neon, o `PAYLOAD_SECRET` e o `BLOB_READ_WRITE_TOKEN`. Com `REVALIDATE_SECRET`
    e `NEXT_PUBLIC_SITE_URL` no ambiente, purga o site no fim; sem eles, o
    artigo só aparece depois de um `POST /api/revalidate` ou do próximo deploy.
-4. `npm run translate -- --slug=<slug>` para o inglês (precisa da
-   `ANTHROPIC_API_KEY`), e as etiquetas no painel.
+4. `npm run translate -- --slug=<slug>` para o inglês, e as etiquetas no
+   painel. Precisa da chave da Anthropic: `ANTHROPIC_API_KEY` em local, ou
+   `JELLY_ANTHROPIC_API_KEY` num ambiente da Claude Code na nuvem — lá, uma
+   variável chamada `ANTHROPIC_API_KEY` é retirada antes da sessão nascer.
 
 ## Pôr em produção
 
