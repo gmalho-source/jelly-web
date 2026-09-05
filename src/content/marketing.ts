@@ -10,14 +10,13 @@ import type { Localized } from "./types";
  * e se prestam contas. As fases do método continuam a vir do serviço no painel.
  *
  * Os serviços sem `href` ainda não têm página: aparecem no mapa, mas não são
- * ligação. Quando a página nascer, basta pôr aqui o endereço.
+ * ligação. Quando a página nascer, basta pôr aqui o endereço. Nenhum leva a
+ * etiqueta «novo»: são serviços que é suposto a casa ter, não lançamentos.
  */
 
 export type ServicoDeArea = {
   nome: Localized;
   linha: Localized;
-  /** Página nova, que não existia no site antigo. */
-  novo?: boolean;
   /** Endereço relativo dentro do site. Sem ele, não é ligação. */
   href?: string;
 };
@@ -56,7 +55,6 @@ export const marketing = {
     eyebrow: { pt: "As áreas", en: "The areas" },
     titulo: { pt: "Quatro áreas. Uma unidade de medida em cada.", en: "Four areas. One unit of measure in each." },
     nota: { pt: "É pela medida que se organiza o trabalho e se prestam contas. Cada serviço tem a sua página.", en: "Work is organised, and accounts are given, by the measure. Each service has its own page." },
-    novo: { pt: "novo", en: "new" },
     emBreve: { pt: "em breve", en: "soon" },
   },
 
@@ -69,7 +67,7 @@ export const marketing = {
       titulo: { pt: "Comprar atenção e devolvê-la em receita.", en: "Buy attention and return it as revenue." },
       posicao: { pt: "Media paga, procura orgânica e leads B2B geridas como um só orçamento.", en: "Paid media, organic search and B2B leads run as one budget." },
       servicos: [
-        { nome: { pt: "Paid Media", en: "Paid Media" }, linha: { pt: "Google, Meta, LinkedIn e TikTok, full-funnel.", en: "Google, Meta, LinkedIn and TikTok, full-funnel." }, novo: true },
+        { nome: { pt: "Paid Media", en: "Paid Media" }, linha: { pt: "Google, Meta, LinkedIn e TikTok, full-funnel.", en: "Google, Meta, LinkedIn and TikTok, full-funnel." } },
         { nome: { pt: "SEO e GEO", en: "SEO and GEO" }, linha: { pt: "Ser encontrado por pessoas e por agentes de IA.", en: "Be found by people and by AI agents." } },
         { nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" }, linha: { pt: "Com os dados da Informa D&B.", en: "Powered by Informa D&B data." } },
       ],
@@ -84,9 +82,9 @@ export const marketing = {
       titulo: { pt: "Merecer atenção em vez de a comprar.", en: "Earn attention instead of buying it." },
       posicao: { pt: "Redes, vídeo e texto com uma ideia editorial por trás, publicados com cadência.", en: "Social, video and text with an editorial idea behind them, published with cadence." },
       servicos: [
-        { nome: { pt: "Social Media", en: "Social Media" }, linha: { pt: "Gestão, conteúdos e comunidade.", en: "Management, content and community." }, novo: true },
+        { nome: { pt: "Social Media", en: "Social Media" }, linha: { pt: "Gestão, conteúdos e comunidade.", en: "Management, content and community." } },
         { nome: { pt: "Vídeo e Audiovisual", en: "Video and Audiovisual" }, linha: { pt: "Jelly.Studio, da ideia à pós-produção.", en: "Jelly.Studio, from idea to post-production." } },
-        { nome: { pt: "Conteúdo editorial e Inbound", en: "Editorial content and Inbound" }, linha: { pt: "Artigos, guias e newsletters que alimentam o SEO e o GEO.", en: "Articles, guides and newsletters that feed SEO and GEO." }, novo: true },
+        { nome: { pt: "Conteúdo editorial e Inbound", en: "Editorial content and Inbound" }, linha: { pt: "Artigos, guias e newsletters que alimentam o SEO e o GEO.", en: "Articles, guides and newsletters that feed SEO and GEO." } },
       ],
       legenda: { pt: "Tempo de atenção acumulado", en: "Accumulated attention time" },
       alcance: { pt: "26 semanas", en: "26 weeks" },
@@ -99,8 +97,8 @@ export const marketing = {
       titulo: { pt: "Pôr outros a dizer o que a marca não pode dizer de si.", en: "Get others to say what the brand cannot say about itself." },
       posicao: { pt: "Criadores, comunidades e imprensa: a credibilidade de quem já tem a atenção do público.", en: "Creators, communities and the press: the credibility of those who already have the audience's attention." },
       servicos: [
-        { nome: { pt: "Influencers e Creators (UGC)", en: "Influencers and Creators (UGC)" }, linha: { pt: "Seleção, briefing, contratos e medição.", en: "Selection, briefing, contracts and measurement." }, novo: true },
-        { nome: { pt: "Digital PR e Assessoria de Imprensa", en: "Digital PR and Media Relations" }, linha: { pt: "Press releases e relações com os media.", en: "Press releases and media relations." }, novo: true },
+        { nome: { pt: "Influencers e Creators (UGC)", en: "Influencers and Creators (UGC)" }, linha: { pt: "Seleção, briefing, contratos e medição.", en: "Selection, briefing, contracts and measurement." } },
+        { nome: { pt: "Digital PR e Assessoria de Imprensa", en: "Digital PR and Media Relations" }, linha: { pt: "Press releases e relações com os media.", en: "Press releases and media relations." } },
       ],
       legenda: { pt: "Rede de menções por afinidade", en: "Mention network by affinity" },
       alcance: { pt: "1 campanha", en: "1 campaign" },
@@ -113,7 +111,7 @@ export const marketing = {
       titulo: { pt: "O que acontece depois do clique.", en: "What happens after the click." },
       posicao: { pt: "Medição limpa, atribuição honesta e jornadas que trabalham quando a equipa vai dormir.", en: "Clean measurement, honest attribution and journeys that keep working while the team sleeps." },
       servicos: [
-        { nome: { pt: "Marketing Automation e Lifecycle", en: "Marketing Automation and Lifecycle" }, linha: { pt: "E-mail, nurturing e jornadas ligadas ao CRM.", en: "Email, nurturing and journeys wired to the CRM." }, novo: true },
+        { nome: { pt: "Marketing Automation e Lifecycle", en: "Marketing Automation and Lifecycle" }, linha: { pt: "E-mail, nurturing e jornadas ligadas ao CRM.", en: "Email, nurturing and journeys wired to the CRM." } },
         { nome: { pt: "Analytics, Atribuição e CRO", en: "Analytics, Attribution and CRO" }, linha: { pt: "Eventos, atribuição e testes na página.", en: "Events, attribution and on-page testing." } },
       ],
       legenda: { pt: "Jornada de uma lead, em ciclos", en: "A lead's journey, in cycles" },

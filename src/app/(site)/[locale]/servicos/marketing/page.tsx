@@ -22,6 +22,18 @@ import { slugFor } from "@/lib/slugs";
  */
 const SLUG = "marketing";
 
+/*
+ * A cor que varre cada área ao passar o rato, como na homepage. Sobre as claras
+ * — lavanda e coral — o texto fica em tinta, senão não se lê. As classes vão
+ * escritas por inteiro porque o Tailwind lê o código à procura delas.
+ */
+const TONS = [
+  { fundo: "bg-red", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
+  { fundo: "bg-lavender", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
+  { fundo: "bg-coral", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
+  { fundo: "bg-red-deep", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
+];
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const service = await getService(SLUG);
@@ -76,14 +88,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
   ];
 
   const entradaDeServico = (s: (typeof m.lista)[number]["servicos"][number], classe: string) => {
-    const corpo = (
-      <>
-        <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{s.nome[locale]}</span>
-        {s.novo ? (
-          <span className="rounded-full bg-ink px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-paper">{m.areas.novo[locale]}</span>
-        ) : null}
-      </>
-    );
+    const corpo = <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{s.nome[locale]}</span>;
     return s.href ? (
       <Link key={s.nome.pt} href={s.href as "/contactos"} className={`${classe} group`}>
         {corpo}
@@ -157,69 +162,74 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
       {/* ── As áreas ───────────────────────────────────────────────────────── */}
       <section className="surface-paper bg-white py-24 lg:py-28 [--color-line:var(--color-paper-2)]">
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-end lg:gap-14">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
             <div>
               <span className="eyebrow text-red">{m.areas.eyebrow[locale]}</span>
-              <h2 className="mt-4 font-display text-[clamp(34px,4vw,60px)] leading-[1.0] tracking-[-0.025em]">{m.areas.titulo[locale]}</h2>
+              <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.areas.titulo[locale]}</h2>
             </div>
-            <p className="max-w-[52ch] text-md text-fg-soft">{m.areas.nota[locale]}</p>
+            <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.areas.nota[locale]}</p>
           </div>
 
-          <div className="mt-6">
-            {m.lista.map((area) => (
-              <article
-                key={area.chave}
-                id={area.chave}
-                className="grid gap-8 border-t border-line py-16 lg:grid-cols-[320px_minmax(0,1fr)_380px] lg:items-start lg:gap-14 lg:py-20"
-              >
-                <div className="entra">
-                  <span className="varre block h-0.5 w-[72px] bg-red" />
-                  <p className="mt-6 font-display text-[clamp(40px,4vw,56px)] leading-none tracking-[-0.02em] tabular-nums">{area.medida[locale]}</p>
-                  <span className="mt-3 block text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-soft">{area.medidaNota[locale]}</span>
-                </div>
-                <div className="entra">
-                  <span className="eyebrow text-red">{area.nome[locale]}</span>
-                  <h3 className="mt-2 max-w-[18ch] font-display text-[clamp(28px,3vw,42px)] leading-[1.04] tracking-[-0.02em]">{area.titulo[locale]}</h3>
-                  <p className="mt-4 max-w-[40ch] text-md text-fg-soft">{area.posicao[locale]}</p>
-                  <div className="mt-7 border-t border-line">
-                    {area.servicos.map((s) => {
-                      const classe = "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-5 gap-y-1 border-b border-line py-4 transition-[padding] duration-300 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)_auto] hover:pl-2";
-                      const conteudo = (
-                        <>
-                          <span className="flex flex-wrap items-center gap-2 text-[16px] font-medium text-fg">
-                            {s.nome[locale]}
-                            {s.novo ? (
-                              <span className="rounded-full bg-ink px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-paper">{m.areas.novo[locale]}</span>
-                            ) : null}
-                          </span>
-                          <span className="col-span-2 text-[13.5px] text-fg-soft sm:col-span-1">{s.linha[locale]}</span>
-                          <span
-                            aria-hidden="true"
-                            className={`row-start-1 grid h-[34px] w-[34px] place-items-center rounded-full text-fg shadow-[inset_0_0_0_1px_var(--color-line)] sm:row-auto ${s.href ? "" : "opacity-40"}`}
-                          >
-                            {s.href ? "→" : "·"}
-                          </span>
-                        </>
-                      );
-                      return s.href ? (
-                        <Link key={s.nome.pt} href={s.href as "/contactos"} className={`${classe} group`} title={s.nome[locale]}>
-                          {conteudo}
-                        </Link>
-                      ) : (
-                        <div key={s.nome.pt} className={classe} title={m.areas.emBreve[locale]}>
-                          {conteudo}
-                        </div>
-                      );
-                    })}
+          <div className="mt-10">
+            {m.lista.map((area, ordem) => (
+              <article key={area.chave} id={area.chave} className="border-t border-line py-16 lg:py-20">
+                <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-16">
+                  <div className="entra">
+                    <span className="varre block h-0.5 w-[72px] bg-red" />
+                    <div className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+                      <span className="eyebrow text-red">{area.nome[locale]}</span>
+                      <span className="font-display text-[clamp(26px,2.4vw,34px)] leading-none tracking-[-0.02em] tabular-nums text-fg">{area.medida[locale]}</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-soft">{area.medidaNota[locale]}</span>
+                    </div>
+                    <h3 className="mt-5 max-w-[24ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.022em]">{area.titulo[locale]}</h3>
+                    <p className="mt-5 max-w-[52ch] text-md text-fg-soft">{area.posicao[locale]}</p>
                   </div>
+                  <figure className="entra-tarde m-0 rounded-[6px] bg-[#1d2126] p-4 text-paper">
+                    <GraficoDeArea tipo={area.chave} />
+                    <figcaption className="mt-3 flex justify-between text-[11.5px] text-paper/55">
+                      <span>{area.legenda[locale]}</span>
+                      <span className="tabular-nums">{area.alcance[locale]}</span>
+                    </figcaption>
+                  </figure>
                 </div>
-                <figure className="entra-tarde m-0 rounded-[6px] bg-[#1d2126] p-4 text-paper lg:sticky lg:top-24">
-                  <GraficoDeArea tipo={area.chave} />
-                  <figcaption className="mt-3 flex justify-between text-[11.5px] text-paper/55">
-                    <span>{area.legenda[locale]}</span>
-                    <span className="tabular-nums">{area.alcance[locale]}</span>
-                  </figcaption>
-                </figure>
+
+                {/* As faixas dos serviços: a toda a largura, e a cor a varrer da
+                    esquerda ao passar o rato, como os serviços na homepage. Um
+                    serviço sem página varre na mesma — a faixa é o desenho da
+                    lista, não a promessa de uma ligação — mas não leva seta. */}
+                <div className="entra mt-12 border-t border-line">
+                  {area.servicos.map((s) => {
+                    const tom = TONS[ordem % TONS.length];
+                    const faixa = "relative block overflow-hidden border-b border-line";
+                    const dentro = (
+                      <span className="relative grid gap-x-8 gap-y-2 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center lg:py-7">
+                        <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{s.nome[locale]}</span>
+                        <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{s.linha[locale]}</span>
+                        <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${s.href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
+                          {s.href ? "→" : "·"}
+                        </span>
+                      </span>
+                    );
+                    const varredura = (
+                      <span
+                        aria-hidden="true"
+                        className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 ${tom.fundo}`}
+                      />
+                    );
+                    const classe = `${faixa} group transition-colors duration-300 ${tom.texto}`;
+                    return s.href ? (
+                      <Link key={s.nome.pt} href={s.href as "/contactos"} className={classe}>
+                        {varredura}
+                        {dentro}
+                      </Link>
+                    ) : (
+                      <div key={s.nome.pt} className={classe} title={m.areas.emBreve[locale]}>
+                        {varredura}
+                        {dentro}
+                      </div>
+                    );
+                  })}
+                </div>
               </article>
             ))}
           </div>
@@ -232,12 +242,12 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
       {service?.phases?.length ? (
         <section className="surface-red py-24 lg:py-28">
           <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-            <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-end lg:gap-14">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
               <div>
                 <span className="eyebrow text-ink/70">{m.metodo.eyebrow[locale]}</span>
-                <h2 className="mt-4 font-display text-[clamp(34px,4vw,60px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
+                <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
               </div>
-              <p className="max-w-[52ch] text-md text-fg-soft">{m.metodo.nota[locale]}</p>
+              <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.metodo.nota[locale]}</p>
             </div>
             <ol className="relative mt-14 grid gap-12 pl-7 sm:pl-10">
               <span aria-hidden="true" className="camada-fio camada-fio-curto absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-ink to-ink/30" />
@@ -263,7 +273,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           <div className="flex flex-wrap items-end justify-between gap-8 border-b border-line pb-6">
             <div className="entra">
               <span className="eyebrow text-red">{m.trabalho.eyebrow[locale]}</span>
-              <h2 className="mt-4 max-w-[20ch] text-chapter">{m.trabalho.titulo[locale]}</h2>
+              <h2 className="mt-4 max-w-[26ch] text-chapter">{m.trabalho.titulo[locale]}</h2>
             </div>
             <Link href="/projetos" className="btn-pill btn-pill-ink">
               {m.trabalho.todos[locale]} <span aria-hidden="true">→</span>
@@ -301,7 +311,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         <div className="mx-auto grid max-w-[1200px] gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:items-center lg:gap-14">
           <div className="entra">
             <span className="eyebrow text-red">{m.ia.eyebrow[locale]}</span>
-            <h2 className="mt-4 max-w-[18ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.025em]">{m.ia.titulo[locale]}</h2>
+            <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.025em]">{m.ia.titulo[locale]}</h2>
             <p className="mt-5 max-w-[46ch] text-md text-fg-soft">{m.ia.texto[locale]}</p>
             {ia ? (
               <Link href={{ pathname: "/servicos/[slug]", params: { slug: slugFor(ia, locale) } }} className="btn-pill mt-7">
