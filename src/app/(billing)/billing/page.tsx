@@ -17,18 +17,22 @@ export default async function BillingSignInPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-paper-3 px-5 py-5 sm:px-8">
-        <JellyWordmark className="w-[72px] text-red" />
-        <span className="eyebrow text-mute">{t("area")}</span>
+      <header className="border-b border-paper-3">
+        <div className="mx-auto flex w-full max-w-[920px] items-center justify-between gap-4 px-5 py-5 sm:px-8">
+          <JellyWordmark className="w-[72px] text-red" />
+          <span className="eyebrow text-mute">{t("area")}</span>
+        </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center px-5 py-12 sm:px-8">
-        <div className="w-full max-w-[520px]">
+      {/* O mesmo cartão branco do formulário do Monday, para quem chega daqui
+          não mudar de casa quando entra. */}
+      <main className="flex flex-1 items-start justify-center px-5 py-12 sm:px-8 sm:py-16">
+        <div className="w-full max-w-[560px] rounded-[16px] bg-white px-6 py-8 shadow-[0_1px_2px_rgba(21,23,25,0.04),0_8px_28px_rgba(21,23,25,0.06)] sm:px-10 sm:py-10">
           <h1 className="text-chapter">{t("signIn")}</h1>
           <p className="mt-3 text-[14px] text-slate">{t("intro")}</p>
 
           {erro === "link" ? (
-            <p className="mt-5 border-l-2 border-red bg-white p-4 text-[13px] text-slate" role="alert">
+            <p className="mt-5 rounded-[12px] border-l-2 border-red bg-paper p-4 text-[13px] text-slate" role="alert">
               {t("invalidLink")}
             </p>
           ) : null}

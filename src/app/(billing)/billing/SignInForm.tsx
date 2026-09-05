@@ -44,7 +44,7 @@ export function SignInForm({ copy }: { copy: Copy }) {
 
   if (state === "sent") {
     return (
-      <p className="rounded-[12px] border-l-2 border-chartreuse bg-white p-4 text-sm text-slate" role="status">
+      <p className="rounded-[12px] border-l-2 border-chartreuse bg-paper p-4 text-sm text-slate" role="status">
         {copy.sent}
       </p>
     );
@@ -69,21 +69,21 @@ export function SignInForm({ copy }: { copy: Copy }) {
           }}
           aria-invalid={state === "invalid"}
           aria-describedby={state === "idle" || state === "sending" ? undefined : "sign-in-message"}
-          className="rounded-[4px] border border-paper-3 bg-white px-3.5 py-2.5 text-sm text-ink shadow-xs outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red"
+          className="rounded-[8px] border border-paper-3 bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition-colors duration-200 placeholder:text-ink/45 focus:border-red"
           placeholder="nome@empresa.pt"
         />
       </div>
       <button
         type="submit"
         disabled={state === "sending"}
-        /* A pastilha da casa, de papel: fui medir o fundo desta página e é
-           tinta, como o resto do site — os campos brancos enganam. */
-        className="btn-pill w-fit disabled:opacity-40"
+        /* A página é clara e o cartão é branco: a pastilha de papel
+           desaparecia aqui. Vai de tinta, como nas secções de papel do site. */
+        className="btn-pill btn-pill-ink w-fit disabled:opacity-40"
       >
         {state === "sending" ? copy.sending : copy.submit}
       </button>
       {state === "invalid" || state === "error" || state === "throttled" ? (
-        <p id="sign-in-message" className="text-[13px] text-red-dark" role="alert">
+        <p id="sign-in-message" className="text-[13px] text-red-deep" role="alert">
           {state === "invalid" ? copy.invalidEmail : state === "throttled" ? copy.tooMany : copy.error}
         </p>
       ) : null}

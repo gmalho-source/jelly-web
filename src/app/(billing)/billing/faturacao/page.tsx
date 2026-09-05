@@ -28,39 +28,44 @@ export default async function InvoicePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="flex items-center justify-between gap-4 border-b border-paper-3 px-5 py-5 sm:px-8">
-        <JellyWordmark className="w-[72px] text-red" />
-        <div className="flex items-center gap-3 text-sm text-slate">
-          <span>{ficha.nome}</span>
-          <form action="/billing/sair" method="post">
-            <button type="submit" className="text-sm font-semibold text-red hover:underline">
-              {t("signOut")}
-            </button>
-          </form>
+      <header className="border-b border-paper-3">
+        <div className="mx-auto flex w-full max-w-[920px] items-center justify-between gap-4 px-5 py-5 sm:px-8">
+          <JellyWordmark className="w-[72px] text-red" />
+          <div className="flex items-center gap-3 text-sm text-slate">
+            <span>{ficha.nome}</span>
+            <form action="/billing/sair" method="post">
+              <button type="submit" className="text-sm font-semibold text-red hover:underline">
+                {t("signOut")}
+              </button>
+            </form>
+          </div>
         </div>
       </header>
 
-      <main className="px-5 py-10 sm:px-8">
-        <h1 className="text-chapter">{t("submitInvoice")}</h1>
-        <p className="mt-3 max-w-[52ch] text-[14px] text-slate">{t("invoiceIntro")}</p>
+      {/* O formulário do Monday traz o seu próprio cartão branco, centrado no
+          cinzento dele. A página dá-lhe a mesma cor e a mesma coluna, ao meio,
+          e fica de fora: o título em cima, o formulário a seguir, mais nada. */}
+      <main className="mx-auto w-full max-w-[920px] flex-1 px-5 pt-10 pb-16 sm:px-8">
+        <div className="mx-auto max-w-[56ch] text-center">
+          <h1 className="text-chapter">{t("submitInvoice")}</h1>
+          <p className="mt-3 text-[14px] text-slate">{t("invoiceIntro")}</p>
+        </div>
 
-        <div className="mt-7 max-w-[860px] border border-paper-3 bg-white">
+        <div className="mt-8">
           {embedUrl ? (
             <iframe
               src={embedUrl}
               title={t("submitInvoice")}
-              className="h-[720px] w-full border-0"
+              className="block h-[1240px] w-full border-0"
               // O formulário é servido pelo Monday; nada aqui lê o seu conteúdo.
               sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
             />
           ) : (
-            <p className="p-6 text-[13px] text-mute">{t("formUnavailable")}</p>
+            <p className="mx-auto max-w-[56ch] rounded-[12px] bg-white p-6 text-center text-[13px] text-mute">
+              {t("formUnavailable")}
+            </p>
           )}
         </div>
-
-        <p className="mt-5 max-w-[52ch] border-l-2 border-lime bg-white p-4 text-[13px] text-slate">
-          {t("phase2")}
-        </p>
       </main>
     </div>
   );
