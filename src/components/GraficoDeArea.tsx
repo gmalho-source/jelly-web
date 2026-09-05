@@ -3,10 +3,12 @@
 import { useEffect, useRef } from "react";
 
 /**
- * O gráfico de cada área da página de Marketing, desenhado em canvas.
+ * O gráfico de cada área das páginas de Marketing e de Tecnologia, em canvas.
  *
- * Quatro desenhos, um por unidade de medida: barras de custo por canal, uma
- * área de atenção acumulada, uma rede de menções e a jornada de uma lead. Os
+ * Oito desenhos, um por unidade de medida. Do Marketing: barras de custo por
+ * canal, uma área de atenção acumulada, uma rede de menções e a jornada de uma
+ * lead. Da Tecnologia: um funil de conversão, duas curvas de retenção, cinco
+ * sistemas a escrever num só registo e o tempo de carregamento por página. Os
  * números são ilustrativos — é o gesto que se quer mostrar, o de pôr o número
  * ao lado da ideia — e por isso não saem do desenho nem vão para o texto.
  *
@@ -15,7 +17,7 @@ import { useEffect, useRef } from "react";
  * novecentos milissegundos; a quem pediu menos movimento, ou não chega a vê-lo,
  * fica o desenho parado, que é o mesmo.
  */
-export type Grafico = "performance" | "conteudo" | "influencia" | "dados";
+export type Grafico = "performance" | "conteudo" | "influencia" | "dados" | "conversao" | "retencao" | "integracao" | "velocidade";
 
 const CORES = {
   vermelho: "#dd364a",
@@ -168,6 +170,121 @@ const DESENHOS: Record<Grafico, (x: Ctx, w: number, h: number, t: number) => voi
       rotulo(x, "automático", (X(4) + X(6)) / 2, h - 12, CORES.vermelho, "center");
       rotulo(x, "pessoa", (X(0) + X(2)) / 2, h - 12, CORES.suave, "center");
     }
+  },
+
+  /* ── Tecnologia ─────────────────────────────────────────────────────────── */
+
+  conversao(x, w, h, t) {
+    grelha(x, w, h, 4);
+    const etapas = ["visita", "produto", "carrinho", "checkout", "compra"];
+    const antes = [100, 41, 12, 6.1, 1.4];
+    const depois = [100, 52, 19, 11.3, 2.9];
+    const bw = (w - 40) / etapas.length;
+    // Escala em raiz quadrada: em linear, a compra (1,4 %) não se via ao lado da visita (100 %).
+    const y = (v: number) => h - 24 - ((h - 48) * Math.sqrt(v)) / 10;
+    etapas.forEach((nome, i) => {
+      const bx = 20 + bw * i + bw * 0.22;
+      const a = antes[i] * t;
+      const d = depois[i] * t;
+      x.fillStyle = CORES.fraco;
+      x.fillRect(bx, y(a), bw * 0.24, h - 24 - y(a));
+      x.fillStyle = CORES.vermelho;
+      x.fillRect(bx + bw * 0.3, y(d), bw * 0.24, h - 24 - y(d));
+      rotulo(x, nome, bx + bw * 0.27, h - 8, CORES.suave, "center");
+      if (t > 0.98 && i) rotulo(x, `${String(depois[i]).replace(".", ",")} %`, bx + bw * 0.42, y(d) - 6, CORES.papel, "center");
+    });
+  },
+  retencao(x, w, h, t) {
+    grelha(x, w, h, 4);
+    const dias = 30;
+    const X = (d: number) => 14 + ((w - 28) * d) / dias;
+    const Y = (v: number) => h - 24 - ((h - 48) * v) / 100;
+    // Duas curvas que caem e assentam: a app feita para o lançamento assenta nos
+    // seis por cento; a feita para o gesto que se repete, perto dos trinta.
+    const antes = (d: number) => 100 * Math.exp(-d / 6) + 6 * (1 - Math.exp(-d / 6));
+    const depois = (d: number) => 100 * Math.exp(-d / 9) + 27 * (1 - Math.exp(-d / 9));
+    const ate = Math.max(1, Math.round(dias * t));
+    const pontos = (f: (d: number) => number) => Array.from({ length: ate + 1 }, (_, d) => [X(d), Y(f(d))] as [number, number]);
+    linha(x, pontos(antes), CORES.suave, 1.4, [3, 4]);
+    linha(x, pontos(depois), CORES.vermelho, 2.5);
+    [1, 7, 14, 30].forEach((d) => rotulo(x, `D${d}`, X(d), h - 8, CORES.fraco, "center"));
+    rotulo(x, "utilizadores que voltam", 14, 22);
+    if (t > 0.98) {
+      rotulo(x, `${Math.round(depois(dias))} %`, X(dias) - 4, Y(depois(dias)) - 8, CORES.papel, "right");
+      rotulo(x, `${Math.round(antes(dias))} %`, X(dias) - 4, Y(antes(dias)) + 14, CORES.suave, "right");
+    }
+  },
+  integracao(x, w, h, t) {
+    const fontes = ["loja", "site", "faturação", "e-mail", "suporte"];
+    const destinos = ["marketing", "vendas", "direção"];
+    const cx = w / 2;
+    const cy = h / 2 + 6;
+    const xF = 70;
+    const xD = w - 70;
+    const yF = (i: number) => 30 + ((h - 60) * i) / (fontes.length - 1);
+    const yD = (i: number) => h * 0.3 + (h * 0.42 * i) / (destinos.length - 1);
+    const ate = Math.round((fontes.length + destinos.length) * t);
+    fontes.forEach((nome, i) => {
+      if (i >= ate) return;
+      x.beginPath();
+      x.strokeStyle = CORES.fraco;
+      x.lineWidth = 1.2;
+      x.moveTo(xF + 6, yF(i));
+      x.bezierCurveTo(cx - 44, yF(i), cx - 44, cy, cx - 12, cy);
+      x.stroke();
+      x.fillStyle = CORES.suave;
+      x.beginPath();
+      x.arc(xF, yF(i), 4, 0, 7);
+      x.fill();
+      rotulo(x, nome, xF - 10, yF(i) + 4, CORES.suave, "right");
+    });
+    destinos.forEach((nome, i) => {
+      if (fontes.length + i >= ate) return;
+      x.beginPath();
+      x.strokeStyle = "rgba(221,54,74,.7)";
+      x.lineWidth = 1.4;
+      x.moveTo(cx + 12, cy);
+      x.bezierCurveTo(cx + 44, cy, cx + 44, yD(i), xD - 6, yD(i));
+      x.stroke();
+      x.fillStyle = CORES.vermelho;
+      x.beginPath();
+      x.arc(xD, yD(i), 4, 0, 7);
+      x.fill();
+      rotulo(x, nome, xD + 10, yD(i) + 4, CORES.papel, "left");
+    });
+    x.fillStyle = CORES.vermelho;
+    x.beginPath();
+    x.arc(cx, cy, 11, 0, 7);
+    x.fill();
+    rotulo(x, "1 registo", cx, cy + 27, CORES.papel, "center");
+    rotulo(x, "o dado entra uma vez", cx, 16, CORES.suave, "center");
+  },
+  velocidade(x, w, h, t) {
+    const paginas = ["início", "categoria", "produto", "checkout"];
+    const antes = [4.8, 5.6, 6.1, 3.9];
+    const depois = [1.6, 1.9, 2.1, 1.4];
+    const x0 = 70;
+    const X = (s: number) => x0 + ((w - 16 - x0) * s) / 6.5;
+    const alturaLinha = (h - 40) / paginas.length;
+    // O limiar do Google para um LCP bom: dois segundos e meio.
+    x.setLineDash([3, 4]);
+    x.strokeStyle = CORES.suave;
+    x.lineWidth = 1;
+    x.beginPath();
+    x.moveTo(X(2.5) + 0.5, 8);
+    x.lineTo(X(2.5) + 0.5, h - 26);
+    x.stroke();
+    x.setLineDash([]);
+    rotulo(x, "2,5 s · bom", X(2.5), h - 10, CORES.suave, "center");
+    paginas.forEach((nome, i) => {
+      const y = 12 + alturaLinha * i;
+      rotulo(x, nome, x0 - 10, y + alturaLinha * 0.55 + 4, CORES.suave, "right");
+      x.fillStyle = CORES.fraco;
+      x.fillRect(x0, y + alturaLinha * 0.2, X(antes[i] * t) - x0, alturaLinha * 0.26);
+      x.fillStyle = CORES.vermelho;
+      x.fillRect(x0, y + alturaLinha * 0.52, X(depois[i] * t) - x0, alturaLinha * 0.26);
+      if (t > 0.98) rotulo(x, `${String(depois[i]).replace(".", ",")} s`, X(depois[i]) + 6, y + alturaLinha * 0.52 + alturaLinha * 0.22, CORES.papel, "left");
+    });
   },
 };
 

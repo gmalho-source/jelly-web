@@ -130,7 +130,11 @@ Marketing, que reutiliza o manifesto para o título e acrescenta os gráficos de
 cada área (`GraficoDeArea`): um canvas que se desenha por inteiro ao montar e,
 a quem tem movimento, cresce uma vez quando chega ao ecrã. É uma animação de
 tempo e não de scroll, e por isso é a única aqui com `ease-out`. O mapa da
-oferta, logo abaixo da abertura, não se anima: pode estar no ecrã à chegada. Os
+oferta, logo abaixo da abertura, não se anima: pode estar no ecrã à chegada. A
+página-mãe de Tecnologia e as suas quatro páginas de serviço repetem a fórmula
+tal e qual — o mesmo topo, os mesmos gráficos com quatro desenhos novos, e o
+mesmo `PaginaDeServico` que desenha as dez do Marketing — de propósito: duas
+famílias com o mesmo esqueleto leem-se como uma casa. Os
 projetos, o Sobre e a homepage
 continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.

@@ -4621,7 +4621,7 @@
   },
   {
     "source": "/jellycare",
-    "destination": "/servicos/tecnologia",
+    "destination": "/servicos/tecnologia/performance-acessibilidade-migracoes",
     "permanent": true
   },
   {
@@ -4641,7 +4641,7 @@
   },
   {
     "source": "/servicos/aplicacoes-web-e-mobile",
-    "destination": "/servicos/tecnologia",
+    "destination": "/servicos/tecnologia/aplicacoes-web-mobile",
     "permanent": true
   },
   {
@@ -4651,12 +4651,12 @@
   },
   {
     "source": "/servicos/web-design-criacao-de-sites",
-    "destination": "/servicos/tecnologia",
+    "destination": "/servicos/tecnologia/websites-ecommerce",
     "permanent": true
   },
   {
     "source": "/servicos/consultoria-e-sistemas-crm-erp-cdp",
-    "destination": "/servicos/tecnologia",
+    "destination": "/servicos/tecnologia/crm-cdp-integracoes",
     "permanent": true
   },
   {

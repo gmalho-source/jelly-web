@@ -30,11 +30,11 @@ const SERVICES = {
   // vai para ela e não para o serviço, senão quem chega por uma pesquisa perde
   // a página que procurava.
   "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia/": "/pre-qualificacao-leads-agentes-ia",
-  "/servicos/web-design-criacao-de-sites/": "/servicos/tecnologia",
-  "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia",
-  "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia",
+  "/servicos/web-design-criacao-de-sites/": "/servicos/tecnologia/websites-ecommerce",
+  "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia/aplicacoes-web-mobile",
+  "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia/crm-cdp-integracoes",
   "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db/": "/servicos/marketing/lead-generation-b2b",
-  "/jellycare/": "/servicos/tecnologia",
+  "/jellycare/": "/servicos/tecnologia/performance-acessibilidade-migracoes",
 };
 
 /** Páginas institucionais e utilitárias. */

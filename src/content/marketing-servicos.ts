@@ -1,4 +1,4 @@
-import type { Localized } from "./types";
+import { irmaosDe, servicoPorSlug, type PaginaDeServico } from "./pagina-de-servico";
 
 /**
  * Os serviços de Marketing, um a um.
@@ -13,25 +13,8 @@ import type { Localized } from "./types";
  * página: a rota, o mapa do site e as ligações da página-mãe leem daqui.
  */
 
-export type Passo = { nome: Localized; corpo: Localized };
-export type Pergunta = { pergunta: Localized; resposta: Localized };
-export type Formato = { nome: Localized; ideal: Localized; itens: Localized[] };
-
-export type ServicoDeMarketing = {
-  /** Endereço em cada língua. */
-  slug: { pt: string; en: string };
-  area: "performance" | "conteudo" | "influencia" | "dados";
-  nome: Localized;
-  titulo: Localized;
-  claim: Localized;
-  descricao: Localized;
-  abertura: { titulo: Localized; problema: Localized[]; abordagem: Localized[] };
-  fazemos: { titulo: Localized; itens: Passo[] };
-  formatos?: { titulo: Localized; nota: Localized; itens: Formato[] };
-  passos: { titulo: Localized; itens: Passo[] };
-  faq: Pergunta[];
-  fecho: { titulo: Localized; texto: Localized };
-};
+export type AreaDeMarketing = "performance" | "conteudo" | "influencia" | "dados";
+export type ServicoDeMarketing = PaginaDeServico<AreaDeMarketing>;
 
 export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
@@ -592,11 +575,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
 ];
 
 /** Um serviço pelo seu endereço, em qualquer das duas línguas. */
-export function servicoDeMarketing(slug: string): ServicoDeMarketing | undefined {
-  return SERVICOS_DE_MARKETING.find((s) => s.slug.pt === slug || s.slug.en === slug);
-}
+export const servicoDeMarketing = (slug: string) => servicoPorSlug(SERVICOS_DE_MARKETING, slug);
 
 /** Os outros serviços da mesma área. */
-export function irmaos(servico: ServicoDeMarketing): ServicoDeMarketing[] {
-  return SERVICOS_DE_MARKETING.filter((s) => s.area === servico.area && s.slug.pt !== servico.slug.pt);
-}
+export const irmaos = (servico: ServicoDeMarketing) => irmaosDe(SERVICOS_DE_MARKETING, servico);
