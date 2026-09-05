@@ -22,8 +22,8 @@ const SERVICES = {
   "/servicos/web-marketing-digital/": "/servicos/marketing",
   "/sem-search-engine-marketing/": "/servicos/marketing",
   "/servicos/web-marketing-digital/seo-search-everywhere-optimization/": "/servicos/marketing/seo-geo",
-  "/servicos/web-marketing-digital/live-video-shopping/": "/servicos/marketing",
-  "/servicos/audiovisuais-producao-video/": "/servicos/marketing",
+  "/servicos/web-marketing-digital/live-video-shopping/": "/servicos/marketing/video-audiovisual",
+  "/servicos/audiovisuais-producao-video/": "/servicos/marketing/video-audiovisual",
   "/servicos/producoes-3d/": "/servicos/marketing",
   "/inteligencia-artificial/": "/servicos/inteligencia-artificial",
   // A pilar da pré-qualificação existe agora no site novo: o endereço antigo

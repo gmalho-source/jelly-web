@@ -4606,12 +4606,12 @@
   },
   {
     "source": "/servicos/web-marketing-digital/live-video-shopping",
-    "destination": "/servicos/marketing",
+    "destination": "/servicos/marketing/video-audiovisual",
     "permanent": true
   },
   {
     "source": "/servicos/audiovisuais-producao-video",
-    "destination": "/servicos/marketing",
+    "destination": "/servicos/marketing/video-audiovisual",
     "permanent": true
   },
   {
