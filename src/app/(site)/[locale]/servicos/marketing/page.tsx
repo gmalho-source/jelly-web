@@ -24,15 +24,17 @@ import { slugFor } from "@/lib/slugs";
 const SLUG = "marketing";
 
 /*
- * A cor que varre cada área ao passar o rato, como na homepage. Sobre as claras
- * — lavanda e coral — o texto fica em tinta, senão não se lê. As classes vão
+ * A cor que varre cada área ao passar o rato: as quatro da homepage, pela
+ * mesma ordem. Sobre as claras — lavanda, coral e chartreuse — o texto fica em
+ * tinta, senão não se lê. O vermelho fundo ficou de fora: sobre papel lia-se
+ * como um aviso, não como uma cor da casa. As classes vão
  * escritas por inteiro porque o Tailwind lê o código à procura delas.
  */
 const TONS = [
   { fundo: "bg-red", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
   { fundo: "bg-lavender", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
   { fundo: "bg-coral", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-  { fundo: "bg-red-deep", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
+  { fundo: "bg-chartreuse", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
 ];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {

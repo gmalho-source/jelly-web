@@ -161,11 +161,12 @@ const DESENHOS: Record<Grafico, (x: Ctx, w: number, h: number, t: number) => voi
       x.arc(p[0], p[1], 7, 0, 7);
       x.fill();
       x.stroke();
-      rotulo(x, toques[i], p[0], p[1] + 24, i >= 3 ? CORES.papel : CORES.suave, "center");
+      // Alternam por cima e por baixo: sete nomes na mesma linha tocavam-se.
+      rotulo(x, toques[i], p[0], p[1] + (i % 2 ? -18 : 26), i >= 3 ? CORES.papel : CORES.suave, "center");
     });
     if (t > 0.98) {
-      rotulo(x, "automático", X(4), Y(4) - 40, CORES.vermelho, "center");
-      rotulo(x, "pessoa", X(0), Y(0) - 34, CORES.suave, "center");
+      rotulo(x, "automático", (X(4) + X(6)) / 2, h - 12, CORES.vermelho, "center");
+      rotulo(x, "pessoa", (X(0) + X(2)) / 2, h - 12, CORES.suave, "center");
     }
   },
 };
