@@ -44,6 +44,12 @@ export const marketing = {
     en: "Data, creativity and cadence. Ten services in four areas, run as one account, with the number always next to the idea.",
   },
   cta: { pt: "Falar connosco", en: "Talk to us" },
+  /* O vídeo do topo é o da página antiga, imagens de banco de 2019, recodificado
+     de 51 MB para 3 MB. Provisório: fica até haver imagens filmadas na Jelly. */
+  topo: {
+    video: "/media/marketing-topo.mp4",
+    poster: { src: "/media/marketing-topo-poster.webp", width: 1440, height: 810 },
+  },
   descricao: {
     pt: "Marketing digital pela Jelly: paid media, SEO e GEO, lead generation B2B, social media, vídeo, conteúdo, influencers, digital PR, marketing automation e analytics. Dez serviços, uma só conta.",
     en: "Digital marketing by Jelly: paid media, SEO and GEO, B2B lead generation, social media, video, content, influencers, digital PR, marketing automation and analytics. Ten services, one account.",

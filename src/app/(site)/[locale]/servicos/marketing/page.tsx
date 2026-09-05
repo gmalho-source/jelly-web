@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
       (candidate) => ({ pathname: "/servicos/[slug]" as const, params: { slug: service ? slugFor(service, candidate) : SLUG } }),
       locale,
     ),
-    openGraph: { type: "website", title: nome, description: marketing.descricao[locale] },
+    openGraph: { type: "website", title: nome, description: marketing.descricao[locale], images: [{ url: `${SITE_URL}${marketing.topo.poster.src}` }] },
   };
 }
 
@@ -109,7 +110,25 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           Curta e em tinta: uma frase, uma linha. O chapéu está logo a seguir,
           em papel — é ele a imagem desta página. Acima da dobra, e por isso a
           entrada é uma animação de tempo, como no manifesto do Branding. */}
-      <header className="surface-ink relative -mt-6 flex flex-col justify-end overflow-hidden pb-14 pt-[140px] sm:-mt-24 lg:pb-16 lg:pt-[168px]">
+      <header className="surface-cover relative isolate -mt-6 flex min-h-[clamp(520px,84svh,940px)] flex-col justify-end overflow-hidden bg-ink pb-14 pt-[140px] sm:-mt-24 lg:pb-16">
+        {/* O vídeo é textura, não cena: escurecido até o título mandar. O
+            primeiro fotograma serve de capa enquanto os 3 MB chegam, e a quem
+            pediu menos movimento fica só ele. */}
+        <Image src={m.topo.poster.src} alt="" fill priority sizes="100vw" className="-z-30 object-cover" />
+        <video
+          className="video-fundo absolute inset-0 -z-20 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={m.topo.poster.src}
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src={m.topo.video} type="video/mp4" />
+        </video>
+        <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/97 via-ink/86 to-ink/72" />
         <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
           <span className="eyebrow text-red">{m.eyebrow[locale]}</span>
           <h1
