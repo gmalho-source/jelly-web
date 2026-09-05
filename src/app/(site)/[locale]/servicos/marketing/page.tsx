@@ -110,7 +110,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           Curta e em tinta: uma frase, uma linha. O chapéu está logo a seguir,
           em papel — é ele a imagem desta página. Acima da dobra, e por isso a
           entrada é uma animação de tempo, como no manifesto do Branding. */}
-      <header className="surface-cover relative isolate -mt-6 flex min-h-[clamp(520px,84svh,940px)] flex-col justify-end overflow-hidden bg-ink pb-14 pt-[140px] sm:-mt-24 lg:pb-16">
+      <header className="surface-cover relative isolate -mt-6 flex min-h-[100svh] flex-col justify-end overflow-hidden bg-ink pb-14 pt-[140px] sm:-mt-24 lg:pb-16">
         {/* O vídeo é textura, não cena: escurecido até o título mandar. O
             primeiro fotograma serve de capa enquanto os 3 MB chegam, e a quem
             pediu menos movimento fica só ele. */}

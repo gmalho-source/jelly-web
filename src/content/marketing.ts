@@ -83,7 +83,7 @@ export const marketing = {
     {
       chave: "conteudo",
       nome: { pt: "Conteúdo", en: "Content" },
-      medida: { pt: "min.", en: "min." },
+      medida: { pt: "minutos", en: "minutes" },
       medidaNota: { pt: "de atenção merecida", en: "of earned attention" },
       titulo: { pt: "Merecer atenção em vez de a comprar.", en: "Earn attention instead of buying it." },
       posicao: { pt: "Redes, vídeo e texto com uma ideia editorial por trás, publicados com cadência.", en: "Social, video and text with an editorial idea behind them, published with cadence." },
