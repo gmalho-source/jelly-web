@@ -25,7 +25,11 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
 
 E, feito à mão na página das camadas: um fio vertical que cresce com o scroll
-(`camada-fio`), que é o gesto de que a casa mais gostou. Vale para qualquer
+(`camada-fio`), que é o gesto de que a casa mais gostou. E, no topo da página
+de Marketing, `topo-paralaxe`: o vídeo de fundo que deriva 28% para baixo
+enquanto o topo sai do ecrã. Mede-se em `scroll(root)` e não em `view()`,
+porque um topo com `overflow: hidden` é, para `view()`, um contentor de scroll
+onde a camada nunca se mexe — medido, a transformação ficava a zero. Vale para qualquer
 sequência que se acumule — camadas, fases, passos.
 
 ## Os números, e porque é que são estes

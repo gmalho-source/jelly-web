@@ -1357,6 +1357,33 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   }
 }
 
+/* ── O topo da página de Marketing ─────────────────────────────────────────
+   O vídeo do topo deriva mais devagar do que a página quando se desce: é a
+   paralaxe de um fundo, e não a da moldura de uma fotografia (`.paralaxe`),
+   porque aqui a camada ocupa o ecrã inteiro e não tem respiro à volta.
+
+   Mede-se no scroll da página — `scroll(root)`, do zero até uma altura de
+   ecrã, que é exatamente a saída do topo — e não em `view()`: o topo tem
+   `overflow: hidden`, e para `view()` isso é um contentor de scroll onde a
+   camada nunca se mexe. Medido: com `view()` a transformação ficava a zero.
+   Move a camada 28% para baixo; o que ficaria à vista em cima já está fora do
+   ecrã. A capa e o vídeo levam a mesma classe para não se desencontrarem.
+   Linear, pela razão de sempre: o scroll é o compasso. */
+@keyframes topo-paralaxe {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 28%, 0); }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .topo-paralaxe {
+      animation: topo-paralaxe linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+      will-change: transform;
+    }
+  }
+}
+
 /* ── A página de Branding ──────────────────────────────────────────────────
    Três coisas que só existem lá: o manifesto que entra palavra a palavra, a
    secção do trabalho que toma a cor da marca no ecrã, e o espécime da
