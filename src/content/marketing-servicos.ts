@@ -79,6 +79,9 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
     slug: { pt: "seo-geo", en: "seo-geo" },
     area: "performance",
+    /* O vídeo do topo da página de SEO do site antigo, recodificado de 8,6 MB
+       para 0,3 MB: 1280 px, H.264, sem áudio. */
+    topo: { video: "/media/marketing-seo-topo.mp4", poster: { src: "/media/marketing-seo-topo-poster.webp", width: 1280, height: 720 } },
     nome: { pt: "SEO e GEO", en: "SEO and GEO" },
     titulo: { pt: "Enquanto uns procuram visibilidade, outros conquistam relevância. E são os escolhidos.", en: "While some chase visibility, others earn relevance. And they are the ones chosen." },
     claim: {
