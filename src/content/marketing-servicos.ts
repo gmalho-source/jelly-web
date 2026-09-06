@@ -25,7 +25,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
        do topo, e a essa luz a compressão não se vê. */
     topo: { video: "/media/marketing-paid-topo.mp4", poster: { src: "/media/marketing-paid-topo-poster.webp", width: 1440, height: 810 } },
     nome: { pt: "Paid Media", en: "Paid Media" },
-    titulo: { pt: "Cada euro em media com um nome à frente: o da venda que trouxe.", en: "Every euro of media with a name in front of it: the sale it brought." },
+    titulo: { pt: "Cada euro em publicidade com um nome à frente: o do seu novo cliente.", en: "Every euro of advertising with a name in front of it: your new customer's." },
     claim: {
       pt: "Google, Meta, LinkedIn e TikTok geridos como um só orçamento, full-funnel, com a atribuição limpa antes do primeiro euro.",
       en: "Google, Meta, LinkedIn and TikTok run as one budget, full-funnel, with clean attribution before the first euro.",
