@@ -250,6 +250,13 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       { pergunta: { pt: "Precisamos de trocar de CRM?", en: "Do we need to change CRM?" }, resposta: { pt: "Não. Ligamos ao que existe. Se não existir nenhum, ajudamos a escolher um que a equipa use de facto.", en: "No. We connect to what you have. If there's none, we help pick one the team will actually use." } },
     ],
     fecho: { titulo: { pt: "Negócio B2B? Descubra como transformar dados em crescimento real.", en: "B2B business? Find out how to turn data into real growth." }, texto: { pt: "Começa por uma leitura da vossa carteira. Sem compromisso, com números.", en: "It starts with a reading of your portfolio. No commitment, with numbers." } },
+    parceiro: {
+      eyebrow: { pt: "Sobre a Informa D&B", en: "About Informa D&B" },
+      texto: {
+        pt: "A Informa D&B é especialista no conhecimento do tecido empresarial. Através de análises inovadoras, disponibiliza o acesso a informação atualizada e relevante sobre a atividade de empresas e gestores, fundamental para a condução dos negócios dos seus clientes. A Informa D&B está integrada na maior rede mundial de informação empresarial, a D&B Worldwide Network, com acesso aos dados de mais de 500 milhões de agentes económicos em todo o mundo. A base de dados empresarial da Informa D&B é a mais utilizada em Portugal, servindo mais de 500 mil utilizadores através das duas marcas: INFORMA e eInforma.",
+        en: "Informa D&B specialises in knowledge of the business landscape. Through innovative analysis, it provides access to up-to-date, relevant information on the activity of companies and managers, essential to how its clients run their businesses. Informa D&B is part of the world's largest business information network, the D&B Worldwide Network, with access to data on more than 500 million economic agents worldwide. Informa D&B's business database is the most widely used in Portugal, serving more than 500 thousand users through its two brands: INFORMA and eInforma.",
+      },
+    },
   },
 
   {

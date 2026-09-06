@@ -282,6 +282,20 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
         </div>
       </section>
 
+      {/* ── Sobre o parceiro, quando há um ──────────────────────────────────
+          Um bloco em papel, com a apresentação do parceiro pelas suas
+          palavras. Perto do fim, e por isso `entra-perto`. */}
+      {servico.parceiro ? (
+        <section className="surface-paper border-t border-line">
+          <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-20">
+            <div className="entra-perto grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-14">
+              <h2 className="eyebrow text-red">{servico.parceiro.eyebrow[locale]}</h2>
+              <p className="reading max-w-[68ch] text-md text-fg-soft">{servico.parceiro.texto[locale]}</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── A área, e o caminho de volta ────────────────────────────────────── */}
       <section className="surface-ink">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-20">

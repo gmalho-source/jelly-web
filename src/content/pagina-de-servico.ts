@@ -56,6 +56,12 @@ export type PaginaDeServico<Area extends string = string> = {
   passos: { titulo: Localized; itens: Passo[] };
   faq: Pergunta[];
   fecho: { titulo: Localized; texto: Localized };
+  /**
+   * Uma nota sobre um parceiro, no fim da página. É a apresentação do
+   * parceiro pelas suas palavras — a Informa D&B na Lead Generation B2B — e
+   * por isso entra tal e qual, sem a voz da casa por cima.
+   */
+  parceiro?: { eyebrow: Localized; texto: Localized };
 };
 
 /** Um serviço pelo seu endereço, em qualquer das duas línguas. */
