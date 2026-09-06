@@ -324,6 +324,7 @@ export const Clients: CollectionConfig = {
         { label: "Financeiro e seguros", value: "financeiro" },
         { label: "Saúde e estética", value: "saude" },
         { label: "Bebidas e espirituosas", value: "bebidas" },
+        { label: "Indústria alimentar", value: "alimentar" },
         { label: "Produtos de consumo", value: "consumo" },
         { label: "Retalho", value: "retalho" },
         { label: "Indústria", value: "industria" },

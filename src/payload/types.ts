@@ -858,6 +858,7 @@ export interface Client {
     | 'financeiro'
     | 'saude'
     | 'bebidas'
+    | 'alimentar'
     | 'consumo'
     | 'retalho'
     | 'industria'
