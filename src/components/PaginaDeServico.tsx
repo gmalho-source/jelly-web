@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -73,24 +74,58 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Abertura em tinta ─────────────────────────────────────────────────
-          Sem vídeo: nenhum destes serviços tem imagem própria ainda, e um fundo
-          repetido em dez páginas deixava de dizer alguma coisa. A área e a sua
-          unidade de medida ficam por cima do título, para se saber onde se
-          está no mapa. Acima da dobra, e por isso não se anima. */}
-      <header className="surface-ink relative -mt-6 flex flex-col justify-end pb-12 pt-[136px] sm:-mt-24 lg:pb-14 lg:pt-[176px]">
-        <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
-          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
-            <span className="eyebrow text-red">{mae.nome} · {area.nome[locale]}</span>
-            <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span>
+      {/* ── Abertura ──────────────────────────────────────────────────────────
+          Em tinta por defeito: a maioria destes serviços não tem imagem própria,
+          e um fundo repetido em catorze páginas deixava de dizer alguma coisa.
+          Quando o serviço traz vídeo, abre em cheio como a página-mãe: vídeo
+          como textura, escurecido até o título mandar, e o primeiro fotograma
+          de capa. Nos dois casos a área e a sua unidade de medida ficam por cima
+          do título, para se saber onde se está no mapa. Acima da dobra, e por
+          isso não se anima. */}
+      {servico.topo ? (
+        <header className="surface-cover relative isolate -mt-6 flex min-h-[100lvh] flex-col justify-end overflow-hidden bg-ink pb-32 pt-[140px] sm:-mt-24 sm:pb-14 lg:pb-16">
+          <Image src={servico.topo.poster.src} alt="" fill priority sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
+          <video
+            className="video-fundo topo-paralaxe absolute inset-0 -z-20 h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={servico.topo.poster.src}
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            <source src={servico.topo.video} type="video/mp4" />
+          </video>
+          <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/97 via-ink/80 to-ink/55" />
+          <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
+            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+              <span className="eyebrow text-red">{mae.nome} · {area.nome[locale]}</span>
+              <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span>
+            </div>
+            <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(38px,5.6vw,84px)] leading-[0.98] tracking-[-0.03em]">{servico.titulo[locale]}</h1>
+            <div className="mt-10 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
+              <p className="subtitle max-w-[52ch]">{servico.claim[locale]}</p>
+              {chamada}
+            </div>
           </div>
-          <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(38px,5.6vw,84px)] leading-[0.98] tracking-[-0.03em]">{servico.titulo[locale]}</h1>
-          <div className="mt-10 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
-            <p className="subtitle max-w-[52ch]">{servico.claim[locale]}</p>
-            {chamada}
+        </header>
+      ) : (
+        <header className="surface-ink relative -mt-6 flex flex-col justify-end pb-12 pt-[136px] sm:-mt-24 lg:pb-14 lg:pt-[176px]">
+          <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
+            <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+              <span className="eyebrow text-red">{mae.nome} · {area.nome[locale]}</span>
+              <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span>
+            </div>
+            <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(38px,5.6vw,84px)] leading-[0.98] tracking-[-0.03em]">{servico.titulo[locale]}</h1>
+            <div className="mt-10 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
+              <p className="subtitle max-w-[52ch]">{servico.claim[locale]}</p>
+              {chamada}
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* ── Abertura em papel: o problema e a abordagem ─────────────────────── */}
       <section className="surface-paper">

@@ -258,6 +258,9 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
     slug: { pt: "video-audiovisual", en: "video-and-audiovisual" },
     area: "conteudo",
+    /* O making-of do site antigo: a equipa da Jelly a filmar, o único vídeo
+       desta família que é nosso. Recodificado de 26 MB para cerca de 1 MB. */
+    topo: { video: "/media/marketing-video-topo.mp4", poster: { src: "/media/marketing-video-topo-poster.webp", width: 1440, height: 810 } },
     nome: { pt: "Vídeo e Audiovisual", en: "Video and Audiovisual" },
     titulo: { pt: "Vídeos feitos para atrair e converter, com uma fração de segundo para o conseguir.", en: "Video made to attract and convert, with a fraction of a second to do it." },
     claim: {

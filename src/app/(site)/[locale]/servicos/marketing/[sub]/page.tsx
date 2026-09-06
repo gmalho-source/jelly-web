@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     title: servico.nome[locale],
     description: servico.descricao[locale],
     alternates: alternates((candidate) => ({ pathname: ROTA, params: { sub: servico.slug[candidate] } }), locale),
-    openGraph: { type: "website", title: servico.nome[locale], description: servico.descricao[locale], images: [{ url: `${SITE_URL}${marketing.topo.poster.src}` }] },
+    openGraph: { type: "website", title: servico.nome[locale], description: servico.descricao[locale], images: [{ url: `${SITE_URL}${servico.topo?.poster.src ?? marketing.topo.poster.src}` }] },
   };
 }
 
