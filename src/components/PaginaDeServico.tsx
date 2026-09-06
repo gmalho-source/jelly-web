@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FluxoDeAnalise } from "@/components/FluxoDeAnalise";
 import type { PaginaDeServico as Servico } from "@/content/pagina-de-servico";
 import type { Localized } from "@/content/types";
 import { SITE_URL } from "@/lib/seo";
@@ -156,6 +157,28 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
           </div>
         </div>
       </section>
+
+      {/* ── O fluxo, quando o serviço tem um processo para mostrar ──────────
+          Um palco fixo que se transforma com o scroll e seis capítulos ao lado.
+          Em tinta, entre a abertura e o que fazemos: é a prova de que o método
+          existe, antes da lista do que se entrega. */}
+      {servico.fluxo ? (
+        <section className="surface-ink border-t border-line">
+          <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
+              <div className="entra">
+                <span className="eyebrow text-red">{servico.fluxo.eyebrow[locale]}</span>
+                <h2 className="mt-4 max-w-[22ch] text-chapter">{servico.fluxo.titulo[locale]}</h2>
+              </div>
+              <p className="entra-tarde max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{servico.fluxo.nota[locale]}</p>
+            </div>
+            <FluxoDeAnalise
+              capitulos={servico.fluxo.capitulos.map((c) => ({ nome: c.nome[locale], texto: c.texto[locale] }))}
+              rotulos={Object.fromEntries(Object.entries(servico.fluxo.rotulos).map(([chave, valor]) => [chave, valor[locale]]))}
+            />
+          </div>
+        </section>
+      ) : null}
 
       {/* ── O que fazemos ─────────────────────────────────────────────────────
           A grelha de fios das áreas de um serviço: um padrão de papel, com cada

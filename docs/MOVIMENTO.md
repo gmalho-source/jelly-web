@@ -24,6 +24,15 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
 
+E, na página de Lead Generation B2B, `FluxoDeAnalise`: um palco em canvas que
+fica preso ao topo enquanto seis capítulos passam ao lado, e um só desenho que
+muda de estado com o scroll — os mesmos pontos a mudar de lugar, em `linear`,
+com uma pausa em cada estado para se ler. Em ecrã estreito o palco está por cima
+e a leitura mede-se pelo meio do que sobra por baixo dele, senão o título do
+capítulo ficava escondido; a quem pediu menos movimento o desenho salta de
+estado em estado em vez de deslizar. Medido: o palco visível nos seis
+capítulos, em 1440 e em 390, e nada transparente atrás do meio do ecrã.
+
 E, feito à mão na página das camadas: um fio vertical que cresce com o scroll
 (`camada-fio`), que é o gesto de que a casa mais gostou. E, no topo da página
 de Marketing, `topo-paralaxe`: o vídeo de fundo que deriva 28% para baixo

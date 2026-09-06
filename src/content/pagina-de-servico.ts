@@ -15,6 +15,22 @@ export type Passo = { nome: Localized; corpo: Localized };
 export type Pergunta = { pergunta: Localized; resposta: Localized };
 export type Formato = { nome: Localized; ideal: Localized; itens: Localized[] };
 
+/**
+ * Um fluxo contado em capítulos, com um palco fixo ao lado que se transforma
+ * com o scroll. Só faz sentido quando o serviço tem um processo com princípio,
+ * meio e fim que o cliente precisa de ver para acreditar — a análise de
+ * carteira com a Informa D&B é o primeiro. Os rótulos são o texto que entra no
+ * desenho, e por isso também têm as duas línguas.
+ */
+export type Fluxo = {
+  desenho: "informa";
+  eyebrow: Localized;
+  titulo: Localized;
+  nota: Localized;
+  capitulos: { nome: Localized; texto: Localized }[];
+  rotulos: Record<string, Localized>;
+};
+
 export type PaginaDeServico<Area extends string = string> = {
   /** Endereço em cada língua. */
   slug: { pt: string; en: string };
@@ -35,6 +51,7 @@ export type PaginaDeServico<Area extends string = string> = {
   descricao: Localized;
   abertura: { titulo: Localized; problema: Localized[]; abordagem: Localized[] };
   fazemos: { titulo: Localized; itens: Passo[] };
+  fluxo?: Fluxo;
   formatos?: { titulo: Localized; nota: Localized; itens: Formato[] };
   passos: { titulo: Localized; itens: Passo[] };
   faq: Pergunta[];
