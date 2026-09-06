@@ -20,6 +20,10 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
     slug: { pt: "paid-media", en: "paid-media" },
     area: "performance",
+    /* Vídeo da Jelly (setembro de 2026), 1080p HEVC com 28 MB, recodificado a
+       1280 px em H.264 CRF 36, sem áudio: 0,4 MB. Fica escurecido pelo gradiente
+       do topo, e a essa luz a compressão não se vê. */
+    topo: { video: "/media/marketing-paid-topo.mp4", poster: { src: "/media/marketing-paid-topo-poster.webp", width: 1440, height: 810 } },
     nome: { pt: "Paid Media", en: "Paid Media" },
     titulo: { pt: "Cada euro em media com um nome à frente: o da venda que trouxe.", en: "Every euro of media with a name in front of it: the sale it brought." },
     claim: {

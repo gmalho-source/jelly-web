@@ -23,7 +23,12 @@ export type PaginaDeServico<Area extends string = string> = {
    * Um vídeo para o topo, quando o serviço tem imagem própria. Sem ele a página
    * abre em tinta, como as irmãs; com ele abre em cheio, como a página-mãe.
    */
-  topo?: { video: string; poster: { src: string; width: number; height: number } };
+  topo?: {
+    video: string;
+    /** A mesma imagem em VP9, mais leve; o browser que a souber ler prefere-a. */
+    webm?: string;
+    poster: { src: string; width: number; height: number };
+  };
   nome: Localized;
   titulo: Localized;
   claim: Localized;
