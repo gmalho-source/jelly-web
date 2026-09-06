@@ -43,7 +43,7 @@ export const tecnologia = {
     pt: "Websites, e-commerce, aplicações e os dados por baixo, desenhados e construídos pela mesma equipa que os vai medir. Quatro serviços, uma arquitetura.",
     en: "Websites, e-commerce, applications and the data underneath, designed and built by the same team that will measure them. Four services, one architecture.",
   },
-  cta: { pt: "Falar connosco", en: "Talk to us" },
+  cta: { pt: "Vamos falar", en: "Let's talk" },
   /* O vídeo do topo é o da página de web design do site antigo, imagens de
      banco de 2025, recodificado de 5 MB para 1 MB. Provisório: fica até haver
      imagens filmadas na Jelly. */

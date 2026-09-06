@@ -43,7 +43,7 @@ export const marketing = {
     pt: "Dados, criatividade e cadência. Dez serviços em quatro áreas, geridos como uma só conta, com o número sempre ao lado da ideia.",
     en: "Data, creativity and cadence. Ten services in four areas, run as one account, with the number always next to the idea.",
   },
-  cta: { pt: "Falar connosco", en: "Talk to us" },
+  cta: { pt: "Vamos falar", en: "Let's talk" },
   /* O vídeo do topo é o da página antiga, imagens de banco de 2019, recodificado
      de 51 MB para 3 MB. Provisório: fica até haver imagens filmadas na Jelly. */
   topo: {
