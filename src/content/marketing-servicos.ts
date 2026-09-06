@@ -202,7 +202,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       },
     },
     nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" },
-    titulo: { pt: "Uma estratégia digital B2B, mas em esteróides.", en: "A B2B digital strategy, but on steroids." },
+    titulo: { pt: "Uma estratégia B2B, mas em esteróides.", en: "A B2B strategy, but on steroids." },
     claim: {
       pt: "Uma estratégia que vem da Terra para o digital, com impacto real no crescimento do seu negócio.",
       en: "A strategy that comes from the ground up into digital, with real impact on the growth of your business.",
