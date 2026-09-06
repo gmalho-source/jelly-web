@@ -25,10 +25,18 @@ jobs:
       # O painel do Payload carrega os componentes pelo mapa de importações. Um
       # campo ou plugin novo sem o mapa regenerado responde 500 no /api do
       # painel — já aconteceu, com o upload direto para o Blob.
+      #
+      # Compara-se o conteúdo ordenado, não o ficheiro à letra: o gerador escreve
+      # as mesmas entradas por ordens diferentes conforme quem o corre (a CLI,
+      # o `next dev`), e a ordem não muda nada no painel. Uma troca de duas
+      # linhas pôs isto vermelho vinte e nove vezes seguidas em setembro de 2026,
+      # e cada vermelho é um email a quem fez o push.
       - name: mapa de importações do painel está atualizado
         run: |
+          sort "src/app/(payload)/admin/importMap.js" > /tmp/importMap.antes
           npm run payload:importmap
-          git diff --exit-code -- "src/app/(payload)/admin/importMap.js"
+          sort "src/app/(payload)/admin/importMap.js" > /tmp/importMap.depois
+          diff /tmp/importMap.antes /tmp/importMap.depois
         env:
           DATABASE_URL: postgresql://ci@localhost:5432/ci
           PAYLOAD_SECRET: ci

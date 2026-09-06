@@ -41,12 +41,11 @@ import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/pay
 import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
 import { PainelCasa as PainelCasa_08e90f846953d2e7c14238564f1115f8 } from '@/payload/components/PainelCasa'
 import { PainelBarra as PainelBarra_26b5a52e79442c96441209b56420c706 } from '@/payload/components/PainelBarra'
-import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
+import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@/payload/components/CampoEtiquetas#CampoEtiquetas": CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1,
   "@/payload/components/ResumoIA#ResumoIA": ResumoIA_615993207b8485cba1987d35775acf71,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -90,5 +89,6 @@ export const importMap = {
   "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,
   "@/payload/components/PainelCasa#PainelCasa": PainelCasa_08e90f846953d2e7c14238564f1115f8,
   "@/payload/components/PainelBarra#PainelBarra": PainelBarra_26b5a52e79442c96441209b56420c706,
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
