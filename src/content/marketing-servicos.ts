@@ -156,6 +156,9 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
     slug: { pt: "lead-generation-b2b", en: "b2b-lead-generation" },
     area: "performance",
+    /* O vídeo do topo de b2b.jelly.pt, a página da parceria com a Informa D&B,
+       recodificado para 1280 px em H.264 sem áudio. */
+    topo: { video: "/media/marketing-b2b-topo.mp4", poster: { src: "/media/marketing-b2b-topo-poster.webp", width: 1280, height: 720 } },
     nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" },
     titulo: { pt: "Digital sem propósito é ruído. Comercial sem visão é esforço. Juntos, são estratégia.", en: "Digital without purpose is noise. Sales without vision is effort. Together, they are strategy." },
     claim: {
