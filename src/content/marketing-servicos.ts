@@ -202,10 +202,10 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       },
     },
     nome: { pt: "Lead Generation B2B", en: "B2B Lead Generation" },
-    titulo: { pt: "Digital sem propósito é ruído. Comercial sem visão é esforço. Juntos, são estratégia.", en: "Digital without purpose is noise. Sales without vision is effort. Together, they are strategy." },
+    titulo: { pt: "Uma estratégia digital B2B, mas em esteróides.", en: "A B2B digital strategy, but on steroids." },
     claim: {
-      pt: "Estratégia digital B2B com os dados da Informa D&B: saber quem são e quanto valem os clientes a conquistar antes de gastar a falar com os errados.",
-      en: "B2B digital strategy powered by Informa D&B data: know who the customers worth winning are, and what they're worth, before spending on the wrong ones.",
+      pt: "Uma estratégia que vem da Terra para o digital, com impacto real no crescimento do seu negócio.",
+      en: "A strategy that comes from the ground up into digital, with real impact on the growth of your business.",
     },
     descricao: {
       pt: "Lead generation B2B pela Jelly com os dados da Informa D&B: diagnóstico da carteira, empresas semelhantes aos melhores clientes, campanhas dirigidas e pré-qualificação com agentes de IA.",
