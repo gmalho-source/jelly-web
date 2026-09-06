@@ -44,8 +44,9 @@ export const marketing = {
     en: "Data, creativity and cadence. Ten services in four areas, run as one account, with the number always next to the idea.",
   },
   cta: { pt: "Vamos falar", en: "Let's talk" },
-  /* O vídeo do topo é o da página antiga, imagens de banco de 2019, recodificado
-     de 51 MB para 3 MB. Provisório: fica até haver imagens filmadas na Jelly. */
+  /* O vídeo do topo é o que a Jelly entregou em setembro de 2026 (1080p HEVC,
+     23 MB), recodificado para 1440 px em H.264 sem áudio, cerca de 1 MB. O
+     gradiente por cima escurece-o até o título mandar: o plano é claro. */
   topo: {
     video: "/media/marketing-topo.mp4",
     poster: { src: "/media/marketing-topo-poster.webp", width: 1440, height: 810 },
