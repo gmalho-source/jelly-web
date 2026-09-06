@@ -27,12 +27,12 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
     nome: { pt: "Paid Media", en: "Paid Media" },
     titulo: { pt: "Cada euro em publicidade com um nome à frente: o do seu novo cliente.", en: "Every euro of advertising with a name in front of it: your new customer's." },
     claim: {
-      pt: "Google, Meta, LinkedIn e TikTok geridos como um só orçamento, full-funnel, com a atribuição limpa antes do primeiro euro.",
-      en: "Google, Meta, LinkedIn and TikTok run as one budget, full-funnel, with clean attribution before the first euro.",
+      pt: "Google, Meta, LinkedIn, TikTok e ChatGPT Ads geridos como um só orçamento, full-funnel, com a atribuição limpa antes do primeiro euro.",
+      en: "Google, Meta, LinkedIn, TikTok and ChatGPT Ads run as one budget, full-funnel, with clean attribution before the first euro.",
     },
     descricao: {
-      pt: "Gestão de paid media pela Jelly: Google Ads, Meta, LinkedIn e TikTok geridos como um só orçamento, com medição limpa, hipóteses ordenadas por retorno e relatório semanal.",
-      en: "Paid media management by Jelly: Google Ads, Meta, LinkedIn and TikTok run as one budget, with clean measurement, hypotheses ranked by return and a weekly report.",
+      pt: "Gestão de paid media pela Jelly: Google Ads, Meta, LinkedIn, TikTok e ChatGPT Ads geridos como um só orçamento, com medição limpa, hipóteses ordenadas por retorno e relatório semanal.",
+      en: "Paid media management by Jelly: Google Ads, Meta, LinkedIn, TikTok and ChatGPT Ads run as one budget, with clean measurement, hypotheses ranked by return and a weekly report.",
     },
     abertura: {
       titulo: { pt: "Onde o dinheiro de media se perde", en: "Where media money gets lost" },
@@ -49,6 +49,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       titulo: { pt: "O que entra numa conta de paid media da Jelly", en: "What goes into a Jelly paid media account" },
       itens: [
         { nome: { pt: "Search e Shopping", en: "Search and Shopping" }, corpo: { pt: "Google e Bing. Estrutura por intenção, feed de produto limpo, lances ligados à margem e não ao clique.", en: "Google and Bing. Intent-led structure, a clean product feed, bids tied to margin rather than clicks." } },
+        { nome: { pt: "ChatGPT Ads", en: "ChatGPT Ads" }, corpo: { pt: "Anúncios dentro das conversas do ChatGPT, onde a pergunta já vem feita. Entrar cedo, medir como tudo o resto e ficar só se pagar.", en: "Ads inside ChatGPT conversations, where the question is already asked. Get in early, measure it like everything else and stay only if it pays." } },
         { nome: { pt: "Social pago", en: "Paid social" }, corpo: { pt: "Meta, TikTok e LinkedIn. Criativos testados em série, audiências construídas a partir dos clientes que valem mais.", en: "Meta, TikTok and LinkedIn. Creatives tested in series, audiences built from the customers worth most." } },
         { nome: { pt: "Full-funnel", en: "Full-funnel" }, corpo: { pt: "Alcance, consideração e conversão com orçamento próprio e o mesmo painel. Sem topo de funil, o fundo seca em três meses.", en: "Reach, consideration and conversion with their own budget and one dashboard. Without the top of the funnel, the bottom dries up in three months." } },
         { nome: { pt: "Criativo para performance", en: "Performance creative" }, corpo: { pt: "Vídeo curto, estáticos e UGC produzidos para serem testados. Um anúncio é uma hipótese com imagem.", en: "Short video, statics and UGC made to be tested. An ad is a hypothesis with a picture." } },
