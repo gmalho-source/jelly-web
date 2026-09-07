@@ -24,8 +24,11 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
 
-E, no fundo do topo de Branding, `fita-paralaxe`: a moldura do filme deriva 22 %
-para baixo enquanto o topo sai do ecrã, também em `scroll(root)`.
+Em Branding, o filme da equipa vem logo a seguir ao manifesto, em 16:9 inteiro
+e com a `paralaxe` da moldura: fora do topo, que tem `overflow: hidden`, e por
+isso `view()` funciona. Uma primeira versão pôs o filme numa faixa de cinema
+dentro do topo, e num ecrã largo e baixo a faixa era uma tira que cortava as
+cabeças — um fotograma cortado não é um enquadramento.
 
 E, na página de Lead Generation B2B, `FluxoDeAnalise`: um palco em canvas que
 fica preso ao topo enquanto seis capítulos passam ao lado, e um só desenho que
