@@ -1392,6 +1392,25 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 /* O manifesto entra palavra a palavra ao carregar — uma animação de tempo e
    não de scroll, porque está acima da dobra e o scroll ainda não aconteceu.
    Rápida e uma só vez; a quem pediu menos movimento fica a frase inteira. */
+/* A fita de vídeo no fundo do topo de Branding: a moldura deriva para baixo
+   enquanto o topo sai do ecrã, mais devagar do que a página, e fica um pouco
+   mais tempo à vista. Mede-se em `scroll(root)` pela mesma razão que o
+   `topo-paralaxe`: o topo tem `overflow: hidden` e `view()` não a mexia. */
+@keyframes fita-paralaxe {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 22%, 0); }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fita-paralaxe {
+      animation: fita-paralaxe linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+      will-change: transform;
+    }
+  }
+}
+
 @keyframes manifesto-palavra {
   from { opacity: 0; transform: translate3d(0, 0.35em, 0); }
   to { opacity: 1; transform: none; }

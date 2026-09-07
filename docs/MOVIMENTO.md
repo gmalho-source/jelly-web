@@ -24,6 +24,9 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
 
+E, no fundo do topo de Branding, `fita-paralaxe`: a moldura do filme deriva 22 %
+para baixo enquanto o topo sai do ecrã, também em `scroll(root)`.
+
 E, na página de Lead Generation B2B, `FluxoDeAnalise`: um palco em canvas que
 fica preso ao topo enquanto seis capítulos passam ao lado, e um só desenho que
 muda de estado com o scroll — os mesmos pontos a mudar de lugar, em `linear`,

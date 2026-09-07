@@ -72,15 +72,17 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── O manifesto ─────────────────────────────────────────────────────
-          Sem vídeo: a frase é a imagem. Acima da dobra, e por isso a entrada é
-          uma animação de tempo ao carregar e não de scroll. A fita por baixo é
-          o trabalho em matéria — cartões, garrafa, relevo — a dizer desde o
-          primeiro ecrã que isto se pega na mão. */}
-      <header className="surface-ink relative -mt-6 flex min-h-[92svh] flex-col justify-end overflow-hidden pb-10 pt-[140px] sm:-mt-24">
+          A frase é a imagem, e por isso continua em tinta, sem nada por trás.
+          Acima da dobra, e por isso a entrada é uma animação de tempo ao
+          carregar e não de scroll. Por baixo, a toda a largura, o filme: a
+          equipa à mesa a escolher cores. Em cor plena e sem gradiente — a frase
+          manda em cima, o filme prova em baixo, e não competem. A moldura deriva
+          para baixo enquanto o topo sai do ecrã (`fita-paralaxe`). */}
+      <header className="surface-ink relative -mt-6 flex min-h-[100lvh] flex-col justify-end overflow-hidden pb-6 pt-[140px] sm:-mt-24">
         <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
           <span className="eyebrow text-red">{b.eyebrow[locale]}</span>
           <h1
-            className="mt-6 max-w-[12ch] font-display text-[clamp(46px,9.2vw,148px)] leading-[0.94] tracking-[-0.035em]"
+            className="mt-6 max-w-[12ch] font-display text-[clamp(44px,7.8vw,116px)] leading-[0.94] tracking-[-0.035em]"
             aria-label={`${b.manifesto.forte.join(" ")} ${b.manifesto.fraco.join(" ")} ${b.manifesto.fecho}`}
           >
             {palavras.map(({ p, fraca }, i) => (
@@ -94,23 +96,32 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
               </span>
             ))}
           </h1>
-          <div className="mt-12 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6 lg:mt-10">
             <p className="subtitle max-w-[48ch]">{b.claim[locale]}</p>
             {chamada}
           </div>
         </div>
-        <div aria-hidden="true" className="mx-auto mt-10 grid w-full max-w-[1200px] grid-cols-3 gap-0.5 px-5 sm:px-8">
-          {b.obras.map((obra) => (
-            <Image
-              key={obra.slug}
-              src={obra.imagem.src}
-              alt=""
-              width={640}
-              height={480}
-              sizes="(max-width: 1200px) 33vw, 400px"
-              className="aspect-[4/3] w-full object-cover"
-            />
-          ))}
+        <div className="mx-auto mt-6 w-full max-w-[1200px] px-5 sm:px-8 lg:mt-8">
+          {/* O primeiro fotograma serve de capa enquanto o filme chega, e é o
+              que fica a quem pediu menos movimento. */}
+          {/* Altura pela janela e não pela proporção: a fita tem de caber no primeiro
+              ecrã por baixo da frase, e o `object-cover` corta o que sobrar. */}
+          <div className="fita-paralaxe relative h-[clamp(150px,22vh,300px)] overflow-hidden rounded-[6px] bg-[#1d2126] lg:h-[clamp(170px,22vh,300px)]">
+            <Image src={b.topo.poster.src} alt="" fill priority sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover object-[50%_40%]" />
+            <video
+              className="video-fundo absolute inset-0 h-full w-full object-cover object-[50%_40%]"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={b.topo.poster.src}
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <source src={b.topo.video} type="video/mp4" />
+            </video>
+          </div>
         </div>
       </header>
 
