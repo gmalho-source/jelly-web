@@ -1392,6 +1392,71 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 /* O manifesto entra palavra a palavra ao carregar — uma animação de tempo e
    não de scroll, porque está acima da dobra e o scroll ainda não aconteceu.
    Rápida e uma só vez; a quem pediu menos movimento fica a frase inteira. */
+/* A grelha de células de texto (components/Grelha.tsx).
+
+   As linhas são pseudo-elementos: por cima de cada célula, uma linha que se
+   desenha da esquerda; à esquerda das células que não abrem uma linha, um fio
+   que cresce de cima para baixo. A estrutura nunca se mexe — só as linhas se
+   desenham e o texto assenta —, e por isso não há fundo nenhum à vista atrás.
+   Em repouso, sem suporte ou a quem pediu menos movimento, as linhas estão
+   inteiras.
+
+   A linha de cima tem um pixel de altura, e por isso a janela mede-se em
+   `cover` (docs/MOVIMENTO.md: `entry` contra um pixel é uma janela de um
+   pixel). O fio vertical tem a altura da célula e usa a mesma janela que o
+   `camada-fio-curto`. */
+.grelha > .celula::before,
+.grelha > .celula::after {
+  content: "";
+  position: absolute;
+  background: var(--color-line);
+  pointer-events: none;
+}
+.grelha > .celula::before {
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  transform-origin: left center;
+}
+.grelha > .celula::after {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: top center;
+  display: none;
+}
+/* Em duas colunas, as células pares abrem a segunda coluna. */
+@media (min-width: 640px) {
+  .grelha-2 > .celula:nth-child(2n)::after,
+  .grelha-3 > .celula:nth-child(2n)::after {
+    display: block;
+  }
+}
+/* Em três, são as que não abrem uma linha. */
+@media (min-width: 1024px) {
+  .grelha-3 > .celula:nth-child(2n)::after {
+    display: none;
+  }
+  .grelha-3 > .celula:not(:nth-child(3n + 1))::after {
+    display: block;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .grelha > .celula::before {
+      animation: rule-sweep linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 28%;
+    }
+    .grelha > .celula::after {
+      animation: fio-desce linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 60%;
+    }
+  }
+}
+
 @keyframes manifesto-palavra {
   from { opacity: 0; transform: translate3d(0, 0.35em, 0); }
   to { opacity: 1; transform: none; }

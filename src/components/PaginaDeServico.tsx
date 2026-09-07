@@ -4,6 +4,7 @@ import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FluxoDeAnalise } from "@/components/FluxoDeAnalise";
+import { Grelha } from "@/components/Grelha";
 import type { PaginaDeServico as Servico } from "@/content/pagina-de-servico";
 import type { Localized } from "@/content/types";
 import { SITE_URL } from "@/lib/seo";
@@ -181,20 +182,17 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
       ) : null}
 
       {/* ── O que fazemos ─────────────────────────────────────────────────────
-          A grelha de fios das áreas de um serviço: um padrão de papel, com cada
-          célula a repor o fundo. */}
+          A grelha de células de texto: as linhas desenham-se, o texto assenta,
+          a estrutura não se mexe (components/Grelha.tsx). */}
       <section className="surface-paper border-t border-line">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
           <span className="eyebrow text-red">{servico.nome[locale]}</span>
           <h2 className="entra mt-4 max-w-[26ch] text-chapter">{servico.fazemos.titulo[locale]}</h2>
-          <div className="mt-12 grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-3">
-            {servico.fazemos.itens.map((item, i) => (
-              <article key={item.nome.pt} className={`${i % 2 ? "entra-tarde" : "entra"} bg-paper p-6 lg:p-8`}>
-                <h3 className="editorial text-xl lg:text-2xl">{item.nome[locale]}</h3>
-                <p className="mt-3 max-w-[40ch] text-[15px] text-fg-soft">{item.corpo[locale]}</p>
-              </article>
-            ))}
-          </div>
+          <Grelha
+            colunas={3}
+            className="mt-12"
+            celulas={servico.fazemos.itens.map((item) => ({ chave: item.nome.pt, titulo: item.nome[locale], corpo: item.corpo[locale] }))}
+          />
         </div>
       </section>
 

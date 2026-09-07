@@ -3,6 +3,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { Grelha } from "@/components/Grelha";
 import { ServiceHero } from "@/components/ServiceHero";
 import { pilaresDoServico } from "@/content/pilares";
 import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
@@ -139,21 +140,13 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       {service.areas?.length ? (
         <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
           <h2 className="eyebrow">{t("areas")}</h2>
-          {/* Numa grelha de duas colunas as duas da mesma linha estão à mesma
-              altura e chegariam juntas: a da direita chega um compasso depois.
-              As linhas seguintes escalonam-se sozinhas — cada uma tem a sua
-              linha do tempo, e a posição na página faz o resto. */}
-          <div className="mt-8 grid gap-px border-t border-line bg-line sm:grid-cols-2">
-            {service.areas.map((area, indice) => (
-              <div
-                key={area.title.pt}
-                className={`surface-paper flex flex-col gap-3 px-0 py-7 sm:px-7 ${indice % 2 ? "entra-tarde" : "entra"}`}
-              >
-                <h3 className="max-w-[26ch] text-xl">{area.title[locale]}</h3>
-                <p className="max-w-[46ch] text-md text-fg-soft">{area.body[locale]}</p>
-              </div>
-            ))}
-          </div>
+          {/* As linhas desenham-se e o texto assenta; a grelha não se mexe. Ver
+              components/Grelha.tsx para o porquê. */}
+          <Grelha
+            colunas={2}
+            className="mt-8"
+            celulas={service.areas.map((area) => ({ chave: area.title.pt, titulo: area.title[locale], corpo: area.body[locale] }))}
+          />
         </section>
       ) : null}
 

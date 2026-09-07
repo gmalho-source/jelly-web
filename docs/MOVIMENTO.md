@@ -122,11 +122,16 @@ local. Se não der, dizer que a medição foi feita na versão de recurso.
 
 ## Um padrão não se muda de superfície sem o ver
 
-A grelha de fios que as áreas de um serviço usam — `gap-px` sobre `bg-line`,
-com cada célula a repor o fundo — é um padrão de papel. Passada tal e qual para
-uma secção em tinta, os fios ou desaparecem ou fazem uma gaiola à volta do
-texto, e as células ficam desalinhadas quando um título ocupa duas linhas e o
-outro uma. Sobre tinta, o que separa é o espaço e o fio vermelho que se desenha.
+A grelha de fios que as áreas de um serviço usavam — `gap-px` sobre `bg-line`,
+com cada célula a repor o fundo e a entrar com `entra` — tinha dois defeitos.
+Sobre tinta, os fios ou desapareciam ou faziam uma gaiola à volta do texto. E
+sobre papel, enquanto uma célula subia e acendia, via-se o fundo cinzento da
+grelha por trás, e quatro células a chegar em tempos diferentes faziam um
+tabuleiro desalinhado: o movimento desenhava a estrutura em vez de a revelar.
+Foi substituída pela `Grelha` (components/Grelha.tsx): a estrutura fica inteira
+e no lugar, as linhas desenham-se (a horizontal da esquerda, a vertical de cima
+para baixo) e só o texto dentro de cada célula sobe e acende. Sobre tinta
+continua a valer a regra: o que separa é o espaço e o fio vermelho.
 
 O mesmo vale para o `card`: é branco, e sobre tinta desenha um retângulo claro
 no meio da secção escura. Uma ligação em fundo escuro é uma linha que se acende.
