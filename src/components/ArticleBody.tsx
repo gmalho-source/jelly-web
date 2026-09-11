@@ -99,7 +99,11 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
               ? "my-6 @[30rem]:float-left @[30rem]:my-2 @[30rem]:mr-8 @[30rem]:w-[40%]"
               : block.float === "right"
                 ? "my-6 @[30rem]:float-right @[30rem]:my-2 @[30rem]:ml-8 @[30rem]:w-[40%]"
-                : "my-10";
+                : // Com legenda, a figura é `relative` para o cartão se lhe
+                  // sobrepor, e ganha em baixo o espaço que o cartão ocupa.
+                  block.caption
+                  ? "relative my-10 sm:mb-[4.75rem]"
+                  : "my-10";
           const medidas = block.float ? "(max-width: 640px) 100vw, 320px" : "(max-width: 900px) 100vw, 720px";
           return (
             <figure key={index} className={contorno}>
@@ -121,7 +125,11 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={block.src} alt={block.alt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px]" />
               )}
-              {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
+              {/* A contornar, a imagem é estreita e o cartão não cabe: a legenda
+                  fica por baixo, simples. */}
+              {block.caption ? (
+                <figcaption className={block.float ? "mt-3 text-sm text-fg-soft" : "legenda-imagem"}>{block.caption}</figcaption>
+              ) : null}
             </figure>
           );
         }
@@ -129,7 +137,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
           const fonte = fonteDeVideo(block.url);
           if (!fonte) return null;
           return (
-            <figure key={index} className="my-10">
+            <figure key={index} className={block.caption ? "relative my-10 sm:mb-[4.75rem]" : "my-10"}>
               {fonte.tipo === "ficheiro" ? (
                 // Ficheiro nosso: não há plataforma a quem pedir licença, e os
                 // controlos do browser bastam. `preload="metadata"` traz a
@@ -144,7 +152,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
               ) : (
                 <VideoEmbed fonte={fonte} titulo={block.caption ?? "Vídeo"} />
               )}
-              {block.caption ? <figcaption className="mt-3 text-sm text-fg-soft">{block.caption}</figcaption> : null}
+              {block.caption ? <figcaption className="legenda-imagem">{block.caption}</figcaption> : null}
             </figure>
           );
         }

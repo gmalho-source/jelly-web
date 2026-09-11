@@ -1457,6 +1457,48 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   }
 }
 
+/* A legenda de uma imagem ou vídeo num artigo.
+
+   Sai do fluxo do texto de propósito: é um cartão que se sobrepõe ao canto
+   inferior esquerdo da imagem, afastado da margem, com o fio vermelho da casa à
+   esquerda e o fundo em vidro — papel a 72 % com a imagem desfocada por trás,
+   para se perceber que pertence à fotografia e não ao parágrafo seguinte. É a
+   família da legenda do site antigo, com os materiais desta casa.
+
+   Em ecrã estreito não há sobreposição: a legenda fica por baixo, a toda a
+   largura, em papel sólido — uma legenda longa sobre uma imagem pequena tapava
+   metade do que se queria ver. Sem `backdrop-filter`, fica papel sólido também. */
+.legenda-imagem {
+  display: block;
+  margin-top: 0.75rem;
+  border-left: 3px solid var(--color-red);
+  border-radius: 0 6px 6px 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  padding: 0.85rem 1.25rem 0.9rem 1.1rem;
+  font-size: 14.5px;
+  line-height: 1.45;
+}
+@media (min-width: 640px) {
+  .legenda-imagem {
+    position: absolute;
+    left: 48px;
+    bottom: -2.25rem;
+    margin-top: 0;
+    max-width: min(72%, 560px);
+    box-shadow: 0 10px 30px rgba(21, 23, 25, 0.14);
+    outline: 1px solid rgba(255, 255, 255, 0.55);
+    outline-offset: -1px;
+  }
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .legenda-imagem {
+      background: color-mix(in oklab, var(--color-paper) 72%, transparent);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      backdrop-filter: blur(14px) saturate(1.2);
+    }
+  }
+}
+
 @keyframes manifesto-palavra {
   from { opacity: 0; transform: translate3d(0, 0.35em, 0); }
   to { opacity: 1; transform: none; }
