@@ -1,5 +1,237 @@
 [
  {
+  "slug": "o-que-e-geo-motores-de-ia",
+  "legacyPath": "/o-que-e-geo-motores-de-ia/inteligencia-artificial/",
+  "date": "2026-09-10",
+  "updated": "2026-09-10",
+  "lang": "pt",
+  "title": "O que é GEO e como me ajuda a aparecer nos motores de IA como o ChatGPT",
+  "excerpt": "O GEO é a otimização para motores de IA. O que dizem os estudos, o que o Google confirma e um plano de 90 dias para a sua marca ser citada no ChatGPT e nas restantes plataformas de IA.",
+  "author": "Alícia Coquim",
+  "category": "Inteligência Artificial",
+  "categorySlug": "inteligencia-artificial",
+  "readingMinutes": 9,
+  "cover": {
+   "src": "https://www.jelly.pt/wp-content/uploads/2026/09/GEO_header.png",
+   "alt": "O que é GEO e como me ajuda a aparecer nos motores de IA como o ChatGPT",
+   "width": 1999,
+   "height": 786
+  },
+  "body": [
+   {
+    "type": "p",
+    "text": "A pergunta que antes era escrita numa caixa de pesquisa é hoje feita, cada vez mais, a um assistente de inteligência artificial. A resposta chega em texto corrido, com duas ou três fontes citadas e o objetivo das empresas muda de lugar: já não basta estar na primeira página de resultados, é preciso ser a fonte que a IA usa para responder."
+   },
+   {
+    "type": "p",
+    "text": "É esse o território do GEO."
+   },
+   {
+    "type": "h2",
+    "text": "GEO: uma sigla que nasceu num estudo académico"
+   },
+   {
+    "type": "p",
+    "text": "GEO é a abreviatura de Generative Engine Optimization – otimização para motores generativos. Designa o conjunto de práticas que aumentam a probabilidade de um conteúdo ser recuperado, utilizado e citado nas respostas produzidas por sistemas como o ChatGPT, o Claude, o Gemini, o Perplexity, o AI Mode e as AI Overviews do Google."
+   },
+   {
+    "type": "p",
+    "text": "O termo não nasceu no marketing. Foi proposto por investigadores de Princeton, do Georgia Institute of Technology, do Allen Institute for AI e do IIT Delhi, num artigo apresentado na conferência ACM SIGKDD de 2024. O estudo criou também o GEO-Bench, um conjunto de 10.000 perguntas reais distribuídas por 25 domínios, e demonstrou que ajustes ao conteúdo podem aumentar a visibilidade numa resposta gerada até 40%."
+   },
+   {
+    "type": "p",
+    "text": "A distinção face ao SEO é de objetivo, não de ferramentas. O SEO procura uma posição numa lista de dez endereços. O GEO procura que uma passagem do conteúdo entre na resposta que o assistente escreve, o que pode acontecer sem que exista um clique."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/01-seo-vs-geo.png",
+    "alt": "Comparação entre SEO e GEO: posição numa lista versus presença na resposta"
+   },
+   {
+    "type": "h2",
+    "text": "Porque é que isto deixou de ser um tema de futuro"
+   },
+   {
+    "type": "p",
+    "text": "O primeiro sinal veio do comportamento dos utilizadores. O Pew Research Center analisou 68.879 pesquisas reais realizadas no Google por 900 adultos que partilharam o histórico de navegação em março de 2025. Quando a página de resultados incluía um resumo gerado por IA, os utilizadores clicaram num resultado tradicional em apenas 8% das visitas; sem resumo, clicaram em 15% – quase o dobro. E 26% das visitas com resumo terminaram aí a sessão de navegação, contra 16% nas restantes."
+   },
+   {
+    "type": "p",
+    "text": "A projeção da Gartner, feita em fevereiro de 2024, aponta no mesmo sentido: uma queda de 25% no volume de pesquisa tradicional em 2026, com a migração das perguntas para assistentes de IA."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/02-clique-resumos-ia.png",
+    "alt": "Taxa de clique nos resultados do Google com e sem resumo gerado por IA"
+   },
+   {
+    "type": "p",
+    "text": "Em termos de tráfego direto, o volume que chega dos assistentes é ainda modesto: uma análise da SE Ranking a 101.574 sites, entre janeiro de 2025 e abril de 2026, coloca as plataformas de IA em 0,32% do tráfego total. Mas cresce depressa, a Similarweb contabilizou 770,7 milhões de visitas mensais encaminhadas por plataformas de IA no ano até maio de 2026, um aumento de 117% e converte melhor. Os dados da Adobe para o retalho norte-americano no primeiro trimestre de 2026 mostram tráfego de IA a converter 42% melhor do que os restantes canais, com visitas 48% mais longas."
+   },
+   {
+    "type": "p",
+    "text": "A leitura correta é esta: o efeito imediato do GEO não é o volume de visitas, é a influência. Quem é citado entra na decisão; quem não é, desaparece da conversa antes de ela chegar ao site."
+   },
+   {
+    "type": "h2",
+    "text": "Em Portugal, a pesquisa já começa dentro da IA"
+   },
+   {
+    "type": "p",
+    "text": "O estudo «O Consumidor Impulsionado pela IA», realizado pela LLYC com a Appinio a partir de 700 entrevistas em Portugal, mostra que 45% dos consumidores portugueses usam ferramentas de IA generativa com regularidade e que 23,6% iniciam a procura de informação diretamente num assistente de IA mais do que em fóruns online (15%) e em recomendações de influenciadores (9,6%). Entre os 18 e os 24 anos, a adoção sobe para 65,9%."
+   },
+   {
+    "type": "p",
+    "text": "Um inquérito independente da Consumers Trust Labs, com 1.378 respostas em março de 2026, chega a um número convergente: 65,1% dos consumidores já recorrem a ferramentas de IA para apoiar decisões de compra. E 60,2% dos utilizadores regulares de ChatGPT confirmam a informação noutras fontes, ou seja, a resposta da IA funciona como primeiro filtro, não como palavra final. Estar dentro desse filtro é o que está em jogo."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/03-pesquisa-portugal.png",
+    "alt": "Pesquisa e plataformas de IA em Portugal"
+   },
+   {
+    "type": "h2",
+    "text": "O que a investigação mostra que funciona"
+   },
+   {
+    "type": "p",
+    "text": "O estudo do GEO-Bench testou nove técnicas de escrita sobre o mesmo conteúdo e mediu o ganho de visibilidade nas respostas geradas. Os resultados são consistentes e pouco intuitivos para quem vem do SEO clássico: as técnicas vencedoras são as que tornam o texto verificável."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/04-o-que-funciona-geo-bench.png",
+    "alt": "O que funciona em GEO, segundo o estudo GEO-Bench"
+   },
+   {
+    "type": "p",
+    "text": "Acrescentar citações de especialistas rendeu +41%, incluir estatísticas +33%, citar as fontes utilizadas +27% e melhorar a fluência do texto +28%. O enchimento de palavras-chave foi a única técnica com efeito negativo: −8%. Mais relevante para a maioria das empresas: nas fontes que entravam na resposta em quinta posição, citar fontes valeu +115% e acrescentar citações +100%. O GEO é, sobretudo, uma oportunidade para quem não é a marca dominante do setor."
+   },
+   {
+    "type": "p",
+    "text": "Há um segundo dado que altera a forma de planear conteúdos. Um teste da Ahrefs a 15.000 perguntas em quatro assistentes concluiu que apenas 12% dos endereços citados estavam no top 10 do Google para a pergunta original. Os assistentes decompõem cada pergunta em várias pesquisas paralelas, pelo que a cobertura de variações e de perguntas adjacentes pesa mais do que a posição numa única palavra-chave."
+   },
+   {
+    "type": "p",
+    "text": "A plataforma também importa. O AI Visibility Index da Semrush, que analisou 126 milhões de prompts entre janeiro e abril de 2026, verificou que o ChatGPT cita em média cerca de 15 fontes por resposta e o Gemini apenas três e que só 36 marcas em todo o mundo mantiveram visibilidade no top 100 das quatro plataformas analisadas, todos os meses. A visibilidade em IA não é transferível de uma plataforma para outra."
+   },
+   {
+    "type": "h2",
+    "text": "O que o Google diz e os mitos que convém abandonar"
+   },
+   {
+    "type": "p",
+    "text": "Em julho de 2026, o Google publicou documentação própria sobre otimização para as funcionalidades de IA generativa na Pesquisa. A posição oficial é direta: otimizar para IA continua a ser SEO. Para aparecer nas AI Overviews e no AI Mode existe um único requisito técnico, a página tem de estar indexada e elegível para ser mostrada com snippet."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/05-google-funciona-vs-mito.png",
+    "alt": "O que o Google confirma e o que é mito sobre otimização para IA"
+   },
+   {
+    "type": "p",
+    "text": "A mesma documentação desmonta várias práticas que circulam como boas ideias: o ficheiro llms.txt não é usado pelo Google nem está previsto que venha a ser; não existe marcação schema.org “especial para IA”; fragmentar o conteúdo em micro-páginas não ajuda; e menções artificiais da marca compradas pela web não melhoram a visibilidade. Vale a pena reter o contraste: nada disto substitui conteúdo original, com análise de primeira mão, bem estruturado e tecnicamente acessível."
+   },
+   {
+    "type": "h2",
+    "text": "A checklist técnica que quase ninguém verifica"
+   },
+   {
+    "type": "p",
+    "text": "Antes de reescrever o conteúdo, convém garantir que os motores de IA conseguem chegar a ele e lê-lo. Dois exemplos frequentes: o robô OAI-SearchBot, o que alimenta as respostas de pesquisa do ChatGPT, está bloqueado em muitos ficheiros robots.txt por arrasto das regras criadas para travar o treino de modelos e, num levantamento da Adobe a sites de retalho, as páginas de produto pontuaram apenas 66 em 100 em legibilidade por máquina, sobretudo por dependerem de JavaScript para mostrar informação essencial."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/06-checklist-tecnica.png",
+    "alt": "Checklist técnica de GEO"
+   },
+   {
+    "type": "h2",
+    "text": "Como medir e por onde começar"
+   },
+   {
+    "type": "p",
+    "text": "A medição é o ponto mais frágil do processo: no inquérito da Semrush, 45% dos responsáveis de marketing admitem não conseguir avaliar com rigor a visibilidade da sua marca nas respostas geradas por IA. Há hoje três instrumentos acessíveis a qualquer empresa: o relatório de desempenho em IA generativa na Search Console, a separação do tráfego de IA na analítica do site e um teste manual e recorrente de um conjunto fixo de perguntas em cada plataforma, registando quem é citado."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/07-plano-90-dias.png",
+    "alt": "Plano de 90 dias para GEO"
+   },
+   {
+    "type": "p",
+    "text": "O sequenciamento tem consequências mensuráveis. Ainda segundo a Semrush, 81% das organizações que tratam de SEO e visibilidade em IA no mesmo fluxo de trabalho relataram mais tráfego ou mais leads a partir de plataformas de IA, entre as que gerem as duas coisas em separado, foram 36%."
+   },
+   {
+    "type": "h2",
+    "text": "O GEO é uma camada, não uma estratégia"
+   },
+   {
+    "type": "p",
+    "text": "Há um limite no que a técnica consegue fazer sozinha e os dados do GEO-Bench mostram-no de forma indireta: as técnicas que aumentam a visibilidade são as que tornam o conteúdo verificável como: citações, estatísticas, fontes e a única com efeito negativo é a que tenta manipular o sinal sem acrescentar substância. Por outras palavras, o algoritmo não cria a autoridade de uma marca. Lê uma autoridade que já existe. Onde ela não existe, não há estruturação técnica que a invente."
+   },
+   {
+    "type": "p",
+    "text": "É esta inversão que está na base da Imunidade Algorítmica, a metodologia que usamos na Jelly: primeiro a substância, depois a técnica. Cinco camadas, por esta ordem: substância (a qualidade real da oferta e um posicionamento inequívoco), registo (documentar a experiência em reviews, casos e citações verificáveis), coerência (o mesmo nome, a mesma promessa e os mesmos dados em todos os pontos de contacto), amplificação (a estruturação técnica de que trata este artigo, GEO e AEO incluídos) e imunidade (o regime permanente, com distribuição própria e monitorização contínua)."
+   },
+   {
+    "type": "p",
+    "text": "O GEO vive na quarta camada. Este é indispensável: sem ela, uma marca com substância continua invisível para as máquinas que hoje respondem às perguntas dos clientes. Mas é a amplificação que multiplica o que existe, não substitui o que falta. E porque esse estado não se compra nem se ativa num trimestre, quem o alcança primeiro fica difícil de deslocar."
+   },
+   {
+    "type": "p",
+    "text": "O GEO não é um canal novo nem um atalho técnico. É a disciplina de escrever e estruturar informação de forma verificável com dados, fontes, datas e atribuição, e de garantir que essa informação é acessível às máquinas que hoje respondem às perguntas dos clientes. Para as empresas que já fazem SEO com rigor, é uma extensão natural. Para as que não fazem, é a segunda vez que a mesma oportunidade passa à porta."
+   },
+   {
+    "type": "p",
+    "text": "Nota de Transparência: Este artigo reflete a nossa abordagem à inovação. O texto foi estruturado com o apoio de ferramentas de IA Co-Pilot e revisto, expandido e editado pela nossa equipa editorial. As infografias integradas foram criadas com recurso à Inteligência Artificial Generativa."
+   },
+   {
+    "type": "h2",
+    "text": "Perguntas frequentes"
+   },
+   {
+    "type": "h3",
+    "text": "O GEO substitui o SEO?"
+   },
+   {
+    "type": "p",
+    "text": "Não. As duas disciplinas partilham a base técnica – indexação, estrutura, qualidade e autoridade – e o próprio Google afirma que otimizar para as funcionalidades de IA é otimizar para a pesquisa. O GEO acrescenta uma camada: verificabilidade do conteúdo, cobertura de variações da pergunta e medição da presença em respostas geradas."
+   },
+   {
+    "type": "h3",
+    "text": "Faz sentido para uma pequena ou média empresa?"
+   },
+   {
+    "type": "p",
+    "text": "Faz, e possivelmente mais do que para as marcas líderes. No estudo do GEO-Bench, os ganhos mais elevados foram medidos precisamente nas fontes menos bem posicionadas: até +115% de visibilidade só por citar as fontes utilizadas. A escala do orçamento pesa menos aqui do que o rigor do conteúdo."
+   },
+   {
+    "type": "h3",
+    "text": "É preciso criar um ficheiro llms.txt?"
+   },
+   {
+    "type": "p",
+    "text": "Não é preciso para o Google, que declarou não utilizar esse ficheiro nem ter planos para o fazer. Mais útil é revisitar o robots.txt para confirmar que os robôs de pesquisa dos assistentes, como o OAI-SearchBot da OpenAI, têm autorização de acesso, e verificar se o conteúdo essencial está disponível em HTML e não apenas gerado por JavaScript."
+   },
+   {
+    "type": "h3",
+    "text": "Basta criar uma boa estratégia de GEO para ser citado pelos sistemas de IA?"
+   },
+   {
+    "type": "p",
+    "text": "Não. O GEO garante que o conteúdo é acessível, legível e verificável para os sistemas de IA, mas o que os assistentes citam é a autoridade que já existe fora deles, ou seja, a qualidade real da oferta, experiência documentada por terceiros e coerência de entidade em todos os pontos de contacto. É a esse conjunto que chamamos de Imunidade Algorítmica; o GEO é a camada que torna a marca visível às máquinas, não a que constrói."
+   },
+   {
+    "type": "h3",
+    "text": "GEO, AEO, AIO e LLMO são a mesma coisa?"
+   },
+   {
+    "type": "p",
+    "text": "Na prática descrevem o mesmo trabalho, mas com ênfases diferentes: o AEO parte da pergunta e da resposta direta, o LLMO do comportamento dos modelos de linguagem, o GEO dos motores generativos no seu conjunto. AIO exige mais cuidado, porque tanto é usada para a funcionalidade do Google (AI Overviews) como para a otimização em si. Nenhuma destas siglas corresponde a um sistema técnico distinto, não existe uma marcação schema.org «para IA» nem um ficheiro que o Google leia para este efeito. A base é a mesma: conteúdo verificável, acessível às máquinas."
+   }
+  ]
+ },
+ {
   "slug": "shadow-ai-nas-empresas",
   "legacyPath": "/shadow-ai-nas-empresas/inteligencia-artificial/",
   "date": "2026-08-31",
