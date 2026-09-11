@@ -6,15 +6,19 @@
  * Dois modos, porque um fundo e um filme não são a mesma coisa.
  *
  * **Fundo** (por omissão) é o que corre sozinho por trás de um texto. Não
- * precisa de 1080p nem de som. Os vídeos do site antigo vêm em 1080p a 7 Mbps
- * — 6 MB para sete segundos em ciclo — e a 1600 px com CRF 30 o mesmo plano
- * fica em 400 KB: quinze vezes menos, sem diferença visível num fundo
- * escurecido.
+ * precisa de som, mas precisa de 1080p: um fundo abre em cheio, e num monitor
+ * de 2560 px um ficheiro de 1600 é esticado antes de se ver. Fica em 1920 px
+ * com CRF 26.
+ *
+ * A régua era 1600 px e CRF 30, e era drástica de mais. Os fundos que saíram
+ * assim ficaram entre 100 e 780 kbps, e a perda via-se em movimento e nos
+ * gradientes. O peso a mais é de três a cinco vezes — na ordem de 1,5 a 2,5 MB
+ * por fundo — e num ficheiro que abre a página em cheio é dinheiro bem gasto.
  *
  * **Filme** (`--filme`) é uma peça que alguém se senta a ver: um spot, um
- * making-of. Fica em 1920 px, **com som**, e com uma régua de qualidade mais
- * alta. Tirar o som a um spot de televisão era o que este script fazia antes,
- * e não havia como pedir o contrário.
+ * making-of. Fica em 1920 px, **com som**, e com uma régua mais alta ainda.
+ * Tirar o som a um spot de televisão era o que este script fazia antes, e não
+ * havia como pedir o contrário.
  *
  * Em qualquer dos modos a saída é **H.264**, e isso é metade da razão de ser
  * deste script. O spot do Slide & Splash foi carregado à mão em HEVC (H.265):
@@ -40,11 +44,12 @@ const origem = args.find((a) => !a.startsWith("--"));
 const valor = (nome) => args.find((a) => a.startsWith(`--${nome}=`))?.split("=")[1];
 const nome = valor("nome");
 const filme = args.includes("--filme");
-// Um fundo escurecido aguenta CRF 30 a 1600 px. Um filme que alguém vê de
-// frente não: 1920 px e CRF 25, medido no spot do Slide & Splash (43,8 MB de
-// HEVC para 18,0 MB de H.264, SSIM 0,972 — sem diferença visível a 100%).
-const largura = Number(valor("largura") ?? (filme ? 1920 : 1600));
-const crf = Number(valor("crf") ?? (filme ? 25 : 30));
+// 1080p nos dois modos: um fundo full-height ocupa o ecrã todo como um filme
+// ocupa, e a diferença entre os dois é o som e a régua. CRF 26 no fundo, 23 no
+// filme — a régua antiga (30 e 25) foi medida quando o peso mandava, e no
+// ecrã lia-se.
+const largura = Number(valor("largura") ?? 1920);
+const crf = Number(valor("crf") ?? (filme ? 23 : 26));
 const segundo = Number(valor("fotograma") ?? 1);
 
 if (!origem || !nome) {
@@ -92,7 +97,9 @@ execFileSync("ffmpeg", [
   "-profile:v", "high", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
   "-vf", `scale=${largura}:-2`, mp4,
 ]);
-execFileSync("ffmpeg", ["-v", "error", "-y", "-ss", String(segundo), "-i", entrada, "-frames:v", "1", "-vf", `scale=${largura}:-2`, cartaz]);
+// O cartaz é o que se vê antes de o vídeo tocar, e com `preload="metadata"`
+// pode ser o que se vê durante um segundo inteiro: sai na melhor régua do JPEG.
+execFileSync("ffmpeg", ["-v", "error", "-y", "-ss", String(segundo), "-i", entrada, "-frames:v", "1", "-q:v", "2", "-vf", `scale=${largura}:-2`, cartaz]);
 
 const antes = fs.statSync(entrada).size;
 const depois = fs.statSync(mp4).size;

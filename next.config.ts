@@ -10,6 +10,23 @@ const nextConfig: NextConfig = {
     // AVIF primeiro, WebP a seguir: o AVIF pesa menos 20 a 30% para a mesma
     // qualidade, e quem não o suporta recebe WebP.
     formats: ["image/avif", "image/webp"],
+    /*
+     * A régua da compressão de saída, e a única que existe: 85.
+     *
+     * O otimizador entregava a 75, que é o valor de origem do Next. Somado à
+     * conversão para WebP que o painel faz à entrada, davam duas compressões
+     * com perda em cima da fotografia — e via-se, em gradientes, tecidos e
+     * paredes de LED. Medido numa fotografia do palco dos Heróis PME a
+     * 1920 px: 112 KB a 75, 141 KB a 85. São 26% a mais, e é barato ao lado de
+     * uma cara com blocos.
+     *
+     * Um valor só na lista e não `[75, 85]`: assim não é preciso escrever
+     * `quality` em trinta e seis componentes nem lembrar-se dele no próximo.
+     * O Next aproxima qualquer pedido ao valor permitido mais perto, e como só
+     * há um, todos os pedidos saem a 85 — inclusive o 75 que o componente pede
+     * quando ninguém lhe diz nada.
+     */
+    qualities: [85],
     // O resultado do otimizador fica em cache um mês: sem isto, o mesmo
     // recorte é recodificado a cada poucas horas.
     minimumCacheTTL: 60 * 60 * 24 * 31,

@@ -14,7 +14,13 @@ export const Media: CollectionConfig = {
     // Tudo o que entra sai em WebP e com o lado maior travado: uma fotografia
     // de máquina traz 6 MB e 6000 px que nenhum ecrã usa. O site serve estas
     // imagens pelo otimizador do Next, que corta o resto por tamanho de ecrã.
-    formatOptions: { format: "webp", options: { quality: 82 } },
+    //
+    // 90 e não 82: este é o primeiro de dois passos com perda, e o que aqui se
+    // deita fora não há otimizador que o devolva. O que fica guardado é a
+    // matriz de tudo o que o site mostra dessa fotografia, e vale mais uns
+    // quilobytes a mais no armazenamento do que um gradiente aos quadrados em
+    // todos os tamanhos servidos. A régua de saída está no `next.config.ts`.
+    formatOptions: { format: "webp", options: { quality: 90 } },
     resizeOptions: { width: 2400, height: 2400, fit: "inside", withoutEnlargement: true },
     imageSizes: [
       { name: "thumb", width: 400 },

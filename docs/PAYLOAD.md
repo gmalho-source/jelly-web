@@ -181,10 +181,23 @@ ficheiro. Nada se perde que o site fosse usar, porque a coleção já travava tu
 nos 2400 px. O que o browser não desenhar (um SVG, um formato raro) segue como
 está, e se for grande demais a linha diz-o a vermelho antes de gravar.
 
-Tudo o que entra pelo painel é convertido para **WebP** a 82 e travado nos 2400
+Tudo o que entra pelo painel é convertido para **WebP** a 90 e travado nos 2400
 px do lado maior: uma fotografia de máquina traz 6 MB e 6000 px que nenhum ecrã
 usa. O site serve depois pelo otimizador do Next, que entrega **AVIF** a quem o
-suporta e corta por tamanho de ecrã — uma capa de projeto a 640 px fica em 17 KB.
+suporta e corta por tamanho de ecrã.
+
+São duas compressões com perda em cima da mesma fotografia, e estiveram as duas
+apertadas de mais: 82 à entrada e 75 à saída. A régua passou a **90 à entrada**
+(`formatOptions` na coleção) e **85 à saída** (`images.qualities` no
+`next.config.ts`). A lista de saída tem um valor só de propósito: o Next
+aproxima qualquer pedido ao permitido mais perto, por isso os 75 que o
+componente pede quando ninguém lhe diz nada saem a 85, sem escrever `quality`
+em trinta e seis sítios. Medido numa fotografia do palco dos Heróis PME a
+1920 px: 112 KB a 75, 141 KB a 85.
+
+A entrada só vale para o que for carregado a partir de agora — o que já está
+guardado ficou com a régua com que entrou, e recodificá-lo não devolve o que se
+perdeu.
 
 O que veio do WordPress não passou por essa porta: 35 ficheiros acima de 500 KB,
 o pior com 2,8 MB, fotografias guardadas em PNG. `npm run media:optimize`
@@ -394,12 +407,18 @@ O `video:prep` resolve isto de graça, seja qual for a entrada — a saída é s
 H.264 com `faststart`. Tem dois modos:
 
 ```
-npm run video:prep -- fundo.mp4 --nome=ia-topo            # fundo: 1600 px, sem som, CRF 30
-npm run video:prep -- spot.mov  --nome=slide-spot --filme  # filme: 1920 px, com som, CRF 25
+npm run video:prep -- fundo.mp4 --nome=ia-topo            # fundo: 1920 px, sem som, CRF 26
+npm run video:prep -- spot.mov  --nome=slide-spot --filme  # filme: 1920 px, com som, CRF 23
 ```
 
 O `--filme` existe porque o script tirava o som a tudo com `-an`, o que está bem
 num fundo em ciclo e está errado num spot de televisão.
+
+A régua foi 1600 px e CRF 30 no fundo, 1920 e CRF 25 no filme, e era drástica de
+mais: os fundos preparados assim ficaram entre 100 e 780 kbps, e a perda via-se
+em movimento e nos gradientes. Um fundo abre a página em cheio — num monitor de
+2560 px, 1600 é esticado antes de se ver. Os ficheiros que já estão no site
+ficam como estão; a régua nova vale para o que for preparado de agora em diante.
 
 Números medidos no spot: 43,8 MB de HEVC a 18,4 Mbps → **18,0 MB** de H.264 a
 7,5 Mbps, SSIM 0,972. A 100%, num fotograma de água e respingos, não há

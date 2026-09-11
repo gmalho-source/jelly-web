@@ -31,7 +31,9 @@ const dryRun = args.includes("--dry-run");
 const value = (name) => args.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
 const minBytes = Number(value("min-kb") ?? 500) * 1024;
 const limit = Number(value("limit") ?? 0) || Infinity;
-const quality = Number(value("quality") ?? 82);
+// A mesma régua da coleção: quem recodificar um dia não pode ficar com um
+// valor mais apertado do que o que a porta de entrada usa hoje.
+const quality = Number(value("quality") ?? 90);
 const maxSide = Number(value("max-side") ?? 2400);
 
 const payload = await getPayload({ config });
