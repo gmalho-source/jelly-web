@@ -62,23 +62,23 @@ export default async function BlogIndexPage({
           <span className="eyebrow">{t("eyebrow")}</span>
           <h1 className="editorial mt-5 text-display">{t("title")}</h1>
         </div>
-        <p className="subtitle">{t("lead")}</p>
-      </div>
-
-      {/* A pesquisa, antes do destaque: quem chega à procura de uma coisa não
-          tem de passar pela lista para a encontrar. */}
-      <div className="mt-14 max-w-[720px]">
-        <PesquisaDoBlog
-          artigos={paraPesquisa}
-          textos={{
-            titulo: t("searchTitle"),
-            placeholder: t("searchPlaceholder"),
-            rotulo: t("searchLabel"),
-            semResultados: t("searchNone"),
-            resultados: t.raw("searchCount") as string,
-            abrir: t("searchOpen"),
-          }}
-        />
+        {/* A coluna da direita: a pesquisa em cima, no canto, e a frase de
+            apresentação em baixo, alinhada com o título. Quem chega à procura
+            de uma coisa encontra o campo antes de descer. */}
+        <div className="flex flex-col gap-10 lg:self-stretch lg:justify-between lg:pt-2">
+          <PesquisaDoBlog
+            artigos={paraPesquisa}
+            textos={{
+              titulo: t("searchTitle"),
+              placeholder: t("searchPlaceholder"),
+              rotulo: t("searchLabel"),
+              semResultados: t("searchNone"),
+              resultados: t.raw("searchCount") as string,
+              abrir: t("searchOpen"),
+            }}
+          />
+          <p className="subtitle">{t("lead")}</p>
+        </div>
       </div>
 
       <Link

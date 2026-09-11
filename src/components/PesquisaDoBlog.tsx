@@ -136,14 +136,16 @@ export function PesquisaDoBlog({ artigos, textos }: { artigos: ArtigoParaPesquis
   };
 
   const mostrar = aberto && termos.length > 0;
+  // A lista é mais larga do que o campo: um título de artigo não cabe numa
+  // coluna estreita. Ancora à direita, que é onde o campo está no topo.
 
   return (
     <div ref={raiz} className="relative">
-      <label htmlFor={`${idLista}-campo`} className="editorial block text-2xl lg:text-3xl">
+      <label htmlFor={`${idLista}-campo`} className="editorial block text-lg lg:text-xl">
         {textos.titulo}
       </label>
-      <div className="relative mt-5">
-        <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-fg-soft" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <div className="relative mt-3">
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-fg-soft" fill="none" stroke="currentColor" strokeWidth="1.8">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" strokeLinecap="round" />
         </svg>
@@ -167,12 +169,12 @@ export function PesquisaDoBlog({ artigos, textos }: { artigos: ArtigoParaPesquis
           }}
           onFocus={() => setAberto(true)}
           onKeyDown={teclas}
-          className="w-full rounded-full border border-line bg-white py-4 pl-14 pr-6 text-md text-ink shadow-sm outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-fg-soft/70 focus:border-red focus:shadow-md [&::-webkit-search-cancel-button]:hidden"
+          className="w-full rounded-full border border-line bg-white py-2.5 pl-11 pr-5 text-[15px] text-ink shadow-sm outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-fg-soft/70 focus:border-red focus:shadow-md [&::-webkit-search-cancel-button]:hidden"
         />
       </div>
 
       {mostrar ? (
-        <div className="absolute inset-x-0 top-full z-20 mt-2 overflow-hidden rounded-[6px] bg-white shadow-lg ring-1 ring-line">
+        <div className="absolute right-0 top-full z-20 mt-2 w-full overflow-hidden rounded-[6px] bg-white shadow-lg ring-1 ring-line sm:w-[min(560px,calc(100vw-40px))]">
           {sugestoes.length ? (
             <>
               <ul id={`${idLista}-lista`} role="listbox" className="m-0 list-none p-0">
@@ -181,9 +183,9 @@ export function PesquisaDoBlog({ artigos, textos }: { artigos: ArtigoParaPesquis
                     <Link
                       href={{ pathname: "/blog/[slug]", params: { slug: a.slug } }}
                       onMouseEnter={() => setAtivo(i)}
-                      className={`grid gap-1 px-6 py-4 transition-colors duration-150 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-6 ${i === ativo ? "bg-paper" : "hover:bg-paper"}`}
+                      className={`grid gap-1 px-5 py-3.5 transition-colors duration-150 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-6 ${i === ativo ? "bg-paper" : "hover:bg-paper"}`}
                     >
-                      <span className="editorial text-lg leading-snug">
+                      <span className="editorial text-[17px] leading-snug">
                         <Realce texto={a.titulo} termos={termos} />
                       </span>
                       <span className="text-xs text-fg-soft sm:text-right">
