@@ -174,8 +174,16 @@ export const branding = {
     ],
   },
 
+  /*
+   * O fecho é uma pergunta e um botão, e mais nada.
+   *
+   * Era um título com um parágrafo por baixo a prometer um diagnóstico de duas
+   * semanas. A página inteira já é o argumento: no fim, quem chega ali não
+   * precisa de mais uma explicação, precisa de uma porta. A faixa vermelha a
+   * toda a largura é a porta.
+   */
   fecho: {
-    titulo: { pt: "Quer saber o que a sua marca já diz sem querer?", en: "Want to know what your brand already says without meaning to?" },
-    texto: { pt: "Um diagnóstico de duas semanas, com o que a marca significa hoje para quem compra — e o que devia significar.", en: "A two-week diagnosis of what the brand means today to the people who buy — and what it should mean." },
+    titulo: { pt: "Vamos falar sobre a sua nova marca?", en: "Shall we talk about your new brand?" },
+    cta: { pt: "Vamos a isso", en: "Let's do it" },
   },
 };

@@ -245,16 +245,26 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
         </div>
       </section>
 
-      {/* ── Fecho e outras disciplinas ───────────────────────────────────── */}
-      <section className="surface-ink py-24">
+      {/* ── O fecho, em vermelho a toda a largura ────────────────────────────
+          A mesma cor e a mesma medida da tese, para as duas faixas se lerem
+          como as duas margens da página: uma abre o argumento, a outra
+          fecha-o. Aqui não há parágrafo por baixo do título — a esta altura
+          quem lê não precisa de mais uma explicação, precisa de uma porta. */}
+      <section className="surface-red py-20 lg:py-24">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-8 px-5 sm:px-8">
-          <div className="entra">
-            <h2 className="max-w-[16ch] font-display text-[clamp(30px,4.6vw,64px)] leading-[1.0] tracking-[-0.025em]">{b.fecho.titulo[locale]}</h2>
-            <p className="mt-4 max-w-[44ch] text-md text-fg-soft">{b.fecho.texto[locale]}</p>
-          </div>
-          {chamada}
+          <h2 className="entra-perto max-w-[18ch] font-display text-[clamp(32px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">
+            {b.fecho.titulo[locale]}
+          </h2>
+          {/* Pastilha de tinta sobre o vermelho: a branca desaparecia nele. */}
+          <Link href="/contactos" className="btn-pill btn-pill-ink entra-perto">
+            {b.fecho.cta[locale]} <span aria-hidden="true">→</span>
+          </Link>
         </div>
-        <div className="mx-auto max-w-[1200px] px-5 pt-24 sm:px-8">
+      </section>
+
+      {/* ── Outras áreas ─────────────────────────────────────────────────── */}
+      <section className="surface-ink py-24">
+        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
           <h2 className="entra-perto eyebrow">{t("others")}</h2>
           <div className="mt-5 grid gap-4 sm:grid-cols-3">
             {outros.map((item) => (
