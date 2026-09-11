@@ -17,6 +17,18 @@ export type SheetTile = {
   /** Banda onde o mosaico vive: «Serviços», «Trabalho», «A casa». */
   group?: string;
   /**
+   * A linha viva da janela: o último artigo, a última notícia.
+   *
+   * O «Blog» e a «Newsroom» são portas, e uma porta não tem imagem. Ficavam
+   * com um rectângulo de cor onde todos os outros destinos têm fotografia — e,
+   * pior, não diziam nada de novo a quem já sabe o que é um blog. Com a capa
+   * do artigo mais recente por baixo e o título dele por cima, a janela passa
+   * a responder à pergunta que se faz mesmo antes de entrar: «o que há de
+   * novo?». O nome da página continua lá em grande: quem aponta continua a
+   * saber para onde vai.
+   */
+  ultimo?: { rotulo: string; titulo: string };
+  /**
    * Fora da folha, mas dentro da procura.
    *
    * O índice mostra o site em três bandas curtas — mas continua a encontrar
@@ -451,6 +463,18 @@ export function IndexSheet({
                 <span className="font-display text-2xl leading-[1.06] text-paper lg:text-[clamp(28px,3vw,44px)]">
                   {destaque.label}
                 </span>
+                {/* Duas linhas no máximo: um título de artigo pode ter doze
+                    palavras, e a janela tem 26svh no telemóvel. */}
+                {destaque.ultimo ? (
+                  <span className="mt-1 flex flex-col gap-1 border-l-2 border-red pl-3 lg:mt-2">
+                    <span className="text-[10px] uppercase tracking-[0.12em] text-red">
+                      {destaque.ultimo.rotulo}
+                    </span>
+                    <span className="line-clamp-2 text-[13px] font-light leading-[1.35] text-paper/75 lg:text-[15px]">
+                      {destaque.ultimo.titulo}
+                    </span>
+                  </span>
+                ) : null}
               </span>
             </Link>
             ) : null}

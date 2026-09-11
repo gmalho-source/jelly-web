@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { getArchivedProjects, getPosts, getServices } from "@/lib/cms";
+import type { NewsItem } from "@/content/types";
+import { getArchivedProjects, getNews, getPosts, getServices } from "@/lib/cms";
 import { slugFor } from "@/lib/slugs";
 import { IndexSheet, type SheetTile } from "./IndexSheet";
 
@@ -15,7 +16,12 @@ const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
  */
 export async function SiteHeader({ locale }: { locale: Locale }) {
   const nav = await getTranslations({ locale, namespace: "nav" });
-  const [services, posts, archive] = await Promise.all([getServices(), getPosts(), getArchivedProjects()]);
+  const [services, posts, archive, news] = await Promise.all([
+    getServices(),
+    getPosts(),
+    getArchivedProjects(),
+    getNews(),
+  ]);
   const pt = locale === "pt";
 
   const url = (href: Parameters<typeof getPathname>[0]["href"]) => getPathname({ href, locale });
@@ -36,6 +42,23 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   const servicos = pt ? "Serviços" : "Services";
   const trabalho = pt ? "Trabalho" : "Work";
   const casa = pt ? "A casa" : "The house";
+
+  /*
+   * O «Blog» e a «Newsroom» entram na janela com a capa do que lá está de mais
+   * recente — e com o título por cima dela. Eram os dois únicos destinos com
+   * conteúdo novo todas as semanas a mostrarem-se como um rectângulo de cor.
+   *
+   * A newsroom não tem capa própria: a imagem vem do artigo que a notícia
+   * aponta, como no cabeçalho da própria página. Uma notícia sem artigo — só
+   * com ligação para fora — não traz nenhuma, por isso a escolhida é a mais
+   * recente que traga, e o título que aparece é o dela: a fotografia e a
+   * legenda têm de ser a mesma notícia. Se nenhuma trouxer imagem, fica a
+   * notícia mais recente sobre a cor plana de antes, que é melhor do que pôr
+   * a fotografia de uma debaixo do nome de outra.
+   */
+  const capaDe = (item: NewsItem) => posts.find((post) => post.slug === item.postSlug)?.cover;
+  const ultimoArtigo = posts.find((post) => post.cover?.src) ?? posts[0];
+  const ultimaNoticia = news.find((item) => capaDe(item)?.src) ?? news[0];
 
   const tiles: SheetTile[] = [
     // ── O que fazemos ──────────────────────────────────────────────────────
@@ -69,8 +92,28 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     },
 
     // ── A casa ─────────────────────────────────────────────────────────────
-    { group: casa, label: nav("blog"), kind: pt ? "página" : "page", href: url("/blog"), tone: "bg-slate" },
-    { group: casa, label: nav("newsroom"), kind: pt ? "página" : "page", href: url("/newsroom"), tone: "bg-slate" },
+    {
+      group: casa,
+      label: nav("blog"),
+      kind: pt ? "página" : "page",
+      href: url("/blog"),
+      tone: "bg-slate",
+      image: ultimoArtigo?.cover?.src,
+      ultimo: ultimoArtigo
+        ? { rotulo: pt ? "Último artigo" : "Latest article", titulo: ultimoArtigo.title[locale] }
+        : undefined,
+    },
+    {
+      group: casa,
+      label: nav("newsroom"),
+      kind: pt ? "página" : "page",
+      href: url("/newsroom"),
+      tone: "bg-slate",
+      image: ultimaNoticia ? capaDe(ultimaNoticia)?.src : undefined,
+      ultimo: ultimaNoticia
+        ? { rotulo: pt ? "Última notícia" : "Latest news", titulo: ultimaNoticia.title[locale] }
+        : undefined,
+    },
     { group: casa, label: nav("careers"), kind: pt ? "página" : "page", href: url("/recrutamento"), tone: "bg-chartreuse" },
     { group: casa, label: nav("about"), kind: pt ? "página" : "page", href: url("/sobre"), tone: "bg-slate" },
     // A equipa fecha a banda: eram sete quadrados e uma célula vazia.
