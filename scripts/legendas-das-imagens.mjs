@@ -15,7 +15,8 @@
  *   B. começa por um nome próprio (ou «Na mesa redonda…: nome») seguido de um
  *      cargo entre parênteses, com uma frase no máximo;
  *   C. «Nome Apelido – Cargo»;
- *   D. um parágrafo todo em itálico, até 160 caracteres.
+ *   D. um parágrafo todo em itálico, até 160 caracteres;
+ *   E. um texto exato numa lista curta de casos conhecidos de vista.
  * E nunca um texto que acabe em dois pontos ou travessão, nem com mais de
  * 220 caracteres.
  *
@@ -37,8 +38,14 @@ const todosItalicos = (n) => {
   return ts.length > 0 && ts.every((t) => t.text.trim() === "" || t.format & 2);
 };
 const NOME = "[A-ZÁÂÃÉÍÓÔÚÇ][\\wÀ-ÿ'’.-]+";
-const regra = (t, p) => {
+/* Legendas que as regras não apanham e que se conhecem de vista: o texto exato,
+   por artigo. */
+const A_DEDO = {
+  "8a-edicao-dos-premios-herois-pme-na-cnn-portugal": ["Vencedores Heróis PME", "Heróis PME Winners"],
+};
+const regra = (t, p, slug) => {
   const s = t.trim();
+  if ((A_DEDO[slug] ?? []).includes(s)) return "E";
   if (s.length < 8 || s.length > 220) return null;
   if (/[:–-]\s*$/.test(s)) return null;
   const frases = (s.match(/[.!?](\s|$)/g) || []).length;
@@ -65,7 +72,7 @@ for (const doc of docs) {
       const media = a.type === "upload" || (a.type === "block" && a.fields?.blockType === "video");
       if (!media || b.type !== "paragraph" || a.fields?.caption) continue;
       const t = texto(b).trim();
-      const r = regra(t, b);
+      const r = regra(t, b, doc.slug);
       if (!r) continue;
       a.fields = { ...(a.fields ?? {}), ...(a.type === "upload" && !a.fields?.align ? { align: "full" } : {}), caption: t };
       kids.splice(i + 1, 1);
