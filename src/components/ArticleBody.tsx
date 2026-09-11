@@ -125,10 +125,13 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={block.src} alt={block.alt ?? ""} loading="lazy" className="h-auto w-full rounded-[20px]" />
               )}
-              {/* A contornar, a imagem é estreita e o cartão não cabe: a legenda
-                  fica por baixo, simples. */}
+              {/* A contornar, o cartão não se pode sobrepor à fotografia — a
+                  imagem é estreita de mais. A legenda mantém a linguagem e
+                  muda de sítio: fica encostada por baixo. */}
               {block.caption ? (
-                <figcaption className={block.float ? "mt-3 text-sm text-fg-soft" : "legenda-imagem"}>{block.caption}</figcaption>
+                <figcaption className={block.float ? "legenda-imagem legenda-imagem-estreita" : "legenda-imagem"}>
+                  {block.caption}
+                </figcaption>
               ) : null}
             </figure>
           );
