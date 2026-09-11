@@ -202,7 +202,13 @@
     "related": "Relacionado",
     "tags": "Temas",
     "back": "Todos os artigos",
-    "by": "Por"
+    "by": "Por",
+    "searchTitle": "Procura algo em particular?",
+    "searchPlaceholder": "Um tema, um título, um autor…",
+    "searchLabel": "Pesquisar no blog",
+    "searchNone": "Nada com essas palavras. Experimente um tema mais curto, ou o nome de quem escreveu.",
+    "searchCount": "{n} artigos",
+    "searchOpen": "Enter abre · setas escolhem"
   },
   "newsroom": {
     "eyebrow": "Newsroom",

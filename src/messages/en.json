@@ -202,7 +202,13 @@
     "related": "Related",
     "tags": "Topics",
     "back": "All articles",
-    "by": "By"
+    "by": "By",
+    "searchTitle": "Looking for something in particular?",
+    "searchPlaceholder": "A topic, a title, an author…",
+    "searchLabel": "Search the blog",
+    "searchNone": "Nothing with those words. Try a shorter topic, or the name of who wrote it.",
+    "searchCount": "{n} articles",
+    "searchOpen": "Enter opens · arrows choose"
   },
   "newsroom": {
     "eyebrow": "Newsroom",

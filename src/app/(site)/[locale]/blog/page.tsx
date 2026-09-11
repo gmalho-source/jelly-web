@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 import { getPosts } from "@/lib/cms";
+import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
 
 export async function generateMetadata({
   params,
@@ -41,6 +42,18 @@ export default async function BlogIndexPage({
     locale === "pt" ? "pt-PT" : "en-GB",
     { day: "numeric", month: "short", year: "numeric" },
   );
+  // O índice para a pesquisa no browser: só o que se lê numa sugestão, e o
+  // resumo cortado — o texto inteiro dos 181 artigos não tem de vir na página.
+  const paraPesquisa = posts.map((post) => ({
+    slug: slugFor(post, locale),
+    titulo: post.title[locale],
+    resumo: post.excerpt[locale].slice(0, 200),
+    categoria: post.category[locale],
+    temas: (post.tags ?? []).map((tag) => tag.name[locale]),
+    autor: post.author.name,
+    data: post.date,
+    dataLegivel: formatter.format(new Date(post.date)),
+  }));
 
   return (
     <section className="surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
@@ -50,6 +63,22 @@ export default async function BlogIndexPage({
           <h1 className="editorial mt-5 text-display">{t("title")}</h1>
         </div>
         <p className="subtitle">{t("lead")}</p>
+      </div>
+
+      {/* A pesquisa, antes do destaque: quem chega à procura de uma coisa não
+          tem de passar pela lista para a encontrar. */}
+      <div className="mt-14 max-w-[720px]">
+        <PesquisaDoBlog
+          artigos={paraPesquisa}
+          textos={{
+            titulo: t("searchTitle"),
+            placeholder: t("searchPlaceholder"),
+            rotulo: t("searchLabel"),
+            semResultados: t("searchNone"),
+            resultados: t.raw("searchCount") as string,
+            abrir: t("searchOpen"),
+          }}
+        />
       </div>
 
       <Link
