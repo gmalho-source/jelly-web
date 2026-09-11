@@ -863,6 +863,7 @@ export interface Client {
     | 'retalho'
     | 'industria'
     | 'construcao'
+    | 'imobiliario'
     | 'transportes'
     | 'servicos'
     | 'ong'

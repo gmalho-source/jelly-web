@@ -59,7 +59,7 @@ export type Service = {
   closing?: { question: Localized; answer: Localized };
 };
 
-export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "alimentar" | "consumo" | "retalho" | "industria" | "construcao" | "transportes" | "servicos" | "ong" | "arte" | "eventos" | "lazer" | "tecnologia" };
+export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "alimentar" | "consumo" | "retalho" | "industria" | "construcao" | "imobiliario" | "transportes" | "servicos" | "ong" | "arte" | "eventos" | "lazer" | "tecnologia" };
 
 export type TeamMember = {
   name: string;

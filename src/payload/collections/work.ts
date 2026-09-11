@@ -329,6 +329,7 @@ export const Clients: CollectionConfig = {
         { label: "Retalho", value: "retalho" },
         { label: "Indústria", value: "industria" },
         { label: "Arquitetura e construção", value: "construcao" },
+        { label: "Mediação, consultoria, angariação e gestão imobiliária", value: "imobiliario" },
         { label: "Transportes & Logística", value: "transportes" },
         { label: "Serviços", value: "servicos" },
         { label: "ONG", value: "ong" },
