@@ -22,7 +22,7 @@ export function OuvirArtigo({
 }: {
   src: string;
   segundos?: number;
-  textos: { ouvir: string; pausar: string; barra: string };
+  textos: { convite: string; ouvir: string; pausar: string; barra: string };
 }) {
   const audio = useRef<HTMLAudioElement>(null);
   const [atocar, setAtocar] = useState(false);
@@ -70,6 +70,12 @@ export function OuvirArtigo({
   return (
     <div className="mt-3 flex flex-col gap-2">
       <audio ref={audio} src={src} preload="none" />
+
+      {/* O convite, antes do botão: nesta coluna o leitor aparece a seguir a
+          um nome e a uma data, e um triângulo sozinho ali não diz que há uma
+          gravação — diz que há um controlo qualquer. A frase é que abre a
+          porta a quem passou os olhos pelo artigo e não tem mãos para o ler. */}
+      <p className="text-xs text-fg-soft">{textos.convite}</p>
 
       <div className="flex items-center gap-2.5">
         <button

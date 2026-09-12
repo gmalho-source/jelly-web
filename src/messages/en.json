@@ -209,6 +209,7 @@
     "searchNone": "Nothing with those words. Try a shorter topic, or the name of who wrote it.",
     "searchCount": "{n} articles",
     "searchOpen": "Enter opens · arrows choose",
+    "listenInvite": "Can't read right now? Listen to it all here.",
     "listen": "Listen to the article",
     "pause": "Pause",
     "listenBar": "Position in the reading"
