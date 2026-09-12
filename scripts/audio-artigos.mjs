@@ -141,25 +141,40 @@ async function pergunta(caminho) {
   return { voices: [] };
 }
 
-/** As vozes da conta e as da biblioteca partilhada que falam português. */
+/**
+ * As vozes da conta e as da biblioteca partilhada que falam a língua.
+ *
+ * A biblioteca em português tem quatrocentas vozes e nove em cada dez são
+ * brasileiras: pedir a primeira página trazia trinta do Brasil e duas de
+ * Portugal, quando há trinta e duas de Portugal para ouvir. Daí percorrerem-se
+ * as páginas todas em português e ficar o que não é brasileiro — é essa a
+ * escolha que esta casa tem para fazer. Em inglês uma página chega.
+ */
 async function vozesDisponiveis(lingua) {
   const minhas = await pergunta("voices");
 
   const codigo = lingua === "pt" ? "pt" : "en";
-  const partilhadas = await pergunta(`shared-voices?page_size=30&language=${codigo}`);
+  const partilhadas = [];
+  const [paginas, porPagina] = codigo === "pt" ? [4, 100] : [1, 30];
+  for (let pagina = 0; pagina < paginas; pagina++) {
+    const { voices } = await pergunta(`shared-voices?page_size=${porPagina}&page=${pagina}&language=${codigo}`);
+    if (!voices?.length) break;
+    partilhadas.push(...voices.filter((v) => codigo !== "pt" || !/brazil/i.test(v.accent ?? "")));
+  }
 
   const ficha = (voz, origem) => ({
     id: voz.voice_id,
     nome: voz.name,
     origem,
     sotaque: voz.labels?.accent ?? voz.accent ?? "",
+    quem: [voz.labels?.gender ?? voz.gender, voz.labels?.age ?? voz.age].filter(Boolean).join(" "),
     descricao: (voz.labels?.description ?? voz.description ?? "").slice(0, 60),
     lingua: voz.labels?.language ?? voz.language ?? "",
   });
 
   return [
     ...(minhas.voices ?? []).map((voz) => ficha(voz, "conta")),
-    ...(partilhadas.voices ?? []).map((voz) => ficha(voz, "biblioteca")),
+    ...partilhadas.map((voz) => ficha(voz, "biblioteca")),
   ];
 }
 
@@ -302,7 +317,7 @@ if (listar) {
     console.log(`\n── ${lingua} ────────────────────────────────────────────`);
     for (const voz of await vozesDisponiveis(lingua)) {
       console.log(
-        `${voz.id}  ${voz.nome.padEnd(22)} ${voz.origem.padEnd(11)} ${(voz.sotaque || voz.lingua).padEnd(14)} ${voz.descricao}`,
+        `${voz.id}  ${voz.nome.padEnd(22)} ${voz.origem.padEnd(11)} ${(voz.sotaque || voz.lingua).padEnd(14)} ${voz.quem.padEnd(18)} ${voz.descricao}`,
       );
     }
   }
