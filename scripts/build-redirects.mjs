@@ -34,7 +34,15 @@ const SERVICES = {
   "/servicos/aplicacoes-web-e-mobile/": "/servicos/tecnologia/aplicacoes-web-mobile",
   "/servicos/consultoria-e-sistemas-crm-erp-cdp/": "/servicos/tecnologia/crm-cdp-integracoes",
   "/servicos/estrategia-digital-e-crescimento-das-vendas-powered-by-informa-db/": "/servicos/marketing/lead-generation-b2b",
-  "/jellycare/": "/servicos/tecnologia/performance-acessibilidade-migracoes",
+  /*
+   * JellyCARE: nada a redirecionar.
+   *
+   * Esta linha mandava `/jellycare/` para a página de Performance, porque
+   * quando foi escrita o JellyCARE só existia lá dentro. Voltou a ter página
+   * própria, no mesmo endereço de sempre — e um redirecionamento de um
+   * endereço para ele mesmo é um ciclo. O `add` abaixo até o filtrava, mas o
+   * lugar de dizer isto é aqui.
+   */
 };
 
 /** Páginas institucionais e utilitárias. */

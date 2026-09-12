@@ -4620,11 +4620,6 @@
     "permanent": true
   },
   {
-    "source": "/jellycare",
-    "destination": "/servicos/tecnologia/performance-acessibilidade-migracoes",
-    "permanent": true
-  },
-  {
     "source": "/impacto-do-comercio-eletronico-no-setor-de-i-gaming",
     "destination": "/blog",
     "permanent": true

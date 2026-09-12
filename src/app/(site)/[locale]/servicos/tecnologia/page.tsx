@@ -101,7 +101,6 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
     const pagina = servicoDeTecnologia(sub);
     return pagina ? ({ pathname: ROTA, params: { sub: pagina.slug[locale] } } as const) : undefined;
   };
-  const manutencao = paginaDe("performance-acessibilidade-migracoes");
 
   return (
     <>
@@ -358,11 +357,12 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
             <span className="eyebrow text-red">{m.cuidar.eyebrow[locale]}</span>
             <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.025em]">{m.cuidar.titulo[locale]}</h2>
             <p className="mt-5 max-w-[46ch] text-md text-fg-soft">{m.cuidar.texto[locale]}</p>
-            {manutencao ? (
-              <Link href={manutencao} className="btn-pill mt-7">
-                {m.cuidar.cta[locale]} <span aria-hidden="true">→</span>
-              </Link>
-            ) : null}
+            {/* Leva à página do JellyCARE, e não à de Performance: o bloco
+                fala de um produto com nome e preço, e é essa a página que o
+                diz por inteiro. */}
+            <Link href="/jellycare" className="btn-pill mt-7">
+              {m.cuidar.cta[locale]} <span aria-hidden="true">→</span>
+            </Link>
           </div>
           <ul className="entra-tarde border-t border-line">
             {m.cuidar.itens.map((item) => (

@@ -1,5 +1,6 @@
 import type { Localized } from "./types";
 import { agentesLeads } from "./agentes-leads";
+import { jellycare } from "./jellycare";
 
 /**
  * As páginas pilar, e o serviço debaixo do qual cada uma vive.
@@ -18,7 +19,7 @@ export type Pilar = {
   /** O slug português do serviço a que pertence. */
   servico: string;
   /** A rota, tal como o next-intl a conhece. */
-  rota: "/pre-qualificacao-leads-agentes-ia";
+  rota: "/pre-qualificacao-leads-agentes-ia" | "/jellycare";
   eyebrow: Localized;
   titulo: Localized;
   resumo: Localized;
@@ -33,6 +34,14 @@ export const PILARES: Pilar[] = [
     titulo: agentesLeads.titulo,
     resumo: agentesLeads.abertura.titulo,
     cta: { pt: "Ler o guia", en: "Read the guide" },
+  },
+  {
+    servico: "tecnologia",
+    rota: "/jellycare",
+    eyebrow: { pt: "Depois de publicar", en: "After launch" },
+    titulo: jellycare.titulo,
+    resumo: jellycare.abertura.titulo,
+    cta: { pt: "Ver o JellyCARE", en: "See JellyCARE" },
   },
 ];
 

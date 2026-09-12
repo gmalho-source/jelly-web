@@ -35,6 +35,10 @@ export const routing = defineRouting({
       pt: "/pre-qualificacao-leads-agentes-ia",
       en: "/ai-lead-pre-qualification",
     },
+    // O JellyCARE é um produto com nome próprio, preço e assinatura: tem
+    // endereço de raiz e o mesmo nas duas línguas, porque uma marca não se
+    // traduz. Vive debaixo da Tecnologia, e quem o diz são as migalhas.
+    "/jellycare": { pt: "/jellycare", en: "/jellycare" },
     "/equipa": { pt: "/equipa", en: "/team" },
     "/equipa/[slug]": { pt: "/equipa/[slug]", en: "/team/[slug]" },
     "/recrutamento": { pt: "/recrutamento", en: "/careers" },

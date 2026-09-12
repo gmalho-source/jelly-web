@@ -172,7 +172,7 @@ export const tecnologia = {
       pt: "Manutenção ativa e preventiva, todos os meses: o que se faz é reportado, e o que se evita também. Sem fidelização.",
       en: "Active, preventive maintenance, every month: what gets done is reported, and so is what gets avoided. No lock-in.",
     },
-    cta: { pt: "Ver Performance e Manutenção", en: "See Performance and Maintenance" },
+    cta: { pt: "Ver os planos JellyCARE", en: "See the JellyCARE plans" },
     itens: [
       { nome: { pt: "Checkup diário de segurança e malware", en: "Daily security and malware checkup" }, area: { pt: "Segurança", en: "Security" } },
       { nome: { pt: "Atualização de temas, plugins e dependências", en: "Theme, plugin and dependency updates" }, area: { pt: "Atualizações", en: "Updates" } },
