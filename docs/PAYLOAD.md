@@ -242,8 +242,8 @@ resolver um componente, não um erro de javascript.
 ## O artigo lido em voz alta
 
 Cada artigo pode ter uma gravação por língua. O guião `npm run audio` lê o corpo
-no painel, manda-o à síntese da **Azure**, junta os pedaços num MP3, mede-o,
-envia-o para o Blob e escreve no artigo o endereço, a duração, a voz e a
+no painel, manda-o à síntese da **ElevenLabs**, junta os pedaços num MP3,
+mede-o, envia-o para o Blob e escreve no artigo o endereço, a duração, a voz e a
 impressão digital do texto lido. A página do artigo mostra um leitor por baixo
 do tempo de leitura; sem ficheiro, não mostra nada.
 
@@ -251,26 +251,43 @@ A impressão digital é o que faz isto poder correr sempre: um artigo cujo corpo
 não mudou não volta a ser falado. Sem ela, cada correção de vírgula obrigava a
 escolher entre pagar tudo outra vez e nunca mais acertar nada.
 
-Porquê a Azure: o português europeu é uma língua de primeira classe lá — Raquel,
-Duarte e Fernanda são vozes nativas de pt-PT. As vozes novas da Google não
-cobrem pt-PT, e a ElevenLabs soa melhor mas o sotaque europeu é menos previsível
-e custa cinco vezes mais. Ao escalão neural são 16 dólares por milhão de
-caracteres, com o primeiro meio milhão de cada mês sem custo: os 181 artigos em
-português são uma despesa de cerca de 23 dólares, e o ritmo de publicação cabe
-todos os meses no que é gratuito.
+Porquê a ElevenLabs. O problema aqui não é o preço da síntese, é o português
+europeu: quase toda a síntese moderna assume o Brasil. A Cartesia faz o
+português cair no sotaque brasileiro; as vozes novas da Google não cobrem pt-PT;
+o Piper tem licenças por voz e diz-se para uso pessoal e investigação, o que não
+serve num blog comercial. Ficavam a Azure, a Polly e esta — e esta é a única que
+não é de uma hiperescala, distingue Portugal do Brasil, e deixa um dia a casa
+ler os artigos com a voz de quem os escreve.
+
+Custa 0,10 dólares por mil caracteres no `eleven_multilingual_v2`, metade no
+`eleven_flash_v2_5`. Os 181 artigos em português são cerca de 146 dólares no
+primeiro, 73 no segundo. Depois disso, o ritmo de publicação são uns dólares por
+ano.
+
+Três coisas que a leitura ganhou e não se veem no resultado. As pausas são a
+etiqueta `<break>`, que esta casa usa nos títulos e entre parágrafos — é a única
+marcação que a ElevenLabs entende, e o limite dela são três segundos. O corte
+dos pedaços é sempre em fim de parágrafo, nunca a meio de uma frase. E cada
+pedido leva o fim do pedaço anterior e o princípio do seguinte em
+`previous_text` e `next_text`: é o que faz um artigo partido em cinco pedidos
+soar a uma leitura só, em vez de cinco leituras coladas.
 
 O que não se lê em voz alta: imagens, vídeos, legendas e blocos de código. Uma
 legenda lida no meio de uma frase é ruído.
 
 ```
-AZURE_SPEECH_KEY=… npm run audio -- --amostra      # o mesmo parágrafo nas três vozes
-AZURE_SPEECH_KEY=… npm run audio -- --so=<slug>    # um artigo
-AZURE_SPEECH_KEY=… npm run audio -- --limite=5     # os cinco primeiros que faltam
-AZURE_SPEECH_KEY=… npm run audio                   # tudo o que falta ou mudou
+ELEVENLABS_API_KEY=… npm run audio -- --vozes               # as vozes que há
+ELEVENLABS_API_KEY=… npm run audio -- --amostra --voz=a,b   # ouvi-las
+ELEVENLABS_API_KEY=… npm run audio -- --so=<slug>           # um artigo
+ELEVENLABS_API_KEY=… npm run audio -- --limite=5            # os cinco que faltam
+ELEVENLABS_API_KEY=… npm run audio                          # tudo o que falta ou mudou
 ```
 
-Opções: `--lingua=pt|en`, `--voz=`, `--forcar`, `--dry`. A região sai de
-`AZURE_SPEECH_REGION` e por omissão é `westeurope`.
+Opções: `--lingua=pt|en`, `--voz=`, `--modelo=`, `--formato=`, `--forcar`,
+`--dry`. As vozes escolhidas vivem em `ELEVENLABS_VOICE_PT` e
+`ELEVENLABS_VOICE_EN` — são decisão de marca, mudam sem o código mudar, e um
+identificador da ElevenLabs no repositório não diz nada a quem o lê daqui a um
+ano.
 
 ## Os planos JellyCARE
 
@@ -327,8 +344,9 @@ repositório e corrê-las no build.
 | `BLOB_READ_WRITE_TOKEN` | Ficheiros no Blob da Vercel. **Obrigatória em produção**: o serverless não tem disco persistente |
 | `REVALIDATE_SECRET` | Purga manual do site |
 | `RESEND_API_KEY` | Recuperação de senha do painel. Sem ela, o email vai para o log |
-| `AZURE_SPEECH_KEY` | Síntese de voz dos artigos (`npm run audio`). Só é precisa na máquina de quem gera |
-| `AZURE_SPEECH_REGION` | A região do recurso de Speech. Por omissão `westeurope` |
+| `ELEVENLABS_API_KEY` | Síntese de voz dos artigos (`npm run audio`). Só é precisa na máquina de quem gera |
+| `ELEVENLABS_VOICE_PT` | A voz portuguesa escolhida. Sai de `--vozes` e ouve-se com `--amostra` |
+| `ELEVENLABS_VOICE_EN` | O mesmo, para os artigos em inglês |
 
 ## Imagens dentro dos artigos
 

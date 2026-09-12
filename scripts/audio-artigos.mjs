@@ -2,25 +2,28 @@
 /**
  * O artigo lido em voz alta.
  *
- * Gera a leitura de cada artigo com a síntese da Azure, junta os pedaços num
- * MP3, mede-o, envia-o para o Blob e escreve no artigo o endereço, a duração, a
- * voz e a impressão digital do texto lido.
+ * Gera a leitura de cada artigo com a ElevenLabs, junta os pedaços num MP3,
+ * mede-o, envia-o para o Blob e escreve no artigo o endereço, a duração, a voz
+ * e a impressão digital do texto lido.
  *
  * É a impressão digital que faz isto poder correr todos os dias: um artigo cujo
  * corpo não mudou não volta a ser falado. Sem ela, cada correção de vírgula
  * obrigava a escolher entre pagar tudo outra vez e nunca mais acertar nada.
  *
- * Porquê a Azure e não outra: o português europeu é uma língua de primeira
- * classe lá — Raquel, Duarte e Fernanda são vozes nativas de pt-PT. As vozes
- * novas da Google não cobrem pt-PT, e a ElevenLabs soa melhor mas o sotaque
- * europeu é menos previsível e custa cinco vezes mais.
+ * Porquê a ElevenLabs. O problema desta casa não é o preço da síntese, é o
+ * português europeu: quase toda a síntese moderna assume o Brasil. A Cartesia
+ * faz o português cair no sotaque brasileiro; as vozes novas da Google não
+ * cobrem pt-PT; o Piper tem licenças por voz e diz-se para uso pessoal e
+ * investigação, o que não serve num blog comercial. Ficavam a Azure, a Polly e
+ * esta — e esta é a única que não é de uma hiperescala, distingue Portugal do
+ * Brasil, e deixa um dia a casa ler os artigos com a voz de quem os escreve.
  *
- *   AZURE_SPEECH_KEY=… npm run audio -- --amostra
- *   AZURE_SPEECH_KEY=… npm run audio -- --so=o-que-e-geo-motores-de-ia
- *   AZURE_SPEECH_KEY=… npm run audio -- --limite=5
- *   AZURE_SPEECH_KEY=… npm run audio            # tudo o que falta ou mudou
+ *   ELEVENLABS_API_KEY=… npm run audio -- --vozes     # que vozes há para pt-PT
+ *   ELEVENLABS_API_KEY=… npm run audio -- --amostra --voz=<id>,<id>
+ *   ELEVENLABS_API_KEY=… npm run audio -- --so=<slug>
+ *   ELEVENLABS_API_KEY=… npm run audio               # tudo o que falta ou mudou
  *
- * Opções: --so= --lingua=pt|en --limite= --voz= --forcar --dry --amostra
+ * Opções: --so= --lingua=pt|en --limite= --voz= --modelo= --formato= --forcar --dry
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -41,47 +44,112 @@ const limite = Number(valor("limite") ?? 0) || Infinity;
 const dry = flag("dry");
 const forcar = flag("forcar");
 const amostra = flag("amostra");
+const listar = flag("vozes");
 const linguas = valor("lingua") ? [valor("lingua")] : ["pt", "en"];
 
 /**
- * As vozes.
+ * O modelo.
  *
- * pt-PT tem três, e a escolha é de ouvido: `--amostra` grava o mesmo parágrafo
- * nas três para se decidir com os ouvidos e não com uma tabela. Em inglês fica
- * uma voz britânica — esta casa escreve inglês europeu, e um sotaque americano
- * a ler «Jelly, Lisbon» soa a outra agência.
+ * `eleven_multilingual_v2` é o mais estável para texto longo e aceita dez mil
+ * caracteres por pedido. O `eleven_flash_v2_5` custa metade e aceita quarenta
+ * mil, mas troca nuance por velocidade — e aqui não há pressa nenhuma: isto
+ * corre uma vez por artigo, de madrugada se for preciso.
  */
-const VOZES = {
-  pt: { padrao: "pt-PT-RaquelNeural", todas: ["pt-PT-RaquelNeural", "pt-PT-DuarteNeural", "pt-PT-FernandaNeural"] },
-  en: { padrao: "en-GB-SoniaNeural", todas: ["en-GB-SoniaNeural", "en-GB-RyanNeural"] },
-};
-const vozDe = (lingua) => valor("voz") ?? VOZES[lingua].padrao;
+const MODELO = valor("modelo") ?? "eleven_multilingual_v2";
+const TETO = MODELO.includes("flash") || MODELO.includes("turbo") ? 35_000 : 9_000;
+// 64 kbps chega e sobra para voz. Os 192 e os formatos sem compressão pedem
+// escalões pagos mais altos, e não trazem nada a um artigo falado.
+const FORMATO = valor("formato") ?? "mp3_44100_64";
 
 /**
- * O que a voz diz mal, e como se lhe diz melhor.
+ * As vozes escolhidas, por língua.
  *
- * Fica curto de propósito: cada entrada é uma correção medida de ouvido, não um
- * palpite. Afina-se depois de ouvir o primeiro artigo — é para isso que a
- * `--amostra` existe.
+ * Ficam no ambiente e não aqui: a voz da casa é uma decisão de marca, muda sem
+ * o código mudar, e um identificador da ElevenLabs no repositório não diz nada
+ * a quem o lê daqui a um ano. `--vozes` lista as que há; `--amostra` grava a
+ * mesma frase em cada uma para se escolher de ouvido.
  */
-const LEITURAS = [
-  [/\bJellyCARE\b/g, "Jelly Care"],
-  [/\bJELLY\b/g, "Jelly"],
-];
+const VOZES = {
+  pt: process.env.ELEVENLABS_VOICE_PT?.trim(),
+  en: process.env.ELEVENLABS_VOICE_EN?.trim(),
+};
+const vozDe = (lingua) => valor("voz")?.split(",")[0] ?? VOZES[lingua];
 
-const chave = process.env.AZURE_SPEECH_KEY?.trim();
-const regiao = process.env.AZURE_SPEECH_REGION?.trim() || "westeurope";
+const chave = process.env.ELEVENLABS_API_KEY?.trim();
 const tokenBlob = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 
 if (!chave) {
-  console.error("falta AZURE_SPEECH_KEY (e AZURE_SPEECH_REGION, se não for westeurope)");
+  console.error("falta ELEVENLABS_API_KEY");
   process.exit(2);
 }
 
-// ── O texto ─────────────────────────────────────────────────────────────────
+// ── A ElevenLabs ────────────────────────────────────────────────────────────
 
-/** Escapa o que o XML não deixa passar. Um «&» numa frase parte o pedido todo. */
-const escapa = (texto) => texto.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const API = "https://api.elevenlabs.io/v1";
+const cabecalho = { "xi-api-key": chave, "Content-Type": "application/json" };
+
+/**
+ * Fala um pedaço.
+ *
+ * `previous_text` e `next_text` são o que faz um artigo partido em cinco
+ * pedidos soar a uma leitura só: o modelo vê o fim do pedaço anterior e o
+ * princípio do seguinte, e por isso não recomeça do zero em cada corte, com
+ * outro tom e outra respiração. Sem eles, ouve-se a emenda.
+ */
+async function fala({ texto, voz, antes, depois }) {
+  const resposta = await fetch(`${API}/text-to-speech/${voz}?output_format=${FORMATO}`, {
+    method: "POST",
+    headers: cabecalho,
+    body: JSON.stringify({
+      text: texto,
+      model_id: MODELO,
+      ...(antes ? { previous_text: antes } : {}),
+      ...(depois ? { next_text: depois } : {}),
+      voice_settings: {
+        // Estável, para um texto longo não derivar de tom a meio; a semelhança
+        // alta mantém a mesma pessoa do princípio ao fim; um pouco mais devagar
+        // do que a conversa, porque isto é para ouvir a fazer outra coisa.
+        stability: 0.5,
+        similarity_boost: 0.8,
+        style: 0,
+        use_speaker_boost: true,
+        speed: 0.95,
+      },
+    }),
+  });
+  if (!resposta.ok) {
+    throw new Error(`a ElevenLabs respondeu ${resposta.status}: ${(await resposta.text()).slice(0, 300)}`);
+  }
+  return Buffer.from(await resposta.arrayBuffer());
+}
+
+/** As vozes da conta e as da biblioteca partilhada que falam português. */
+async function vozesDisponiveis(lingua) {
+  const minhas = await fetch(`${API}/voices`, { headers: cabecalho })
+    .then((r) => (r.ok ? r.json() : { voices: [] }))
+    .catch(() => ({ voices: [] }));
+
+  const codigo = lingua === "pt" ? "pt" : "en";
+  const partilhadas = await fetch(`${API}/shared-voices?page_size=30&language=${codigo}`, { headers: cabecalho })
+    .then((r) => (r.ok ? r.json() : { voices: [] }))
+    .catch(() => ({ voices: [] }));
+
+  const ficha = (voz, origem) => ({
+    id: voz.voice_id,
+    nome: voz.name,
+    origem,
+    sotaque: voz.labels?.accent ?? voz.accent ?? "",
+    descricao: (voz.labels?.description ?? voz.description ?? "").slice(0, 60),
+    lingua: voz.labels?.language ?? voz.language ?? "",
+  });
+
+  return [
+    ...(minhas.voices ?? []).map((voz) => ficha(voz, "conta")),
+    ...(partilhadas.voices ?? []).map((voz) => ficha(voz, "biblioteca")),
+  ];
+}
+
+// ── O texto ─────────────────────────────────────────────────────────────────
 
 /**
  * O corpo do artigo em parágrafos de texto limpo.
@@ -99,7 +167,6 @@ function paragrafosDe(no, fora = []) {
 
   if (tipo === "paragraph" || tipo === "heading" || tipo === "quote" || tipo === "listitem") {
     const texto = textoDe(no).replace(/\s+/g, " ").trim();
-    // Um título é uma entrada nova: marca-se para a voz respirar antes dele.
     if (texto) fora.push({ texto, titulo: tipo === "heading" });
     if (tipo !== "listitem") return fora;
   }
@@ -115,44 +182,56 @@ function textoDe(no) {
   return (no.children ?? []).map(textoDe).join(" ");
 }
 
+/**
+ * O que a voz diz mal, e como se lhe diz melhor.
+ *
+ * Fica curto de propósito: cada entrada é uma correção medida de ouvido, não um
+ * palpite. Afina-se depois de ouvir o primeiro artigo — é para isso que a
+ * `--amostra` existe.
+ */
+const LEITURAS = [
+  [/\bJellyCARE\b/g, "Jelly Care"],
+  [/\bJELLY\b/g, "Jelly"],
+];
+
 /** O que vai ser dito, do princípio ao fim, já com as correções de leitura. */
-function guiao({ titulo, autor, paragrafos, lingua }) {
-  const abertura = [{ texto: titulo, titulo: true }];
-  if (autor) abertura.push({ texto: lingua === "pt" ? `Por ${autor}.` : `By ${autor}.`, titulo: false });
-  return [...abertura, ...paragrafos].map((linha) => ({
+function guiao({ titulo, paragrafos }) {
+  return [{ texto: titulo, titulo: true }, ...paragrafos].map((linha) => ({
     ...linha,
     texto: LEITURAS.reduce((texto, [de, para]) => texto.replace(de, para), linha.texto),
   }));
 }
 
 /**
- * O SSML de um pedaço.
+ * As linhas em texto corrido, com as pausas marcadas.
  *
- * As pausas são a diferença entre uma leitura e um debitar: meio segundo entre
- * parágrafos, quase um antes de cada título. A voz não sabe onde acaba uma
- * secção — isso está na marcação, não no texto.
+ * A ElevenLabs não lê SSML, mas entende a etiqueta de pausa — é a única, e o
+ * limite dela são três segundos. As pausas são a diferença entre uma leitura e
+ * um debitar: a voz não sabe onde acaba uma secção, isso está na marcação.
  */
-function ssml(linhas, lingua, voz) {
-  const corpo = linhas
-    .map((linha) =>
-      linha.titulo
-        ? `<break time="800ms"/><p>${escapa(linha.texto)}</p><break time="400ms"/>`
-        : `<p>${escapa(linha.texto)}</p><break time="500ms"/>`,
-    )
-    .join("\n");
-  return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${lingua === "pt" ? "pt-PT" : "en-GB"}">
-  <voice name="${voz}"><prosody rate="-4%">${corpo}</prosody></voice>
-</speak>`;
+function escrito(linhas) {
+  return (
+    linhas
+      .map((linha) =>
+        linha.titulo
+          ? `<break time="1.0s" /> ${linha.texto} <break time="0.4s" />`
+          : `${linha.texto} <break time="0.5s" />`,
+      )
+      .join("\n")
+      // Uma pausa à cabeça é um silêncio no princípio do ficheiro: quem carrega
+      // em tocar fica um segundo a pensar que não funcionou.
+      .replace(/^(?:<break[^>]*\/>\s*)+/, "")
+  );
 }
 
 /**
  * Os pedaços.
  *
- * O pedido à Azure tem tecto — de caracteres e de minutos de áudio — e um
- * artigo de vinte mil caracteres não passa de uma vez. Parte-se por parágrafos,
- * nunca a meio de um: um corte a meio de uma frase ouve-se.
+ * O pedido tem tecto de caracteres e um artigo de vinte mil não passa de uma
+ * vez. Parte-se por parágrafos, nunca a meio de um: um corte a meio de uma
+ * frase ouve-se, mesmo com a costura do `previous_text`.
  */
-function pedacos(linhas, maximo = 3000) {
+function pedacos(linhas, maximo) {
   const fora = [[]];
   let conta = 0;
   for (const linha of linhas) {
@@ -164,25 +243,6 @@ function pedacos(linhas, maximo = 3000) {
     conta += linha.texto.length;
   }
   return fora.filter((pedaco) => pedaco.length);
-}
-
-// ── A Azure ─────────────────────────────────────────────────────────────────
-
-async function fala(texto, lingua, voz) {
-  const resposta = await fetch(`https://${regiao}.tts.speech.microsoft.com/cognitiveservices/v1`, {
-    method: "POST",
-    headers: {
-      "Ocp-Apim-Subscription-Key": chave,
-      "Content-Type": "application/ssml+xml",
-      // 48 kbps mono chega e sobra para voz, e é o que faz um artigo de nove
-      // minutos pesar três megabytes em vez de dez.
-      "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
-      "User-Agent": "jelly-web",
-    },
-    body: ssml(texto, lingua, voz),
-  });
-  if (!resposta.ok) throw new Error(`a Azure respondeu ${resposta.status}: ${(await resposta.text()).slice(0, 200)}`);
-  return Buffer.from(await resposta.arrayBuffer());
 }
 
 /** Junta os pedaços num ficheiro só, sem recodificar. */
@@ -205,34 +265,68 @@ const segundosDe = (ficheiro) =>
     ),
   );
 
-// ── A amostra ───────────────────────────────────────────────────────────────
+/** Fala um texto inteiro, pedaço a pedaço, e devolve o ficheiro. */
+async function grava({ linhas, voz, destino, pasta, nome }) {
+  const partes = pedacos(linhas, TETO);
+  const ficheiros = [];
+  for (const [i, parte] of partes.entries()) {
+    const texto = escrito(parte);
+    const anterior = i > 0 ? escrito(partes[i - 1]).slice(-500) : "";
+    const seguinte = i + 1 < partes.length ? escrito(partes[i + 1]).slice(0, 500) : "";
+    const ficheiro = path.join(pasta, `${nome}-${i}.mp3`);
+    fs.writeFileSync(ficheiro, await fala({ texto, voz, antes: anterior, depois: seguinte }));
+    ficheiros.push(ficheiro);
+  }
+  junta(ficheiros, destino);
+  return destino;
+}
 
-if (amostra) {
-  const pasta = fs.mkdtempSync(path.join(os.tmpdir(), "vozes-"));
-  const linhas = [
-    { texto: "A Jelly ajuda empresas a comunicar e a desempenhar melhor.", titulo: true },
-    {
-      texto:
-        "Ligamos os pontos entre branding, marketing, comunicação e tecnologia. É o que fazemos todos os dias com os nossos clientes: dar qualidade de agência, com a ambição de quem leva uma marca mais longe.",
-      titulo: false,
-    },
-  ];
-  const emIngles = [
-    { texto: "Jelly helps companies communicate and perform better.", titulo: true },
-    {
-      texto:
-        "We connect the dots between branding, marketing, communication and technology. That is what we do every day with our clients: agency quality, with the ambition of someone taking a brand further.",
-      titulo: false,
-    },
-  ];
+// ── As vozes, e a escolha ───────────────────────────────────────────────────
+
+if (listar) {
   for (const lingua of linguas) {
-    for (const voz of VOZES[lingua].todas) {
-      const ficheiro = path.join(pasta, `${voz}.mp3`);
-      fs.writeFileSync(ficheiro, await fala(lingua === "pt" ? linhas : emIngles, lingua, voz));
-      console.log(`${voz}  ${ficheiro}  ${segundosDe(ficheiro)}s`);
+    console.log(`\n── ${lingua} ────────────────────────────────────────────`);
+    for (const voz of await vozesDisponiveis(lingua)) {
+      console.log(
+        `${voz.id}  ${voz.nome.padEnd(22)} ${voz.origem.padEnd(11)} ${(voz.sotaque || voz.lingua).padEnd(14)} ${voz.descricao}`,
+      );
     }
   }
-  console.log(`\nOuve-os e escolhe: a voz entra em --voz=, ou passa a ser o padrão no guião.`);
+  console.log(`\nOuve-as com --amostra --voz=<id>,<id>, e a escolhida entra em ELEVENLABS_VOICE_PT.`);
+  process.exit(0);
+}
+
+if (amostra) {
+  const escolhidas = (valor("voz") ?? "").split(",").filter(Boolean);
+  if (!escolhidas.length) {
+    console.error("diz quais: --amostra --voz=<id>,<id>   (corre --vozes para as ver)");
+    process.exit(2);
+  }
+  const pasta = fs.mkdtempSync(path.join(os.tmpdir(), "vozes-"));
+  const linhas = {
+    pt: [
+      { texto: "A Jelly ajuda empresas a comunicar e a desempenhar melhor.", titulo: true },
+      {
+        texto:
+          "Ligamos os pontos entre branding, marketing, comunicação e tecnologia. É o que fazemos todos os dias com os nossos clientes: dar qualidade de agência, com a ambição de quem leva uma marca mais longe.",
+        titulo: false,
+      },
+    ],
+    en: [
+      { texto: "Jelly helps companies communicate and perform better.", titulo: true },
+      {
+        texto:
+          "We connect the dots between branding, marketing, communication and technology. That is what we do every day with our clients: agency quality, with the ambition of someone taking a brand further.",
+        titulo: false,
+      },
+    ],
+  };
+  for (const voz of escolhidas) {
+    const destino = path.join(pasta, `${voz}.mp3`);
+    await grava({ linhas: linhas[linguas[0]], voz, destino, pasta, nome: voz });
+    console.log(`${voz}  ${destino}  ${segundosDe(destino)}s`);
+  }
+  console.log(`\nOuve-os e escolhe: a voz entra em ELEVENLABS_VOICE_PT (ou ELEVENLABS_VOICE_EN).`);
   process.exit(0);
 }
 
@@ -241,6 +335,12 @@ if (amostra) {
 if (!tokenBlob && !dry) {
   console.error("falta BLOB_READ_WRITE_TOKEN");
   process.exit(2);
+}
+for (const lingua of linguas) {
+  if (!vozDe(lingua) && !dry) {
+    console.error(`falta a voz de ${lingua}: corre --vozes, ouve com --amostra, e põe o id em ELEVENLABS_VOICE_${lingua.toUpperCase()}`);
+    process.exit(2);
+  }
 }
 
 const payload = await getPayload({ config });
@@ -267,7 +367,7 @@ for (const doc of docs) {
     const paragrafos = paragrafosDe(corpo?.root);
     if (!paragrafos.length) continue;
 
-    const linhas = guiao({ titulo, autor: "", paragrafos, lingua });
+    const linhas = guiao({ titulo, paragrafos });
     const texto = linhas.map((linha) => linha.texto).join("\n");
     const impressao = createHash("sha1").update(texto).digest("hex").slice(0, 16);
     const campo = lingua === "pt" ? "audioPt" : "audioEn";
@@ -276,20 +376,12 @@ for (const doc of docs) {
     if (!forcar && doc[campo] && doc[campoHash] === impressao) continue;
 
     const voz = vozDe(lingua);
-    const partes = pedacos(linhas);
-    console.log(`${doc.slug} [${lingua}] ${texto.length} caracteres, ${partes.length} pedaço(s), ${voz}`);
+    console.log(`${doc.slug} [${lingua}] ${texto.length} caracteres, ${pedacos(linhas, TETO).length} pedaço(s)`);
     caracteres += texto.length;
     if (dry) continue;
 
-    const ficheiros = [];
-    for (const [i, parte] of partes.entries()) {
-      const ficheiro = path.join(pasta, `${doc.slug}-${lingua}-${i}.mp3`);
-      fs.writeFileSync(ficheiro, await fala(parte, lingua, voz));
-      ficheiros.push(ficheiro);
-    }
-
     const inteiro = path.join(pasta, `${doc.slug}-${lingua}.mp3`);
-    junta(ficheiros, inteiro);
+    await grava({ linhas, voz, destino: inteiro, pasta, nome: `${doc.slug}-${lingua}` });
     const segundos = segundosDe(inteiro);
 
     const enviado = await put(`audio/${doc.slug}-${lingua}.mp3`, fs.readFileSync(inteiro), {
@@ -321,10 +413,12 @@ for (const doc of docs) {
   }
 }
 
-// A conta, porque isto gasta dinheiro de verdade: 16 dólares por milhão de
-// caracteres no escalão neural, com o primeiro meio milhão de cada mês de graça.
-const dolares = ((caracteres / 1_000_000) * 16).toFixed(2);
-console.log(`\n${feitos} gravação(ões), ${caracteres.toLocaleString("pt-PT")} caracteres (~${dolares} USD)`);
+// A conta, porque isto gasta dinheiro de verdade: 0,10 dólares por mil
+// caracteres no multilingual v2, metade no flash.
+const porMil = MODELO.includes("flash") || MODELO.includes("turbo") ? 0.05 : 0.1;
+console.log(
+  `\n${feitos} gravação(ões), ${caracteres.toLocaleString("pt-PT")} caracteres (~${((caracteres / 1000) * porMil).toFixed(2)} USD)`,
+);
 
 if (feitos && !dry) await purgeSite();
 process.exit(0);
