@@ -1,4 +1,4 @@
-import type { Localized } from "./types";
+import type { CarePlan } from "./types";
 
 /**
  * JellyCARE: manutenção ativa e preventiva de websites.
@@ -142,36 +142,8 @@ export const jellycare = {
     nota: { pt: "Acresce IVA à taxa legal em vigor.", en: "VAT at the legal rate is added." },
     periodo: { pt: "mês", en: "month" },
     cta: { pt: "Subscrever", en: "Subscribe" },
-    itens: [
-      {
-        nome: "JellyCARE",
-        preco: 75,
-        selo: null as Localized | null,
-        itens: [
-          { pt: "Segurança, checkup diário", en: "Security, daily checkup" },
-          { pt: "Atualização de temas e plugins", en: "Theme and plugin updates" },
-          { pt: "Otimização da base de dados", en: "Database optimisation" },
-          { pt: "Links quebrados", en: "Broken links" },
-          { pt: "Analytics", en: "Analytics" },
-          { pt: "Relatório mensal JellyCARE", en: "Monthly JellyCARE report" },
-        ],
-      },
-      {
-        nome: "JellyCARE Plus",
-        preco: 90,
-        selo: { pt: "Mais popular", en: "Most popular" },
-        itens: [
-          { pt: "Segurança, checkup diário", en: "Security, daily checkup" },
-          { pt: "Atualização de temas e plugins", en: "Theme and plugin updates" },
-          { pt: "Otimização da base de dados", en: "Database optimisation" },
-          { pt: "Links quebrados", en: "Broken links" },
-          { pt: "Analytics", en: "Analytics" },
-          { pt: "Relatório mensal JellyCARE", en: "Monthly JellyCARE report" },
-          { pt: "Backup diário na cloud", en: "Daily cloud backup" },
-          { pt: "Atualização segura", en: "Safe updates" },
-        ],
-      },
-    ],
+    /** O que a campanha diz quando o painel só preenche o preço do primeiro mês. */
+    campanhaPrimeiroMes: { pt: "Primeiro mês a {preco}", en: "First month at {preco}" },
   },
 
   comecar: {
@@ -213,4 +185,93 @@ export const jellycare = {
     },
     cta: { pt: "Subscrever sem compromisso", en: "Subscribe, no strings" },
   },
+
+  formulario: {
+    eyebrow: { pt: "Subscrever", en: "Subscribe" },
+    titulo: { pt: "Diga-nos qual é o site", en: "Tell us which site" },
+    texto: {
+      pt: "Escolha o plano, deixe o endereço do site e o contacto. Respondemos com os próximos passos e com o dia em que começamos a tratar dele.",
+      en: "Pick the plan, leave the site's address and your contact. We answer with the next steps and the day we start looking after it.",
+    },
+    campos: {
+      plano: { pt: "Plano", en: "Plan" },
+      site: { pt: "O seu website", en: "Your website" },
+      siteHint: { pt: "exemplo.pt", en: "example.com" },
+      infetado: {
+        pt: "O site está infetado com malware, ou suspeito que esteja.",
+        en: "The site is infected with malware, or I suspect it is.",
+      },
+      name: { pt: "Nome", en: "Name" },
+      company: { pt: "Empresa", en: "Company" },
+      email: { pt: "Email", en: "Email" },
+      phone: { pt: "Telefone", en: "Phone" },
+      phoneHint: { pt: "912 345 678", en: "912 345 678" },
+      notas: { pt: "Quer acrescentar alguma coisa?", en: "Anything to add?" },
+      notasHint: {
+        pt: "A plataforma, quem aloja, o que já aconteceu ao site.",
+        en: "The platform, who hosts it, what has happened to the site.",
+      },
+      consent: { pt: "Concordo e aceito a", en: "I agree to and accept the" },
+      privacidade: { pt: "Política de Privacidade da Jelly", en: "Jelly Privacy Policy" },
+      submit: { pt: "Quero experimentar", en: "I want to try it" },
+      sending: { pt: "A enviar", en: "Sending" },
+      sent: { pt: "Está tratado, {nome}.", en: "It's done, {nome}." },
+      sentBody: {
+        pt: "Recebemos o pedido e vamos ver o site antes de responder. Damos notícias com os próximos passos e a data de início.",
+        en: "We have your request and will look at the site before replying. We'll come back with the next steps and a start date.",
+      },
+      error: {
+        pt: "Não foi possível enviar. Tente outra vez, ou escreva para hello@jelly.pt.",
+        en: "It could not be sent. Try again, or write to hello@jelly.pt.",
+      },
+      erros: {
+        name: { pt: "Falta o nome.", en: "The name is missing." },
+        email: { pt: "Falta o email.", en: "The email is missing." },
+        emailInvalid: { pt: "Este email não parece estar certo.", en: "That email does not look right." },
+        phone: { pt: "Falta o telefone.", en: "The phone number is missing." },
+        phoneShort: { pt: "Este número parece curto.", en: "That number looks short." },
+        site: { pt: "Falta o endereço do site.", en: "The site's address is missing." },
+        consent: { pt: "É preciso aceitar a política de privacidade.", en: "The privacy policy has to be accepted." },
+      },
+    },
+  },
 } as const;
+
+/**
+ * Os planos, para quando não há painel.
+ *
+ * São os do site antigo, com os preços de lá. Quem manda é a coleção
+ * «Planos JellyCARE»; isto é a rede por baixo — em desenvolvimento, ou se a
+ * base não responder, a página de preços continua a ter preços.
+ */
+export const planosDeCodigo: CarePlan[] = [
+  {
+    key: "jellycare",
+    name: "JellyCARE",
+    price: 75,
+    features: [
+      { pt: "Segurança, checkup diário", en: "Security, daily checkup" },
+      { pt: "Atualização de temas e plugins", en: "Theme and plugin updates" },
+      { pt: "Otimização da base de dados", en: "Database optimisation" },
+      { pt: "Links quebrados", en: "Broken links" },
+      { pt: "Analytics", en: "Analytics" },
+      { pt: "Relatório mensal JellyCARE", en: "Monthly JellyCARE report" },
+    ],
+  },
+  {
+    key: "jellycare-plus",
+    name: "JellyCARE Plus",
+    price: 90,
+    badge: { pt: "Mais popular", en: "Most popular" },
+    features: [
+      { pt: "Segurança, checkup diário", en: "Security, daily checkup" },
+      { pt: "Atualização de temas e plugins", en: "Theme and plugin updates" },
+      { pt: "Otimização da base de dados", en: "Database optimisation" },
+      { pt: "Links quebrados", en: "Broken links" },
+      { pt: "Analytics", en: "Analytics" },
+      { pt: "Relatório mensal JellyCARE", en: "Monthly JellyCARE report" },
+      { pt: "Backup diário na cloud", en: "Daily cloud backup" },
+      { pt: "Atualização segura", en: "Safe updates" },
+    ],
+  },
+];

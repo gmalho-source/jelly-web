@@ -3,6 +3,7 @@ import type {
   ArchivedProject,
   Autor,
   Block,
+  CarePlan,
   Client,
   Department,
   Job,
@@ -476,6 +477,43 @@ export function fetchMilestones(fallback: Milestone[]) {
   return fromCms(async (payload) => {
     const { docs } = await payload.find({ collection: "milestones", sort: "year", ...all });
     return (docs as unknown as Doc[]).map((raw): Milestone => ({ year: text(raw.year), ...localized(raw.body) }));
+  }, fallback);
+}
+
+/**
+ * Os planos JellyCARE.
+ *
+ * A campanha é filtrada aqui e não na página: um plano com a campanha desligada
+ * — ou com a data já passada — chega ao site sem campanha nenhuma, e a página
+ * não precisa de saber que existe um visto no painel. A data compara-se pelo
+ * dia: uma campanha que acaba a 31 de dezembro vale o dia 31 inteiro.
+ */
+export function fetchCarePlans(fallback: CarePlan[]) {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({ collection: "care-plans", sort: "order", ...all });
+    const hoje = new Date().toISOString().slice(0, 10);
+    return (docs as unknown as Doc[])
+      .filter((raw) => raw.active !== false)
+      .map((raw): CarePlan => {
+        const campanha = (raw.campaign ?? {}) as Doc;
+        const ate = text(campanha.until).slice(0, 10);
+        const aDecorrer = Boolean(campanha.active) && (!ate || ate >= hoje);
+        const etiqueta = localized(campanha.label);
+        const primeiro = typeof campanha.firstPrice === "number" ? campanha.firstPrice : undefined;
+        return {
+          key: text(raw.key),
+          name: text(raw.name),
+          price: Number(raw.price ?? 0),
+          badge: localized(raw.badge).pt ? localized(raw.badge) : undefined,
+          features: ((raw.features ?? []) as Doc[])
+            .map((linha) => localized(linha.item))
+            .filter((linha) => linha.pt),
+          ...(aDecorrer && (etiqueta.pt || primeiro !== undefined)
+            ? { campaign: { ...(etiqueta.pt ? { label: etiqueta } : {}), ...(primeiro !== undefined ? { firstPrice: primeiro } : {}), ...(ate ? { until: ate } : {}) } }
+            : {}),
+        };
+      })
+      .filter((plano) => plano.key && plano.name);
   }, fallback);
 }
 

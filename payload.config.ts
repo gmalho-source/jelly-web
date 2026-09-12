@@ -14,6 +14,7 @@ import { i18n } from "./src/payload/i18n";
 import { Authors, Categories, NewsItems, Posts, Tags } from "./src/payload/collections/editorial";
 import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
+import { CarePlans } from "./src/payload/collections/care";
 import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
@@ -82,6 +83,7 @@ export default buildConfig({
     TeamMembers,
     Milestones,
     Messages,
+    CarePlans,
     Attachments,
     Departments,
     JobFunctions,

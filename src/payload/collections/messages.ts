@@ -16,8 +16,8 @@ export const Messages: CollectionConfig = {
   admin: {
     useAsTitle: "name",
     group: "Casa",
-    defaultColumns: ["name", "company", "email", "status", "createdAt"],
-    description: "Os briefings que entram pela página de contactos.",
+    defaultColumns: ["name", "company", "origin", "status", "createdAt"],
+    description: "Os briefings da página de contactos e as subscrições do JellyCARE.",
   },
   access: { read: ({ req }) => Boolean(req.user), create: () => false, update: ({ req }) => Boolean(req.user), delete: ({ req }) => Boolean(req.user) },
   fields: [
@@ -33,6 +33,32 @@ export const Messages: CollectionConfig = {
     // número sem indicativo não se marca de fora do país, e é de fora do país
     // que vem parte destes pedidos.
     { name: "phone", label: "Telefone", type: "text", admin: { readOnly: true } },
+    /*
+     * De onde veio o pedido.
+     *
+     * A caixa é uma só de propósito: quem responde não tem de andar por duas
+     * coleções. Estes dois campos é que dizem se a mensagem é um briefing da
+     * página de contactos ou uma subscrição do JellyCARE — e, nesse caso, com
+     * que plano e para que site.
+     */
+    {
+      type: "row",
+      fields: [
+        {
+          name: "origin",
+          label: "Origem",
+          type: "select",
+          defaultValue: "contacto",
+          admin: { readOnly: true },
+          options: [
+            { label: "Contactos", value: "contacto" },
+            { label: "JellyCARE", value: "jellycare" },
+          ],
+        },
+        { name: "plan", label: "Plano", type: "text", admin: { readOnly: true, condition: (data) => data?.origin === "jellycare" } },
+        { name: "site", label: "Website", type: "text", admin: { readOnly: true, condition: (data) => data?.origin === "jellycare" } },
+      ],
+    },
     { name: "message", label: "O que precisa", type: "textarea", admin: { readOnly: true } },
     {
       type: "row",

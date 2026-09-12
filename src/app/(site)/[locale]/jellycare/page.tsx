@@ -6,7 +6,8 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Grelha } from "@/components/Grelha";
 import { ServiceHero } from "@/components/ServiceHero";
 import { jellycare } from "@/content/jellycare";
-import { getService } from "@/lib/cms";
+import { FormularioJellyCare } from "./FormularioJellyCare";
+import { getCarePlans, getService } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -36,8 +37,32 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
   const nav = await getTranslations("nav");
   const t = await getTranslations("services");
   // A migalha sobe até à área, e o slug da área muda de língua para língua.
-  const servico = await getService(SERVICO);
+  const [servico, planos] = await Promise.all([getService(SERVICO), getCarePlans()]);
   const slugServico = servico ? slugFor(servico, locale) : SERVICO;
+
+  const campos = jellycare.formulario.campos;
+
+  const euros = new Intl.NumberFormat(locale === "pt" ? "pt-PT" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+  });
+
+  /*
+   * O que a campanha diz no cartão.
+   *
+   * O painel pode escrever a frase à mão — «dois meses oferecidos», o que for —
+   * e pode limitar-se a pôr o preço do primeiro mês. No segundo caso a frase
+   * monta-se aqui, com o valor já em euros da língua de quem lê.
+   */
+  const frasePromo = (plano: (typeof planos)[number]) => {
+    const campanha = plano.campaign;
+    if (!campanha) return undefined;
+    if (campanha.label?.[locale]) return campanha.label[locale];
+    if (campanha.firstPrice === undefined) return undefined;
+    return jellycare.planos.campanhaPrimeiroMes[locale].replace("{preco}", euros.format(campanha.firstPrice));
+  };
 
   /*
    * O que a máquina lê. Um plano com preço é uma oferta, e é assim que se
@@ -54,25 +79,27 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
     provider: { "@type": "Organization", name: "Jelly", url: SITE_URL },
     areaServed: "PT",
     url: `${SITE_URL}${getPathname({ href: ROTA, locale })}`,
-    offers: jellycare.planos.itens.map((plano) => ({
+    offers: planos.map((plano) => ({
       "@type": "Offer",
-      name: plano.nome,
-      price: plano.preco,
+      name: plano.name,
+      price: plano.price,
       priceCurrency: "EUR",
       valueAddedTaxIncluded: false,
       priceSpecification: {
         "@type": "UnitPriceSpecification",
-        price: plano.preco,
+        price: plano.price,
         priceCurrency: "EUR",
         referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "MON" },
       },
     })),
   };
 
+  // As duas chamadas da página levam ao formulário e não a contactos: o que se
+  // pede aqui é uma subscrição com um plano, e isso pergunta-se aqui mesmo.
   const chamada = (
-    <Link href="/contactos" className="btn-pill">
+    <a href="#subscrever" className="btn-pill">
       {jellycare.fecho.cta[locale]} <span aria-hidden="true">→</span>
-    </Link>
+    </a>
   );
 
   return (
@@ -148,49 +175,73 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
           <span className="eyebrow text-red">{jellycare.planos.eyebrow[locale]}</span>
           <h2 className="entra mt-4 max-w-[24ch] text-chapter">{jellycare.planos.titulo[locale]}</h2>
 
-          <div className="mt-12 grid gap-6 border-t border-line pt-12 lg:grid-cols-2 lg:gap-8">
-            {jellycare.planos.itens.map((plano, indice) => (
-              <article
-                key={plano.nome}
-                className={`relative flex flex-col rounded-[6px] border p-8 lg:p-10 ${
-                  indice === 0 ? "entra border-line" : "entra-tarde border-red"
-                }`}
-              >
-                {plano.selo ? (
-                  <span className="absolute -top-3 left-8 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-paper">
-                    {plano.selo[locale]}
-                  </span>
-                ) : null}
-
-                <h3 className="font-display text-2xl">{plano.nome}</h3>
-                {/* O preço em letra de cartaz, com a moeda e o período em
-                    corpo pequeno: o que se lê primeiro é o número. */}
-                <p className="mt-5 flex items-baseline gap-2 font-display leading-none tracking-[-0.03em] tabular-nums text-red">
-                  <span className="text-[clamp(48px,6vw,84px)]">{plano.preco}</span>
-                  <span className="text-[clamp(20px,2.4vw,32px)]">€</span>
-                  <span className="text-sm font-normal text-fg-soft">/ {jellycare.planos.periodo[locale]}</span>
-                </p>
-
-                <ul className="mt-8 flex flex-col gap-3 border-t border-line pt-8 text-md text-fg-soft">
-                  {plano.itens.map((item) => (
-                    <li key={item.pt} className="flex items-baseline gap-3">
-                      <span aria-hidden="true" className="mt-[2px] block h-px w-4 shrink-0 bg-red" />
-                      <span>{item[locale]}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* `mt-auto`: os dois cartões têm a mesma altura e listas de
-                    tamanhos diferentes. Sem isto, o botão do plano mais curto
-                    ficava a meio do cartão, com um palmo de vazio por baixo. */}
-                <Link
-                  href="/contactos"
-                  className={`btn-pill mt-auto self-start pt-3 ${indice === 0 ? "" : "bg-red text-paper hover:bg-red-deep"}`}
+          {/* A grelha acompanha o número de planos: dois ficam lado a lado,
+              três passam a três colunas. O painel pode acrescentar um sem que
+              a página fique com um cartão órfão a ocupar meia largura. */}
+          <div
+            className={`mt-12 grid gap-6 border-t border-line pt-12 lg:gap-8 ${
+              planos.length >= 3 ? "lg:grid-cols-3" : "lg:grid-cols-2"
+            }`}
+          >
+            {planos.map((plano, indice) => {
+              const promo = frasePromo(plano);
+              const destaque = Boolean(plano.badge?.[locale]);
+              return (
+                <article
+                  key={plano.key}
+                  className={`relative flex flex-col rounded-[6px] border p-8 lg:p-10 ${
+                    indice % 2 ? "entra-tarde" : "entra"
+                  } ${destaque ? "border-red" : "border-line"}`}
                 >
-                  {jellycare.planos.cta[locale]} <span aria-hidden="true">→</span>
-                </Link>
-              </article>
-            ))}
+                  {plano.badge?.[locale] ? (
+                    <span className="absolute -top-3 left-8 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-paper">
+                      {plano.badge[locale]}
+                    </span>
+                  ) : null}
+
+                  <h3 className="font-display text-2xl">{plano.name}</h3>
+                  {/* O preço em letra de cartaz, com a moeda e o período em
+                      corpo pequeno: o que se lê primeiro é o número. */}
+                  <p className="mt-5 flex items-baseline gap-2 font-display leading-none tracking-[-0.03em] tabular-nums text-red">
+                    <span className="text-[clamp(48px,6vw,84px)]">{plano.price}</span>
+                    <span className="text-[clamp(20px,2.4vw,32px)]">€</span>
+                    <span className="text-sm font-normal text-fg-soft">/ {jellycare.planos.periodo[locale]}</span>
+                  </p>
+
+                  {/* A campanha, quando há: uma linha coral por baixo do preço.
+                      Coral e não vermelho — o preço já é vermelho, e duas
+                      coisas da mesma cor uma debaixo da outra leem-se como uma
+                      só. */}
+                  {promo ? (
+                    <p className="mt-3 flex flex-wrap items-baseline gap-x-2 text-sm text-coral">
+                      <span className="font-semibold">{promo}</span>
+                      {plano.campaign?.firstPrice !== undefined ? (
+                        <span className="text-fg-soft line-through">{euros.format(plano.price)}</span>
+                      ) : null}
+                    </p>
+                  ) : null}
+
+                  <ul className="mt-8 flex flex-col gap-3 border-t border-line pt-8 text-md text-fg-soft">
+                    {plano.features.map((item) => (
+                      <li key={item.pt} className="flex items-baseline gap-3">
+                        <span aria-hidden="true" className="mt-[2px] block h-px w-4 shrink-0 bg-red" />
+                        <span>{item[locale]}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Leva ao formulário logo abaixo, com este plano já
+                      escolhido: um botão que salta para o sítio onde se
+                      subscreve é melhor do que um que muda de página. */}
+                  <a
+                    href={`#subscrever-${plano.key}`}
+                    className={`btn-pill mt-auto self-start pt-3 ${destaque ? "bg-red text-paper hover:bg-red-deep" : ""}`}
+                  >
+                    {jellycare.planos.cta[locale]} <span aria-hidden="true">→</span>
+                  </a>
+                </article>
+              );
+            })}
           </div>
 
           <p className="mt-6 text-sm text-fg-soft">{jellycare.planos.nota[locale]}</p>
@@ -209,6 +260,64 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* O formulário. Em papel e a seguir aos planos: escolhe-se ali em cima,
+          preenche-se aqui, e o botão de cada cartão salta para o rótulo do
+          plano certo. Duas colunas no desktop — o texto de um lado, os campos
+          do outro — para o formulário não ficar com a largura de um artigo. */}
+      <section id="subscrever" className="surface-paper scroll-mt-24 border-t border-line">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,38%)_minmax(0,1fr)] lg:gap-20 lg:py-24">
+          <div>
+            <span className="eyebrow text-red">{jellycare.formulario.eyebrow[locale]}</span>
+            <h2 className="mt-4 max-w-[16ch] font-display text-[clamp(28px,3.6vw,52px)] leading-[1.02] tracking-[-0.025em] text-ink">
+              {jellycare.formulario.titulo[locale]}
+            </h2>
+            <p className="reading mt-5 max-w-[44ch] text-md text-fg-soft">{jellycare.formulario.texto[locale]}</p>
+          </div>
+
+          <FormularioJellyCare
+            planos={planos.map((plano) => ({
+              key: plano.key,
+              name: plano.name,
+              preco: `${euros.format(plano.price)} / ${jellycare.planos.periodo[locale]}`,
+              ...(frasePromo(plano) ? { promo: frasePromo(plano) } : {}),
+            }))}
+            privacidadeHref={getPathname({
+              href: { pathname: "/legal/[slug]", params: { slug: "politica-de-privacidade" } },
+              locale,
+            })}
+            copy={{
+              plano: campos.plano[locale],
+              site: campos.site[locale],
+              siteHint: campos.siteHint[locale],
+              infetado: campos.infetado[locale],
+              name: campos.name[locale],
+              company: campos.company[locale],
+              email: campos.email[locale],
+              phone: campos.phone[locale],
+              phoneHint: campos.phoneHint[locale],
+              notas: campos.notas[locale],
+              notasHint: campos.notasHint[locale],
+              consent: campos.consent[locale],
+              privacidade: campos.privacidade[locale],
+              submit: campos.submit[locale],
+              sending: campos.sending[locale],
+              sent: campos.sent[locale],
+              sentBody: campos.sentBody[locale],
+              error: campos.error[locale],
+              erros: {
+                name: campos.erros.name[locale],
+                email: campos.erros.email[locale],
+                emailInvalid: campos.erros.emailInvalid[locale],
+                phone: campos.erros.phone[locale],
+                phoneShort: campos.erros.phoneShort[locale],
+                site: campos.erros.site[locale],
+                consent: campos.erros.consent[locale],
+              },
+            }}
+          />
         </div>
       </section>
 
@@ -254,9 +363,9 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
             </p>
             <p className="mt-4 max-w-[54ch] text-md">{jellycare.fecho.texto[locale]}</p>
           </div>
-          <Link href="/contactos" className="btn-pill btn-pill-ink shrink-0">
+          <a href="#subscrever" className="btn-pill btn-pill-ink shrink-0">
             {jellycare.fecho.cta[locale]} <span aria-hidden="true">→</span>
-          </Link>
+          </a>
         </div>
       </section>
 

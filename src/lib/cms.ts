@@ -5,9 +5,10 @@ import generated from "@/content/generated/posts.json";
 import archived from "@/content/generated/projects.json";
 import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
+import { planosDeCodigo } from "@/content/jellycare";
 import { clients, milestones, services } from "@/content/site";
 import { team } from "@/content/team";
-import type { ArchivedProject, Department, Job, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
+import type { ArchivedProject, CarePlan, Department, Job, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
 import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
@@ -15,6 +16,7 @@ import {
   fetchClients,
   fetchLogoGalleries,
   fetchMilestones,
+  fetchCarePlans,
   fetchNews,
   fetchAuthorByName,
   fetchDepartments,
@@ -186,6 +188,17 @@ export const getNews = fromStore("news", async (): Promise<NewsItem[]> => {
  * O export do WordPress não trazia narrativa — as histórias e os números entram
  * à mão nos casos escolhidos, e esses passam a viver como casos escritos.
  */
+/**
+ * Os planos JellyCARE.
+ *
+ * Sem painel — em desenvolvimento, ou se a base cair — ficam os do repositório,
+ * que são os que a página antiga anunciava. Um preço desatualizado é mau; uma
+ * página de preços vazia é pior.
+ */
+export const getCarePlans = fromStore("care-plans", async (): Promise<CarePlan[]> =>
+  fetchCarePlans(planosDeCodigo),
+);
+
 const localArchive = archived as ArchivedProject[];
 
 const getArchive = fromStore("archive", async () => fetchArchivedProjects(localArchive));

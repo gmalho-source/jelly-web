@@ -83,6 +83,7 @@ export interface Config {
     team: Team;
     milestones: Milestone;
     messages: Message;
+    'care-plans': CarePlan;
     attachments: Attachment;
     departments: Department;
     'job-functions': JobFunction;
@@ -115,6 +116,7 @@ export interface Config {
     team: TeamSelect<false> | TeamSelect<true>;
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
+    'care-plans': CarePlansSelect<false> | CarePlansSelect<true>;
     attachments: AttachmentsSelect<false> | AttachmentsSelect<true>;
     departments: DepartmentsSelect<false> | DepartmentsSelect<true>;
     'job-functions': JobFunctionsSelect<false> | JobFunctionsSelect<true>;
@@ -934,7 +936,7 @@ export interface Milestone {
   createdAt: string;
 }
 /**
- * Os briefings que entram pela página de contactos.
+ * Os briefings da página de contactos e as subscrições do JellyCARE.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "messages".
@@ -945,6 +947,9 @@ export interface Message {
   company?: string | null;
   email: string;
   phone?: string | null;
+  origin?: ('contacto' | 'jellycare') | null;
+  plan?: string | null;
+  site?: string | null;
   message?: string | null;
   start?: ('um-mes' | 'dois-tres' | 'mais-tarde' | 'nao-sei') | null;
   brief?: (number | null) | Attachment;
@@ -975,6 +980,68 @@ export interface Attachment {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * Os planos que a página /jellycare mostra e o formulário oferece.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "care-plans".
+ */
+export interface CarePlan {
+  id: number;
+  /**
+   * JellyCARE, JellyCARE Plus, …
+   */
+  name: string;
+  /**
+   * Identifica o plano no formulário e nos emails. Minúsculas, sem espaços: jellycare, jellycare-plus.
+   */
+  key: string;
+  /**
+   * Por mês, em euros, sem IVA.
+   */
+  price: number;
+  order?: number | null;
+  /**
+   * Desligado, sai da página e do formulário.
+   */
+  active?: boolean | null;
+  badge?: {
+    pt?: string | null;
+    en?: string | null;
+  };
+  /**
+   * Uma linha por característica, pela ordem em que aparecem no cartão.
+   */
+  features?:
+    | {
+        item: {
+          pt: string;
+          en?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Desconto de entrada: primeiro mês mais barato, meses oferecidos, o que for.
+   */
+  campaign?: {
+    active?: boolean | null;
+    /**
+     * Opcional. Passada a data, a campanha deixa de aparecer sozinha.
+     */
+    until?: string | null;
+    label?: {
+      pt?: string | null;
+      en?: string | null;
+    };
+    /**
+     * Opcional. Preenchido, o cartão mostra este valor e risca o preço normal.
+     */
+    firstPrice?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
@@ -1401,6 +1468,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'messages';
         value: number | Message;
+      } | null)
+    | ({
+        relationTo: 'care-plans';
+        value: number | CarePlan;
       } | null)
     | ({
         relationTo: 'attachments';
@@ -2054,12 +2125,58 @@ export interface MessagesSelect<T extends boolean = true> {
   company?: T;
   email?: T;
   phone?: T;
+  origin?: T;
+  plan?: T;
+  site?: T;
   message?: T;
   start?: T;
   brief?: T;
   status?: T;
   locale?: T;
   notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "care-plans_select".
+ */
+export interface CarePlansSelect<T extends boolean = true> {
+  name?: T;
+  key?: T;
+  price?: T;
+  order?: T;
+  active?: T;
+  badge?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
+  features?:
+    | T
+    | {
+        item?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        id?: T;
+      };
+  campaign?:
+    | T
+    | {
+        active?: T;
+        until?: T;
+        label?:
+          | T
+          | {
+              pt?: T;
+              en?: T;
+            };
+        firstPrice?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

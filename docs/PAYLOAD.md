@@ -239,6 +239,34 @@ traz o conteúdo no fluxo (procura `template-minimal` no fonte da página) mas o
 `<body>` fica com uma dúzia de elementos. Isso é o painel a não conseguir
 resolver um componente, não um erro de javascript.
 
+## Os planos JellyCARE
+
+A página `/jellycare` mostra preços, e um preço não pode precisar de um deploy.
+A coleção **Planos JellyCARE** (`care-plans`) tem, por plano: nome, chave,
+preço mensal sem IVA, ordem, visto de ativo, selo («Mais popular»), as linhas do
+cartão e a campanha de arranque.
+
+A campanha é um grupo à parte, desligado por omissão, com data de fim opcional,
+uma frase própria nas duas línguas e um preço de primeiro mês. Quando só se
+preenche o preço, a frase monta-se sozinha na página («Primeiro mês a 37,50 €»)
+e o preço normal fica riscado ao lado. Passada a data, a campanha desaparece
+sem ninguém lá ir — mas o visto fica ligado, e é de propósito: é um registo do
+que esteve a decorrer.
+
+Desligar um plano tira-o da página **e** da lista do formulário. Um plano novo
+aparece nos dois sítios sem tocar em código; a partir de três, os cartões passam
+a três colunas sozinhos.
+
+O formulário da página grava na caixa de **Mensagens**, com a origem marcada
+como «JellyCARE» e com o plano e o site em colunas próprias. O nome e o preço do
+plano que seguem no email não vêm do formulário: vêm daqui, pela chave. Quem
+mexer no `radio` do browser não consegue fazer a casa receber um plano
+inventado.
+
+Sem base de dados, a página cai nos planos escritos em `src/content/jellycare.ts`
+— os mesmos 75 € e 90 € de sempre. Uma página de preços vazia seria pior do que
+um preço desatualizado.
+
 ## Mudar a estrutura
 
 O Payload acerta as tabelas sozinho quando corre fora de produção — é o que faz
@@ -804,6 +832,10 @@ escrita. Sem base de dados configurada volta à memória, para desenvolver.
 
 A base precisa de `scripts/sql/2026-09-04-prestadores-e-billing.sql` antes do
 deploy. Foi verificado contra o esquema que o Payload empurra numa base vazia.
+
+A base precisa de `scripts/sql/2026-09-12-jellycare-planos.sql` antes do deploy
+que traz os planos JellyCARE: cria `care_plans` e `care_plans_features`, e junta
+a origem, o plano e o site às mensagens.
 
 ## Falta
 

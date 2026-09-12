@@ -121,6 +121,22 @@ export type Post = {
   draft?: boolean;
 };
 
+/**
+ * Um plano JellyCARE, como o painel o descreve.
+ *
+ * Vive no CMS porque é o que se negoceia: o preço, o nome, as linhas do cartão
+ * e a campanha de arranque. O que está no repositório é a rede de segurança.
+ */
+export type CarePlan = {
+  key: string;
+  name: string;
+  price: number;
+  badge?: Localized;
+  features: Localized[];
+  /** A campanha, já filtrada: se não está a decorrer ou passou a data, não vem. */
+  campaign?: { label?: Localized; firstPrice?: number; until?: string };
+};
+
 export type NewsKind = "noticia" | "evento" | "press";
 
 export type NewsItem = {
