@@ -407,7 +407,13 @@ for (const doc of docs) {
     const voz = vozDe(lingua);
     console.log(`${doc.slug} [${lingua}] ${texto.length} caracteres, ${pedacos(linhas, TETO).length} pedaço(s)`);
     caracteres += texto.length;
-    if (dry) continue;
+    // Conta-se antes de gravar para o ensaio dizer a verdade: um --dry que
+    // anuncia "0 gravações, 284 dólares" é a frase que faz carregar no botão.
+    feitos += 1;
+    if (dry) {
+      if (feitos >= limite) break;
+      continue;
+    }
 
     const inteiro = path.join(pasta, `${doc.slug}-${lingua}.mp3`);
     await grava({ linhas, voz, destino: inteiro, pasta, nome: `${doc.slug}-${lingua}` });
@@ -437,7 +443,6 @@ for (const doc of docs) {
 
     const minutos = `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, "0")}`;
     console.log(`  ✓ ${minutos}  ${(fs.statSync(inteiro).size / 1048576).toFixed(1)} MB`);
-    feitos += 1;
     if (feitos >= limite) break;
   }
 }
