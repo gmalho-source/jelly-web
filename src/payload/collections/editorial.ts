@@ -378,6 +378,45 @@ export const Posts: CollectionConfig = {
     },
     { name: "lang", label: "Língua do original", type: "select", options: ["pt", "en"], defaultValue: "pt" },
     { name: "legacyPath", label: "URL antigo", type: "text", admin: { readOnly: true, description: "Serve o redirecionamento 301." } },
+
+    /*
+     * O artigo lido em voz alta.
+     *
+     * Escreve-o o guião `npm run audio` — daí ser tudo só de leitura aqui. O
+     * que fica é o endereço do ficheiro no Blob, a duração para o leitor a
+     * poder mostrar antes de descarregar seja o que for, a voz que o disse, e
+     * a impressão digital do texto que foi lido.
+     *
+     * A impressão digital é o que evita gastar uma segunda vez: o guião
+     * compara-a com o corpo atual e só volta a falar o que mudou. Sem ela, uma
+     * correção de vírgula num artigo obrigava a escolher entre pagar tudo
+     * outra vez e nunca mais acertar nada.
+     */
+    {
+      type: "collapsible",
+      label: "Áudio",
+      admin: { initCollapsed: true, description: "Gerado pelo guião de leitura. Não se escreve à mão." },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "audioPt", label: "Áudio (PT)", type: "text", admin: { readOnly: true } },
+            { name: "audioPtSegundos", label: "Duração (PT)", type: "number", admin: { readOnly: true } },
+            { name: "audioPtVoz", label: "Voz (PT)", type: "text", admin: { readOnly: true } },
+            { name: "audioPtHash", label: "Texto lido (PT)", type: "text", admin: { readOnly: true, description: "Impressão digital do corpo que foi lido." } },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            { name: "audioEn", label: "Áudio (EN)", type: "text", admin: { readOnly: true } },
+            { name: "audioEnSegundos", label: "Duração (EN)", type: "number", admin: { readOnly: true } },
+            { name: "audioEnVoz", label: "Voz (EN)", type: "text", admin: { readOnly: true } },
+            { name: "audioEnHash", label: "Texto lido (EN)", type: "text", admin: { readOnly: true } },
+          ],
+        },
+      ],
+    },
   ],
 };
 

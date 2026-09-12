@@ -116,6 +116,8 @@ export type Post = {
   /** Corpo traduzido. Vazio, o site em inglês serve o português. */
   blocksEn?: Block[];
   cover?: { src: string; alt?: string; width?: number; height?: number };
+  /** O artigo lido em voz alta, quando já foi gerado. Uma entrada por língua. */
+  audio?: Partial<Record<"pt" | "en", { src: string; segundos?: number; voz?: string }>>;
   legacyPath?: string;
   lang?: "pt" | "en";
   draft?: boolean;

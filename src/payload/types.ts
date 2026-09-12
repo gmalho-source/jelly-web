@@ -385,6 +385,17 @@ export interface Post {
    * Serve o redirecionamento 301.
    */
   legacyPath?: string | null;
+  audioPt?: string | null;
+  audioPtSegundos?: number | null;
+  audioPtVoz?: string | null;
+  /**
+   * Impressão digital do corpo que foi lido.
+   */
+  audioPtHash?: string | null;
+  audioEn?: string | null;
+  audioEnSegundos?: number | null;
+  audioEnVoz?: string | null;
+  audioEnHash?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1646,6 +1657,14 @@ export interface PostsSelect<T extends boolean = true> {
   bodyEn?: T;
   lang?: T;
   legacyPath?: T;
+  audioPt?: T;
+  audioPtSegundos?: T;
+  audioPtVoz?: T;
+  audioPtHash?: T;
+  audioEn?: T;
+  audioEnSegundos?: T;
+  audioEnVoz?: T;
+  audioEnHash?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

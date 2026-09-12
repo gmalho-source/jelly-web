@@ -208,7 +208,10 @@
     "searchLabel": "Search the blog",
     "searchNone": "Nothing with those words. Try a shorter topic, or the name of who wrote it.",
     "searchCount": "{n} articles",
-    "searchOpen": "Enter opens · arrows choose"
+    "searchOpen": "Enter opens · arrows choose",
+    "listen": "Listen to the article",
+    "pause": "Pause",
+    "listenBar": "Position in the reading"
   },
   "newsroom": {
     "eyebrow": "Newsroom",

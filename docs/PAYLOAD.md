@@ -239,6 +239,39 @@ traz o conteúdo no fluxo (procura `template-minimal` no fonte da página) mas o
 `<body>` fica com uma dúzia de elementos. Isso é o painel a não conseguir
 resolver um componente, não um erro de javascript.
 
+## O artigo lido em voz alta
+
+Cada artigo pode ter uma gravação por língua. O guião `npm run audio` lê o corpo
+no painel, manda-o à síntese da **Azure**, junta os pedaços num MP3, mede-o,
+envia-o para o Blob e escreve no artigo o endereço, a duração, a voz e a
+impressão digital do texto lido. A página do artigo mostra um leitor por baixo
+do tempo de leitura; sem ficheiro, não mostra nada.
+
+A impressão digital é o que faz isto poder correr sempre: um artigo cujo corpo
+não mudou não volta a ser falado. Sem ela, cada correção de vírgula obrigava a
+escolher entre pagar tudo outra vez e nunca mais acertar nada.
+
+Porquê a Azure: o português europeu é uma língua de primeira classe lá — Raquel,
+Duarte e Fernanda são vozes nativas de pt-PT. As vozes novas da Google não
+cobrem pt-PT, e a ElevenLabs soa melhor mas o sotaque europeu é menos previsível
+e custa cinco vezes mais. Ao escalão neural são 16 dólares por milhão de
+caracteres, com o primeiro meio milhão de cada mês sem custo: os 181 artigos em
+português são uma despesa de cerca de 23 dólares, e o ritmo de publicação cabe
+todos os meses no que é gratuito.
+
+O que não se lê em voz alta: imagens, vídeos, legendas e blocos de código. Uma
+legenda lida no meio de uma frase é ruído.
+
+```
+AZURE_SPEECH_KEY=… npm run audio -- --amostra      # o mesmo parágrafo nas três vozes
+AZURE_SPEECH_KEY=… npm run audio -- --so=<slug>    # um artigo
+AZURE_SPEECH_KEY=… npm run audio -- --limite=5     # os cinco primeiros que faltam
+AZURE_SPEECH_KEY=… npm run audio                   # tudo o que falta ou mudou
+```
+
+Opções: `--lingua=pt|en`, `--voz=`, `--forcar`, `--dry`. A região sai de
+`AZURE_SPEECH_REGION` e por omissão é `westeurope`.
+
 ## Os planos JellyCARE
 
 A página `/jellycare` mostra preços, e um preço não pode precisar de um deploy.
@@ -294,6 +327,8 @@ repositório e corrê-las no build.
 | `BLOB_READ_WRITE_TOKEN` | Ficheiros no Blob da Vercel. **Obrigatória em produção**: o serverless não tem disco persistente |
 | `REVALIDATE_SECRET` | Purga manual do site |
 | `RESEND_API_KEY` | Recuperação de senha do painel. Sem ela, o email vai para o log |
+| `AZURE_SPEECH_KEY` | Síntese de voz dos artigos (`npm run audio`). Só é precisa na máquina de quem gera |
+| `AZURE_SPEECH_REGION` | A região do recurso de Speech. Por omissão `westeurope` |
 
 ## Imagens dentro dos artigos
 
@@ -836,6 +871,9 @@ deploy. Foi verificado contra o esquema que o Payload empurra numa base vazia.
 A base precisa de `scripts/sql/2026-09-12-jellycare-planos.sql` antes do deploy
 que traz os planos JellyCARE: cria `care_plans` e `care_plans_features`, e junta
 a origem, o plano e o site às mensagens.
+
+E de `scripts/sql/2026-09-12-audio-dos-artigos.sql` antes do deploy que traz o
+áudio: oito colunas em `posts` e as mesmas em `_posts_v`.
 
 ## Falta
 

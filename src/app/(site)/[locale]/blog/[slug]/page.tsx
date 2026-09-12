@@ -6,6 +6,7 @@ import { ArticleBody } from "@/components/ArticleBody";
 import { SubscribeForm } from "@/app/(site)/[locale]/subscrever/SubscribeForm";
 import { copyDaSubscricao } from "@/app/(site)/[locale]/subscrever/copy";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { OuvirArtigo } from "@/components/OuvirArtigo";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPost, getPostBody, getPosts, getRelatedPosts } from "@/lib/cms";
@@ -69,6 +70,16 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   const blocks = corpo?.blocks ?? post.blocks;
   const blocksEn = corpo?.blocksEn ?? post.blocksEn;
   const body = locale === "en" && blocksEn?.length ? blocksEn : blocks;
+  /*
+   * O áudio segue o texto que está a ser mostrado, e não a língua da página.
+   *
+   * Um artigo sem tradução mostra o corpo português no site inglês — é a regra
+   * desta casa. Se o leitor de áudio fosse pela língua da página, esse artigo
+   * ficaria sem nada para tocar, tendo a gravação portuguesa ali ao lado. Daí
+   * `emIngles`: só quando o que se lê é mesmo o texto inglês.
+   */
+  const emIngles = locale === "en" && Boolean(blocksEn?.length);
+  const audio = post.audio?.[emIngles ? "en" : "pt"];
   const resumo = resumoPublicavel(post.excerpt[locale], body);
 
   const jsonLd = {
@@ -77,6 +88,18 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
     headline: post.title[locale],
     description: resumo,
     datePublished: post.date,
+    // A gravação, quando existe: é o mesmo artigo noutro suporte, e um motor de
+    // respostas que a conheça pode oferecê-la a quem procura para ouvir.
+    ...(audio
+      ? {
+          audio: {
+            "@type": "AudioObject",
+            contentUrl: audio.src,
+            encodingFormat: "audio/mpeg",
+            ...(audio.segundos ? { duration: `PT${Math.floor(audio.segundos / 60)}M${audio.segundos % 60}S` } : {}),
+          },
+        }
+      : {}),
     // A casa é uma organização, uma pessoa é uma pessoa: o schema.org distingue
     // as duas, e é isso que decide como o artigo aparece nos resultados.
     author: {
@@ -121,6 +144,17 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <span>
             {post.readingMinutes} {t("minutes")}
           </span>
+          {/* Ouvir, para quem não tem mãos livres para ler. O leitor só existe
+              quando o ficheiro existe: um artigo por gerar fica exatamente como
+              estava. A língua é a da página — um artigo lido em português numa
+              página inglesa seria pior do que não haver leitor nenhum. */}
+          {audio ? (
+            <OuvirArtigo
+              src={audio.src}
+              segundos={audio.segundos}
+              textos={{ ouvir: t("listen"), pausar: t("pause"), barra: t("listenBar") }}
+            />
+          ) : null}
           {post.draft && !blocks?.length ? (
             <span className="mt-3 w-fit rounded-[12px] bg-chartreuse px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-fg">
               {t("draft")}

@@ -290,9 +290,34 @@ export function fetchPosts(fallback: Post[]) {
             : { pt: "Jelly", en: "Jelly" },
         tags: etiquetas.length ? etiquetas : undefined,
         cover: image(raw.cover as MediaDoc),
+        audio: audioDoArtigo(raw),
       };
     });
   }, fallback);
+}
+
+/**
+ * O artigo lido em voz alta, por língua.
+ *
+ * Só entram as línguas que já têm ficheiro: a página desenha o leitor a partir
+ * daqui, e uma entrada vazia punha um leitor sem nada para tocar. Enquanto o
+ * guião não correr, isto vem vazio e a página fica como estava.
+ */
+function audioDoArtigo(raw: Doc): Post["audio"] {
+  const entradas: NonNullable<Post["audio"]> = {};
+  for (const [lingua, campo, duracao, voz] of [
+    ["pt", "audioPt", "audioPtSegundos", "audioPtVoz"],
+    ["en", "audioEn", "audioEnSegundos", "audioEnVoz"],
+  ] as const) {
+    const src = text(raw[campo]);
+    if (!src) continue;
+    entradas[lingua] = {
+      src,
+      ...(typeof raw[duracao] === "number" ? { segundos: raw[duracao] as number } : {}),
+      ...(text(raw[voz]) ? { voz: text(raw[voz]) } : {}),
+    };
+  }
+  return Object.keys(entradas).length ? entradas : undefined;
 }
 
 /**
