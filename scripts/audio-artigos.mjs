@@ -123,16 +123,30 @@ async function fala({ texto, voz, antes, depois }) {
   return Buffer.from(await resposta.arrayBuffer());
 }
 
+/**
+ * Pergunta à ElevenLabs, e diz alto quando ela não responde.
+ *
+ * Uma lista vazia por a chave não ter permissão lê-se exatamente como uma lista
+ * vazia por não haver vozes — e a primeira vez que isso aconteceu perdeu-se uma
+ * tarde a procurar vozes de pt-PT que a conta nunca chegou a ver.
+ */
+async function pergunta(caminho) {
+  try {
+    const resposta = await fetch(`${API}/${caminho}`, { headers: cabecalho });
+    if (resposta.ok) return await resposta.json();
+    console.error(`  (${caminho}: a ElevenLabs respondeu ${resposta.status} — ${(await resposta.text()).slice(0, 200)})`);
+  } catch (erro) {
+    console.error(`  (${caminho}: ${erro.message})`);
+  }
+  return { voices: [] };
+}
+
 /** As vozes da conta e as da biblioteca partilhada que falam português. */
 async function vozesDisponiveis(lingua) {
-  const minhas = await fetch(`${API}/voices`, { headers: cabecalho })
-    .then((r) => (r.ok ? r.json() : { voices: [] }))
-    .catch(() => ({ voices: [] }));
+  const minhas = await pergunta("voices");
 
   const codigo = lingua === "pt" ? "pt" : "en";
-  const partilhadas = await fetch(`${API}/shared-voices?page_size=30&language=${codigo}`, { headers: cabecalho })
-    .then((r) => (r.ok ? r.json() : { voices: [] }))
-    .catch(() => ({ voices: [] }));
+  const partilhadas = await pergunta(`shared-voices?page_size=30&language=${codigo}`);
 
   const ficha = (voz, origem) => ({
     id: voz.voice_id,
