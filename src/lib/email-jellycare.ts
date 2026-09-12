@@ -18,6 +18,14 @@ export type Subscricao = {
   telefone: string;
   /** O nome do plano como o painel o escreve. */
   plano: string;
+  /**
+   * A campanha de arranque, por extenso, quando o plano escolhido tem uma.
+   *
+   * Vai nas duas cartas e não só no aviso interno: quem subscreve a pensar num
+   * primeiro mês a 45 € tem de ver esse número na confirmação. Um email que só
+   * repete o preço de tabela desmente a página que a pessoa acabou de ler.
+   */
+  campanha?: string;
   site: string;
   infetado: boolean;
   notas: string;
@@ -26,7 +34,7 @@ export type Subscricao = {
 };
 
 /** O aviso à casa. */
-export function avisoDeSubscricao({ nome, empresa, email, telefone, plano, site, infetado, notas, mensagemId }: Subscricao) {
+export function avisoDeSubscricao({ nome, empresa, email, telefone, plano, campanha, site, infetado, notas, mensagemId }: Subscricao) {
   const urgente = infetado ? " · SITE INFETADO" : "";
   const assunto = `JellyCARE: ${plano} para ${site}${urgente}`;
 
@@ -40,6 +48,7 @@ export function avisoDeSubscricao({ nome, empresa, email, telefone, plano, site,
       "Quem subscreveu",
       [
         { rotulo: "Plano", valor: plano },
+        { rotulo: "Campanha", valor: campanha ?? "" },
         { rotulo: "Website", valor: site },
         { rotulo: "Nome", valor: nome },
         { rotulo: "Empresa", valor: empresa },
@@ -67,6 +76,7 @@ export function avisoDeSubscricao({ nome, empresa, email, telefone, plano, site,
     assunto,
     "",
     `Plano: ${plano}`,
+    campanha ? `Campanha: ${campanha}` : "",
     `Website: ${site}`,
     infetado ? "O site está marcado como infetado." : "",
     `Nome: ${nome}`,
@@ -92,6 +102,7 @@ const T = {
       "recebemos o seu pedido de subscrição do JellyCARE. Antes de responder vamos olhar para o site, para lhe dizermos com o que contamos encontrar e a partir de quando começamos.",
     recibo: "O que escolheu",
     plano: "Plano",
+    campanha: "Campanha",
     site: "Website",
     empresa: "Empresa",
     telefone: "Telefone",
@@ -112,6 +123,7 @@ const T = {
       "we have your JellyCARE subscription request. Before replying we'll look at the site, so we can tell you what we expect to find and when we start.",
     recibo: "What you chose",
     plano: "Plan",
+    campanha: "Campaign",
     site: "Website",
     empresa: "Company",
     telefone: "Phone",
@@ -131,6 +143,7 @@ export function cartaDeSubscricaoCare({
   empresa,
   telefone,
   plano,
+  campanha,
   site,
   infetado,
   notas,
@@ -144,6 +157,8 @@ export function cartaDeSubscricaoCare({
       t.recibo,
       [
         { rotulo: t.plano, valor: plano },
+        // A linha só existe quando há campanha: o `recibo` deixa cair as vazias.
+        { rotulo: t.campanha, valor: campanha ?? "" },
         { rotulo: t.site, valor: site },
         { rotulo: t.empresa, valor: empresa },
         { rotulo: t.telefone, valor: telefone },
@@ -171,6 +186,7 @@ export function cartaDeSubscricaoCare({
     `${t.saudacao(primeiro)} ${t.chegou}`,
     "",
     `${t.plano}: ${plano}`,
+    campanha ? `${t.campanha}: ${campanha}` : "",
     `${t.site}: ${site}`,
     notas ? `\n${notas}` : "",
     "",

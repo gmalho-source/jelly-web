@@ -4,6 +4,7 @@ import config from "@/../payload.config";
 import { enviaEmail } from "@/lib/email";
 import { avisoDeSubscricao, cartaDeSubscricaoCare } from "@/lib/email-jellycare";
 import { indicativoDe } from "@/lib/indicativos";
+import { campanhaDe, emEuros } from "@/lib/campanha";
 import { isValidEmail, normalizeEmail } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { getCarePlans } from "@/lib/cms";
@@ -65,7 +66,33 @@ export async function POST(request: NextRequest) {
   // veio, marcado, para quem responde perceber o que aconteceu.
   const planos = await getCarePlans();
   const escolhido = planos.find((plano) => plano.key === chave);
-  const plano = escolhido ? `${escolhido.name} (${escolhido.price} €/mês)` : chave ? `${chave} (fora da lista)` : "sem plano";
+  /*
+   * O plano escrito duas vezes, e não é redundância.
+   *
+   * O que fica gravado e o que vai no aviso à casa é sempre português: o
+   * arquivo e a caixa de quem responde são desta casa, e uma lista de
+   * subscrições metade em inglês não se lê de uma vez. A carta de quem
+   * subscreveu vai na língua em que ele leu a página.
+   */
+  const nomeDoPlano = (lingua: "pt" | "en") =>
+    escolhido
+      ? `${escolhido.name} (${emEuros(escolhido.price, lingua)}/${lingua === "pt" ? "mês" : "month"})`
+      : chave
+        ? `${chave} (fora da lista)`
+        : "sem plano";
+  const plano = nomeDoPlano(locale);
+  const planoPt = nomeDoPlano("pt");
+
+  /*
+   * A campanha, na língua de quem subscreveu e na da casa.
+   *
+   * Sai da mesma função que escreve a frase no cartão de preços, para a
+   * confirmação não prometer um desconto diferente do que a página anunciou. A
+   * versão portuguesa é a que fica gravada e a que vai no aviso interno; a da
+   * língua de quem subscreveu vai na carta que ele recebe.
+   */
+  const campanha = escolhido ? campanhaDe(escolhido, locale)?.detalhe : undefined;
+  const campanhaPt = escolhido ? campanhaDe(escolhido, "pt")?.detalhe : undefined;
 
   /*
    * O que fica gravado, na caixa de sempre. A mensagem é o texto que quem
@@ -73,7 +100,8 @@ export async function POST(request: NextRequest) {
    * site, o aviso de infeção e as notas de quem subscreveu.
    */
   const message = [
-    `Subscrição JellyCARE — ${plano}`,
+    `Subscrição JellyCARE — ${planoPt}`,
+    campanhaPt ? `Campanha: ${campanhaPt}` : "",
     `Website: ${site}`,
     infetado ? "Assinalou que o site está infetado com malware." : "",
     notas ? `\n${notas}` : "",
@@ -86,7 +114,7 @@ export async function POST(request: NextRequest) {
     const payload = await getPayload({ config });
     const registo = await payload.create({
       collection: "messages",
-      data: { name, company, email, phone, message, locale, status: "nova", origin: "jellycare", plan: plano, site },
+      data: { name, company, email, phone, message, locale, status: "nova", origin: "jellycare", plan: planoPt, site },
     });
     registoId = registo.id;
   } catch (error) {
@@ -99,7 +127,18 @@ export async function POST(request: NextRequest) {
     voz: "cliente",
     to: paraCasa,
     replyTo: email,
-    ...avisoDeSubscricao({ nome: name, empresa: company, email, telefone: phone, plano, site, infetado, notas, mensagemId: registoId }),
+    ...avisoDeSubscricao({
+      nome: name,
+      empresa: company,
+      email,
+      telefone: phone,
+      plano: planoPt,
+      ...(campanhaPt ? { campanha: campanhaPt } : {}),
+      site,
+      infetado,
+      notas,
+      mensagemId: registoId,
+    }),
   });
 
   // Sem chave de email — em desenvolvimento — o texto fica no log e o pedido
@@ -114,7 +153,17 @@ export async function POST(request: NextRequest) {
     voz: "cliente",
     to: email,
     replyTo: paraCasa,
-    ...cartaDeSubscricaoCare({ locale, nome: name, empresa: company, telefone: phone, plano, site, infetado, notas }),
+    ...cartaDeSubscricaoCare({
+      locale,
+      nome: name,
+      empresa: company,
+      telefone: phone,
+      plano,
+      ...(campanha ? { campanha } : {}),
+      site,
+      infetado,
+      notas,
+    }),
   });
   if (!recibo.ok) console.error(`[jellycare] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
 

@@ -7,6 +7,7 @@ import { Grelha } from "@/components/Grelha";
 import { ServiceHero } from "@/components/ServiceHero";
 import { jellycare } from "@/content/jellycare";
 import { FormularioJellyCare } from "./FormularioJellyCare";
+import { campanhaDe, emEuros } from "@/lib/campanha";
 import { getCarePlans, getService } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -42,27 +43,9 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
 
   const campos = jellycare.formulario.campos;
 
-  const euros = new Intl.NumberFormat(locale === "pt" ? "pt-PT" : "en-GB", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 0,
-  });
-
-  /*
-   * O que a campanha diz no cartão.
-   *
-   * O painel pode escrever a frase à mão — «dois meses oferecidos», o que for —
-   * e pode limitar-se a pôr o preço do primeiro mês. No segundo caso a frase
-   * monta-se aqui, com o valor já em euros da língua de quem lê.
-   */
-  const frasePromo = (plano: (typeof planos)[number]) => {
-    const campanha = plano.campaign;
-    if (!campanha) return undefined;
-    if (campanha.label?.[locale]) return campanha.label[locale];
-    if (campanha.firstPrice === undefined) return undefined;
-    return jellycare.planos.campanhaPrimeiroMes[locale].replace("{preco}", euros.format(campanha.firstPrice));
-  };
+  // A campanha escreve-se num sítio só, e daqui vai para o cartão e para os
+  // emails da subscrição: ver `lib/campanha.ts`.
+  const promo = (plano: (typeof planos)[number]) => campanhaDe(plano, locale);
 
   /*
    * O que a máquina lê. Um plano com preço é uma oferta, e é assim que se
@@ -184,7 +167,7 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
             }`}
           >
             {planos.map((plano, indice) => {
-              const promo = frasePromo(plano);
+              const campanha = promo(plano);
               const destaque = Boolean(plano.badge?.[locale]);
               return (
                 <article
@@ -212,11 +195,11 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
                       Coral e não vermelho — o preço já é vermelho, e duas
                       coisas da mesma cor uma debaixo da outra leem-se como uma
                       só. */}
-                  {promo ? (
+                  {campanha ? (
                     <p className="mt-3 flex flex-wrap items-baseline gap-x-2 text-sm text-coral">
-                      <span className="font-semibold">{promo}</span>
+                      <span className="font-semibold">{campanha.frase}</span>
                       {plano.campaign?.firstPrice !== undefined ? (
-                        <span className="text-fg-soft line-through">{euros.format(plano.price)}</span>
+                        <span className="text-fg-soft line-through">{campanha.normal}</span>
                       ) : null}
                     </p>
                   ) : null}
@@ -281,8 +264,8 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
             planos={planos.map((plano) => ({
               key: plano.key,
               name: plano.name,
-              preco: `${euros.format(plano.price)} / ${jellycare.planos.periodo[locale]}`,
-              ...(frasePromo(plano) ? { promo: frasePromo(plano) } : {}),
+              preco: `${emEuros(plano.price, locale)} / ${jellycare.planos.periodo[locale]}`,
+              ...(promo(plano) ? { promo: promo(plano)!.frase } : {}),
             }))}
             privacidadeHref={getPathname({
               href: { pathname: "/legal/[slug]", params: { slug: "politica-de-privacidade" } },

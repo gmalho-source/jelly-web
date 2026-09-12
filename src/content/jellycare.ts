@@ -142,8 +142,6 @@ export const jellycare = {
     nota: { pt: "Acresce IVA à taxa legal em vigor.", en: "VAT at the legal rate is added." },
     periodo: { pt: "mês", en: "month" },
     cta: { pt: "Subscrever", en: "Subscribe" },
-    /** O que a campanha diz quando o painel só preenche o preço do primeiro mês. */
-    campanhaPrimeiroMes: { pt: "Primeiro mês a {preco}", en: "First month at {preco}" },
   },
 
   comecar: {
