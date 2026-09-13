@@ -28,7 +28,7 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
     slug: { pt: "websites-ecommerce", en: "websites-ecommerce" },
     area: "web",
     nome: { pt: "Websites e Plataformas de E-commerce", en: "Websites and E-commerce Platforms" },
-    titulo: { pt: "Um site que a equipa consegue gerir e o cliente consegue encontrar.", en: "A site your team can manage and your customer can find." },
+    titulo: { pt: "Um site que a equipa consegue gerir, o Google consegue ler e o cliente consegue comprar.", en: "A site your team can manage, Google can read and your customer can buy from." },
     claim: {
       pt: "Sites institucionais, lojas online e plataformas à medida, construídos a partir do conteúdo e com a performance fixada antes do primeiro ecrã.",
       en: "Corporate sites, online stores and bespoke platforms, built from the content out and with the performance budget fixed before the first screen.",
