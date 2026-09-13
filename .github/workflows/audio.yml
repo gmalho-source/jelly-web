@@ -41,11 +41,16 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
-      # O script junta os pedaços e mede a duração com o ffmpeg. Vem na imagem
-      # do runner, mas se um dia deixar de vir isto falha com um erro que não
-      # diz o que falta — daí a verificação em vez da confiança.
+      # O script junta os pedaços e mede a duração com o ffmpeg, e o runner do
+      # GitHub não o traz — a primeira versão disto limitou-se a verificar que
+      # existia, e a corrida morreu aqui sem chegar a ler nada. Instala-se, e só
+      # quando falta: se um dia passar a vir na imagem, isto não faz nada.
       - name: ffmpeg
-        run: ffmpeg -version > /dev/null && ffprobe -version > /dev/null
+        run: |
+          command -v ffmpeg > /dev/null && command -v ffprobe > /dev/null && exit 0
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffmpeg -version | head -1
 
       # Sem a chave não há nada a fazer, e um vermelho todas as noites é um
       # email todas as noites a dizer o mesmo. Sai limpo e diz porquê.
