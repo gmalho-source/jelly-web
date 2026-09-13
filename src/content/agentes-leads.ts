@@ -103,8 +103,8 @@ export const agentesLeads = {
       },
     ],
     tese: {
-      pt: "O agente qualifica. As pessoas vendem. O objetivo nunca é substituir a sua equipa comercial — é devolver-lhe as horas que hoje gasta a filtrar curiosos, e entregar-lhe conversas que valem o seu tempo.",
-      en: "The agent qualifies. People sell. The goal is never to replace your sales team — it is to give back the hours it spends today filtering the merely curious, and to hand it conversations worth its time.",
+      pt: "A pré-qualificação com Agentes de IA devolve foco à equipa de vendas e, consequentemente, melhores resultados à empresa.",
+      en: "Pre-qualification with AI agents gives the sales team its focus back and, with it, better results for the business.",
     },
   },
 
