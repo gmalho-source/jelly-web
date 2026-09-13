@@ -291,7 +291,17 @@ export function IndexSheet({
         aria-controls="folha"
         onClick={openSheet}
         aria-label={copy.index}
-        className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-paper/10 px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8"
+        /*
+         * Tinta e não papel translúcido.
+         *
+         * Era `bg-paper/10` com texto papel: papel claro sobre papel claro. Em
+         * cima do topo escuro lia-se; mal a página rolava para o mapa ou para
+         * os capítulos em branco, a pílula desaparecia — um botão fixo que só
+         * existe em metade da página. O `bg-ink/80` é o mesmo que a pílula de
+         * convite ali em cima já usa, e o anel desenha-lhe a forma quando o
+         * fundo também é escuro.
+         */
+        className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-ink/80 px-4 py-2.5 text-paper ring-1 ring-paper/40 backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink hover:ring-ink/15 sm:right-8 sm:top-8"
       >
         <span
           aria-hidden="true"
