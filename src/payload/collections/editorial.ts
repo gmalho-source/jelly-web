@@ -9,6 +9,7 @@ import {
 import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 import { categoryCounts, tagCounts } from "../endpoints/category-counts";
+import { gravaOArtigoFalado } from "../hooks/audio";
 import { slugDaEtiqueta } from "../hooks/slug-etiqueta";
 import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 import { writeExcerpt } from "../endpoints/write-excerpt";
@@ -259,7 +260,11 @@ export const Posts: CollectionConfig = {
   },
   versions: { drafts: true },
   access: { read: () => true },
-  hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(postPaths)], afterDelete: [revalidateOnDelete(postPaths)] },
+  hooks: {
+    beforeChange: [guardaSlugsAntigos],
+    afterChange: [revalidateOnChange(postPaths), gravaOArtigoFalado],
+    afterDelete: [revalidateOnDelete(postPaths)],
+  },
   // Um Markdown a povoar o artigo. O trabalho é do servidor porque é lá que as
   // imagens entram na biblioteca.
   endpoints: [
