@@ -40,7 +40,21 @@ const blocosSimples: Block[] = [
   {
     slug: "gallery",
     labels: { singular: "Galeria", plural: "Galerias" },
-    fields: [{ name: "images", type: "upload", relationTo: "media", hasMany: true, required: true } as Block["fields"][number]],
+    fields: [
+      {
+        name: "images",
+        type: "upload",
+        relationTo: "media",
+        hasMany: true,
+        required: true,
+        admin: {
+          // Quem monta uma galeria tem de saber o que ela faz na página: a
+          // ordem é a que aqui se arrasta, e cada imagem abre em cheio.
+          description:
+            "Uma fita que se desliza, pela ordem em que as puser aqui. Na página, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado.",
+        },
+      } as Block["fields"][number],
+    ],
   },
   {
     slug: "video",

@@ -77,7 +77,12 @@
     "team": "Team",
     "clientWord": "In the client's words",
     "next": "Next case",
-    "back": "All projects"
+    "back": "All projects",
+    "galleryOpen": "View larger",
+    "galleryClose": "Close the gallery",
+    "galleryPrev": "Previous image",
+    "galleryNext": "Next image",
+    "galleryCount": "{n} of {total}"
   },
   "footer": {
     "providers": "Providers area",

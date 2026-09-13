@@ -166,7 +166,9 @@ function fromStory(story: unknown, lingua: "pt" | "en" = "pt"): Block[] {
       const images = ((raw.images ?? []) as MediaDoc[])
         .map(image)
         .filter((item): item is NonNullable<ReturnType<typeof image>> => Boolean(item))
-        .map(({ src, alt }) => ({ src, alt }));
+        // As medidas seguem: a lente da galeria precisa delas para reservar o
+        // sítio certo antes de a imagem grande chegar.
+        .map(({ src, alt, width, height }) => ({ src, alt, width, height }));
       if (images.length) blocks.push({ type: "gallery", images });
     } else if (kind === "video") {
       // O ficheiro carregado ganha ao endereço escrito à mão: quem arrastou um

@@ -77,7 +77,12 @@
     "team": "Equipa",
     "clientWord": "Palavra do cliente",
     "next": "Próximo caso",
-    "back": "Todos os projetos"
+    "back": "Todos os projetos",
+    "galleryOpen": "Ver maior",
+    "galleryClose": "Fechar a galeria",
+    "galleryPrev": "Imagem anterior",
+    "galleryNext": "Imagem seguinte",
+    "galleryCount": "{n} de {total}"
   },
   "footer": {
     "providers": "Área de prestadores",

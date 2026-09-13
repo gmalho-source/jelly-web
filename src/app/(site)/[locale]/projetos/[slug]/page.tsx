@@ -122,7 +122,20 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         </dl>
       ) : null}
 
-      <CaseStory blocks={story} client={client} poster={cover} />
+      {/* Os rótulos da lente saem daqui, que é onde a língua se sabe: o
+          `CaseStory` desenha blocos e não devia ir buscar traduções. */}
+      <CaseStory
+        blocks={story}
+        client={client}
+        poster={cover}
+        textos={{
+          ver: t("galleryOpen"),
+          fechar: t("galleryClose"),
+          anterior: t("galleryPrev"),
+          seguinte: t("galleryNext"),
+          contador: t.raw("galleryCount") as string,
+        }}
+      />
 
       {project?.quote ? (
         <blockquote className="mt-16 border-t border-line pt-8">

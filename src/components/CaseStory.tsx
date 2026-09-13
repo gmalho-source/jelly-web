@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
 import { CaseVideo } from "@/components/CaseVideo";
+import { Galeria, type TextosDaGaleria } from "@/components/Galeria";
 
 /** ID de um vídeo do YouTube, das duas formas em que o site antigo os guardava. */
 function youtubeId(url: string): string | undefined {
@@ -19,7 +20,7 @@ function youtubeId(url: string): string | undefined {
  * primeiro de cada coluna a perde (`first:mt-0`): dentro de uma coluna, o
  * primeiro bloco tem de alinhar com o primeiro da coluna do lado.
  */
-function Bloco({ block, client, poster }: { block: Block; client: string; poster?: string }) {
+function Bloco({ block, client, poster, textos }: { block: Block; client: string; poster?: string; textos: TextosDaGaleria }) {
   if (block.type === "h2") {
     return (
       <h2 className="mt-16 max-w-[24ch] text-chapter first:mt-0">
@@ -69,26 +70,9 @@ function Bloco({ block, client, poster }: { block: Block; client: string; poster
     );
   }
   if (block.type === "gallery") {
-    return (
-      // Fita horizontal com paragem por imagem: mostra que há mais sem
-      // encher a página, e funciona com o dedo tal como com a roda.
-      <div
-       
-        className="mt-10 -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:thin]"
-      >
-        {block.images.map((image, imageIndex) => (
-          <Image
-            key={imageIndex}
-            src={image.src}
-            alt={image.alt || client}
-            width={1200}
-            height={900}
-            className="h-[46vw] max-h-[420px] w-auto shrink-0 snap-start rounded-[20px] object-cover"
-            sizes="(max-width: 900px) 80vw, 620px"
-          />
-        ))}
-      </div>
-    );
+    // A fita e a lente que a abre em grande vivem no `Galeria`: é a única
+    // parte de um caso que precisa de estado no cliente.
+    return <Galeria imagens={block.images} legenda={client} textos={textos} />;
   }
   if (block.type === "video") {
     return (
@@ -141,7 +125,7 @@ function Bloco({ block, client, poster }: { block: Block; client: string; poster
         {block.columns.map((coluna, indice) => (
           <div key={indice} className="flex flex-col [&>*:first-child]:mt-0">
             {coluna.map((dentro, ordem) => (
-              <Bloco key={ordem} block={dentro} client={client} poster={poster} />
+              <Bloco key={ordem} block={dentro} client={client} poster={poster} textos={textos} />
             ))}
           </div>
         ))}
@@ -160,13 +144,24 @@ function Bloco({ block, client, poster }: { block: Block; client: string; poster
  * corpo, medida curta, cor plana, cartões de 20 px. Sem texto por cima de
  * imagem e sem gradiente, que o design system não usa.
  */
-export function CaseStory({ blocks, client, poster }: { blocks: Block[]; client: string; poster?: string }) {
+export function CaseStory({
+  blocks,
+  client,
+  poster,
+  textos,
+}: {
+  blocks: Block[];
+  client: string;
+  poster?: string;
+  /** Os rótulos da lente da galeria, já na língua da página. */
+  textos: TextosDaGaleria;
+}) {
   if (!blocks.length) return null;
 
   return (
     <div className="mt-14 flex flex-col">
       {blocks.map((block, index) => (
-        <Bloco key={index} block={block} client={client} poster={poster} />
+        <Bloco key={index} block={block} client={client} poster={poster} textos={textos} />
       ))}
     </div>
   );
