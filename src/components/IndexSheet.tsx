@@ -61,6 +61,29 @@ export type SheetCopy = {
  */
 const DISCIPLINAS = ["BRANDING", "DIGITAL", "MARKETING", "AI SYSTEMS", "TECHNOLOGY"];
 
+/**
+ * As cores que a pílula pode vestir sobre fundo claro.
+ *
+ * Vão com a cor do texto colada: sobre o vermelho a letra é papel, sobre as três
+ * claras é tinta, e é isso que as torna legíveis — a tinta dá 8,9 no coral, 9,1
+ * no lavender e 13,0 no chartreuse, onde o branco daria menos de dois.
+ *
+ * Escritas por inteiro porque o Tailwind lê o código à procura das classes: uma
+ * construída por interpolação não chega à folha de estilos.
+ */
+const CORES_EM_CLARO = [
+  "bg-red text-paper",
+  "bg-coral text-ink",
+  "bg-chartreuse text-ink",
+  "bg-lavender text-ink",
+];
+
+/** Uma cor ao acaso, nunca a que estava: repetir lê-se como não ter mudado. */
+function outraCor(anterior: string | null) {
+  const possiveis = CORES_EM_CLARO.filter((cor) => cor !== anterior);
+  return possiveis[Math.floor(Math.random() * possiveis.length)];
+}
+
 function normalize(value: string) {
   return value
     .toLowerCase()
@@ -114,6 +137,16 @@ export function IndexSheet({
    * exatamente quando a resposta pode mudar.
    */
   const [fundoClaro, setFundoClaro] = useState(false);
+  /*
+   * A cor não roda com o relógio: sorteia-se no instante em que a pílula entra
+   * num fundo claro e fica essa enquanto lá estiver — uma secção ou a página
+   * toda. Duas secções claras seguidas são uma entrada só; para haver sorteio
+   * novo tem de passar por escuro pelo meio. Quem não faz scroll nunca a vê
+   * mudar, e é isso que se quer: a cor é um sinal de que se atravessou uma
+   * fronteira, não um efeito a acontecer sozinho ao lado do texto.
+   */
+  const [corEmClaro, setCorEmClaro] = useState<string | null>(null);
+  const estavaClaro = useRef(false);
   const input = useRef<HTMLInputElement>(null);
   const lista = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -236,10 +269,17 @@ export function IndexSheet({
         if (alfa < 0.5) continue;
         // Luminância relativa, a mesma conta do contraste.
         const canal = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
-        setFundoClaro(0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b) > 0.4);
+        aplica(0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b) > 0.4);
         return;
       }
-      setFundoClaro(true);
+      aplica(true);
+    };
+
+    // Só a passagem de escuro para claro sorteia; o resto é manter o que está.
+    const aplica = (claro: boolean) => {
+      if (claro && !estavaClaro.current) setCorEmClaro((anterior) => outraCor(anterior));
+      estavaClaro.current = claro;
+      setFundoClaro(claro);
     };
 
     mede();
@@ -358,11 +398,16 @@ export function IndexSheet({
         onClick={openSheet}
         aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
-           Sobre papel entra a ronda das quatro cores (`pilula-clara`), que traz
-           o seu próprio fundo e a sua própria cor de texto — sobre as claras a
-           letra é tinta, e é isso que as torna legíveis. */
-        className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 sm:right-8 sm:top-8 ${
-          fundoClaro ? "pilula-clara" : "bg-paper/10 hover:bg-paper hover:text-ink"
+           Sobre claro veste a cor sorteada à entrada, que traz consigo a cor do
+           texto.
+
+           A cor do texto não pode estar na base: `text-paper` e `text-ink` têm a
+           mesma especificidade, e quem decide é a ordem na folha de estilos e
+           não a ordem na string — com um `text-paper` aqui, a tinta do coral
+           nunca chegava a pintar. Cada estado traz a sua. O hover é que ganha a
+           ambas, porque o Tailwind escreve as variantes no fim. */
+        className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8 ${
+          fundoClaro ? (corEmClaro ?? CORES_EM_CLARO[0]) : "bg-paper/10 text-paper"
         }`}
       >
         <span
