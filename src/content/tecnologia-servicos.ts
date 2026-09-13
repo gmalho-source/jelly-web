@@ -115,6 +115,10 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
   {
     slug: { pt: "aplicacoes-web-mobile", en: "web-mobile-apps" },
     area: "apps",
+    topo: {
+      video: "/media/aplicacoes-topo.mp4",
+      poster: { src: "/media/aplicacoes-topo-poster.webp", width: 1920, height: 1080 },
+    },
     nome: { pt: "Aplicações Web e Mobile", en: "Web and Mobile Applications" },
     titulo: { pt: "Uma app só vale o que as pessoas voltam a fazer nela.", en: "An app is only worth what people come back to do in it." },
     claim: {
