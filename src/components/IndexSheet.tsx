@@ -358,10 +358,12 @@ export function IndexSheet({
         onClick={openSheet}
         aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
-           Sobre papel toma o vermelho da casa, que é a única cor desta paleta
-           que se impõe a um fundo claro sem deixar de ser a Jelly. */
+           Sobre papel toma o vermelho da casa — o fundo, e não o vermelho de
+           marca: com o texto em papel por cima, o `red` dava 3,7:1 e o
+           `red-deep` dá 6,8:1, que é o que um rótulo pequeno precisa para
+           passar em AA. É a mesma paleta, e a pílula não é um logótipo. */
         className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8 ${
-          fundoClaro ? "bg-red" : "bg-paper/10"
+          fundoClaro ? "bg-red-deep" : "bg-paper/10"
         }`}
       >
         <span
