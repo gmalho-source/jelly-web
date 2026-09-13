@@ -1,0 +1,75 @@
+# A leitura em voz alta dos artigos que saíram esta semana.
+#
+# Corre de madrugada e apanha duas coisas: um artigo publicado nos últimos sete
+# dias que ainda não foi lido, e qualquer artigo cujo corpo tenha mudado desde a
+# gravação — a impressão digital do texto trata disso, e é ela que faz isto
+# poder correr todos os dias sem pagar tudo outra vez.
+#
+# O `--desde=7` é o que impede a corrida de atacar o catálogo inteiro. Sem ele
+# são trezentas e tal gravações e dois milhões e meio de caracteres, muito acima
+# de uma quota mensal: em setembro de 2026 uma corrida sem limite esgotou a
+# quota a meio de um artigo e deixou-o com português e sem inglês. O atraso de
+# anos grava-se à mão, com `--limite`, ao ritmo que os créditos aguentam.
+name: audio
+
+on:
+  schedule:
+    # 04:00 UTC. Isto demora minutos por artigo e não tem pressa nenhuma.
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+    inputs:
+      desde:
+        description: "Janela em dias para artigos ainda por ler"
+        default: "7"
+
+# Duas corridas ao mesmo tempo gravariam o mesmo artigo duas vezes e pagá-lo-iam
+# duas vezes. Uma de cada vez, e a que chega depois espera.
+concurrency:
+  group: audio
+  cancel-in-progress: false
+
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
+      # O script junta os pedaços e mede a duração com o ffmpeg. Vem na imagem
+      # do runner, mas se um dia deixar de vir isto falha com um erro que não
+      # diz o que falta — daí a verificação em vez da confiança.
+      - name: ffmpeg
+        run: ffmpeg -version > /dev/null && ffprobe -version > /dev/null
+
+      # Sem a chave não há nada a fazer, e um vermelho todas as noites é um
+      # email todas as noites a dizer o mesmo. Sai limpo e diz porquê.
+      - name: há chave?
+        id: chave
+        run: |
+          if [ -z "${{ secrets.ELEVENLABS_API_KEY }}" ]; then
+            echo "sem ELEVENLABS_API_KEY nos segredos do repositório: nada a fazer"
+            echo "corre=nao" >> "$GITHUB_OUTPUT"
+          else
+            echo "corre=sim" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ler os artigos
+        if: steps.chave.outputs.corre == 'sim'
+        run: npm run audio -- --desde=${{ inputs.desde || 7 }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
+          BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_PT: ${{ secrets.ELEVENLABS_VOICE_PT }}
+          ELEVENLABS_VOICE_EN: ${{ secrets.ELEVENLABS_VOICE_EN }}
+          # A purga fecha o ciclo: o áudio fica gravado, mas o leitor só aparece
+          # na página quando o cache do Next souber que ele existe.
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          PURGE_URL: ${{ secrets.PURGE_URL }}

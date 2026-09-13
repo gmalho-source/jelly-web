@@ -21,9 +21,13 @@
  *   ELEVENLABS_API_KEY=… npm run audio -- --vozes     # que vozes há para pt-PT
  *   ELEVENLABS_API_KEY=… npm run audio -- --amostra --voz=<id>,<id>
  *   ELEVENLABS_API_KEY=… npm run audio -- --so=<slug>
+ *   ELEVENLABS_API_KEY=… npm run audio -- --desde=7   # o que saiu esta semana
  *   ELEVENLABS_API_KEY=… npm run audio               # tudo o que falta ou mudou
  *
- * Opções: --so= --lingua=pt|en --limite= --voz= --modelo= --formato= --forcar --dry
+ * O último é o que a automação nunca corre: sem `--desde` nem `--limite` isto
+ * vai buscar o catálogo todo, e uma quota mensal não chega para metade.
+ *
+ * Opções: --so= --desde= --lingua=pt|en --limite= --voz= --modelo= --formato= --forcar --dry
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -41,6 +45,20 @@ const valor = (nome) => args.find((a) => a.startsWith(`--${nome}=`))?.split("=")
 
 const so = valor("so");
 const limite = Number(valor("limite") ?? 0) || Infinity;
+/**
+ * A janela, em dias, para um artigo que ainda não foi lido.
+ *
+ * Sem ela, uma corrida sem argumentos ataca o catálogo inteiro: são trezentas e
+ * tal gravações e dois milhões e meio de caracteres, que nenhuma quota mensal
+ * aguarda. Serve para o trabalho ficar agendado — corre de madrugada, apanha o
+ * que saiu esta semana, e o atraso de anos fica para quem o mandar buscar à
+ * mão.
+ *
+ * Só filtra o que nunca foi lido. Um artigo antigo cujo corpo mudou continua a
+ * ser regravado, venha de onde vier a data: o que está publicado a dizer uma
+ * coisa não pode estar publicado a ler outra.
+ */
+const desde = Number(valor("desde") ?? 0) || 0;
 const dry = flag("dry");
 const forcar = flag("forcar");
 const amostra = flag("amostra");
@@ -403,6 +421,7 @@ for (const doc of docs) {
     const campoHash = lingua === "pt" ? "audioPtHash" : "audioEnHash";
 
     if (!forcar && doc[campo] && doc[campoHash] === impressao) continue;
+    if (desde && !doc[campo] && (Date.now() - new Date(doc.date).getTime()) / 86_400_000 > desde) continue;
 
     const voz = vozDe(lingua);
     console.log(`${doc.slug} [${lingua}] ${texto.length} caracteres, ${pedacos(linhas, TETO).length} pedaço(s)`);
