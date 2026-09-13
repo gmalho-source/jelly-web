@@ -358,17 +358,11 @@ export function IndexSheet({
         onClick={openSheet}
         aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
-           Sobre papel toma o vermelho da marca.
-
-           Houve uma versão em `red-deep`, decidida por um cálculo de contraste
-           que estava errado. O `red` com texto em papel dá 4,1:1: passa de
-           sobra os 3:1 que um elemento gráfico precisa para se ver, e fica a
-           pouco dos 4,5:1 que o AA pede a texto pequeno. O `red-deep` fecha
-           essa margem e custa a identidade — um bordó no canto do ecrã deixa
-           de ser a Jelly, e a pílula está ao lado do quadrado vermelho do
-           logótipo, que usa este mesmo par. */
-        className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8 ${
-          fundoClaro ? "bg-red" : "bg-paper/10"
+           Sobre papel entra a ronda das quatro cores (`pilula-clara`), que traz
+           o seu próprio fundo e a sua própria cor de texto — sobre as claras a
+           letra é tinta, e é isso que as torna legíveis. */
+        className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 sm:right-8 sm:top-8 ${
+          fundoClaro ? "pilula-clara" : "bg-paper/10 hover:bg-paper hover:text-ink"
         }`}
       >
         <span
