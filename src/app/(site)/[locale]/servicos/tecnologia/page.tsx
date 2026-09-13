@@ -45,14 +45,14 @@ const TONS = [
  *
  * Ficaram quando as unidades de medida saíram do texto: um gesto ao lado da
  * ideia lê-se sem ser um indicador, e é para isso que lá estão. A IA herdou o
- * desenho dos dados — cinco sistemas a escrever no mesmo sítio serve para uma
- * área que vive por dentro dos outros.
+ * desenho é seu: pedidos que chegam, a maior parte a sair resolvida, e os que
+ * o agente não sabe responder a subir para uma pessoa.
  */
 const GRAFICOS: Record<AreaDeTecnologia, Grafico> = {
   web: "conversao",
   apps: "retencao",
   dados: "integracao",
-  ia: "dados",
+  ia: "agentes",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
