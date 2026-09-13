@@ -25,9 +25,16 @@ export type Vertical = {
   numero: string;
   titulo: Localized;
   corpo: Localized;
-  imagem: { src: string; alt: Localized };
+  /**
+   * A fotografia do vertical. O último não tem, e é de propósito: os três
+   * primeiros são setores onde a casa já trabalhou, o quarto é o de quem está a
+   * ler. Uma imagem de banco de imagens ali seria reclamar um caso que não há.
+   */
+  imagem?: { src: string; alt: Localized };
+  /** No lugar da fotografia, uma frase sobre cor plana. Só o vertical aberto a tem. */
+  painel?: { frase: Localized; cta: Localized };
   /** A cor da paleta que marca este vertical. */
-  cor: "coral" | "lavender" | "chartreuse";
+  cor: "coral" | "lavender" | "chartreuse" | "red";
 };
 
 export type Pergunta = { pergunta: Localized; resposta: Localized };
@@ -276,6 +283,22 @@ export const agentesLeads = {
           },
         },
         cor: "chartreuse",
+      },
+      {
+        numero: "04",
+        titulo: {
+          pt: "O seu setor: o que muda é o vocabulário, não a máquina",
+          en: "Your sector: what changes is the vocabulary, not the machine",
+        },
+        corpo: {
+          pt: "Imobiliário, saúde e B2B são três exemplos, não uma lista fechada. O que passa de um setor para o outro é o mecanismo: responder em segundos, perguntar o que separa um curioso de um comprador, e entregar a conversa a quem vende já qualificada. O que muda é o vocabulário do setor, as perguntas que qualificam e as regras do que o agente pode e não pode responder. Isso escreve-se no arranque, com quem conhece o negócio: vocês.",
+          en: "Real estate, healthcare and B2B are three examples, not a closed list. What carries from one sector to the next is the mechanism: answering in seconds, asking what separates the merely curious from a buyer, and handing the conversation to the person who sells already qualified. What changes is the sector's vocabulary, the questions that qualify, and the rules of what the agent may and may not answer. That gets written at kickoff, with the people who know the business: you.",
+        },
+        painel: {
+          frase: { pt: "O seu setor entra aqui.", en: "Your sector goes here." },
+          cta: { pt: "Falar connosco", en: "Talk to us" },
+        },
+        cor: "red",
       },
     ] satisfies Vertical[],
   },

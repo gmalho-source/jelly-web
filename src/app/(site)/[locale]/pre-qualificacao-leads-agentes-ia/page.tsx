@@ -48,6 +48,9 @@ const CORES = {
     texto: "text-chartreuse",
     borda: "border-chartreuse/40",
   },
+  // O vertical aberto leva o vermelho da casa: é o que assina, e é o único dos
+  // quatro que não é um setor mas um convite.
+  red: { contorno: "[--outline-color:var(--color-red)]", texto: "text-red", borda: "border-red/40" },
 } as const;
 
 export default async function PreQualificacaoPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -330,7 +333,12 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
 
       {/* Os verticais. Cada um tem a sua cor, o seu número contornado e a sua
           fotografia, e a fotografia troca de lado a cada linha para a página
-          não ficar com uma coluna de imagens. */}
+          não ficar com uma coluna de imagens.
+
+          O quarto não tem fotografia, e é de propósito: os três primeiros são
+          setores onde a casa já trabalhou, o quarto é o de quem está a ler. Uma
+          imagem de banco de imagens ali seria reclamar um caso que não há — no
+          lugar dela fica uma frase sobre o vermelho da casa. */}
       <section className="surface-paper border-t border-line">
         <div className="mx-auto max-w-[1200px] px-5 py-16 sm:px-8 lg:py-24">
           <h2 className="entra text-chapter max-w-[24ch]">{agentesLeads.verticais.titulo[locale]}</h2>
@@ -358,14 +366,29 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
                   </div>
 
                   <div className={`entra-tarde ${imagemPrimeiro ? "lg:order-1" : ""}`}>
-                    <Image
-                      src={vertical.imagem.src}
-                      alt={vertical.imagem.alt[locale]}
-                      width={1400}
-                      height={1050}
-                      sizes="(max-width: 1024px) 100vw, 560px"
-                      className="aspect-[4/3] w-full rounded-[20px] object-cover"
-                    />
+                    {vertical.imagem ? (
+                      <Image
+                        src={vertical.imagem.src}
+                        alt={vertical.imagem.alt[locale]}
+                        width={1400}
+                        height={1050}
+                        sizes="(max-width: 1024px) 100vw, 560px"
+                        className="aspect-[4/3] w-full rounded-[20px] object-cover"
+                      />
+                    ) : vertical.painel ? (
+                      // A mesma proporção e o mesmo canto da fotografia: o
+                      // bloco ocupa o lugar dela em vez de abrir um buraco na
+                      // linha. A pastilha é de tinta, que sobre vermelho é a
+                      // única que se vê.
+                      <div className="surface-red flex aspect-[4/3] w-full flex-col justify-end gap-6 rounded-[20px] p-8 lg:p-10">
+                        <p className="max-w-[14ch] font-display text-[clamp(28px,3.4vw,48px)] leading-[1.02] tracking-[-0.025em]">
+                          {vertical.painel.frase[locale]}
+                        </p>
+                        <Link href="/contactos" className="btn-pill btn-pill-ink w-fit">
+                          {vertical.painel.cta[locale]} <span aria-hidden="true">→</span>
+                        </Link>
+                      </div>
+                    ) : null}
                   </div>
                 </article>
               );
