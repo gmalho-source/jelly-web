@@ -17,7 +17,7 @@ import { useEffect, useRef } from "react";
  * novecentos milissegundos; a quem pediu menos movimento, ou não chega a vê-lo,
  * fica o desenho parado, que é o mesmo.
  */
-export type Grafico = "performance" | "conteudo" | "influencia" | "dados" | "conversao" | "retencao" | "integracao" | "velocidade";
+export type Grafico = "performance" | "conteudo" | "influencia" | "dados" | "conversao" | "retencao" | "integracao" | "velocidade" | "agentes";
 
 const CORES = {
   vermelho: "#dd364a",
@@ -258,6 +258,85 @@ const DESENHOS: Record<Grafico, (x: Ctx, w: number, h: number, t: number) => voi
     x.fill();
     rotulo(x, "1 registo", cx, cy + 27, CORES.papel, "center");
     rotulo(x, "o dado entra uma vez", cx, 16, CORES.suave, "center");
+  },
+  /**
+   * Os sistemas de IA: o que passa a fazer-se sem ninguém a meio.
+   *
+   * Nasceu porque a área tinha emprestado o desenho dos dados, e esse conta a
+   * jornada de uma lead — anúncio, página, guia, e-mail, chamada, proposta.
+   * Lia-se um funil de vendas debaixo de um título que fala de agentes.
+   *
+   * Aqui chegam pedidos, e o que importa é a bifurcação: a maior parte sai
+   * resolvida, e os que o agente não sabe responder sobem para uma pessoa. A
+   * proporção é ilustrativa, como em todos os outros — é o gesto que se mostra,
+   * não um número.
+   */
+  agentes(x, w, h, t) {
+    const pedidos = 9;
+    const aPessoa = 3;
+    // As margens são dos rótulos, não dos pontos: a moldura tem 380px e à
+    // primeira o "pedidos" saía pela esquerda e o "a uma pessoa" pela direita.
+    const xEntra = 66;
+    const cx = w / 2 - 10;
+    const xSai = w - 96;
+    const cy = h / 2 + 4;
+    const yEntra = (i: number) => 26 + ((h - 56) * i) / (pedidos - 1);
+    const ySozinho = h * 0.34;
+    const yPessoa = h * 0.82;
+    const ate = Math.round(pedidos * t);
+
+    for (let i = 0; i < pedidos; i++) {
+      if (i >= ate) continue;
+      const humano = i >= pedidos - aPessoa;
+      x.beginPath();
+      x.strokeStyle = CORES.fraco;
+      x.lineWidth = 1.2;
+      x.moveTo(xEntra + 6, yEntra(i));
+      x.bezierCurveTo(cx - 40, yEntra(i), cx - 40, cy, cx - 13, cy);
+      x.stroke();
+      x.fillStyle = humano ? CORES.suave : CORES.fraco;
+      x.beginPath();
+      x.arc(xEntra, yEntra(i), 3.5, 0, 7);
+      x.fill();
+    }
+    rotulo(x, "pedidos", xEntra - 12, cy + 4, CORES.suave, "right");
+
+    // As duas saídas. A de cima é a que se quer larga; a de baixo existe porque
+    // um agente que nunca passa nada a ninguém está a responder o que não sabe.
+    if (t > 0.45) {
+      x.beginPath();
+      x.strokeStyle = "rgba(221,54,74,.75)";
+      x.lineWidth = 2.4;
+      x.moveTo(cx + 13, cy);
+      x.bezierCurveTo(cx + 46, cy, cx + 46, ySozinho, xSai - 6, ySozinho);
+      x.stroke();
+      x.fillStyle = CORES.vermelho;
+      x.beginPath();
+      x.arc(xSai, ySozinho, 4.5, 0, 7);
+      x.fill();
+      rotulo(x, "resolvido", xSai + 10, ySozinho + 4, CORES.papel, "left");
+
+      x.beginPath();
+      x.strokeStyle = CORES.fraco;
+      x.lineWidth = 1.2;
+      x.setLineDash([3, 3]);
+      x.moveTo(cx + 13, cy);
+      x.bezierCurveTo(cx + 46, cy, cx + 46, yPessoa, xSai - 6, yPessoa);
+      x.stroke();
+      x.setLineDash([]);
+      x.fillStyle = CORES.suave;
+      x.beginPath();
+      x.arc(xSai, yPessoa, 3.5, 0, 7);
+      x.fill();
+      rotulo(x, "a uma pessoa", xSai + 10, yPessoa + 4, CORES.suave, "left");
+    }
+
+    x.fillStyle = CORES.vermelho;
+    x.beginPath();
+    x.arc(cx, cy, 12, 0, 7);
+    x.fill();
+    rotulo(x, "agente", cx, cy + 29, CORES.papel, "center");
+    rotulo(x, "o que não precisa de ninguém", cx, 16, CORES.suave, "center");
   },
   velocidade(x, w, h, t) {
     const paginas = ["início", "categoria", "produto", "checkout"];

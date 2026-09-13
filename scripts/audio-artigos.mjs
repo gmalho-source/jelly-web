@@ -160,6 +160,28 @@ async function pergunta(caminho) {
 }
 
 /**
+ * O saldo da quota, que é a única conta que aqui interessa.
+ *
+ * Esta conta não paga ao caractere: tem um tecto mensal de créditos e não deixa
+ * comprar por cima. A subscrição custa o mesmo com duas gravações ou com
+ * duzentas — o que se esgota é a quota, e é ela que decide se se pode gravar
+ * mais hoje.
+ */
+async function quota() {
+  if (!chave) return undefined;
+  try {
+    const resposta = await fetch(`${API}/user/subscription`, { headers: cabecalho });
+    if (!resposta.ok) return undefined;
+    const { character_count: usado, character_limit: tecto, next_character_count_reset_unix: reposicao } = await resposta.json();
+    return { usado, tecto, reposicao };
+  } catch {
+    return undefined;
+  }
+}
+
+const numero = (valor) => Math.round(valor).toLocaleString("pt-PT");
+
+/**
  * As vozes da conta e as da biblioteca partilhada que falam a língua.
  *
  * A biblioteca em português tem quatrocentas vozes e nove em cada dez são
@@ -400,6 +422,7 @@ const { docs } = await payload.find({
 });
 
 console.log(`${docs.length} artigo(s) a considerar\n`);
+const quotaAntes = await quota();
 
 const pasta = fs.mkdtempSync(path.join(os.tmpdir(), "audio-"));
 let feitos = 0;
@@ -466,12 +489,39 @@ for (const doc of docs) {
   }
 }
 
-// A conta, porque isto gasta dinheiro de verdade: 0,10 dólares por mil
-// caracteres no multilingual v2, metade no flash.
-const porMil = MODELO.includes("flash") || MODELO.includes("turbo") ? 0.05 : 0.1;
-console.log(
-  `\n${feitos} gravação(ões), ${caracteres.toLocaleString("pt-PT")} caracteres (~${((caracteres / 1000) * porMil).toFixed(2)} USD)`,
-);
+/*
+ * A conta, e não em dólares.
+ *
+ * Esta linha dizia o custo a 0,10 dólares por mil caracteres, que é a tarifa de
+ * quem paga ao consumo. A conta desta casa não é essa: tem uma quota mensal de
+ * créditos e não deixa comprar por cima, portanto a subscrição custa o mesmo
+ * quer se grave um artigo quer se gravem cem. Os dólares que aqui saíam não
+ * correspondiam a dinheiro nenhum — e enganaram uma decisão de verdade, em
+ * setembro de 2026, quando "duzentos e oitenta dólares" foi discutido como se
+ * fosse uma fatura e o que estava mesmo em causa era a quota a acabar a meio.
+ *
+ * O que se esgota são créditos. Medido em duas corridas, um caractere de texto
+ * custa à volta de 0,3 — a conta exata é da ElevenLabs e muda com o modelo, por
+ * isso o que se grava é o antes e o depois, e a estimativa só serve ao ensaio,
+ * onde não há depois.
+ */
+const POR_CARACTERE = 0.3;
+const quotaDepois = dry ? quotaAntes : await quota();
+const gastos = quotaAntes && quotaDepois ? quotaDepois.usado - quotaAntes.usado : undefined;
+
+console.log(`\n${feitos} gravação(ões), ${caracteres.toLocaleString("pt-PT")} caracteres`);
+
+if (quotaDepois) {
+  const resta = quotaDepois.tecto - quotaDepois.usado;
+  const dia = new Date(quotaDepois.reposicao * 1000).toLocaleDateString("pt-PT", { day: "numeric", month: "long" });
+  if (dry) {
+    const previsao = caracteres * POR_CARACTERE;
+    const cabe = previsao <= resta;
+    console.log(`~${numero(previsao)} créditos, e há ${numero(resta)} — ${cabe ? "cabe na quota" : "NÃO cabe: isto pára a meio"}`);
+  } else if (gastos !== undefined) {
+    console.log(`${numero(gastos)} créditos nesta corrida · restam ${numero(resta)} de ${numero(quotaDepois.tecto)} · repõe a ${dia}`);
+  }
+}
 
 if (feitos && !dry) await purgeSite();
 process.exit(0);

@@ -135,8 +135,9 @@ quota a meio e deixou um artigo com português e sem inglês. Os artigos antigos
 gravam-se à mão, com `--limite`, ao ritmo que os créditos aguentam.
 
 A conta da ElevenLabs funciona por **quota mensal de créditos**, não por consumo
-avulso — o custo em dólares que o script imprime é de uma tarifa que esta casa
-não usa. Medido: um caractere de texto custa à volta de 0,3 créditos.
+avulso. O script mede a quota antes e depois e diz no fim quantos créditos gastou
+e quantos restam; no ensaio (`--dry`) estima, e avisa quando a corrida não cabe
+no que sobra. Medido: um caractere de texto custa à volta de 0,3 créditos.
 
 ## Domínios
 
