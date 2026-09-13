@@ -20,6 +20,50 @@ const escapa = (valor: string) =>
 
 const QUANTOS = 20;
 
+/**
+ * O tipo de uma imagem pela terminação do endereço.
+ *
+ * O `<enclosure>` exige-o, e quem lê o feed usa-o para decidir se mostra a
+ * capa. Não vale a pena ir buscar cabeçalhos ao Blob por causa disto: os
+ * ficheiros da casa são estes quatro.
+ */
+function tipoDaImagem(src: string): string | undefined {
+  const fim = src.split("?")[0].toLowerCase();
+  if (fim.endsWith(".webp")) return "image/webp";
+  if (fim.endsWith(".png")) return "image/png";
+  if (fim.endsWith(".avif")) return "image/avif";
+  if (fim.endsWith(".jpg") || fim.endsWith(".jpeg")) return "image/jpeg";
+  return undefined;
+}
+
+/**
+ * A capa do artigo, escrita das duas maneiras que os leitores conhecem.
+ *
+ * O `<enclosure>` é o que o Brevo procura quando monta uma campanha RSS, e o
+ * `media:content` é o que a maior parte dos leitores de feeds prefere. São a
+ * mesma imagem duas vezes, de propósito: escrever só uma delas é escolher
+ * qual dos dois lados fica sem capa.
+ *
+ * O `length` vai a zero porque não conhecemos o tamanho do ficheiro sem o ir
+ * buscar — a norma pede o atributo, não que ele seja exato, e nenhum leitor
+ * descarrega uma capa por causa dele.
+ */
+function capaDoItem(post: { cover?: { src: string; alt?: string; width?: number; height?: number } }): string[] {
+  const capa = post.cover;
+  if (!capa?.src) return [];
+  const endereco = capa.src.startsWith("http") ? capa.src : `${SITE_URL.replace(/\/$/, "")}${capa.src}`;
+  const tipo = tipoDaImagem(endereco);
+  if (!tipo) return [];
+  const medidas = [
+    capa.width ? ` width="${capa.width}"` : "",
+    capa.height ? ` height="${capa.height}"` : "",
+  ].join("");
+  return [
+    `      <enclosure url="${escapa(endereco)}" type="${tipo}" length="0" />`,
+    `      <media:content url="${escapa(endereco)}" type="${tipo}" medium="image"${medidas} />`,
+  ];
+}
+
 const TITULO = {
   pt: "Jelly — Blog",
   en: "Jelly — Blog",
@@ -53,6 +97,7 @@ export async function feedDoBlog(locale: Locale): Promise<string> {
         // Sem resumo, sem elemento: um `<description>` vazio faz alguns leitores
         // mostrarem uma linha em branco onde devia estar o princípio do artigo.
         resumo ? `      <description>${escapa(resumo)}</description>` : "",
+        ...capaDoItem(post),
         "    </item>",
       ]
         .filter(Boolean)
@@ -62,7 +107,7 @@ export async function feedDoBlog(locale: Locale): Promise<string> {
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">',
+    '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">',
     "  <channel>",
     `    <title>${escapa(TITULO[locale])}</title>`,
     `    <link>${escapa(`${base}/blog`)}</link>`,

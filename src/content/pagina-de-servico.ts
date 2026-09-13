@@ -1,3 +1,4 @@
+import type { routing } from "@/i18n/routing";
 import type { Localized } from "./types";
 
 /**
@@ -56,6 +57,25 @@ export type PaginaDeServico<Area extends string = string> = {
   passos: { titulo: Localized; itens: Passo[] };
   faq: Pergunta[];
   fecho: { titulo: Localized; texto: Localized };
+  /**
+   * Um remate que aponta para outra página da casa.
+   *
+   * Há serviços que continuam noutro sítio: um site publicado continua no
+   * JellyCARE. Dizê-lo só na lista do que fazemos e numa pergunta lá em baixo
+   * é dizê-lo a quem já estava a ler com atenção; este bloco é para quem
+   * chegou ao fim da página a decidir o passo seguinte.
+   *
+   * `endereco` é uma rota do `routing.ts`, e não um link solto: o `Link`
+   * traduzido trata do resto.
+   */
+  remate?: {
+    eyebrow: Localized;
+    titulo: Localized;
+    texto: Localized;
+    cta: Localized;
+    /** Uma rota sem parâmetros do `routing.ts` — as com `[slug]` precisavam de mais do que um endereço. */
+    endereco: Exclude<keyof typeof routing.pathnames, `${string}[${string}`>;
+  };
   /**
    * Uma nota sobre um parceiro, no fim da página. É a apresentação do
    * parceiro pelas suas palavras — a Informa D&B na Lead Generation B2B — e

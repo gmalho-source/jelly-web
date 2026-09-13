@@ -95,6 +95,18 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
       { pergunta: { pt: "Fazem isto em sites que não construíram?", en: "Do you do this on sites you did not build?" }, resposta: { pt: "Sim, e é frequente. Auditamos, corrigimos e mantemos sites em WordPress, Shopify e outras plataformas, feitos por outras equipas.", en: "Yes, and often. We audit, fix and maintain sites on WordPress, Shopify and other platforms, built by other teams." } },
       { pergunta: { pt: "Fazem só o design, ou só o desenvolvimento?", en: "Do you do design only, or development only?" }, resposta: { pt: "Fazemos os dois, e é assim que trabalhamos melhor. Mas construímos a partir de design de terceiros, e desenhamos para equipas técnicas internas, quando é isso que faz sentido.", en: "We do both, and that is how we work best. But we build from third-party design, and design for in-house technical teams, when that is what makes sense." } },
     ],
+    /* O site publicado não acaba no dia em que se publica, e a página não
+       pode acabar como se acabasse. */
+    remate: {
+      eyebrow: { pt: "Depois de publicar", en: "After launch" },
+      titulo: { pt: "Um site publicado é um site para tratar.", en: "A published site is a site to look after." },
+      texto: {
+        pt: "O JellyCARE é o plano que mantém o site de pé depois de nós sairmos: checkup diário de segurança, atualizações, monitor de disponibilidade, backups e relatório mensal. Em sites nossos e em sites feitos por outros. Sem fidelização.",
+        en: "JellyCARE is the plan that keeps the site standing after we leave: daily security checkup, updates, uptime monitoring, backups and a monthly report. On sites we built and on sites built by others. No lock-in.",
+      },
+      cta: { pt: "Ver o JellyCARE", en: "See JellyCARE" },
+      endereco: "/jellycare",
+    },
     fecho: {
       titulo: { pt: "O seu site está a trabalhar para o negócio, ou o negócio a trabalhar para o site?", en: "Is your site working for the business, or the business working for the site?" },
       texto: { pt: "Envie-nos o endereço. Respondemos com uma leitura técnica gratuita: performance, SEO, acessibilidade e o que mudaríamos primeiro.", en: "Send us the address. We answer with a free technical reading: performance, SEO, accessibility and what we would change first." },

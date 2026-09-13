@@ -282,6 +282,29 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
         </div>
       </section>
 
+      {/* ── O remate, quando o serviço continua noutra página ────────────────
+          Em tinta, entre as perguntas em papel e o que vem a seguir: é a
+          única coisa escura ali, e por isso lê-se como uma porta e não como
+          mais um parágrafo. */}
+      {servico.remate ? (
+        <section className="surface-ink border-b border-line">
+          <div className="mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
+            <div className="entra-perto flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="eyebrow text-red">{servico.remate.eyebrow[locale]}</p>
+                <p className="mt-4 max-w-[24ch] font-display text-[clamp(24px,3vw,42px)] leading-[1.06] tracking-[-0.025em]">
+                  {servico.remate.titulo[locale]}
+                </p>
+                <p className="mt-4 max-w-[56ch] text-md text-paper/70">{servico.remate.texto[locale]}</p>
+              </div>
+              <Link href={servico.remate.endereco} className="btn-pill shrink-0">
+                {servico.remate.cta[locale]} <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── Sobre o parceiro, quando há um ──────────────────────────────────
           Um bloco em papel, com a apresentação do parceiro pelas suas
           palavras. Perto do fim, e por isso `entra-perto`. */}
