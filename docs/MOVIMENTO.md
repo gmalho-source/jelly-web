@@ -68,6 +68,31 @@ de uma moldura fixa corta-lhe as pontas para render vinte pixéis. Mover a
 moldura dentro da secção — que costuma ter 100px de respiro em cima e em baixo —
 rende noventa e seis sem cortar nada.
 
+## Uma frase que se escreve
+
+Na pilar da pré-qualificação, a tese escreve-se letra a letra quando chega ao
+ecrã (`frase-escrita` no globals.css, `components/FraseEscrita.tsx`). Três
+decisões e uma armadilha.
+
+**É animação de tempo, não de scroll.** Ligada ao scroll, quem parasse a meio
+ficava com meia frase invisível a meio do ecrã — o contrário da regra que manda
+que nada que já passou pelo meio fique transparente. Aqui começa quando metade
+da frase está à vista, e acaba sempre.
+
+**Escreve uma vez.** Reescrever a cada passagem faz dela um brinquedo, e à
+segunda ninguém a lê.
+
+**O texto não muda de sítio.** As letras que ainda não chegaram estão lá,
+invisíveis, a ocupar o lugar delas: as linhas partem onde vão partir no fim, e a
+frase não salta. É o defeito dos «typewriter» que reescrevem o texto a cada
+letra.
+
+**A armadilha: `steps(1, end)` deixa o valor final no de partida.** Com um só
+passo, o salto acontece no instante final do intervalo e o que fica para o
+`forwards` guardar é o zero. Medido: setenta e oito das cento e vinte letras
+ficavam invisíveis para sempre. `steps(1, jump-start)` resolve — a letra
+aparece quando a vez dela chega.
+
 ## Três coisas que não se animam
 
 **O que já está no ecrã quando a página abre.** Um título a 34% de opacidade à

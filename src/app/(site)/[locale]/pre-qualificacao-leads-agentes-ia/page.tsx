@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { FraseEscrita } from "@/components/FraseEscrita";
 import { Odometer } from "@/components/Odometer";
 import { ServiceHero } from "@/components/ServiceHero";
 import { agentesLeads } from "@/content/agentes-leads";
@@ -226,8 +227,12 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
                 página vazia ao lado e oito linhas para ler. Sem limite de
                 medida, a mesma frase cabe em quatro linhas e ocupa o bloco
                 inteiro — que é o que uma frase de tese pede. */}
+            {/* A tese escreve-se à frente de quem chega a ela. O texto está
+                inteiro no documento: sem javascript, ou a quem pediu menos
+                movimento, é uma frase normal — ver `frase-escrita` no
+                globals.css e `docs/MOVIMENTO.md`. */}
             <blockquote className="editorial font-display text-[clamp(26px,3.6vw,54px)] leading-[1.06] tracking-[-0.025em] text-ink">
-              {agentesLeads.definicao.tese[locale]}
+              <FraseEscrita texto={agentesLeads.definicao.tese[locale]} />
             </blockquote>
           </div>
         </div>

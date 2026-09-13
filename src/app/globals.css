@@ -1547,6 +1547,58 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   }
 }
 
+/*
+   Uma frase escrita à frente de quem lê.
+
+   As regras da casa continuam de pé: o texto está inteiro no documento e o
+   estado de repouso é o estado completo. Quem pediu menos movimento, ou tem um
+   browser sem isto, lê a frase como sempre leu — não perde a animação, não
+   perde nada.
+
+   É animação de tempo e não de scroll, de propósito. Ligada ao scroll, quem
+   parasse a meio ficava com meia frase invisível no meio do ecrã, que é
+   exactamente o que o `MOVIMENTO.md` proíbe. Aqui começa quando a frase chega
+   ao ecrã, e acaba sempre.
+
+   `steps(1, jump-start)` e não uma curva: uma letra não acende devagar,
+   aparece. E `jump-start` e não `end` — medido: com `steps(1, end)` o salto
+   acontece no instante final do intervalo e o valor que fica é o de partida,
+   por isso setenta e oito das cento e vinte letras ficavam invisíveis para
+   sempre. Com `jump-start`, a letra aparece quando a vez dela chega.
+
+   Cada letra leva o seu cursor — um traço que dura um instante no sítio dela e
+   apaga-se quando a seguinte chega. São cento e tal pseudo-elementos com uma
+   animação curta cada um, e é o que faz o cursor parecer andar.
+*/
+@keyframes frase-letra {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes frase-cursor {
+  0%, 100% { opacity: 0; }
+  1%, 99% { opacity: 1; }
+}
+.frase-escrita .letra { position: relative; }
+@media (prefers-reduced-motion: no-preference) {
+  .frase-escrita[data-escreve="sim"] .letra {
+    opacity: 0;
+    animation: frase-letra 1ms steps(1, jump-start) forwards;
+    animation-delay: calc(var(--vez, 0) * var(--ritmo, 24ms));
+  }
+  .frase-escrita[data-escreve="sim"] .letra::after {
+    content: "";
+    position: absolute;
+    top: 0.08em;
+    bottom: 0.08em;
+    right: -0.06em;
+    width: 0.06em;
+    background: var(--color-red);
+    opacity: 0;
+    animation: frase-cursor var(--ritmo, 24ms) linear;
+    animation-delay: calc(var(--vez, 0) * var(--ritmo, 24ms));
+  }
+}
+
 /* A cor viva da secção do trabalho. Em repouso é o vermelho da casa; o
    ObrasComAcento escreve a da obra que está no ecrã. */
 .obras { --acento-vivo: var(--color-red); }
