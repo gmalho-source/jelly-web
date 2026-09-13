@@ -99,6 +99,21 @@ export function IndexSheet({
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const trigger = useRef<HTMLButtonElement>(null);
+  /*
+   * A pílula sabe o que tem por baixo.
+   *
+   * Ela é papel translúcido sobre um topo em tinta, e era invisível assim que a
+   * página rolava para uma secção em papel — papel claro sobre papel claro.
+   * Aqui não há regra de CSS que sirva: um elemento `fixed` não herda nada de
+   * quem lhe passa por baixo, e o browser não deixa ler a cor do ecrã. Mede-se,
+   * então, o que está mesmo debaixo dela, e sobre fundo claro toma o vermelho
+   * da casa.
+   *
+   * Não se ouve o scroll: um observador com a janela recortada à faixa da
+   * pílula acorda só quando uma secção lhe entra ou sai de baixo, que é
+   * exatamente quando a resposta pode mudar.
+   */
+  const [fundoClaro, setFundoClaro] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const lista = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -197,6 +212,57 @@ export function IndexSheet({
       ?.scrollIntoView({ block: "nearest" });
   }, [active, open]);
 
+  /*
+   * O que está debaixo da pílula, medido onde ela está.
+   *
+   * `elementsFromPoint` devolve a pilha toda naquele ponto, de cima para baixo.
+   * Salta-se a própria pílula e desce-se até encontrar alguém com fundo opaco:
+   * os véus e gradientes por cima de um vídeo são transparentes e não contam,
+   * e quem manda é a secção por baixo deles. Sem ninguém opaco, o fundo é o
+   * papel do documento.
+   */
+  useEffect(() => {
+    const botao = trigger.current;
+    if (!botao) return;
+
+    const mede = () => {
+      const caixa = botao.getBoundingClientRect();
+      const pilha = document.elementsFromPoint(caixa.left + caixa.width / 2, caixa.top + caixa.height / 2);
+      for (const no of pilha) {
+        if (botao.contains(no)) continue;
+        const partes = getComputedStyle(no).backgroundColor.match(/[\d.]+/g);
+        if (!partes) continue;
+        const [r, g, b, alfa = 1] = partes.map(Number);
+        if (alfa < 0.5) continue;
+        // Luminância relativa, a mesma conta do contraste.
+        const canal = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+        setFundoClaro(0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b) > 0.4);
+        return;
+      }
+      setFundoClaro(true);
+    };
+
+    mede();
+    // A janela recortada à faixa onde a pílula está: o observador só acorda
+    // quando uma secção lhe entra ou sai de baixo.
+    const faixa = () => {
+      const caixa = botao.getBoundingClientRect();
+      return `${-caixa.top}px 0px ${-(window.innerHeight - caixa.bottom)}px 0px`;
+    };
+    let observador: IntersectionObserver | undefined;
+    const arma = () => {
+      observador?.disconnect();
+      observador = new IntersectionObserver(mede, { rootMargin: faixa(), threshold: 0 });
+      for (const secao of document.querySelectorAll("header, section, footer, main > div")) observador.observe(secao);
+    };
+    arma();
+    window.addEventListener("resize", arma);
+    return () => {
+      observador?.disconnect();
+      window.removeEventListener("resize", arma);
+    };
+  }, [pathname]);
+
   // Com a folha aberta, o fundo não deve rolar por trás dela.
   useEffect(() => {
     if (!open) return;
@@ -291,17 +357,12 @@ export function IndexSheet({
         aria-controls="folha"
         onClick={openSheet}
         aria-label={copy.index}
-        /*
-         * Tinta e não papel translúcido.
-         *
-         * Era `bg-paper/10` com texto papel: papel claro sobre papel claro. Em
-         * cima do topo escuro lia-se; mal a página rolava para o mapa ou para
-         * os capítulos em branco, a pílula desaparecia — um botão fixo que só
-         * existe em metade da página. O `bg-ink/80` é o mesmo que a pílula de
-         * convite ali em cima já usa, e o anel desenha-lhe a forma quando o
-         * fundo também é escuro.
-         */
-        className="group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full bg-ink/80 px-4 py-2.5 text-paper ring-1 ring-paper/40 backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink hover:ring-ink/15 sm:right-8 sm:top-8"
+        /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
+           Sobre papel toma o vermelho da casa, que é a única cor desta paleta
+           que se impõe a um fundo claro sem deixar de ser a Jelly. */
+        className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8 ${
+          fundoClaro ? "bg-red" : "bg-paper/10"
+        }`}
       >
         <span
           aria-hidden="true"
