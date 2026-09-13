@@ -20,7 +20,11 @@ import type {
 import { fromCms, getCms } from "./client";
 
 type Doc = Record<string, unknown>;
-type MediaDoc = { url?: string | null; alt?: string | null; width?: number | null; height?: number | null } | number | null | undefined;
+type MediaDoc =
+  | { url?: string | null; alt?: string | null; caption?: string | null; width?: number | null; height?: number | null }
+  | number
+  | null
+  | undefined;
 
 const text = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
 
@@ -33,7 +37,16 @@ function localized(group: unknown, fallback = ""): Localized {
 
 function image(media: MediaDoc) {
   if (!media || typeof media === "number" || !media.url) return undefined;
-  return { src: media.url, alt: media.alt ?? undefined, width: media.width ?? undefined, height: media.height ?? undefined };
+  return {
+    src: media.url,
+    alt: media.alt ?? undefined,
+    // A Legenda do ficheiro, escrita uma vez no backoffice e boa em qualquer
+    // sítio onde a imagem apareça. A galeria mostra-a; os outros blocos por
+    // agora ignoram-na.
+    legenda: text(media.caption) || undefined,
+    width: media.width ?? undefined,
+    height: media.height ?? undefined,
+  };
 }
 
 /** Lexical → os blocos que o ArticleBody desenha. */
@@ -168,7 +181,7 @@ function fromStory(story: unknown, lingua: "pt" | "en" = "pt"): Block[] {
         .filter((item): item is NonNullable<ReturnType<typeof image>> => Boolean(item))
         // As medidas seguem: a lente da galeria precisa delas para reservar o
         // sítio certo antes de a imagem grande chegar.
-        .map(({ src, alt, width, height }) => ({ src, alt, width, height }));
+        .map(({ src, alt, legenda, width, height }) => ({ src, alt, legenda, width, height }));
       if (images.length) blocks.push({ type: "gallery", images });
     } else if (kind === "video") {
       // O ficheiro carregado ganha ao endereço escrito à mão: quem arrastou um

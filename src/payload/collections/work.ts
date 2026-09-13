@@ -51,7 +51,7 @@ const blocosSimples: Block[] = [
           // Quem monta uma galeria tem de saber o que ela faz na página: a
           // ordem é a que aqui se arrasta, e cada imagem abre em cheio.
           description:
-            "Uma fita que se desliza, pela ordem em que as puser aqui. Na página, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado.",
+            "Uma fita que se desliza, pela ordem em que as puser aqui. Na página, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado. A Legenda escrita no ficheiro aparece por baixo da imagem quando ela está aberta — sem legenda, só se vê a fotografia.",
         },
       } as Block["fields"][number],
     ],

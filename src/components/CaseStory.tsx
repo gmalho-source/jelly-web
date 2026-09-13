@@ -72,7 +72,7 @@ function Bloco({ block, client, poster, textos }: { block: Block; client: string
   if (block.type === "gallery") {
     // A fita e a lente que a abre em grande vivem no `Galeria`: é a única
     // parte de um caso que precisa de estado no cliente.
-    return <Galeria imagens={block.images} legenda={client} textos={textos} />;
+    return <Galeria imagens={block.images} cliente={client} textos={textos} />;
   }
   if (block.type === "video") {
     return (

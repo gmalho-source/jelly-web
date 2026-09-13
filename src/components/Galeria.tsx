@@ -3,7 +3,14 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-export type ImagemDaGaleria = { src: string; alt?: string; width?: number; height?: number };
+export type ImagemDaGaleria = {
+  src: string;
+  alt?: string;
+  /** A Legenda do ficheiro, escrita no backoffice. Aparece por baixo da imagem na lente. */
+  legenda?: string;
+  width?: number;
+  height?: number;
+};
 
 /**
  * A medida da fita, escrita uma vez.
@@ -56,12 +63,12 @@ export type TextosDaGaleria = {
  */
 export function Galeria({
   imagens,
-  legenda,
+  cliente,
   textos,
 }: {
   imagens: ImagemDaGaleria[];
   /** O nome do cliente, para as imagens sem texto alternativo. */
-  legenda: string;
+  cliente: string;
   textos: TextosDaGaleria;
 }) {
   const [aberta, setAberta] = useState<number | null>(null);
@@ -144,12 +151,12 @@ export function Galeria({
             key={indice}
             type="button"
             onClick={() => abre(indice)}
-            aria-label={`${textos.ver}: ${imagem.alt || legenda}`}
+            aria-label={`${textos.ver}: ${imagem.legenda || imagem.alt || cliente}`}
             className="group relative shrink-0 snap-start overflow-hidden rounded-[20px]"
           >
             <Image
               src={imagem.src}
-              alt={imagem.alt || legenda}
+              alt={imagem.alt || cliente}
               width={imagem.width ?? 1200}
               height={imagem.height ?? 900}
               className="h-[46vw] max-h-[420px] w-auto object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
@@ -182,15 +189,33 @@ export function Galeria({
               // pela vez delas. Sem isto, cada deslize começava a descarregar
               // uma imagem do zero, e via-se.
               const perto = Math.abs(indice - aVista) <= 1 || indice === aberta;
+              /*
+               * O formato da moldura.
+               *
+               * As galerias antigas vieram do WordPress sem largura nem
+               * altura, e sem elas a moldura não sabe que forma tomar — a
+               * legenda ficava encostada ao fundo do ecrã em vez de à
+               * fotografia. Começa-se por 4/3 e corrige-se com a medida real
+               * mal a imagem de baixo chegue, que vem da cache da fita e por
+               * isso chega no mesmo instante.
+               */
+              const proporcao = imagem.width && imagem.height ? `${imagem.width} / ${imagem.height}` : "4 / 3";
               return (
-                <div className="flex h-full w-full shrink-0 snap-center items-center justify-center p-4 sm:p-10" key={indice}>
+                <figure
+                  className="flex h-full w-full shrink-0 snap-center flex-col items-center justify-center gap-3 p-4 sm:gap-4 sm:p-10"
+                  key={indice}
+                >
                   {/* A moldura é a célula inteira, e as duas camadas enchem-na
                       com `object-contain`: dá o mesmo retângulo às duas, ao
                       pixel, e deixa a fotografia crescer até onde o ecrã der.
                       Medir a moldura pela imagem carregada — que foi o que
                       tentei primeiro — encolhia a lente para os 620px da fita,
                       porque a de baixo é mesmo a pequena. */}
-                  <span className="relative block h-full w-full">
+                  {/* A moldura toma o formato da imagem, para a legenda ficar
+                      encostada à fotografia e não ao fundo do ecrã — que num
+                      telemóvel, com uma imagem larga, são dois sítios muito
+                      diferentes. */}
+                  <span className="relative block max-h-full min-h-0 w-full" style={{ aspectRatio: proporcao }}>
                     {/* A que a fita já descarregou, por baixo: dá que ver no
                         instante em que a lente abre. Desfocada de propósito,
                         para a passagem à nítida se ler como foco e não como
@@ -202,11 +227,18 @@ export function Galeria({
                       fill
                       sizes={MEDIDA_DA_FITA}
                       loading={perto ? "eager" : "lazy"}
+                      onLoad={(evento) => {
+                        const moldura = evento.currentTarget.parentElement;
+                        const { naturalWidth, naturalHeight } = evento.currentTarget;
+                        if (moldura && naturalWidth && naturalHeight) {
+                          moldura.style.aspectRatio = `${naturalWidth} / ${naturalHeight}`;
+                        }
+                      }}
                       className="object-contain blur-[2px]"
                     />
                     <Image
                       src={imagem.src}
-                      alt={imagem.alt || legenda}
+                      alt={imagem.alt || cliente}
                       fill
                       sizes={MEDIDA_DA_LENTE}
                       loading={perto ? "eager" : "lazy"}
@@ -214,7 +246,16 @@ export function Galeria({
                       className="object-contain opacity-0 transition-opacity duration-300"
                     />
                   </span>
-                </div>
+                  {/* A legenda por baixo da fotografia, dentro da mesma
+                      célula: anda com ela quando se desliza, em vez de ficar
+                      uma faixa fixa a dizer o nome da imagem anterior durante
+                      o gesto. Sem legenda não há caixa nenhuma. */}
+                  {imagem.legenda ? (
+                    <figcaption className="max-w-[68ch] shrink-0 text-center text-[13px] leading-[1.45] text-paper/70 sm:text-sm">
+                      {imagem.legenda}
+                    </figcaption>
+                  ) : null}
+                </figure>
               );
             })}
           </div>
