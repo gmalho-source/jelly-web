@@ -62,12 +62,16 @@ export const tecnologia = {
     en: "Websites, e-commerce, applications and the data underneath, designed and built by the same team that will measure them. Four areas, one architecture.",
   },
   cta: { pt: "Vamos falar", en: "Let's talk" },
-  /* O vídeo do topo é o da página de web design do site antigo, imagens de
-     banco de 2025, recodificado de 5 MB para 1 MB. Provisório: fica até haver
-     imagens filmadas na Jelly. */
+  /* Imagens filmadas na Jelly, que era o que faltava aqui: o vídeo anterior era
+     de banco e falava de fazer sites — uma das quatro áreas — no topo da página
+     que as junta às quatro. Desceu para a página de Websites e E-commerce, que
+     é o sítio dele, e este ficou.
+
+     Preparado com a régua nova da casa: 1920 px e CRF 26, sem som, índice à
+     cabeça. 12 MB para 3,7. Ver `docs/MOVIMENTO.md` e o `video:prep`. */
   topo: {
     video: "/media/tecnologia-topo.mp4",
-    poster: { src: "/media/tecnologia-topo-poster.webp", width: 1440, height: 810 },
+    poster: { src: "/media/tecnologia-topo-poster.webp", width: 1920, height: 1084 },
   },
   descricao: {
     pt: "Tecnologia pela Jelly: websites e plataformas de e-commerce, aplicações web e mobile, CRM, CDP e integrações de dados, performance, acessibilidade e migrações sem perder tráfego. Quatro áreas, uma arquitetura.",

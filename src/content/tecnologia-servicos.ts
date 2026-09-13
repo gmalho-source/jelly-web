@@ -27,6 +27,14 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
   {
     slug: { pt: "websites-ecommerce", en: "websites-ecommerce" },
     area: "web",
+    /* O vídeo que estava no topo da página-mãe de Tecnologia desce para aqui:
+       é o da página de web design do site antigo, e o assunto dele é este —
+       fazer sites. Na página-mãe ficava a falar de uma área em vez das
+       quatro. */
+    topo: {
+      video: "/media/websites-topo.mp4",
+      poster: { src: "/media/websites-topo-poster.webp", width: 1440, height: 810 },
+    },
     nome: { pt: "Websites e Plataformas de E-commerce", en: "Websites and E-commerce Platforms" },
     titulo: { pt: "Um site que a equipa consegue gerir, o Google consegue ler e o cliente consegue comprar.", en: "A site your team can manage, Google can read and your customer can buy from." },
     claim: {
