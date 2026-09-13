@@ -60,8 +60,8 @@ export const branding = {
   tese: {
     a: { pt: "Uma marca bem construída não precisa de se explicar.", en: "A well-built brand does not need to explain itself." },
     b: {
-      pt: "Percebe-se. Em apresentações, produtos, redes, embalagens ou ambientes digitais — antes de alguém ler o nome.",
-      en: "It is understood. In decks, products, social, packaging or digital environments — before anyone reads the name.",
+      pt: "É unanimemente compreendida, seja em que contexto for.",
+      en: "It is understood by everyone, in whatever context it appears.",
     },
   },
 
