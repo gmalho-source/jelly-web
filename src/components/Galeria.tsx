@@ -182,7 +182,20 @@ export function Galeria({
               página por trás quando se chega ao fim. */}
           <div
             ref={lente}
-            className="flex h-full w-full snap-x snap-mandatory overflow-x-auto overscroll-contain"
+            /*
+             * Um clique ao lado da fotografia fecha, para não obrigar a
+             * procurar a cruz. Era um botão por baixo de tudo com `-z-10`, e
+             * `-z-10` punha-o atrás do próprio fundo do diálogo: nunca
+             * recebeu um clique na vida. Aqui é o alvo que decide — a
+             * fotografia não fecha, a margem à volta dela fecha.
+             *
+             * Sem botão, porque o teclado já tem o Escape e a cruz, e um
+             * botão que ninguém alcança é pior do que não haver botão.
+             */
+            onClick={(evento) => {
+              if (!(evento.target instanceof HTMLImageElement)) fecha();
+            }}
+            className="flex h-full w-full cursor-zoom-out snap-x snap-mandatory overflow-x-auto overscroll-contain"
           >
             {imagens.map((imagem, indice) => {
               // A que se vê e as duas do lado carregam já; as outras esperam
@@ -243,7 +256,7 @@ export function Galeria({
                       sizes={MEDIDA_DA_LENTE}
                       loading={perto ? "eager" : "lazy"}
                       onLoad={(evento) => evento.currentTarget.classList.remove("opacity-0")}
-                      className="object-contain opacity-0 transition-opacity duration-300"
+                      className="cursor-default object-contain opacity-0 transition-opacity duration-300"
                     />
                   </span>
                   {/* A legenda por baixo da fotografia, dentro da mesma
@@ -259,17 +272,6 @@ export function Galeria({
               );
             })}
           </div>
-
-          {/* O fundo fecha. Fica por baixo dos controlos e por cima das
-              imagens só nas margens, para um clique ao lado da fotografia não
-              obrigar a procurar a cruz. */}
-          <button
-            type="button"
-            onClick={fecha}
-            aria-label={textos.fechar}
-            className="absolute inset-0 -z-10 cursor-zoom-out"
-            tabIndex={-1}
-          />
 
           <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-4 p-4 sm:p-6">
             <span className="rounded-full bg-ink/70 px-3 py-1.5 text-xs tabular-nums text-paper backdrop-blur-md">
@@ -291,7 +293,7 @@ export function Galeria({
           {/* As setas. Escondidas ao dedo — lá o gesto é deslizar — e presentes
               a quem tem rato ou teclado. */}
           {imagens.length > 1 ? (
-            <div className="absolute inset-y-0 left-0 right-0 hidden items-center justify-between p-4 sm:flex sm:p-6">
+            <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between p-4 sm:flex sm:p-6">
               {[
                 { rotulo: textos.anterior, passo: -1, seta: "M15 5l-7 7 7 7" },
                 { rotulo: textos.seguinte, passo: 1, seta: "M9 5l7 7-7 7" },
@@ -301,7 +303,7 @@ export function Galeria({
                   type="button"
                   onClick={() => anda(botao.passo)}
                   aria-label={botao.rotulo}
-                  className="grid size-12 place-items-center rounded-full bg-ink/70 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red"
+                  className="pointer-events-auto grid size-12 place-items-center rounded-full bg-ink/70 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-red"
                 >
                   <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <path d={botao.seta} />
