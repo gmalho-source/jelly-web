@@ -113,6 +113,31 @@ No go-live, `NEXT_PUBLIC_SITE_URL=https://www.jelly.pt` liga a indexação. É a
 mesma variável que alimenta canónicos, hreflang e sitemap: não há segundo sítio
 para mudar.
 
+## A leitura dos artigos, todas as noites
+
+O workflow `audio` corre às 4h UTC e lê em voz alta o que saiu nos últimos sete
+dias, mais qualquer artigo cujo corpo tenha mudado desde a gravação. Precisa
+destes segredos no repositório — sem o `ELEVENLABS_API_KEY` sai limpo e não
+faz nada, para não mandar um email vermelho por noite:
+
+| segredo | para quê |
+|---|---|
+| `ELEVENLABS_API_KEY` | a síntese. Sem ela o workflow não corre |
+| `ELEVENLABS_VOICE_PT` / `_EN` | as vozes escolhidas de ouvido (`--vozes`, `--amostra`) |
+| `DATABASE_URL`, `PAYLOAD_SECRET` | ler os artigos e escrever-lhes o endereço do áudio |
+| `BLOB_READ_WRITE_TOKEN` | onde os MP3 ficam |
+| `REVALIDATE_SECRET`, `PURGE_URL` | sem estes o áudio grava-se e o leitor não aparece na página |
+
+**O `--desde=7` não é um pormenor.** Sem ele, uma corrida vai buscar o catálogo
+inteiro: mais de trezentas gravações e dois milhões e meio de caracteres, muito
+acima de uma quota mensal. Em setembro de 2026 uma corrida sem limite esgotou a
+quota a meio e deixou um artigo com português e sem inglês. Os artigos antigos
+gravam-se à mão, com `--limite`, ao ritmo que os créditos aguentam.
+
+A conta da ElevenLabs funciona por **quota mensal de créditos**, não por consumo
+avulso — o custo em dólares que o script imprime é de uma tarifa que esta casa
+não usa. Medido: um caractere de texto custa à volta de 0,3 créditos.
+
 ## Domínios
 
 `jelly-web.vercel.app` **já pertence a outro projeto** na Vercel (um "Jelly AI",
