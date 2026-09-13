@@ -21,9 +21,18 @@ on:
       desde:
         description: "Janela em dias para artigos ainda por ler"
         default: "7"
+      so:
+        description: "Slug de um artigo, para ler só esse (ganha ao desde)"
+        required: false
 
 # Duas corridas ao mesmo tempo gravariam o mesmo artigo duas vezes e pagá-lo-iam
-# duas vezes. Uma de cada vez, e a que chega depois espera.
+# duas vezes. Uma de cada vez, e a que chega depois espera — nunca se cancela
+# uma a meio, que seriam créditos gastos e deitados fora.
+#
+# Publicar no painel dispara isto (ver `src/payload/hooks/audio.ts`), e quem
+# publica carrega em guardar mais do que uma vez. As corridas a mais fazem fila
+# e saem em segundos: a impressão digital do texto diz-lhes que não há nada
+# novo para ler.
 concurrency:
   group: audio
   cancel-in-progress: false
@@ -64,10 +73,20 @@ jobs:
             echo "corre=sim" >> "$GITHUB_OUTPUT"
           fi
 
+      # O slug e a janela entram por ambiente e não na linha de comandos. Isto é
+      # disparado pelo painel com um slug vindo da base de dados, e um valor de
+      # fora interpolado dentro de um `run:` é uma porta aberta à injeção.
       - name: ler os artigos
         if: steps.chave.outputs.corre == 'sim'
-        run: npm run audio -- --desde=${{ inputs.desde || 7 }}
+        run: |
+          if [ -n "$SO" ]; then
+            npm run audio -- --so="$SO"
+          else
+            npm run audio -- --desde="${DESDE:-7}"
+          fi
         env:
+          SO: ${{ inputs.so }}
+          DESDE: ${{ inputs.desde }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
