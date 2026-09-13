@@ -29,7 +29,9 @@ type Props = {
   locale: Locale;
   servico: Servico;
   rota: RotaDeServico;
-  area: { nome: Localized; medida: Localized };
+  /* A unidade de medida é do Marketing: a Tecnologia deixou de a ter, e por
+     isso é opcional — sem ela fica só o nome da área. */
+  area: { nome: Localized; medida?: Localized };
   tom: Tom;
   irmaos: Servico[];
   /** A página-mãe: como se chama, para onde vai, o que diz de si. */
@@ -105,7 +107,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
             <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
               <span className="eyebrow text-red">{mae.nome} · {area.nome[locale]}</span>
-              <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span>
+              {area.medida ? <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span> : null}
             </div>
             <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(38px,5.6vw,84px)] leading-[0.98] tracking-[-0.03em]">{servico.titulo[locale]}</h1>
             <div className="mt-10 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
@@ -119,7 +121,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
           <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
             <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
               <span className="eyebrow text-red">{mae.nome} · {area.nome[locale]}</span>
-              <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span>
+              {area.medida ? <span className="font-display text-[22px] leading-none text-paper/60 tabular-nums">{area.medida[locale]}</span> : null}
             </div>
             <h1 className="mt-6 max-w-[22ch] font-display text-[clamp(38px,5.6vw,84px)] leading-[0.98] tracking-[-0.03em]">{servico.titulo[locale]}</h1>
             <div className="mt-10 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">

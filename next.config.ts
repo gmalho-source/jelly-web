@@ -44,6 +44,14 @@ const nextConfig: NextConfig = {
   // com extensão: os sitemaps do WordPress ficam aqui.
   async redirects() {
     return [
+      /*
+       * Performance, acessibilidade e migrações foi a quarta página de
+       * Tecnologia até a quarta área passar a ser a dos sistemas de IA. O que lá
+       * estava vive hoje dentro de websites, e o endereço vai para lá: esteve
+       * publicado e indexado, e um 404 aqui perde o que ele já valia.
+       */
+      { source: "/servicos/tecnologia/performance-acessibilidade-migracoes", destination: "/servicos/tecnologia/websites-ecommerce", permanent: true },
+      { source: "/en/services/technology/performance-accessibility-migrations", destination: "/en/services/technology/websites-ecommerce", permanent: true },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
