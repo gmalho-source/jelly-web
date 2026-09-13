@@ -41,12 +41,16 @@ export const branding = {
     en: "A brand is not a logo. It is the decision of what to say, to whom, and what to leave unsaid — and that is what gets built here.",
   },
   cta: { pt: "Vamos falar?", en: "Shall we talk?" },
-  /* O filme do topo: a equipa à mesa a escolher paletas, com o Jelly na
-     parede. Entregue em 1080p HEVC (28 MB), fica a 1440 px em H.264 sem áudio.
+  /* O filme: a equipa de branding da Jelly a trabalhar. Entregue em 1080p HEVC
+     (5,6 MB), que o Chrome e o Firefox não tocam, fica em H.264 a 1920 px e sem
+     áudio — 2,1 MB. Sem áudio porque corre em ciclo e mudo, e um filme mudo com
+     faixa de som é peso que ninguém ouve.
+
+     Preparado com a régua nova da casa: 1920 px, CRF 26, índice à cabeça.
      Vai em cor plena e sem gradiente por cima — o assunto do filme é a cor. */
   topo: {
     video: "/media/branding-topo.mp4",
-    poster: { src: "/media/branding-topo-poster.webp", width: 1440, height: 810 },
+    poster: { src: "/media/branding-topo-poster.webp", width: 1920, height: 1080 },
   },
   descricao: {
     pt: "Posicionamento, identidade e sistemas de marca que se reconhecem antes de se lerem. Branding pela Jelly: estratégia, design e execução, nesta ordem.",
