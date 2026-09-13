@@ -194,10 +194,12 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
                   )}
                   <div className="mt-1 flex flex-col">
                     {s.capacidades.map((c) => {
+                      // Uma capacidade com casa própria leva-lhe; as outras levam à área.
+                      const destino = c.rota ?? href;
                       const classe = "flex items-baseline gap-3 border-b border-line py-3 last:border-b-0 transition-colors duration-200 hover:text-red group";
                       const corpo = <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{c.nome[locale]}</span>;
-                      return href ? (
-                        <Link key={c.nome.pt} href={href} className={classe}>
+                      return destino ? (
+                        <Link key={c.nome.pt} href={destino} className={classe}>
                           {corpo}
                           <span aria-hidden="true" className="ms-auto text-red opacity-0 transition-opacity duration-200 group-hover:opacity-100">→</span>
                         </Link>
@@ -258,12 +260,13 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
                       do serviço: são a lista do que ele inclui. */}
                   <div className="entra mt-12 border-t border-line">
                     {s.capacidades.map((c) => {
+                      const destino = c.rota ?? href;
                       const dentro = (
                         <span className="relative grid gap-x-8 gap-y-2 px-4 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center sm:px-6 lg:py-7">
                           <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{c.nome[locale]}</span>
                           <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{c.linha[locale]}</span>
-                          <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
-                            {href ? "→" : "·"}
+                          <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${destino ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
+                            {destino ? "→" : "·"}
                           </span>
                         </span>
                       );
@@ -274,8 +277,8 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
                         />
                       );
                       const classe = `relative block overflow-hidden border-b border-line group transition-colors duration-300 ${tom.texto}`;
-                      return href ? (
-                        <Link key={c.nome.pt} href={href} className={classe}>
+                      return destino ? (
+                        <Link key={c.nome.pt} href={destino} className={classe}>
                           {varredura}
                           {dentro}
                         </Link>

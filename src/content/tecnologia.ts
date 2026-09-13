@@ -25,6 +25,14 @@ export type AreaDeTecnologia = "web" | "apps" | "dados" | "ia";
 export type Capacidade = {
   nome: Localized;
   linha: Localized;
+  /*
+   * O destino, quando a capacidade tem página só dela. A regra da casa é que as
+   * capacidades de uma área levam todas à página da área — são a lista do que
+   * cabe lá dentro, não uma lista de páginas. A exceção é para quando a página
+   * existe mesmo e está escrita: mandar quem carrega para a lista genérica,
+   * tendo a página certa ao lado, seria esconder o que se tem.
+   */
+  rota?: "/pre-qualificacao-leads-agentes-ia";
 };
 
 export type Servico = {
@@ -142,7 +150,7 @@ export const tecnologia = {
         en: "Agents and automation wired into the CRM, the catalogue and support. Not a pilot to show in a meeting: a process that keeps running after we leave.",
       },
       capacidades: [
-        { nome: { pt: "Agentes de atendimento e qualificação", en: "Support and qualification agents" }, linha: { pt: "Respondem, qualificam e encaminham, com o que não sabem a passar a uma pessoa.", en: "They answer, qualify and route, handing over to a person what they do not know." } },
+        { nome: { pt: "Agentes de IA", en: "AI agents" }, linha: { pt: "Respondem, qualificam e encaminham, com o que não sabem a passar a uma pessoa.", en: "They answer, qualify and route, handing over to a person what they do not know." }, rota: "/pre-qualificacao-leads-agentes-ia" },
         { nome: { pt: "Automação entre sistemas", en: "Automation across systems" }, linha: { pt: "CRM, catálogo, faturação e operações a trocar trabalho, não ficheiros.", en: "CRM, catalogue, invoicing and operations exchanging work, not files." } },
         { nome: { pt: "Diagnóstico e governo", en: "Diagnosis and governance" }, linha: { pt: "Casos de uso ordenados por retorno, com o custo por tarefa à vista desde o primeiro dia.", en: "Use cases ranked by return, with the cost per task in plain sight from day one." } },
       ],
