@@ -8,9 +8,11 @@ import type {
   Department,
   Job,
   JobQuestion,
+  LinhaMarcada,
   Localized,
   LogoGallery,
   NewsItem,
+  Paragrafos,
   Post,
   Project,
   Service,
@@ -616,11 +618,43 @@ export function fetchPageCopy(): Promise<PageCopy[]> {
 }
 
 
-/** As linhas de uma lista da vaga: um array de grupos { pt, en }. */
-function linhas(valor: unknown): Localized[] {
+/**
+ * Os parágrafos de um campo com marcação, nas duas línguas.
+ *
+ * O inglês em falta cai no português, como em todo o resto do site: melhor a
+ * mesma frase do que um espaço vazio no meio de uma vaga.
+ */
+function paragrafos(valor: unknown): Paragrafos {
+  const grupo = (valor ?? {}) as { pt?: unknown; en?: unknown };
+  const pt = fromLexical(grupo.pt);
+  const en = fromLexical(grupo.en);
+  return { pt, en: en.length ? en : pt };
+}
+
+/**
+ * Uma linha de lista, reduzida aos seus pedaços.
+ *
+ * O painel dá um corpo de texto — é o que um editor de texto é — e a página
+ * quer uma frase. Os parágrafos juntam-se num só: quem carregar no Enter no
+ * meio de um ponto de uma lista fica com a frase seguida, e não com meio ponto
+ * perdido.
+ */
+function pedacos(valor: unknown): Span[] {
+  return fromLexical(valor)
+    .filter((bloco): bloco is Extract<Block, { type: "p" }> => bloco.type === "p")
+    .flatMap((bloco) => bloco.spans ?? [{ text: bloco.text }]);
+}
+
+/** As linhas de uma lista da vaga: um array de grupos { pt, en }, com marcação. */
+function linhas(valor: unknown): LinhaMarcada[] {
   return ((valor as { item?: unknown }[] | null) ?? [])
-    .map((linha) => localized(linha?.item))
-    .filter((linha) => linha.pt);
+    .map((linha) => {
+      const grupo = (linha?.item ?? {}) as { pt?: unknown; en?: unknown };
+      const pt = pedacos(grupo.pt);
+      const en = pedacos(grupo.en);
+      return { pt, en: en.length ? en : pt };
+    })
+    .filter((linha) => linha.pt.length);
 }
 
 export function fetchDepartments(fallback: Department[]) {
@@ -681,12 +715,12 @@ export function fetchJobs(fallback: Job[]) {
         seniority: (text(raw.seniority) || undefined) as Job["seniority"],
         location: text(raw.location) || undefined,
         deadline: text(raw.deadline).slice(0, 10) || undefined,
-        intro: localized(raw.intro),
+        intro: paragrafos(raw.intro),
         responsibilities: linhas(raw.responsibilities),
         requirements: linhas(raw.requirements),
         niceToHave: linhas(raw.niceToHave),
         benefits: linhas(raw.benefits),
-        closing: localized(raw.closing),
+        closing: paragrafos(raw.closing),
         questions: ((raw.questions as Doc[] | null) ?? []).map((pergunta): JobQuestion => ({
           type: (text(pergunta.type) || "curto") as JobQuestion["type"],
           required: pergunta.required !== false,

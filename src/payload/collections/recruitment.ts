@@ -1,5 +1,5 @@
 import type { Access, CollectionConfig } from "payload";
-import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
+import { locale, localeRico, oldSlugsField, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
 import { draftJob } from "../endpoints/draft-job";
 import { readCv } from "../endpoints/read-cv";
@@ -215,12 +215,16 @@ export const Jobs: CollectionConfig = {
       type: "ui",
       admin: { components: { Field: "@/payload/components/PropostaDeVaga#PropostaDeVaga" } },
     },
-    locale("intro", "Abertura", { long: true }),
-    { name: "responsibilities", label: "Responsabilidades", type: "array", fields: [locale("item", "Linha", { long: true })] },
-    { name: "requirements", label: "Requisitos", type: "array", fields: [locale("item", "Linha", { long: true })] },
-    { name: "niceToHave", label: "Qualificações desejadas", type: "array", fields: [locale("item", "Linha", { long: true })] },
-    { name: "benefits", label: "Benefícios", type: "array", fields: [locale("item", "Linha", { long: true })] },
-    locale("closing", "Fecho", { long: true }),
+    /* A abertura e o fecho são texto corrido e escrevem-se como tal: os
+       parágrafos que forem precisos, negrito, itálico e links. As quatro
+       listas continuam uma linha por ponto — a lista já é a lista — e ganham
+       só a marcação dentro da frase. */
+    localeRico("intro", "Abertura"),
+    { name: "responsibilities", label: "Responsabilidades", type: "array", fields: [localeRico("item", "Linha", { linha: true })] },
+    { name: "requirements", label: "Requisitos", type: "array", fields: [localeRico("item", "Linha", { linha: true })] },
+    { name: "niceToHave", label: "Qualificações desejadas", type: "array", fields: [localeRico("item", "Linha", { linha: true })] },
+    { name: "benefits", label: "Benefícios", type: "array", fields: [localeRico("item", "Linha", { linha: true })] },
+    localeRico("closing", "Fecho"),
     {
       name: "questions",
       label: "Perguntas da candidatura",

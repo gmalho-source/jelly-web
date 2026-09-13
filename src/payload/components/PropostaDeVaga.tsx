@@ -35,6 +35,56 @@ type Proposta = {
   closing?: Par;
 };
 
+/**
+ * O texto do modelo na forma que o painel guarda.
+ *
+ * A abertura, o fecho e cada linha das listas são campos com marcação desde
+ * que uma vaga passou a poder levar negrito e links. O modelo responde em
+ * texto simples — é o que se lhe pede — e é aqui que o texto ganha a árvore
+ * que o editor sabe abrir. Uma linha em branco separa parágrafos; numa linha
+ * de lista não há nenhuma, e sai um parágrafo só.
+ */
+function comoOPainelGuarda(texto: string) {
+  const paragrafos = texto
+    .split(/\n{2,}/)
+    .map((pedaco) => pedaco.trim())
+    .filter(Boolean);
+  return {
+    root: {
+      type: "root",
+      format: "",
+      indent: 0,
+      version: 1,
+      direction: "ltr" as const,
+      children: paragrafos.map((paragrafo) => ({
+        type: "paragraph",
+        format: "",
+        indent: 0,
+        version: 1,
+        direction: "ltr" as const,
+        textFormat: 0,
+        textStyle: "",
+        children: [
+          { type: "text", detail: 0, format: 0, mode: "normal", style: "", text: paragrafo, version: 1 },
+        ],
+      })),
+    },
+  };
+}
+
+/** Se um campo com marcação tem alguma coisa escrita lá dentro. */
+function temTexto(valor: unknown): boolean {
+  const children = ((valor ?? {}) as { root?: { children?: unknown[] } }).root?.children;
+  if (!Array.isArray(children)) return false;
+  const palavras = (no: unknown): string => {
+    if (!no || typeof no !== "object") return "";
+    const doc = no as { text?: unknown; children?: unknown[] };
+    if (typeof doc.text === "string") return doc.text;
+    return (doc.children ?? []).map(palavras).join("");
+  };
+  return children.map(palavras).join("").trim().length > 0;
+}
+
 /** As quatro listas, pelo nome que têm no formulário e pelo nome que têm à vista. */
 const LISTAS = [
   { campo: "responsibilities", nome: "responsabilidades" },
@@ -94,13 +144,13 @@ export function PropostaDeVaga() {
         ["closing", "fecho", proposta.closing],
       ] as const) {
         if (!par) continue;
-        const jaTem = String(valor(`${campo}.pt`) || valor(`${campo}.en`)).trim();
-        if (jaTem) {
+        const bruto = (caminho: string) => (campos?.[caminho] as { value?: unknown } | undefined)?.value;
+        if (temTexto(bruto(`${campo}.pt`)) || temTexto(bruto(`${campo}.en`))) {
           poupadas.push(nome);
           continue;
         }
-        dispatchFields({ type: "UPDATE", path: `${campo}.pt`, value: par.pt });
-        dispatchFields({ type: "UPDATE", path: `${campo}.en`, value: par.en });
+        dispatchFields({ type: "UPDATE", path: `${campo}.pt`, value: comoOPainelGuarda(par.pt) });
+        dispatchFields({ type: "UPDATE", path: `${campo}.en`, value: comoOPainelGuarda(par.en) });
         escritas.push(nome);
       }
 
@@ -120,8 +170,8 @@ export function PropostaDeVaga() {
             schemaPath: campo,
             rowIndex: indice,
             subFieldState: {
-              "item.pt": { initialValue: linha.pt, valid: true, value: linha.pt },
-              "item.en": { initialValue: linha.en, valid: true, value: linha.en },
+              "item.pt": { initialValue: comoOPainelGuarda(linha.pt), valid: true, value: comoOPainelGuarda(linha.pt) },
+              "item.en": { initialValue: comoOPainelGuarda(linha.en), valid: true, value: comoOPainelGuarda(linha.en) },
             },
           });
         });

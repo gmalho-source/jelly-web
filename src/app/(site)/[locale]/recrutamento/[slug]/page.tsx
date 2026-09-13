@@ -3,7 +3,9 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPathname, Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import type { LinhaMarcada } from "@/content/types";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Inline, Paragrafos, textoDe, textoDosPedacos } from "@/components/Marcado";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { getJob, getJobs } from "@/lib/cms";
 import { slugFor } from "@/lib/slugs";
@@ -25,7 +27,7 @@ export async function generateMetadata({
   if (!job) return {};
   return {
     title: job.title[locale],
-    description: job.intro[locale],
+    description: textoDe(job.intro[locale]),
     alternates: alternates(
       (candidate) => ({ pathname: "/recrutamento/[slug]" as const, params: { slug: slugFor(job, candidate) } }),
       locale,
@@ -68,7 +70,7 @@ export default async function JobPage({ params }: { params: Promise<{ locale: Lo
     "@context": "https://schema.org",
     "@type": "JobPosting",
     title: job.title[locale],
-    description: [job.intro[locale], ...job.responsibilities.map((linha) => linha[locale])].join(" "),
+    description: [textoDe(job.intro[locale]), ...job.responsibilities.map((linha) => textoDosPedacos(linha[locale]))].join(" "),
     ...(job.deadline ? { validThrough: job.deadline } : {}),
     employmentType:
       job.contract === "estagio" ? "INTERN" : job.contract === "freelancer" ? "CONTRACTOR" : "FULL_TIME",
@@ -84,15 +86,19 @@ export default async function JobPage({ params }: { params: Promise<{ locale: Lo
     ...(job.regime === "remoto" ? { jobLocationType: "TELECOMMUTE" } : {}),
   };
 
-  const lista = (titulo: string, linhas: { pt: string; en: string }[]) =>
+  /* Cada linha é um ponto, e a marcação é de dentro da frase: a lista continua
+     a ser a lista mesmo que alguém marque meia dúzia de palavras. */
+  const lista = (titulo: string, linhas: LinhaMarcada[]) =>
     linhas.length ? (
       <div className="mt-10">
         <h2 className="eyebrow text-fg-soft">{titulo}</h2>
         <ul className="mt-4 grid gap-3">
-          {linhas.map((linha) => (
-            <li key={linha.pt} className="flex gap-3 text-md text-fg">
+          {linhas.map((linha, indice) => (
+            <li key={indice} className="flex gap-3 text-md text-fg">
               <span aria-hidden="true" className="mt-2.5 size-1.5 shrink-0 rounded-full bg-red" />
-              {linha[locale]}
+              <span>
+                <Inline spans={linha[locale]} />
+              </span>
             </li>
           ))}
         </ul>
@@ -130,13 +136,15 @@ export default async function JobPage({ params }: { params: Promise<{ locale: Lo
       <section className="surface-paper">
         <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,58%)_minmax(0,34%)] lg:justify-between lg:py-24">
           <div>
-            {job.intro[locale] ? <p className="reading max-w-[62ch] text-lg">{job.intro[locale]}</p> : null}
+            <Paragrafos blocos={job.intro[locale]} className="reading max-w-[62ch] text-lg [&+p]:mt-5" />
             {lista(t("responsibilities"), job.responsibilities)}
             {lista(t("requirements"), job.requirements)}
             {lista(t("niceToHave"), job.niceToHave)}
             {lista(t("benefits"), job.benefits)}
-            {job.closing[locale] ? (
-              <p className="reading mt-10 max-w-[62ch] border-t border-line pt-8 text-md">{job.closing[locale]}</p>
+            {job.closing[locale].length ? (
+              <div className="mt-10 border-t border-line pt-8">
+                <Paragrafos blocos={job.closing[locale]} className="reading max-w-[62ch] text-md [&+p]:mt-4" />
+              </div>
             ) : null}
           </div>
 

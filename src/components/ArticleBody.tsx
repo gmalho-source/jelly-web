@@ -1,26 +1,8 @@
 import Image from "next/image";
-import type { Block, Span } from "@/content/types";
+import type { Block } from "@/content/types";
+import { Inline } from "@/components/Marcado";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { fonteDeVideo, videoDeParagrafo } from "@/lib/video";
-
-/** Negrito, itálico e links escritos no CMS. O texto migrado não tem marcação. */
-function Inline({ spans }: { spans: Span[] }) {
-  return (
-    <>
-      {spans.map((span, index) => {
-        const content = span.bold ? <strong className="font-semibold">{span.text}</strong> : span.italic ? <em>{span.text}</em> : span.text;
-        if (span.href) {
-          return (
-            <a key={index} href={span.href} className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
-              {content}
-            </a>
-          );
-        }
-        return <span key={index}>{content}</span>;
-      })}
-    </>
-  );
-}
 
 /**
  * Corpo de artigo migrado do WordPress. Lora, medida de 66 caracteres,

@@ -241,6 +241,22 @@ export type JobQuestion = {
 };
 
 /** Uma vaga aberta, como o site a mostra. */
+/**
+ * Texto corrido com marcação, nas duas línguas.
+ *
+ * A abertura e o fecho de uma vaga escrevem-se no painel como se escreve um
+ * artigo — parágrafos, negrito, itálico, links — e chegam aqui já em blocos.
+ */
+export type Paragrafos = { pt: Block[]; en: Block[] };
+
+/**
+ * Uma linha com marcação, nas duas línguas.
+ *
+ * Cada ponto das listas de uma vaga. É uma linha e não um corpo: a lista já é
+ * a lista, e o que se marca é uma palavra dentro da frase.
+ */
+export type LinhaMarcada = { pt: Span[]; en: Span[] };
+
 export type Job = {
   slug: string;
   /** Endereço em inglês. Vazio, o inglês usa o português. */
@@ -256,12 +272,12 @@ export type Job = {
   location?: string;
   /** ISO, ou vazio quando a vaga não tem prazo. */
   deadline?: string;
-  intro: Localized;
-  responsibilities: Localized[];
-  requirements: Localized[];
-  niceToHave: Localized[];
-  benefits: Localized[];
-  closing: Localized;
+  intro: Paragrafos;
+  responsibilities: LinhaMarcada[];
+  requirements: LinhaMarcada[];
+  niceToHave: LinhaMarcada[];
+  benefits: LinhaMarcada[];
+  closing: Paragrafos;
   questions: JobQuestion[];
   legacyPath?: string;
 };

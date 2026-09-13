@@ -1,4 +1,13 @@
 import type { Field } from "payload";
+import {
+  BoldFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
+  ItalicFeature,
+  LinkFeature,
+  ParagraphFeature,
+  lexicalEditor,
+} from "@payloadcms/richtext-lexical";
 
 /**
  * Tradução ao nível do campo, como no modelo anterior: um par { pt, en } por
@@ -75,4 +84,61 @@ export function kpiField(name: string, label: string, many = false): Field {
     locale("label", "Legenda"),
   ];
   return many ? { name, label, type: "array", maxRows: 4, fields } : { name, label, type: "group", fields };
+}
+
+/*
+ * ── Texto com marcação, para as vagas ─────────────────────────────────────
+ *
+ * Duas réguas, porque um parágrafo e um ponto de uma lista não são a mesma
+ * coisa.
+ *
+ * `PARAGRAFOS` é para a abertura e o fecho de uma vaga: texto corrido, com os
+ * parágrafos que forem precisos, negrito, itálico e links.
+ *
+ * `LINHA` é para cada ponto das listas — responsabilidades, requisitos,
+ * qualificações, benefícios. Ali a lista já é a lista: cada linha do painel é
+ * um ponto na página. O que faltava era poder marcar uma palavra dentro da
+ * frase, e é só isso que esta régua dá. Sem títulos, sem listas dentro de
+ * listas, sem blocos: uma lista com listas lá dentro deixa de se ler como uma
+ * lista, e os dados estruturados que o Google lê numa vaga deixam de ser
+ * fiáveis.
+ */
+const PARAGRAFOS = lexicalEditor({
+  features: () => [
+    ParagraphFeature(),
+    BoldFeature(),
+    ItalicFeature(),
+    LinkFeature({ enabledCollections: [] }),
+    FixedToolbarFeature(),
+    InlineToolbarFeature(),
+  ],
+});
+
+const LINHA = lexicalEditor({
+  features: () => [
+    ParagraphFeature(),
+    BoldFeature(),
+    ItalicFeature(),
+    LinkFeature({ enabledCollections: [] }),
+    InlineToolbarFeature(),
+  ],
+});
+
+/**
+ * O mesmo par { pt, en } do `locale`, mas com marcação.
+ *
+ * `linha` escolhe a régua curta — a das listas. Sem ela, a régua dos
+ * parágrafos.
+ */
+export function localeRico(name: string, label: string, options: { linha?: boolean } = {}): Field {
+  const editor = options.linha ? LINHA : PARAGRAFOS;
+  return {
+    name,
+    label,
+    type: "group",
+    fields: [
+      { name: "pt", label: "Português", type: "richText", editor },
+      { name: "en", label: "English", type: "richText", editor },
+    ],
+  };
 }
