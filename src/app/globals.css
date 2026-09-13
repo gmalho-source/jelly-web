@@ -891,53 +891,6 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   .word-cycle > *:first-child { opacity: 1; }
 }
 
-/* ── A pílula do índice em fundo claro ──────────────────────────────────────
-   Quatro cores da paleta, uma por compasso de 2,8s — o mesmo compasso das
-   palavras, para a cor trocar na fresta em que nenhuma está visível. Quatro
-   cores contra cinco palavras é de propósito: as combinações nunca se repetem
-   dentro de um minuto, e nenhuma cor fica casada com uma disciplina.
-
-   O texto vem com a cor e é essa a razão de isto funcionar: sobre o vermelho é
-   papel, sobre as três claras é tinta. Medido, a tinta dá 8,9 no coral, 9,1 no
-   lavender e 13,0 no chartreuse — legibilidade que o branco nunca teria ali.
-
-   Fica o reparo, que a casa conhece e aceitou: as três claras distinguem-se do
-   papel do fundo por croma e não por luminância, e a conta do WCAG só mede
-   luminância — 1,9, 1,8 e 1,3 contra os 3:1 da norma. Vêem-se bem num ecrã
-   comum; ao sol, ou com pouca visão, o chartreuse é o primeiro a desaparecer.
-
-   Isto só vale sobre fundo claro. Sobre tinta a pílula é o papel translúcido de
-   sempre, e o javascript é que decide qual dos dois, medindo o que tem por
-   baixo. */
-@keyframes pilula-cores {
-  0%, 22% { background-color: var(--color-red); color: var(--color-paper); }
-  25%, 47% { background-color: var(--color-coral); color: var(--color-ink); }
-  50%, 72% { background-color: var(--color-chartreuse); color: var(--color-ink); }
-  75%, 97% { background-color: var(--color-lavender); color: var(--color-ink); }
-  100% { background-color: var(--color-red); color: var(--color-paper); }
-}
-
-@utility pilula-clara {
-  background-color: var(--color-red);
-  color: var(--color-paper);
-  animation: pilula-cores calc(4 * 2.8s) linear infinite;
-
-  /* O rato manda: a ronda para e fica em papel, que é a resposta que esta
-     pílula sempre deu ao ponteiro. */
-  &:hover,
-  &:focus-visible {
-    animation: none;
-    background-color: var(--color-paper);
-    color: var(--color-ink);
-  }
-}
-
-/* Sem movimento fica no vermelho da marca: o estado de repouso é um estado
-   acabado, não o primeiro fotograma de alguma coisa. */
-@media (prefers-reduced-motion: reduce) {
-  .pilula-clara { animation: none; }
-}
-
 /* ── Entradas e profundidade ────────────────────────────────────────────────
    Movimento ligado ao scroll, feito pelo browser: sem javascript, sem ouvir o
    scroll, sem trabalho na linha principal. Onde a animação ligada ao scroll
