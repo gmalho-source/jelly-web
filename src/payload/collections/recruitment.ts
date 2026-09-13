@@ -1,6 +1,7 @@
 import type { Access, CollectionConfig } from "payload";
 import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
+import { draftJob } from "../endpoints/draft-job";
 import { readCv } from "../endpoints/read-cv";
 import { requestConfirmation } from "../endpoints/request-confirmation";
 import { scoreApplication, setRetention } from "../hooks/rating";
@@ -124,6 +125,7 @@ export const Jobs: CollectionConfig = {
   // mesmo tipo na base de dados.
   access: { read: () => true, create: recruiterOnly, update: recruiterOnly, delete: recruiterOnly },
   hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(jobPaths)], afterDelete: [revalidateOnDelete(jobPaths)] },
+  endpoints: [{ path: "/propor", method: "post", handler: draftJob }],
   fields: [
     {
       type: "row",
@@ -203,6 +205,15 @@ export const Jobs: CollectionConfig = {
           },
         },
       ],
+    },
+    /* O botão fica aqui, entre a ficha da vaga e o texto dela: em cima já está
+       tudo o que o modelo precisa de saber, e em baixo está o que ele escreve.
+       Anda pelos campos do formulário, e por isso serve também uma vaga
+       acabada de abrir, ainda por gravar. */
+    {
+      name: "proporTexto",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/PropostaDeVaga#PropostaDeVaga" } },
     },
     locale("intro", "Abertura", { long: true }),
     { name: "responsibilities", label: "Responsabilidades", type: "array", fields: [locale("item", "Linha", { long: true })] },

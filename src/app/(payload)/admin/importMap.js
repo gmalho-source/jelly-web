@@ -30,6 +30,7 @@ import { ContagemEtiqueta as ContagemEtiqueta_058ebeba328e3db44c299c629c45dc13 }
 import { TraduzirHistoria as TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b } from '@/payload/components/TraduzirHistoria'
 import { TraduzirIA as TraduzirIA_76986ef82f82fecba03ec6985bd66336 } from '@/payload/components/TraduzirIA'
 import { PreencherEquipa as PreencherEquipa_b002362b65cf40e49fbade707cb90351 } from '@/payload/components/PreencherEquipa'
+import { PropostaDeVaga as PropostaDeVaga_3f7989588e14a2ad1d606d7939988797 } from '@/payload/components/PropostaDeVaga'
 import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/components/LerCV'
 import { PedirConfirmacao as PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c } from '@/payload/components/PedirConfirmacao'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
@@ -78,6 +79,7 @@ export const importMap = {
   "@/payload/components/TraduzirHistoria#TraduzirHistoria": TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b,
   "@/payload/components/TraduzirIA#TraduzirIA": TraduzirIA_76986ef82f82fecba03ec6985bd66336,
   "@/payload/components/PreencherEquipa#PreencherEquipa": PreencherEquipa_b002362b65cf40e49fbade707cb90351,
+  "@/payload/components/PropostaDeVaga#PropostaDeVaga": PropostaDeVaga_3f7989588e14a2ad1d606d7939988797,
   "@/payload/components/LerCV#LerCV": LerCV_37586454364dce41f3253d2b9fc6c8bf,
   "@/payload/components/PedirConfirmacao#PedirConfirmacao": PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,
