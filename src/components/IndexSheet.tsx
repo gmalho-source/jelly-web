@@ -358,12 +358,17 @@ export function IndexSheet({
         onClick={openSheet}
         aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
-           Sobre papel toma o vermelho da casa — o fundo, e não o vermelho de
-           marca: com o texto em papel por cima, o `red` dava 3,7:1 e o
-           `red-deep` dá 6,8:1, que é o que um rótulo pequeno precisa para
-           passar em AA. É a mesma paleta, e a pílula não é um logótipo. */
+           Sobre papel toma o vermelho da marca.
+
+           Houve uma versão em `red-deep`, decidida por um cálculo de contraste
+           que estava errado. O `red` com texto em papel dá 4,1:1: passa de
+           sobra os 3:1 que um elemento gráfico precisa para se ver, e fica a
+           pouco dos 4,5:1 que o AA pede a texto pequeno. O `red-deep` fecha
+           essa margem e custa a identidade — um bordó no canto do ecrã deixa
+           de ser a Jelly, e a pílula está ao lado do quadrado vermelho do
+           logótipo, que usa este mesmo par. */
         className={`group fixed right-5 top-5 z-40 flex items-center gap-3 rounded-full px-4 py-2.5 text-paper backdrop-blur-md transition-colors duration-200 hover:bg-paper hover:text-ink sm:right-8 sm:top-8 ${
-          fundoClaro ? "bg-red-deep" : "bg-paper/10"
+          fundoClaro ? "bg-red" : "bg-paper/10"
         }`}
       >
         <span
