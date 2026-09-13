@@ -30,7 +30,7 @@ const TONS = {
   web: { fio: "from-red to-red-deep", contorno: "[--outline-color:var(--color-red)]" },
   apps: { fio: "from-red to-lavender", contorno: "[--outline-color:var(--color-lavender)]" },
   dados: { fio: "from-red to-coral", contorno: "[--outline-color:var(--color-coral)]" },
-  performance: { fio: "from-red to-chartreuse", contorno: "[--outline-color:var(--color-chartreuse)]" },
+  ia: { fio: "from-red to-chartreuse", contorno: "[--outline-color:var(--color-chartreuse)]" },
 } as const;
 
 export function generateStaticParams({ params }: { params: { locale: string } }) {

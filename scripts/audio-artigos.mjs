@@ -123,29 +123,58 @@ async function fala({ texto, voz, antes, depois }) {
   return Buffer.from(await resposta.arrayBuffer());
 }
 
-/** As vozes da conta e as da biblioteca partilhada que falam português. */
+/**
+ * Pergunta à ElevenLabs, e diz alto quando ela não responde.
+ *
+ * Uma lista vazia por a chave não ter permissão lê-se exatamente como uma lista
+ * vazia por não haver vozes — e a primeira vez que isso aconteceu perdeu-se uma
+ * tarde a procurar vozes de pt-PT que a conta nunca chegou a ver.
+ */
+async function pergunta(caminho) {
+  try {
+    const resposta = await fetch(`${API}/${caminho}`, { headers: cabecalho });
+    if (resposta.ok) return await resposta.json();
+    console.error(`  (${caminho}: a ElevenLabs respondeu ${resposta.status} — ${(await resposta.text()).slice(0, 200)})`);
+  } catch (erro) {
+    console.error(`  (${caminho}: ${erro.message})`);
+  }
+  return { voices: [] };
+}
+
+/**
+ * As vozes da conta e as da biblioteca partilhada que falam a língua.
+ *
+ * A biblioteca em português tem quatrocentas vozes e nove em cada dez são
+ * brasileiras: pedir a primeira página trazia trinta do Brasil e duas de
+ * Portugal, quando há trinta e duas de Portugal para ouvir. Daí percorrerem-se
+ * as páginas todas em português e ficar o que não é brasileiro — é essa a
+ * escolha que esta casa tem para fazer. Em inglês uma página chega.
+ */
 async function vozesDisponiveis(lingua) {
-  const minhas = await fetch(`${API}/voices`, { headers: cabecalho })
-    .then((r) => (r.ok ? r.json() : { voices: [] }))
-    .catch(() => ({ voices: [] }));
+  const minhas = await pergunta("voices");
 
   const codigo = lingua === "pt" ? "pt" : "en";
-  const partilhadas = await fetch(`${API}/shared-voices?page_size=30&language=${codigo}`, { headers: cabecalho })
-    .then((r) => (r.ok ? r.json() : { voices: [] }))
-    .catch(() => ({ voices: [] }));
+  const partilhadas = [];
+  const [paginas, porPagina] = codigo === "pt" ? [4, 100] : [1, 30];
+  for (let pagina = 0; pagina < paginas; pagina++) {
+    const { voices } = await pergunta(`shared-voices?page_size=${porPagina}&page=${pagina}&language=${codigo}`);
+    if (!voices?.length) break;
+    partilhadas.push(...voices.filter((v) => codigo !== "pt" || !/brazil/i.test(v.accent ?? "")));
+  }
 
   const ficha = (voz, origem) => ({
     id: voz.voice_id,
     nome: voz.name,
     origem,
     sotaque: voz.labels?.accent ?? voz.accent ?? "",
+    quem: [voz.labels?.gender ?? voz.gender, voz.labels?.age ?? voz.age].filter(Boolean).join(" "),
     descricao: (voz.labels?.description ?? voz.description ?? "").slice(0, 60),
     lingua: voz.labels?.language ?? voz.language ?? "",
   });
 
   return [
     ...(minhas.voices ?? []).map((voz) => ficha(voz, "conta")),
-    ...(partilhadas.voices ?? []).map((voz) => ficha(voz, "biblioteca")),
+    ...partilhadas.map((voz) => ficha(voz, "biblioteca")),
   ];
 }
 
@@ -288,7 +317,7 @@ if (listar) {
     console.log(`\n── ${lingua} ────────────────────────────────────────────`);
     for (const voz of await vozesDisponiveis(lingua)) {
       console.log(
-        `${voz.id}  ${voz.nome.padEnd(22)} ${voz.origem.padEnd(11)} ${(voz.sotaque || voz.lingua).padEnd(14)} ${voz.descricao}`,
+        `${voz.id}  ${voz.nome.padEnd(22)} ${voz.origem.padEnd(11)} ${(voz.sotaque || voz.lingua).padEnd(14)} ${voz.quem.padEnd(18)} ${voz.descricao}`,
       );
     }
   }
@@ -378,7 +407,13 @@ for (const doc of docs) {
     const voz = vozDe(lingua);
     console.log(`${doc.slug} [${lingua}] ${texto.length} caracteres, ${pedacos(linhas, TETO).length} pedaço(s)`);
     caracteres += texto.length;
-    if (dry) continue;
+    // Conta-se antes de gravar para o ensaio dizer a verdade: um --dry que
+    // anuncia "0 gravações, 284 dólares" é a frase que faz carregar no botão.
+    feitos += 1;
+    if (dry) {
+      if (feitos >= limite) break;
+      continue;
+    }
 
     const inteiro = path.join(pasta, `${doc.slug}-${lingua}.mp3`);
     await grava({ linhas, voz, destino: inteiro, pasta, nome: `${doc.slug}-${lingua}` });
@@ -408,7 +443,6 @@ for (const doc of docs) {
 
     const minutos = `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, "0")}`;
     console.log(`  ✓ ${minutos}  ${(fs.statSync(inteiro).size / 1048576).toFixed(1)} MB`);
-    feitos += 1;
     if (feitos >= limite) break;
   }
 }

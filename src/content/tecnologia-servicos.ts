@@ -3,20 +3,24 @@ import { servicoPorSlug, type PaginaDeServico } from "./pagina-de-servico";
 /**
  * Os serviços de Tecnologia, um a um.
  *
- * A página-mãe é o mapa; estas são as quatro páginas para onde o mapa aponta.
- * O esqueleto é o das páginas de Marketing (`PaginaDeServico`): abertura em
- * duas colunas, o que fazemos, como trabalhamos, perguntas, fecho. Três vieram
- * do site antigo — web design, aplicações, consultoria e sistemas — e trazem o
- * que lá estava de bom, incluindo o JellyCARE; a de performance nasce aqui,
- * porque era a parte do trabalho que se fazia e não se dizia. Uma entrada nesta
- * lista é uma página: a rota, o mapa do site e a página-mãe leem daqui.
+ * A página-mãe é o mapa; estas são as páginas construídas aqui para onde o mapa
+ * aponta. O esqueleto é o das páginas de Marketing (`PaginaDeServico`): abertura
+ * em duas colunas, o que fazemos, como trabalhamos, perguntas, fecho. Vieram do
+ * site antigo — web design, aplicações, consultoria e sistemas — e trazem o que
+ * lá estava de bom, incluindo o JellyCARE. Uma entrada nesta lista é uma página:
+ * a rota, o mapa do site e a página-mãe leem daqui.
  *
- * Cada serviço é a sua própria área — o mapa tem quatro serviços, não quatro
- * áreas com serviços dentro — e por isso não há irmãos: o caminho de volta é a
- * página-mãe e os outros três.
+ * São três e o mapa tem quatro áreas: a quarta, os sistemas de IA, tem página
+ * própria fora de Tecnologia e o mapa aponta-lhe diretamente. Performance,
+ * acessibilidade e migrações chegaram a ser a quarta página; hoje são
+ * capacidades dentro de websites, porque nunca foram um projeto que se compra
+ * à parte.
+ *
+ * Não há irmãos dentro de uma área: o caminho de volta é a página-mãe e as
+ * outras duas.
  */
 
-export type AreaDeTecnologia = "web" | "apps" | "dados" | "performance";
+export type AreaDeTecnologia = "web" | "apps" | "dados" | "ia";
 export type ServicoDeTecnologia = PaginaDeServico<AreaDeTecnologia>;
 
 export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
@@ -24,7 +28,7 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
     slug: { pt: "websites-ecommerce", en: "websites-ecommerce" },
     area: "web",
     nome: { pt: "Websites e Plataformas de E-commerce", en: "Websites and E-commerce Platforms" },
-    titulo: { pt: "Um site que a equipa consegue editar, o Google consegue ler e o cliente consegue comprar.", en: "A site your team can edit, Google can read and your customer can buy from." },
+    titulo: { pt: "Um site que a equipa consegue gerir, o Google consegue ler e o cliente consegue comprar.", en: "A site your team can manage, Google can read and your customer can buy from." },
     claim: {
       pt: "Sites institucionais, lojas online e plataformas à medida, construídos a partir do conteúdo e com a performance fixada antes do primeiro ecrã.",
       en: "Corporate sites, online stores and bespoke platforms, built from the content out and with the performance budget fixed before the first screen.",
@@ -53,6 +57,14 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
         { nome: { pt: "Design system em código", en: "Design system in code" }, corpo: { pt: "Componentes reutilizáveis, tipografia e cor como variáveis. Uma landing page nova demora horas, não semanas.", en: "Reusable components, typography and colour as variables. A new landing page takes hours, not weeks." } },
         { nome: { pt: "Medição de origem", en: "Measurement from day one" }, corpo: { pt: "Eventos, consentimento e conversões definidos antes de abrir. Um site sem medição é um folheto caro.", en: "Events, consent and conversions defined before opening. A site without measurement is an expensive brochure." } },
         { nome: { pt: "Conformidade", en: "Compliance" }, corpo: { pt: "RGPD, cookies e termos com a Iubenda, de que somos parceiros certificados. Acessibilidade WCAG desde o primeiro componente.", en: "GDPR, cookies and terms with Iubenda, of which we are certified partners. WCAG accessibility from the first component." } },
+        /* Performance, acessibilidade e migrações tinham página própria enquanto
+           Tecnologia teve quatro serviços. Passaram para aqui quando a quarta
+           área deu lugar aos sistemas de IA: nunca foram um projeto que se
+           compra à parte — são a qualidade do site que se está a comprar. */
+        { nome: { pt: "Performance", en: "Performance" }, corpo: { pt: "Orçamento fixado antes do primeiro ecrã e Core Web Vitals medidos em utilizadores reais, não num laboratório.", en: "A budget fixed before the first screen and Core Web Vitals measured on real users, not in a lab." } },
+        { nome: { pt: "Acessibilidade WCAG 2.2", en: "WCAG 2.2 accessibility" }, corpo: { pt: "Auditoria, correção e declaração de acessibilidade, ao nível AA, com o European Accessibility Act em vigor.", en: "Audit, fixes and an accessibility statement, at level AA, with the European Accessibility Act in force." } },
+        { nome: { pt: "Migrações sem perder tráfego", en: "Migrations without losing traffic" }, corpo: { pt: "Inventário de URLs, mapa de redirecionamentos 301, títulos e dados estruturados preservados, medição antes e depois.", en: "URL inventory, 301 redirect map, titles and structured data preserved, before-and-after measurement." } },
+        { nome: { pt: "JellyCARE", en: "JellyCARE" }, corpo: { pt: "Depois de publicar: checkup diário de segurança, atualizações, backups e relatório mensal. Sem fidelização.", en: "After launch: daily security checkup, updates, backups and a monthly report. No lock-in." } },
       ],
     },
     passos: {
@@ -70,6 +82,9 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
       { pergunta: { pt: "Quanto custa?", en: "How much does it cost?" }, resposta: { pt: "Depende do que tem de fazer, e é por isso que começamos por uma fase de arquitetura com preço fechado. No fim dela há um âmbito, um plano e um orçamento que não muda a meio.", en: "It depends on what it has to do, which is why we start with a fixed-price architecture phase. At the end of it there is a scope, a plan and a budget that does not change halfway." } },
       { pergunta: { pt: "A minha equipa consegue editar o site sozinha?", en: "Can my team edit the site on their own?" }, resposta: { pt: "Sim, e é um critério de aceitação. Entregamos com o CMS configurado, formação gravada e componentes que não se partem quando alguém muda um texto.", en: "Yes, and it is an acceptance criterion. We hand over with the CMS configured, recorded training and components that do not break when someone changes a text." } },
       { pergunta: { pt: "Vou perder posições no Google com o site novo?", en: "Will I lose Google rankings with the new site?" }, resposta: { pt: "Não, se a migração for feita como deve ser: inventário dos URLs que trazem tráfego, mapa de redirecionamentos 301, títulos e dados estruturados preservados, e medição antes e depois. É a quarta fase do método, não um extra.", en: "Not if the migration is done properly: an inventory of the URLs that bring traffic, a 301 redirect map, titles and structured data preserved, and before-and-after measurement. It is the fourth phase of the method, not an extra." } },
+      { pergunta: { pt: "A acessibilidade é obrigatória?", en: "Is accessibility mandatory?" }, resposta: { pt: "Para o setor público há anos. Para o privado, o European Accessibility Act aplica-se desde junho de 2025 a comércio eletrónico, banca, transportes e outros serviços. Mas mais do que a lei, é uma percentagem de clientes que hoje não conseguem comprar-lhe.", en: "For the public sector, for years. For the private sector, the European Accessibility Act has applied since June 2025 to e-commerce, banking, transport and other services. But beyond the law, it is a share of customers who cannot buy from you today." } },
+      { pergunta: { pt: "O que é o JellyCARE?", en: "What is JellyCARE?" }, resposta: { pt: "O plano de manutenção ativa e preventiva da Jelly para websites: checkup diário de segurança, atualizações de temas e plugins, monitor de disponibilidade, links quebrados, otimização da base de dados e relatório mensal. Com backups diários na cloud no plano Plus. Sem fidelização: se não gostar, cancela.", en: "Jelly's active, preventive maintenance plan for websites: daily security checkup, theme and plugin updates, uptime monitoring, broken links, database optimisation and a monthly report. With daily cloud backups on the Plus plan. No lock-in: if you do not like it, you cancel." } },
+      { pergunta: { pt: "Fazem isto em sites que não construíram?", en: "Do you do this on sites you did not build?" }, resposta: { pt: "Sim, e é frequente. Auditamos, corrigimos e mantemos sites em WordPress, Shopify e outras plataformas, feitos por outras equipas.", en: "Yes, and often. We audit, fix and maintain sites on WordPress, Shopify and other platforms, built by other teams." } },
       { pergunta: { pt: "Fazem só o design, ou só o desenvolvimento?", en: "Do you do design only, or development only?" }, resposta: { pt: "Fazemos os dois, e é assim que trabalhamos melhor. Mas construímos a partir de design de terceiros, e desenhamos para equipas técnicas internas, quando é isso que faz sentido.", en: "We do both, and that is how we work best. But we build from third-party design, and design for in-house technical teams, when that is what makes sense." } },
     ],
     fecho: {
@@ -187,62 +202,6 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
     fecho: {
       titulo: { pt: "Quantas vezes o mesmo cliente existe nos seus sistemas?", en: "How many times does the same customer exist in your systems?" },
       texto: { pt: "Se a resposta for mais do que uma, comece por um diagnóstico de dados. Duas semanas, e um mapa do que ligar primeiro.", en: "If the answer is more than once, start with a data diagnosis. Two weeks, and a map of what to connect first." },
-    },
-  },
-  {
-    slug: { pt: "performance-acessibilidade-migracoes", en: "performance-accessibility-migrations" },
-    area: "performance",
-    nome: { pt: "Performance, Acessibilidade e Migrações", en: "Performance, Accessibility and Migrations" },
-    titulo: { pt: "Rápido, acessível e mudado de casa sem perder um visitante.", en: "Fast, accessible and moved house without losing a visitor." },
-    claim: {
-      pt: "Core Web Vitals, WCAG 2.2 e migrações com mapa de redirecionamentos: a parte do trabalho que ninguém vê e todos sentem. E o JellyCARE para depois.",
-      en: "Core Web Vitals, WCAG 2.2 and migrations with a redirect map: the part of the work nobody sees and everyone feels. And JellyCARE for afterwards.",
-    },
-    descricao: {
-      pt: "Performance web, acessibilidade e migrações sem perder tráfego pela Jelly: Core Web Vitals, WCAG 2.2 AA, redirecionamentos 301 e JellyCARE, o plano de manutenção ativa e preventiva.",
-      en: "Web performance, accessibility and migrations without losing traffic by Jelly: Core Web Vitals, WCAG 2.2 AA, 301 redirects and JellyCARE, the active, preventive maintenance plan.",
-    },
-    abertura: {
-      titulo: { pt: "O que um site perde sem ninguém dar por isso", en: "What a site loses without anyone noticing" },
-      problema: [
-        { pt: "Um segundo a mais no carregamento leva uma parte das visitas, todos os dias, sem aviso. Um formulário que não se lê com um leitor de ecrã fecha a porta a quem mais precisava dele. E uma migração feita à pressa apaga em dez minutos o tráfego orgânico de dez anos.", en: "One extra second of loading takes a share of the visits, every day, without warning. A form that cannot be read with a screen reader shuts the door on the people who needed it most. And a rushed migration wipes out ten years of organic traffic in ten minutes." },
-        { pt: "Nenhuma destas perdas aparece numa reunião. Aparecem meses depois, no relatório, com outro nome.", en: "None of these losses shows up in a meeting. They show up months later, in the report, under another name." },
-      ],
-      abordagem: [
-        { pt: "Medimos primeiro, em utilizadores reais e não num laboratório: Core Web Vitals, erros de acessibilidade, URLs que trazem tráfego. Sai uma lista ordenada pelo que custa mais.", en: "We measure first, on real users rather than in a lab: Core Web Vitals, accessibility errors, the URLs that bring traffic. Out comes a list ranked by what costs most." },
-        { pt: "Depois corrige-se pela ordem, com o número a confirmar cada passo. E quando o site muda de casa, o mapa de redirecionamentos está feito antes de a chave rodar.", en: "Then we fix in order, with the number confirming each step. And when the site moves house, the redirect map is done before the key turns." },
-      ],
-    },
-    fazemos: {
-      titulo: { pt: "O que fazemos em performance, acessibilidade e migrações", en: "What we do in performance, accessibility and migrations" },
-      itens: [
-        { nome: { pt: "Auditoria de performance", en: "Performance audit" }, corpo: { pt: "Core Web Vitals em utilizadores reais, orçamento de performance e uma lista ordenada de correções com o ganho estimado de cada uma.", en: "Core Web Vitals on real users, a performance budget and a ranked list of fixes with the estimated gain of each." } },
-        { nome: { pt: "Otimização", en: "Optimisation" }, corpo: { pt: "Imagens, fontes, scripts de terceiros, cache e servidor. O trabalho invisível que faz um site parecer instantâneo.", en: "Images, fonts, third-party scripts, caching and server. The invisible work that makes a site feel instant." } },
-        { nome: { pt: "Acessibilidade WCAG 2.2", en: "WCAG 2.2 accessibility" }, corpo: { pt: "Auditoria, correção e declaração de acessibilidade. Nível AA, com o European Accessibility Act em vigor.", en: "Audit, fixes and accessibility statement. Level AA, with the European Accessibility Act in force." } },
-        { nome: { pt: "Migrações sem perder tráfego", en: "Migrations without losing traffic" }, corpo: { pt: "Inventário de URLs, mapa de redirecionamentos 301, títulos e dados estruturados preservados, medição antes e depois.", en: "URL inventory, 301 redirect map, titles and structured data preserved, before-and-after measurement." } },
-        { nome: { pt: "Segurança e disponibilidade", en: "Security and uptime" }, corpo: { pt: "Checkups diários, atualizações, monitor de disponibilidade e backups na cloud. Ser o primeiro a saber, não o último.", en: "Daily checkups, updates, uptime monitoring and cloud backups. Being the first to know, not the last." } },
-        { nome: { pt: "JellyCARE", en: "JellyCARE" }, corpo: { pt: "O plano de manutenção ativa e preventiva: tudo isto, todos os meses, com relatório do que se fez e do que se evitou.", en: "The active, preventive maintenance plan: all of this, every month, with a report of what was done and what was avoided." } },
-      ],
-    },
-    passos: {
-      titulo: { pt: "Como se recupera o que se perdia", en: "How to recover what was being lost" },
-      itens: [
-        { nome: { pt: "Medição", en: "Measurement" }, corpo: { pt: "Uma semana a medir em utilizadores reais: velocidade, acessibilidade, tráfego por URL. Sem opinião, com números.", en: "A week measuring on real users: speed, accessibility, traffic by URL. No opinion, just numbers." } },
-        { nome: { pt: "Prioridades", en: "Priorities" }, corpo: { pt: "Lista ordenada pelo que custa mais e pelo que custa corrigir. As três primeiras costumam valer metade do ganho.", en: "A list ranked by what costs most and what it costs to fix. The first three usually account for half the gain." } },
-        { nome: { pt: "Correção", en: "Fixing" }, corpo: { pt: "Uma correção de cada vez, em produção, com o número a confirmar. O que não mexe no número sai da lista.", en: "One fix at a time, in production, with the number confirming. Whatever does not move the number leaves the list." } },
-        { nome: { pt: "Vigilância", en: "Watch" }, corpo: { pt: "Quatro semanas de acompanhamento depois de cada mudança, e o JellyCARE a partir daí, se quiser que continuemos.", en: "Four weeks of follow-up after each change, and JellyCARE from then on, if you want us to keep going." } },
-      ],
-    },
-    faq: [
-      { pergunta: { pt: "O que são os Core Web Vitals e porque importam?", en: "What are Core Web Vitals and why do they matter?" }, resposta: { pt: "Três medidas que o Google usa para avaliar a experiência de uma página: quanto demora o conteúdo principal a aparecer, quão depressa responde ao toque, e quanto salta enquanto carrega. Contam para o posicionamento, e contam mais para quem está do outro lado do ecrã.", en: "Three measures Google uses to judge a page's experience: how long the main content takes to show, how quickly it responds to a tap, and how much it jumps while loading. They count for rankings, and they count more for the person on the other side of the screen." } },
-      { pergunta: { pt: "A acessibilidade é obrigatória?", en: "Is accessibility mandatory?" }, resposta: { pt: "Para o setor público há anos. Para o privado, o European Accessibility Act aplica-se desde junho de 2025 a comércio eletrónico, banca, transportes e outros serviços. Mas mais do que a lei, é uma percentagem de clientes que hoje não conseguem comprar-lhe.", en: "For the public sector, for years. For the private sector, the European Accessibility Act has applied since June 2025 to e-commerce, banking, transport and other services. But beyond the law, it is a share of customers who cannot buy from you today." } },
-      { pergunta: { pt: "Vou perder tráfego ao mudar de site ou de domínio?", en: "Will I lose traffic when changing site or domain?" }, resposta: { pt: "Não, se cada URL antigo com tráfego tiver um destino e o resto do trabalho for feito: redirecionamentos 301, títulos e dados estruturados preservados, sitemap novo submetido, e vigilância nas semanas seguintes. É por não se fazer que se perde.", en: "Not if every old URL with traffic has a destination and the rest of the work is done: 301 redirects, titles and structured data preserved, the new sitemap submitted, and a close watch in the following weeks. Traffic is lost when this is not done." } },
-      { pergunta: { pt: "O que é o JellyCARE?", en: "What is JellyCARE?" }, resposta: { pt: "O plano de manutenção ativa e preventiva da Jelly para websites: checkup diário de segurança, atualizações de temas e plugins, monitor de disponibilidade, links quebrados, otimização da base de dados e relatório mensal. Com backups diários na cloud no plano Plus. Sem fidelização: se não gostar, cancela.", en: "Jelly's active, preventive maintenance plan for websites: daily security checkup, theme and plugin updates, uptime monitoring, broken links, database optimisation and a monthly report. With daily cloud backups on the Plus plan. No lock-in: if you do not like it, you cancel." } },
-      { pergunta: { pt: "Fazem isto em sites que não construíram?", en: "Do you do this on sites you did not build?" }, resposta: { pt: "Sim, e é frequente. Auditamos, corrigimos e mantemos sites em WordPress, Shopify e outras plataformas, feitos por outras equipas.", en: "Yes, and often. We audit, fix and maintain sites on WordPress, Shopify and other platforms, built by other teams." } },
-    ],
-    fecho: {
-      titulo: { pt: "Quanto está o seu site a perder sem que ninguém dê por isso?", en: "How much is your site losing without anyone noticing?" },
-      texto: { pt: "Envie-nos o endereço. Respondemos com a medição em utilizadores reais e as três correções que valem mais.", en: "Send us the address. We answer with the measurement on real users and the three fixes worth most." },
     },
   },
 ];

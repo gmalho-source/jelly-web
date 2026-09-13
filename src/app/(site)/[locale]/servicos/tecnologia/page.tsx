@@ -15,11 +15,13 @@ import { slugFor } from "@/lib/slugs";
  *
  * Uma rota fixa que ganha à dinâmica `[slug]`, como as de Branding e de
  * Marketing, e com a fórmula desta última: o topo em vídeo, o mapa, um capítulo
- * por serviço com a sua unidade de medida e o seu gráfico, o método em
- * vermelho, o trabalho, e uma faixa em tinta para o que vem depois de publicar.
- * Aqui o mapa tem quatro serviços e não quatro áreas: cada capítulo é uma
- * página, e as faixas dentro dele são o que cabe lá — todas levam à mesma
- * página, porque é a lista do serviço e não uma lista de serviços.
+ * por área com o seu gráfico, o método em vermelho, o trabalho, e uma faixa em
+ * tinta para o que vem depois de publicar.
+ *
+ * Cada capítulo é uma página, e as faixas dentro dele são o que cabe lá — todas
+ * levam à mesma página, porque é a lista da área e não uma lista de áreas. Três
+ * dessas páginas são construídas em `tecnologia-servicos.ts`; a dos sistemas de
+ * IA é a do serviço de Inteligência Artificial, um nível acima.
  *
  * As fases e a frase de promessa continuam a vir do serviço no painel.
  */
@@ -38,12 +40,19 @@ const TONS = [
   { fundo: "bg-chartreuse", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
 ];
 
-/** O desenho de cada serviço: o gesto da sua unidade de medida. */
+/**
+ * O desenho de cada área.
+ *
+ * Ficaram quando as unidades de medida saíram do texto: um gesto ao lado da
+ * ideia lê-se sem ser um indicador, e é para isso que lá estão. A IA herdou o
+ * desenho dos dados — cinco sistemas a escrever no mesmo sítio serve para uma
+ * área que vive por dentro dos outros.
+ */
 const GRAFICOS: Record<AreaDeTecnologia, Grafico> = {
   web: "conversao",
   apps: "retencao",
   dados: "integracao",
-  performance: "velocidade",
+  ia: "dados",
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
@@ -97,8 +106,16 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
   ];
 
   // A página de um serviço, pelo slug português do registo.
-  const paginaDe = (sub: string) => {
-    const pagina = servicoDeTecnologia(sub);
+  /*
+   * Para onde vai uma área: a sua página dentro de Tecnologia, ou — no caso dos
+   * sistemas de IA — a página do serviço, que vive um nível acima.
+   */
+  const destinoDe = (s: (typeof m.lista)[number]) => {
+    if (s.servico) {
+      const servico = all.find((item) => item.slug === s.servico);
+      return servico ? ({ pathname: "/servicos/[slug]" as const, params: { slug: slugFor(servico, locale) } } as const) : undefined;
+    }
+    const pagina = s.sub ? servicoDeTecnologia(s.sub) : undefined;
     return pagina ? ({ pathname: ROTA, params: { sub: pagina.slug[locale] } } as const) : undefined;
   };
 
@@ -147,32 +164,31 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
       </header>
 
       {/* ── O mapa ──────────────────────────────────────────────────────────
-          Quatro colunas, um serviço em cada, com a unidade de medida e o que
-          cabe lá dentro. Tudo liga à página do serviço. Não se anima: pode
-          estar no ecrã quando a página abre. */}
+          Quatro colunas, uma área em cada, com o nome e o que cabe lá dentro.
+          Tudo liga à página da área. Não se anima: pode estar no ecrã quando a
+          página abre. */}
       <section className="surface-paper py-14 lg:py-16" aria-labelledby="mapa">
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
           <h2 id="mapa" className="eyebrow text-red">{m.mapa.eyebrow[locale]}</h2>
-          <div className="mt-5 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
+          {/* Em quatro colunas os nomes das áreas não têm todos o mesmo número
+              de linhas — um deles leva três — e sem subgrid a régua por baixo
+              do nome ficava a alturas diferentes, que é o que desmancha uma
+              grelha. As duas linhas são do contentor; cada coluna ocupa-as. */}
+          <div className="mt-5 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_1fr]">
             {m.lista.map((s, i) => {
-              const href = paginaDe(s.sub);
-              const cabeca = (
-                <>
-                  <span className="eyebrow text-red">{s.nome[locale]}</span>
-                  <span className="font-display text-[22px] text-fg-soft">{s.medida[locale]}</span>
-                </>
-              );
+              const href = destinoDe(s);
+              const cabeca = <span className="eyebrow text-red">{s.nome[locale]}</span>;
               return (
                 <div
                   key={s.chave}
-                  className={`flex flex-col border-b border-line py-6 lg:border-b-0 lg:py-7 ${i ? "lg:border-l lg:pl-6" : ""} ${i < 3 ? "lg:pr-6" : ""} ${i % 2 ? "sm:border-l sm:pl-6 lg:border-l" : ""}`}
+                  className={`flex flex-col border-b border-line py-6 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:border-b-0 lg:py-7 ${i ? "lg:border-l lg:pl-6" : ""} ${i < 3 ? "lg:pr-6" : ""} ${i % 2 ? "sm:border-l sm:pl-6 lg:border-l" : ""}`}
                 >
                   {href ? (
-                    <Link href={href} className="group flex flex-col gap-1.5 border-b border-line pb-4 transition-colors duration-200 hover:text-red">
+                    <Link href={href} className="group flex flex-col justify-end gap-1.5 border-b border-line pb-4 transition-colors duration-200 hover:text-red">
                       {cabeca}
                     </Link>
                   ) : (
-                    <a href={`#${s.chave}`} className="flex flex-col gap-1.5 border-b border-line pb-4">
+                    <a href={`#${s.chave}`} className="flex flex-col justify-end gap-1.5 border-b border-line pb-4">
                       {cabeca}
                     </a>
                   )}
@@ -212,18 +228,14 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
 
           <div className="mt-10">
             {m.lista.map((s, ordem) => {
-              const href = paginaDe(s.sub);
+              const href = destinoDe(s);
               const tom = TONS[ordem % TONS.length];
               return (
                 <article key={s.chave} id={s.chave} className="border-t border-line py-16 lg:py-20">
                   <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-16">
                     <div className="entra">
                       <span className="varre block h-0.5 w-[72px] bg-red" />
-                      <div className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-                        <span className="eyebrow text-red">{s.nome[locale]}</span>
-                        <span className="font-display text-[clamp(26px,2.4vw,34px)] leading-none tracking-[-0.02em] tabular-nums text-fg">{s.medida[locale]}</span>
-                        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-soft">{s.medidaNota[locale]}</span>
-                      </div>
+                      <span className="eyebrow mt-6 block text-red">{s.nome[locale]}</span>
                       <h3 className="mt-5 max-w-[24ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.022em]">{s.titulo[locale]}</h3>
                       <p className="mt-5 max-w-[52ch] text-md text-fg-soft">{s.posicao[locale]}</p>
                       {href ? (

@@ -152,7 +152,12 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             <OuvirArtigo
               src={audio.src}
               segundos={audio.segundos}
-              textos={{ ouvir: t("listen"), pausar: t("pause"), barra: t("listenBar") }}
+              textos={{
+                convite: t("listenInvite"),
+                ouvir: t("listen"),
+                pausar: t("pause"),
+                barra: t("listenBar"),
+              }}
             />
           ) : null}
           {post.draft && !blocks?.length ? (

@@ -4,15 +4,23 @@ import type { Localized } from "./types";
  * A página-mãe de Tecnologia.
  *
  * O site antigo tinha três páginas soltas — web design, aplicações, consultoria
- * e sistemas — e o JellyCARE à parte. Esta é o chapéu: quatro serviços, cada um
- * com a sua unidade de medida, porque um site mede-se pelo que converte, uma
- * app pelo que retém, uma integração pelas horas que devolve e uma migração
- * pelo tráfego que não perde. As fases do método continuam a vir do serviço no
- * painel. As capacidades de cada serviço ligam todas à página do serviço: são a
- * lista do que cabe lá dentro, não páginas próprias.
+ * e sistemas — e o JellyCARE à parte. Esta é o chapéu: quatro áreas, e o nome
+ * de cada uma diz o que lá se faz, sem número ao lado. Houve uma versão com uma
+ * unidade de medida por área (% de conversão, retenção, horas, segundos): lia-se
+ * como um painel de indicadores à entrada de uma casa onde ainda não se entrou,
+ * e caiu.
+ *
+ * Três áreas têm página construída em `tecnologia-servicos.ts`. A quarta, os
+ * sistemas de IA, aponta para a página de Inteligência Artificial: a área existe
+ * no mapa porque um cliente de tecnologia procura-a aqui, mas a página é a de
+ * lá, e duas páginas a dizer o mesmo seriam duas páginas a desatualizar-se.
+ *
+ * As fases do método continuam a vir do serviço no painel. As capacidades de
+ * cada área ligam todas à página da área: são a lista do que cabe lá dentro,
+ * não páginas próprias.
  */
 
-export type AreaDeTecnologia = "web" | "apps" | "dados" | "performance";
+export type AreaDeTecnologia = "web" | "apps" | "dados" | "ia";
 
 export type Capacidade = {
   nome: Localized;
@@ -21,11 +29,11 @@ export type Capacidade = {
 
 export type Servico = {
   chave: AreaDeTecnologia;
-  /** O slug português da página em `tecnologia-servicos.ts`. */
-  sub: string;
+  /** O slug português da página em `tecnologia-servicos.ts`, quando a há. */
+  sub?: string;
+  /** O slug do serviço em `site.ts`, quando a área vive fora de Tecnologia. */
+  servico?: string;
   nome: Localized;
-  medida: Localized;
-  medidaNota: Localized;
   titulo: Localized;
   posicao: Localized;
   capacidades: Capacidade[];
@@ -35,13 +43,15 @@ export type Servico = {
 
 export const tecnologia = {
   eyebrow: { pt: "Serviços · Tecnologia", en: "Services · Technology" },
+  /* A pergunta parte-se em duas: o vermelho cai sobre o verbo e o agora, que
+     é onde a frase quer o peso. */
   titulo: {
-    forte: { pt: "Onde a marca vive e a receita entra.", en: "Where the brand lives and revenue comes in." },
-    vermelho: { pt: "Construído para durar.", en: "Built to last." },
+    forte: { pt: "O que vamos", en: "What are we" },
+    vermelho: { pt: "criar hoje?", en: "creating today?" },
   },
   lead: {
-    pt: "Websites, e-commerce, aplicações e os dados por baixo, desenhados e construídos pela mesma equipa que os vai medir. Quatro serviços, uma arquitetura.",
-    en: "Websites, e-commerce, applications and the data underneath, designed and built by the same team that will measure them. Four services, one architecture.",
+    pt: "Websites, e-commerce, aplicações e os dados por baixo, desenhados e construídos pela mesma equipa que os vai medir. Quatro áreas, uma arquitetura.",
+    en: "Websites, e-commerce, applications and the data underneath, designed and built by the same team that will measure them. Four areas, one architecture.",
   },
   cta: { pt: "Vamos falar", en: "Let's talk" },
   /* O vídeo do topo é o da página de web design do site antigo, imagens de
@@ -52,18 +62,18 @@ export const tecnologia = {
     poster: { src: "/media/tecnologia-topo-poster.webp", width: 1440, height: 810 },
   },
   descricao: {
-    pt: "Tecnologia pela Jelly: websites e plataformas de e-commerce, aplicações web e mobile, CRM, CDP e integrações de dados, performance, acessibilidade e migrações sem perder tráfego. Quatro serviços, uma arquitetura.",
-    en: "Technology by Jelly: websites and e-commerce platforms, web and mobile applications, CRM, CDP and data integrations, performance, accessibility and migrations without losing traffic. Four services, one architecture.",
+    pt: "Tecnologia pela Jelly: websites e plataformas de e-commerce, aplicações web e mobile, CRM, CDP e integrações de dados, performance, acessibilidade e migrações sem perder tráfego. Quatro áreas, uma arquitetura.",
+    en: "Technology by Jelly: websites and e-commerce platforms, web and mobile applications, CRM, CDP and data integrations, performance, accessibility and migrations without losing traffic. Four areas, one architecture.",
   },
 
   mapa: { eyebrow: { pt: "O mapa", en: "The map" } },
 
   areas: {
-    eyebrow: { pt: "Os serviços", en: "The services" },
-    titulo: { pt: "Quatro serviços. Uma unidade de medida em cada.", en: "Four services. One unit of measure in each." },
+    eyebrow: { pt: "As áreas", en: "The areas" },
+    titulo: { pt: "Quatro áreas. A mesma arquitetura por baixo.", en: "Four areas. The same architecture underneath." },
     nota: {
-      pt: "Um site mede-se pelo que converte, uma app pelo que retém, uma integração pelas horas que devolve, uma migração pelo tráfego que não perde. Cada serviço tem a sua página.",
-      en: "A site is measured by what it converts, an app by what it retains, an integration by the hours it gives back, a migration by the traffic it keeps. Each service has its own page.",
+      pt: "Onde a marca se mostra, o que as pessoas usam, o que a empresa sabe sobre quem compra, e o que passa a correr sozinho. Cada área tem a sua página.",
+      en: "Where the brand shows itself, what people use, what the company knows about who buys, and what starts running on its own. Each area has its own page.",
     },
   },
 
@@ -72,8 +82,6 @@ export const tecnologia = {
       chave: "web",
       sub: "websites-ecommerce",
       nome: { pt: "Websites e E-commerce", en: "Websites and E-commerce" },
-      medida: { pt: "% conversão", en: "% conversion" },
-      medidaNota: { pt: "de visita a cliente", en: "from visit to customer" },
       titulo: { pt: "Um site não é um folheto. É onde a receita entra.", en: "A website is not a brochure. It is where revenue comes in." },
       posicao: {
         pt: "Sites institucionais, lojas online e plataformas à medida, desenhados a partir do conteúdo e construídos com a performance fixada antes do primeiro ecrã.",
@@ -83,6 +91,7 @@ export const tecnologia = {
         { nome: { pt: "Websites institucionais", en: "Corporate websites" }, linha: { pt: "Estrutura, conteúdo e um CMS que a equipa edita sem nos ligar.", en: "Structure, content and a CMS the team edits without calling us." } },
         { nome: { pt: "E-commerce", en: "E-commerce" }, linha: { pt: "Shopify, WooCommerce ou headless, com feed, checkout e medição ligados.", en: "Shopify, WooCommerce or headless, with feed, checkout and measurement wired in." } },
         { nome: { pt: "Plataformas à medida", en: "Bespoke platforms" }, linha: { pt: "Portais, configuradores, leilões, reservas: quando o produto de série não chega.", en: "Portals, configurators, auctions, bookings: when off-the-shelf falls short." } },
+        { nome: { pt: "Performance, acessibilidade e migrações", en: "Performance, accessibility and migrations" }, linha: { pt: "Core Web Vitals, WCAG 2.2 e mudar de casa sem perder um visitante. E o JellyCARE depois de publicar.", en: "Core Web Vitals, WCAG 2.2 and moving house without losing a visitor. And JellyCARE after launch." } },
       ],
       legenda: { pt: "Taxa de conversão por etapa, antes e depois", en: "Conversion rate by step, before and after" },
       alcance: { pt: "12 semanas", en: "12 weeks" },
@@ -91,8 +100,6 @@ export const tecnologia = {
       chave: "apps",
       sub: "aplicacoes-web-mobile",
       nome: { pt: "Aplicações Web e Mobile", en: "Web and Mobile Applications" },
-      medida: { pt: "retenção", en: "retention" },
-      medidaNota: { pt: "ao trigésimo dia", en: "on day thirty" },
       titulo: { pt: "Uma app só vale o que as pessoas voltam a fazer nela.", en: "An app is only worth what people come back to do in it." },
       posicao: {
         pt: "iOS, Android e web, nativo ou híbrido conforme o projeto pede. Desenhadas para o gesto que se repete e medidas por quem volta.",
@@ -109,9 +116,7 @@ export const tecnologia = {
     {
       chave: "dados",
       sub: "crm-cdp-integracoes",
-      nome: { pt: "CRM, CDP e Integrações", en: "CRM, CDP and Integrations" },
-      medida: { pt: "horas", en: "hours" },
-      medidaNota: { pt: "devolvidas por semana", en: "given back per week" },
+      nome: { pt: "Sistemas integrados de Marketing & Vendas (CRM/CDP)", en: "Integrated Marketing & Sales Systems (CRM/CDP)" },
       titulo: { pt: "Um cliente, um registo. Marketing, vendas e operações a ler o mesmo.", en: "One customer, one record. Marketing, sales and operations reading the same thing." },
       posicao: {
         pt: "Pipedrive, Zoho e os sistemas que já tem, ligados para que o dado entre uma vez e chegue a todos. Parceiros certificados Pipedrive e Iubenda.",
@@ -126,24 +131,23 @@ export const tecnologia = {
       alcance: { pt: "1 registo", en: "1 record" },
     },
     {
-      chave: "performance",
-      sub: "performance-acessibilidade-migracoes",
-      nome: { pt: "Performance, Acessibilidade e Migrações", en: "Performance, Accessibility and Migrations" },
-      medida: { pt: "segundos", en: "seconds" },
-      medidaNota: { pt: "até o conteúdo aparecer", en: "until the content shows" },
-      titulo: { pt: "Rápido, acessível e mudado de casa sem perder um visitante.", en: "Fast, accessible and moved house without losing a visitor." },
+      chave: "ia",
+      /* A única área cuja página não é construída aqui: leva à página de
+         Inteligência Artificial, onde o assunto já está escrito por inteiro. */
+      servico: "inteligencia-artificial",
+      nome: { pt: "Sistemas IA", en: "AI Systems" },
+      titulo: { pt: "O trabalho que passa a fazer-se sozinho, dentro dos sistemas que já tem.", en: "The work that starts doing itself, inside the systems you already run." },
       posicao: {
-        pt: "Core Web Vitals, WCAG e mapas de redirecionamento: a parte do trabalho que ninguém vê e todos sentem. E o JellyCARE para depois de publicar.",
-        en: "Core Web Vitals, WCAG and redirect maps: the part of the work nobody sees and everyone feels. And JellyCARE for after launch.",
+        pt: "Agentes e automação ligados ao CRM, ao catálogo e ao atendimento. Não é um piloto para mostrar numa reunião: é um processo que fica a correr depois de irmos embora.",
+        en: "Agents and automation wired into the CRM, the catalogue and support. Not a pilot to show in a meeting: a process that keeps running after we leave.",
       },
       capacidades: [
-        { nome: { pt: "Performance", en: "Performance" }, linha: { pt: "Orçamento de performance fixado e Core Web Vitals medidos em utilizadores reais.", en: "A fixed performance budget and Core Web Vitals measured on real users." } },
-        { nome: { pt: "Acessibilidade", en: "Accessibility" }, linha: { pt: "WCAG 2.2 AA, auditoria e correção, com o European Accessibility Act em vigor.", en: "WCAG 2.2 AA, audit and fixes, with the European Accessibility Act in force." } },
-        { nome: { pt: "Migrações sem perder tráfego", en: "Migrations without losing traffic" }, linha: { pt: "Mapa de redirecionamentos, medição antes e depois, vigilância nas primeiras semanas.", en: "Redirect map, before-and-after measurement, close watch in the first weeks." } },
-        { nome: { pt: "JellyCARE", en: "JellyCARE" }, linha: { pt: "Manutenção ativa e preventiva: segurança, atualizações, backups e relatório mensal.", en: "Active, preventive maintenance: security, updates, backups and a monthly report." } },
+        { nome: { pt: "Agentes de atendimento e qualificação", en: "Support and qualification agents" }, linha: { pt: "Respondem, qualificam e encaminham, com o que não sabem a passar a uma pessoa.", en: "They answer, qualify and route, handing over to a person what they do not know." } },
+        { nome: { pt: "Automação entre sistemas", en: "Automation across systems" }, linha: { pt: "CRM, catálogo, faturação e operações a trocar trabalho, não ficheiros.", en: "CRM, catalogue, invoicing and operations exchanging work, not files." } },
+        { nome: { pt: "Diagnóstico e governo", en: "Diagnosis and governance" }, linha: { pt: "Casos de uso ordenados por retorno, com o custo por tarefa à vista desde o primeiro dia.", en: "Use cases ranked by return, with the cost per task in plain sight from day one." } },
       ],
-      legenda: { pt: "Tempo até o conteúdo principal aparecer, por página", en: "Time until the main content shows, by page" },
-      alcance: { pt: "LCP", en: "LCP" },
+      legenda: { pt: "Tarefas a correr sem ninguém a meio", en: "Tasks running with nobody in the middle" },
+      alcance: { pt: "por processo", en: "per process" },
     },
   ] as Servico[],
 
