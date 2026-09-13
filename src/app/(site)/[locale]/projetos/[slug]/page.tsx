@@ -113,8 +113,16 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
       {kpis.length ? (
         <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-3">
+          {/* O fio que separa as colunas é o `border-r` do vizinho da
+              esquerda, e sem folga o número seguinte encostava-lhe. A folga
+              cai no primeiro de cada linha, para a coluna da esquerda
+              continuar a alinhar com o resto da página, e o fio cai no último
+              de cada linha, para não sobrar um traço na margem. */}
           {kpis.map((kpi) => (
-            <div key={kpi.value} className="border-b border-line py-6 pr-5 sm:border-b-0 sm:border-r sm:last:border-r-0">
+            <div
+              key={kpi.value}
+              className="border-b border-line py-6 pr-5 sm:border-b-0 sm:border-r sm:pl-6 sm:pr-6 sm:[&:nth-child(3n)]:border-r-0 sm:[&:nth-child(3n+1)]:pl-0"
+            >
               <dt className="font-display text-4xl leading-none tabular-nums tracking-tight text-red lg:text-[50px]">{kpi.value}</dt>
               <dd className="mt-2 text-[13px] text-fg-soft">{kpi.label[locale]}</dd>
             </div>
