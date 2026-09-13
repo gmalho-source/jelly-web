@@ -516,6 +516,9 @@ export interface Project {
             blockType: 'image';
           }
         | {
+            /**
+             * Uma fita que se desliza, pela ordem em que as puser aqui. Na página, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado.
+             */
             images: (number | Media)[];
             id?: string | null;
             blockName?: string | null;
@@ -580,6 +583,9 @@ export interface Project {
                             blockType: 'image';
                           }
                         | {
+                            /**
+                             * Uma fita que se desliza, pela ordem em que as puser aqui. Na página, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado.
+                             */
                             images: (number | Media)[];
                             id?: string | null;
                             blockName?: string | null;

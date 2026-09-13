@@ -5,6 +5,28 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export type ImagemDaGaleria = { src: string; alt?: string; width?: number; height?: number };
 
+/**
+ * A medida da fita, escrita uma vez.
+ *
+ * A lente pede exactamente a mesma: assim o browser serve a imagem que já tem
+ * em cache no instante em que a lente abre, em vez de ir buscar outro recorte.
+ */
+const MEDIDA_DA_FITA = "(max-width: 900px) 80vw, 620px";
+
+/**
+ * A medida da lente.
+ *
+ * Travada em 1200px de propósito. Medido em produção: a primeira vez que
+ * alguém pede um recorte que o otimizador ainda não fez, ele fá-lo naquele
+ * instante — o `w=2048` desta galeria demorou trinta segundos a responder, e
+ * 0,17s da segunda vez em diante. A fita já aquece os recortes pequenos; a
+ * lente ficar neles é a diferença entre abrir já e abrir daqui a meio minuto.
+ *
+ * O que se perde: num ecrã 4K a fotografia é esticada. O que se ganha: a lente
+ * abre sempre. Numa galeria de caso, a segunda vale mais do que a primeira.
+ */
+const MEDIDA_DA_LENTE = "(max-width: 1200px) 100vw, 1200px";
+
 export type TextosDaGaleria = {
   /** O que o botão de cada imagem diz a quem usa leitor de ecrã. */
   ver: string;
@@ -131,7 +153,7 @@ export function Galeria({
               width={imagem.width ?? 1200}
               height={imagem.height ?? 900}
               className="h-[46vw] max-h-[420px] w-auto object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-              sizes="(max-width: 900px) 80vw, 620px"
+              sizes={MEDIDA_DA_FITA}
             />
             {/* A lupa só aparece ao passar: em repouso, a imagem é a imagem. */}
             <span
@@ -155,21 +177,46 @@ export function Galeria({
             ref={lente}
             className="flex h-full w-full snap-x snap-mandatory overflow-x-auto overscroll-contain"
           >
-            {imagens.map((imagem, indice) => (
-              <div key={indice} className="flex h-full w-full shrink-0 snap-center items-center justify-center p-4 sm:p-10">
-                <Image
-                  src={imagem.src}
-                  alt={imagem.alt || legenda}
-                  width={imagem.width ?? 1600}
-                  height={imagem.height ?? 1200}
-                  // A imagem em que se carregou entra já; as outras esperam
-                  // pela vez delas.
-                  priority={indice === aberta}
-                  sizes="100vw"
-                  className="max-h-full w-auto max-w-full rounded-[6px] object-contain"
-                />
-              </div>
-            ))}
+            {imagens.map((imagem, indice) => {
+              // A que se vê e as duas do lado carregam já; as outras esperam
+              // pela vez delas. Sem isto, cada deslize começava a descarregar
+              // uma imagem do zero, e via-se.
+              const perto = Math.abs(indice - aVista) <= 1 || indice === aberta;
+              return (
+                <div className="flex h-full w-full shrink-0 snap-center items-center justify-center p-4 sm:p-10" key={indice}>
+                  {/* A moldura é a célula inteira, e as duas camadas enchem-na
+                      com `object-contain`: dá o mesmo retângulo às duas, ao
+                      pixel, e deixa a fotografia crescer até onde o ecrã der.
+                      Medir a moldura pela imagem carregada — que foi o que
+                      tentei primeiro — encolhia a lente para os 620px da fita,
+                      porque a de baixo é mesmo a pequena. */}
+                  <span className="relative block h-full w-full">
+                    {/* A que a fita já descarregou, por baixo: dá que ver no
+                        instante em que a lente abre. Desfocada de propósito,
+                        para a passagem à nítida se ler como foco e não como
+                        troca. */}
+                    <Image
+                      aria-hidden="true"
+                      src={imagem.src}
+                      alt=""
+                      fill
+                      sizes={MEDIDA_DA_FITA}
+                      loading={perto ? "eager" : "lazy"}
+                      className="object-contain blur-[2px]"
+                    />
+                    <Image
+                      src={imagem.src}
+                      alt={imagem.alt || legenda}
+                      fill
+                      sizes={MEDIDA_DA_LENTE}
+                      loading={perto ? "eager" : "lazy"}
+                      onLoad={(evento) => evento.currentTarget.classList.remove("opacity-0")}
+                      className="object-contain opacity-0 transition-opacity duration-300"
+                    />
+                  </span>
+                </div>
+              );
+            })}
           </div>
 
           {/* O fundo fecha. Fica por baixo dos controlos e por cima das
