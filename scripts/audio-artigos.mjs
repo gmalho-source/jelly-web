@@ -115,6 +115,16 @@ const TETO = MODELO.includes("flash") || MODELO.includes("turbo") ? 35_000 : 9_0
 const TETO_GEMINI = 1_500;
 
 /**
+ * E o chão, que custou o mesmo a descobrir.
+ *
+ * Abaixo de mil caracteres o modelo volta a não parar de falar: o parágrafo de
+ * duzentos e cinquenta e nove deu quatro leituras e três más. A janela de
+ * confiança é estreita dos dois lados, e é por isso que os pedaços se dividem
+ * por igual em vez de se encher até cima e deixar o resto para o fim.
+ */
+const CHAO_GEMINI = 1_000;
+
+/**
  * O ritmo de leitura, em caracteres por segundo.
  *
  * Quinze, medido em pedaços deste tamanho e com a instrução que manda ler
@@ -124,6 +134,10 @@ const TETO_GEMINI = 1_500;
  */
 const CARACTERES_POR_SEGUNDO = 15;
 const tetoDe = (fornecedor) => (fornecedor === "gemini" ? TETO_GEMINI : TETO);
+/** Para que tamanho se divide — ver `pedacos`, que é onde isto ganha sentido. */
+const alvoDe = (fornecedor) => (fornecedor === "gemini" ? TETO_GEMINI : TETO);
+/** Abaixo disto um pedaço não vai sozinho. Só o Gemini tem chão; ver `pedacos`. */
+const chaoDe = (fornecedor) => (fornecedor === "gemini" ? CHAO_GEMINI : 0);
 // 64 kbps chega e sobra para voz. Os 192 e os formatos sem compressão pedem
 // escalões pagos mais altos, e não trazem nada a um artigo falado.
 const FORMATO = valor("formato") ?? "mp3_44100_64";
@@ -617,19 +631,51 @@ function escrito(linhas, fornecedor = "elevenlabs") {
  * O pedido tem tecto de caracteres e um artigo de vinte mil não passa de uma
  * vez. Parte-se por parágrafos, nunca a meio de um: um corte a meio de uma
  * frase ouve-se, mesmo com a costura do `previous_text`.
+ *
+ * Encher até ao tecto e deixar o resto para o fim é o que se faz quando os
+ * pedaços são todos iguais para quem os lê. Não é o caso do Gemini: ali o
+ * último pedaço é o que sobrou, costuma ser o mais curto, e um pedaço curto é
+ * onde ele falha. Um artigo de onze mil e trezentos caracteres deixava seiscentos
+ * e quarenta e seis no fim, e esses seiscentos e quarenta e seis deram três
+ * leituras seguidas de cento e quatro, seiscentos e cinquenta e cinco e cento e
+ * vinte e três segundos para quarenta e três esperados — zumbido, três vezes, e
+ * o artigo todo perdido por causa do fim.
+ *
+ * Por isso, quando há um alvo, divide-se por igual: conta-se em quantos pedaços
+ * é que o texto tem de ir e fazem-se todos desse tamanho. Os mesmos nove
+ * pedidos, mas de mil duzentos e cinquenta e seis em vez de oito de mil e
+ * quinhentos e um de seiscentos.
  */
-function pedacos(linhas, maximo) {
+function pedacos(linhas, maximo, alvo = maximo, chao = 0) {
+  const total = linhas.reduce((conta, linha) => conta + linha.texto.length, 0);
+  const quantos = Math.max(1, Math.ceil(total / alvo));
+  const medida = Math.min(maximo, Math.ceil(total / quantos));
   const fora = [[]];
   let conta = 0;
   for (const linha of linhas) {
-    if (conta + linha.texto.length > maximo && fora[fora.length - 1].length) {
+    if (conta + linha.texto.length > medida && fora[fora.length - 1].length) {
       fora.push([]);
       conta = 0;
     }
     fora[fora.length - 1].push(linha);
     conta += linha.texto.length;
   }
-  return fora.filter((pedaco) => pedaco.length);
+
+  // Dividir por igual aproxima, não garante: os parágrafos têm o tamanho que
+  // têm, e um artigo pode acabar com um de duzentos caracteres sozinho no
+  // último pedaço. Quem sobrar abaixo do chão junta-se ao vizinho, que é sempre
+  // melhor do que ser lido à parte — desde que o vizinho aguente sem passar do
+  // máximo. Se não aguentar, fica como está: um pedaço curto arrisca zumbido e
+  // tem três tentativas; um pedaço acima do máximo arrisca leitura truncada, que
+  // é a falha calada.
+  const juntos = fora.filter((pedaco) => pedaco.length);
+  const tamanho = (pedaco) => pedaco.reduce((conta, linha) => conta + linha.texto.length, 0);
+  for (let i = juntos.length - 1; i > 0 && chao; i--) {
+    if (tamanho(juntos[i]) >= chao) continue;
+    if (tamanho(juntos[i - 1]) + tamanho(juntos[i]) > maximo) continue;
+    juntos[i - 1].push(...juntos.splice(i, 1)[0]);
+  }
+  return juntos;
 }
 
 /**
@@ -666,7 +712,7 @@ const segundosDe = (ficheiro) =>
 
 /** Fala um texto inteiro, pedaço a pedaço, e devolve o ficheiro. */
 async function grava({ linhas, voz, destino, pasta, nome, fornecedor = "elevenlabs" }) {
-  const partes = pedacos(linhas, tetoDe(fornecedor));
+  const partes = pedacos(linhas, tetoDe(fornecedor), alvoDe(fornecedor), chaoDe(fornecedor));
   const ficheiros = [];
   for (const [i, parte] of partes.entries()) {
     const texto = escrito(parte, fornecedor);
@@ -812,7 +858,7 @@ for (const doc of docs) {
     const fornecedor = fornecedorDe(lingua);
     console.log(
       `${doc.slug} [${lingua}] ${texto.length} caracteres, ` +
-        `${pedacos(linhas, tetoDe(fornecedor)).length} pedaço(s), ${fornecedor}/${voz}`,
+        `${pedacos(linhas, tetoDe(fornecedor), alvoDe(fornecedor), chaoDe(fornecedor)).length} pedaço(s), ${fornecedor}/${voz}`,
     );
     if (fornecedor === "gemini") caracteresGemini += texto.length;
     else caracteres += texto.length;
