@@ -296,19 +296,32 @@ let segundosGemini = 0;
  * dois, e a maior parte das emendas deixa de existir por não haver corte.
  */
 async function pedeAoGemini({ texto, voz }) {
-  const resposta = await fetch(`${GEMINI}/models/${MODELO_GEMINI}:generateContent?key=${chaveGemini}`, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: `${REALIZACAO}\n\n${texto}` }] }],
-      generationConfig: {
-        responseModalities: ["AUDIO"],
-        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voz } } },
-      },
-    }),
-  });
+  let resposta;
+  try {
+    resposta = await fetch(`${GEMINI}/models/${MODELO_GEMINI}:generateContent?key=${chaveGemini}`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: `${REALIZACAO}\n\n${texto}` }] }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voz } } },
+        },
+      }),
+    });
+  } catch (erro) {
+    // Isto demora minutos por pedido e são nove pedidos num artigo: a ligação
+    // cair a meio é coisa que acontece, e não é razão para perder o que já se
+    // gravou.
+    return { razao: `a ligação caiu: ${erro instanceof Error ? erro.message : erro}`, passageiro: true };
+  }
   if (!resposta.ok) {
-    throw new Error(`o Gemini respondeu ${resposta.status}: ${(await resposta.text()).slice(0, 300)}`);
+    const queixa = `HTTP ${resposta.status}: ${(await resposta.text()).slice(0, 200)}`;
+    // Um 500 ou um 429 é o servidor a ter um mau momento e passa; um 400 ou um
+    // 403 é a chave, o modelo ou o corpo do pedido, e passar-lhe por cima era
+    // tentar três vezes a mesma coisa errada e só depois dizer porquê.
+    if (resposta.status >= 500 || resposta.status === 429) return { razao: queixa, passageiro: true };
+    throw new Error(`o Gemini respondeu ${queixa}`);
   }
   const dados = await resposta.json();
   const audio = dados.candidates?.[0]?.content?.parts?.find((parte) => parte.inlineData)?.inlineData?.data;
@@ -337,6 +350,8 @@ async function pedeAoGemini({ texto, voz }) {
  * isto não podia publicar sozinho de madrugada.
  */
 const TENTATIVAS = 3;
+/** O que se espera depois de um tropeção do servidor, e dobra a cada tentativa. */
+const ESPERA = 5_000;
 const MARGEM = { minima: 0.45, maxima: 1.8 };
 /**
  * Quanto do texto tem de aparecer na transcrição.
@@ -396,10 +411,12 @@ async function falaGemini({ texto, voz }) {
   const queixas = [];
 
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
-    const { pcm, segundos, razao } = await pedeAoGemini({ texto, voz });
+    const { pcm, segundos, razao, passageiro } = await pedeAoGemini({ texto, voz });
     if (!pcm) {
       queixas.push(`${tentativa}ª: ${razao}`);
       console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
+      // Voltar a bater à porta no segundo seguinte a um 500 é pedir outro 500.
+      if (passageiro) await new Promise((pronto) => setTimeout(pronto, ESPERA * tentativa));
       continue;
     }
 
