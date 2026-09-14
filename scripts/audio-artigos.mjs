@@ -276,6 +276,18 @@ const REALIZACAO =
   "tratamento é o de Portugal. Faz uma pausa entre parágrafos e uma pausa maior antes de cada " +
   "título de secção. Lê o texto todo, palavra por palavra, sem resumir nem comentar.";
 
+/**
+ * A linha que diz onde acaba a instrução e começa o artigo.
+ *
+ * Sem ela perde-se o título. O guião de realização acaba numa frase, o título
+ * vem logo a seguir noutra linha curta, e o modelo toma-o por cabeçalho do
+ * pedido em vez de texto para ler: a gravação do primeiro artigo inteiro
+ * começava no primeiro parágrafo, com o título pelo caminho. Os títulos de
+ * secção, esses, eram lidos — o problema era só o primeiro, por estar colado à
+ * instrução. Com esta linha entre os dois, lê-se tudo.
+ */
+const ABERTURA = "O texto a ler, do princípio ao fim, a começar pelo título:";
+
 /** PCM cru (16 bits, mono, 24 kHz) embrulhado num WAV que o ffmpeg abre. */
 function wav(pcm, taxa = 24000) {
   const c = Buffer.alloc(44);
@@ -316,7 +328,7 @@ async function pedeAoGemini({ texto, voz }) {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `${REALIZACAO}\n\n${texto}` }] }],
+        contents: [{ parts: [{ text: `${REALIZACAO}\n\n${ABERTURA}\n\n${texto}` }] }],
         generationConfig: {
           responseModalities: ["AUDIO"],
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voz } } },
