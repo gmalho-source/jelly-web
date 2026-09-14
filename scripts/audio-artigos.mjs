@@ -342,11 +342,19 @@ async function pedeAoGemini({ texto, voz }) {
     return { razao: `a ligação caiu: ${erro instanceof Error ? erro.message : erro}`, passageiro: true };
   }
   if (!resposta.ok) {
-    const queixa = `HTTP ${resposta.status}: ${(await resposta.text()).slice(0, 200)}`;
-    // Um 500 ou um 429 é o servidor a ter um mau momento e passa; um 400 ou um
-    // 403 é a chave, o modelo ou o corpo do pedido, e passar-lhe por cima era
-    // tentar três vezes a mesma coisa errada e só depois dizer porquê.
+    const dito = await resposta.text();
+    const queixa = `HTTP ${resposta.status}: ${dito.slice(0, 200)}`;
+    // Um 500 ou um 429 é o servidor a ter um mau momento, e passa.
     if (resposta.status >= 500 || resposta.status === 429) return { razao: queixa, passageiro: true };
+    // Este 400 é o modelo a responder texto num sítio onde só devia sair som —
+    // «Model tried to generate text, but it should only be used for TTS». Vem
+    // com o código de um pedido mal feito e não é um: o pedido seguinte, igual,
+    // costuma ler. Conta como leitura má e tenta-se outra vez.
+    if (resposta.status === 400 && /should only be used for TTS/i.test(dito)) {
+      return { razao: "respondeu texto em vez de som" };
+    }
+    // O resto é a chave, o modelo ou o corpo do pedido, e insistir era tentar
+    // várias vezes a mesma coisa errada e só depois dizer porquê.
     throw new Error(`o Gemini respondeu ${queixa}`);
   }
   const dados = await resposta.json();
