@@ -375,7 +375,18 @@ async function pedeAoGemini({ texto, voz }) {
  * todo? Custa cêntimos de cêntimo contra os dez cêntimos da gravação, e sem ela
  * isto não podia publicar sozinho de madrugada.
  */
-const TENTATIVAS = 3;
+/**
+ * Duas contas separadas, porque são dois problemas diferentes.
+ *
+ * `TENTATIVAS` é o orçamento de leituras más — o modelo respondeu, e o que
+ * respondeu não presta. `TROPECOES` são os 500 e os 429 e a ligação a cair, que
+ * não dizem nada sobre a leitura e não têm por que gastar aquele orçamento: uma
+ * gravação morreu com as três tentativas consumidas por um erro de servidor,
+ * uma leitura boa mal julgada e uma leitura má, sem nunca ter havido três
+ * leituras más.
+ */
+const TENTATIVAS = 4;
+const TROPECOES = 3;
 /** O que se espera depois de um tropeção do servidor, e dobra a cada tentativa. */
 const ESPERA = 5_000;
 const MARGEM = { minima: 0.45, maxima: 1.8 };
@@ -430,27 +441,47 @@ async function transcreve(wave) {
   return texto ? rasa(texto) : undefined;
 }
 
+/**
+ * Se a leitura chegou ao fim do texto.
+ *
+ * Exigir as últimas três palavras exactas era pedir demais a quem transcreve:
+ * uma vírgula a mais, um número por extenso, e uma leitura completa dava por
+ * truncada. Uma gravação foi recusada com cento e três por cento do texto na
+ * transcrição — tinha lido tudo e mais alguma coisa. Agora conta-se quantas das
+ * últimas dez palavras aparecem no fim da transcrição, e bastam duas: quem
+ * parou a meio não tem lá nenhuma.
+ */
+function chegouAoFim(ouvido, palavras) {
+  const ditas = ouvido.split(" ");
+  const fecho = new Set(ditas.slice(-Math.max(40, Math.round(ditas.length * 0.1))));
+  const ultimas = palavras.slice(-10).filter((palavra) => palavra.length > 2);
+  return ultimas.filter((palavra) => fecho.has(palavra)).length >= 2;
+}
+
 /** Fala um pedaço com o Gemini, e não devolve por leitura o que não é leitura. */
 async function falaGemini({ texto, voz }) {
   const esperado = texto.length / CARACTERES_POR_SEGUNDO;
   const palavras = rasa(texto).split(" ");
   const queixas = [];
 
-  for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
+  let tentativa = 0;
+  let tropecoes = 0;
+  while (tentativa < TENTATIVAS && tropecoes < TROPECOES) {
     const { pcm, segundos, razao, passageiro } = await pedeAoGemini({ texto, voz });
     if (!pcm) {
-      queixas.push(`${tentativa}ª: ${razao}`);
-      console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
-      // Voltar a bater à porta no segundo seguinte a um 500 é pedir outro 500.
-      if (passageiro) await new Promise((pronto) => setTimeout(pronto, ESPERA * tentativa));
+      // Um tropeção do servidor não é uma leitura má: conta noutra conta.
+      if (passageiro) tropecoes += 1;
+      else tentativa += 1;
+      queixas.push(`${razao}`);
+      console.warn(`  ↻ ${razao} — outra vez`);
+      if (passageiro) await new Promise((pronto) => setTimeout(pronto, ESPERA * tropecoes));
       continue;
     }
+    tentativa += 1;
 
     const proporcao = segundos / esperado;
     if (proporcao < MARGEM.minima || proporcao > MARGEM.maxima) {
-      queixas.push(
-        `${tentativa}ª: ${Math.round(segundos)}s para ${texto.length} caracteres (esperava-se ~${Math.round(esperado)}s)`,
-      );
+      queixas.push(`${Math.round(segundos)}s para ${texto.length} caracteres (esperava-se ~${Math.round(esperado)}s)`);
       console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
       continue;
     }
@@ -464,18 +495,16 @@ async function falaGemini({ texto, voz }) {
     }
 
     const cobertura = ouvido.split(" ").length / palavras.length;
-    const acabou = ouvido.includes(palavras.slice(-3).join(" "));
+    const acabou = chegouAoFim(ouvido, palavras);
     if (cobertura >= COBERTURA.minima && cobertura <= COBERTURA.maxima && acabou) return wave;
 
-    queixas.push(
-      `${tentativa}ª: leu ${Math.round(cobertura * 100)}% do texto` + (acabou ? "" : " e não chegou ao fim"),
-    );
+    queixas.push(`leu ${Math.round(cobertura * 100)}% do texto` + (acabou ? "" : " e não chegou ao fim"));
     console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
   }
 
   // Rebenta em vez de publicar: um artigo sem áudio nenhum apanha-se na corrida
   // seguinte, um artigo lido até meio fica no site até alguém dar por isso.
-  throw new Error(`o Gemini não leu isto em condições em ${TENTATIVAS} tentativas — ${queixas.join("; ")}`);
+  throw new Error(`o Gemini não leu isto em condições — ${queixas.join("; ")}`);
 }
 
 /**
@@ -722,22 +751,52 @@ const segundosDe = (ficheiro) =>
     ),
   );
 
+/**
+ * Onde ficam os pedaços já lidos e aprovados, entre corridas.
+ *
+ * Um artigo são nove pedidos de dois minutos, e basta um deles esgotar as
+ * tentativas para o trabalho todo se perder — os oito que estavam bons
+ * incluídos, já gerados e já pagos. Aconteceu três vezes em quatro na tarde em
+ * que isto se montou. O nome de cada ficheiro é a impressão digital do que lá
+ * está lido, com a voz: quem voltar a pedir exactamente o mesmo encontra-o
+ * feito, e quem mudar uma vírgula ao parágrafo não o encontra.
+ *
+ * Fica no temporário da máquina de propósito. Não é cache que se queira manter:
+ * é para a corrida seguinte, minutos depois, não voltar ao princípio.
+ */
+const GUARDADOS = path.join(os.tmpdir(), "audio-pedacos");
+
 /** Fala um texto inteiro, pedaço a pedaço, e devolve o ficheiro. */
 async function grava({ linhas, voz, destino, pasta, nome, fornecedor = "elevenlabs" }) {
   const partes = pedacos(linhas, tetoDe(fornecedor), alvoDe(fornecedor), chaoDe(fornecedor));
   const ficheiros = [];
+  fs.mkdirSync(GUARDADOS, { recursive: true });
   for (const [i, parte] of partes.entries()) {
     const texto = escrito(parte, fornecedor);
     const ficheiro = path.join(pasta, `${nome}-${i}.${fornecedor === "gemini" ? "wav" : "mp3"}`);
     if (fornecedor === "gemini") {
-      fs.writeFileSync(ficheiro, await falaGemini({ texto, voz }));
-    } else {
-      // A costura: o modelo vê o fim do pedaço anterior e o princípio do
-      // seguinte, e por isso não recomeça do zero em cada corte.
-      const anterior = i > 0 ? escrito(partes[i - 1], fornecedor).slice(-500) : "";
-      const seguinte = i + 1 < partes.length ? escrito(partes[i + 1], fornecedor).slice(0, 500) : "";
-      fs.writeFileSync(ficheiro, await fala({ texto, voz, antes: anterior, depois: seguinte }));
+      const guardado = path.join(
+        GUARDADOS,
+        `${createHash("sha1").update(`${voz}\n${texto}`).digest("hex").slice(0, 16)}.wav`,
+      );
+      if (fs.existsSync(guardado)) {
+        console.log(`  ${i + 1}/${partes.length} já estava lido`);
+        fs.copyFileSync(guardado, ficheiro);
+        ficheiros.push(ficheiro);
+        continue;
+      }
+      const lido = await falaGemini({ texto, voz });
+      fs.writeFileSync(ficheiro, lido);
+      fs.writeFileSync(guardado, lido);
+      console.log(`  ${i + 1}/${partes.length} lido`);
+      ficheiros.push(ficheiro);
+      continue;
     }
+    // A costura: o modelo vê o fim do pedaço anterior e o princípio do
+    // seguinte, e por isso não recomeça do zero em cada corte.
+    const anterior = i > 0 ? escrito(partes[i - 1], fornecedor).slice(-500) : "";
+    const seguinte = i + 1 < partes.length ? escrito(partes[i + 1], fornecedor).slice(0, 500) : "";
+    fs.writeFileSync(ficheiro, await fala({ texto, voz, antes: anterior, depois: seguinte }));
     ficheiros.push(ficheiro);
   }
   junta(ficheiros, destino);
