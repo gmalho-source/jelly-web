@@ -9,6 +9,7 @@
  *
  *   DATABASE_URL=… PAYLOAD_SECRET=… node scripts/payload-migrate.mjs --dry-run
  *   DATABASE_URL=… PAYLOAD_SECRET=… node scripts/payload-migrate.mjs --only=pages
+ *   DATABASE_URL=… PAYLOAD_SECRET=… node scripts/payload-migrate.mjs --only=posts --slug=um-artigo
  *
  * Idempotente: procura por slug antes de criar, e as imagens já carregadas
  * ficam registadas em content-import/payload-media.<base>.json.
@@ -42,6 +43,15 @@ const dryRun = flag("dry-run");
 const skipImages = flag("skip-images");
 const only = (value("only") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
 const limit = Number(value("limit") ?? 0) || Infinity;
+/*
+ * Um artigo só, pelo endereço.
+ *
+ * Sem isto, trazer um artigo novo do WordPress obrigava a passar por cima dos
+ * cento e oitenta e um que já cá estão — e o `upsert` actualiza, não ignora:
+ * levava com ele as traduções inglesas e as correcções feitas no painel desde
+ * a migração. Com `--slug=`, entra o que falta e o resto fica quieto.
+ */
+const apenasSlug = value("slug") ?? "";
 const wants = (name) => only.length === 0 || only.includes(name);
 
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
@@ -303,7 +313,9 @@ async function authorRefFor(payload, name) {
 }
 
 async function migratePosts(payload) {
-  const posts = readJson("src/content/generated/posts.json").slice(0, limit);
+  const posts = readJson("src/content/generated/posts.json")
+    .filter((post) => !apenasSlug || post.slug === apenasSlug)
+    .slice(0, limit);
   const categories = new Map();
   for (const post of posts) {
     const authorRef = await authorRefFor(payload, post.author);

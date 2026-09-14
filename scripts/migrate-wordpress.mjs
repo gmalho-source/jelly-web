@@ -71,14 +71,51 @@ function toBlocks(html) {
     return candidates.find((value) => value && !value.startsWith("data:")) ?? null;
   };
 
+  /**
+   * O cartão de quem escreveu, que o tema põe no topo do artigo.
+   *
+   * São duas coisas e não uma: a fotografia de perfil, dentro de um
+   * `wp-block-media-text__media`, e a linha «Nome / Cargo» no parágrafo logo a
+   * seguir. Ambas caem — o site novo tem ficha de autor própria, e sem isto o
+   * artigo abria com um avatar de 600px e com o nome da autora a meio do texto.
+   *
+   * O que fica é o texto do cartão, que neste tema é o parágrafo de entrada do
+   * artigo. Apagar o bloco inteiro, que foi o que tentei primeiro, levava o
+   * lead com ele.
+   */
+  const retratoDoAutor = (node) => (node.getAttribute?.("class") ?? "").includes("wp-block-media-text__media");
+
+  /** «Nome<br>Cargo»: um parágrafo curto com uma quebra de linha lá dentro. */
+  const assinatura = (node) =>
+    Boolean(node.querySelector?.("br")) && Boolean(node.querySelector?.("strong")) && text(node).length <= 60;
+
+  /**
+   * Um parágrafo que é só negrito e é curto é um título.
+   *
+   * Quem escreve no WordPress marca as secções a negrito em vez de usar os
+   * títulos do editor, e o artigo chegava aqui com quarenta e sete parágrafos
+   * seguidos e um único `h3`. As duas condições contam: o parágrafo de entrada
+   * também vem todo a negrito, e é um parágrafo — por isso o corte pelo
+   * comprimento, e por acabar em ponto final.
+   */
+  const tituloDisfarcado = (node) => {
+    const fortes = node.querySelectorAll("strong");
+    if (fortes.length !== 1) return false;
+    const valor = text(node);
+    if (!valor || valor !== text(fortes[0])) return false;
+    return valor.length <= 80 && !/[.:;!?]$/.test(valor);
+  };
+
   for (const node of root.childNodes) {
     const tag = node.rawTagName?.toLowerCase();
+    if (retratoDoAutor(node)) continue;
     if (!tag) {
       const loose = text(node);
       if (loose) blocks.push({ type: "p", text: loose });
       continue;
     }
     if (tag === "p") {
+      if (assinatura(node)) continue;
       const image = node.querySelector("img");
       const value = text(node);
       if (image) {
@@ -87,7 +124,7 @@ function toBlocks(html) {
         if (value) blocks.push({ type: "p", text: value });
         continue;
       }
-      if (value) blocks.push({ type: "p", text: value });
+      if (value) blocks.push({ type: tituloDisfarcado(node) ? "h3" : "p", text: value });
       continue;
     }
     if (tag === "h2" || tag === "h3" || tag === "h4") {

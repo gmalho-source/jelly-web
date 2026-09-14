@@ -1,5 +1,229 @@
 [
  {
+  "slug": "anuncios-no-chatgpt-marcas-portugal",
+  "legacyPath": "/anuncios-no-chatgpt-marcas-portugal/paid-media/",
+  "date": "2026-09-14",
+  "updated": "2026-09-14",
+  "lang": "pt",
+  "title": "ChatGPT Ads – A conversa chega a Portugal",
+  "excerpt": "A publicidade chegou ao Chat GPT em 31 mercados europeus no final de agosto de 2026 e, desde 31 de agosto, empresas sediadas em Portugal podem aceder ao Ads Manager,…",
+  "author": "Alícia Coquim",
+  "category": "Paid Media",
+  "categorySlug": "paid-media",
+  "readingMinutes": 9,
+  "cover": {
+   "src": "https://www.jelly.pt/wp-content/uploads/2026/09/ChatGPT-Ads-chega-a-Portugal-blog-Jelly-Digital.jpg",
+   "alt": "Mulher a usar o ChatGPT no telemóvel, com um anúncio patrocinado de ténis de corrida a aparecer na conversa",
+   "width": 1672,
+   "height": 941
+  },
+  "body": [
+   {
+    "type": "p",
+    "text": "A publicidade chegou ao Chat GPT em 31 mercados europeus no final de agosto de 2026 e, desde 31 de agosto, empresas sediadas em Portugal podem aceder ao Ads Manager, ainda em beta. Abre-se um novo canal de media dentro de uma experiência conversacional, com uma distinção essencial desde o início: pagar para aparecer junto de uma resposta não é pagar para ser recomendado dentro dela."
+   },
+   {
+    "type": "h3",
+    "text": "O que aconteceu"
+   },
+   {
+    "type": "p",
+    "text": "A OpenAI começou a testar publicidade no Chat GPT nos Estados Unidos em fevereiro de 2026. Seis meses depois, expandiu o modelo à Europa. Os anúncios aparecem abaixo das respostas, claramente identificados como patrocinados e visualmente separados do conteúdo gerado pelo Chat GPT. A OpenAI afirma que a publicidade funciona num sistema independente e não altera as respostas dadas pelo modelo."
+   },
+   {
+    "type": "p",
+    "text": "Os primeiros dados reforçam a separação entre as duas camadas. Num estudo da SE Ranking com mais de 50 mil prompts comerciais, o domínio do anunciante apareceu também entre as fontes citadas em apenas 3,63% das colocações publicitárias analisadas."
+   },
+   {
+    "type": "h3",
+    "text": "O PONTO QUE MUDA O PLANO"
+   },
+   {
+    "type": "p",
+    "text": "Comprar publicidade no Chat GPT compra visibilidade patrocinada, não compra presença orgânica dentro da resposta. Uma marca pode pagar para aparecer junto de uma resposta que recomenda um concorrente, e pode ser recomendada sem investir em publicidade."
+   },
+   {
+    "type": "h3",
+    "text": "Quem pode ver anúncios"
+   },
+   {
+    "type": "p",
+    "text": "Os anúncios podem ser apresentados nos planos Free e Go. Plus, Pro, Business, Enterprise e Edu permanecem sem publicidade, e existem outras exclusões e controlos, nomeadamente para menores de 18 anos e para determinadas experiências do produto."
+   },
+   {
+    "type": "p",
+    "text": "O Chat GPT aproxima-se dos mil milhões de utilizadores ativos semanais, mas a OpenAI não publica uma divisão suficientemente detalhada que permita calcular com rigor que percentagem dessa audiência está efetivamente disponível para publicidade. Para as marcas, a questão relevante não é, por isso, a dimensão total do Chat GPT. É perceber se o público que querem alcançar utiliza os planos onde existe inventário publicitário."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/image-1.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "A publicidade existe apenas nos planos Free e Go."
+   },
+   {
+    "type": "h3",
+    "text": "Uma lógica de compra diferente"
+   },
+   {
+    "type": "p",
+    "text": "O Chat GPT Ads não funciona como uma campanha de pesquisa tradicional no Google Ads. Na configuração da campanha, o que o anunciante define são as “Pistas de contexto”: indicações sobre os temas, produtos ou palavras-chave em que os seus produtos ou serviços podem ser relevantes. Ao contrário do que é habitual noutras plataformas, estas pistas não funcionam como palavras-chave de segmentação: orientam a entrega, mas não garantem que o anúncio apareça numa conversa específica."
+   },
+   {
+    "type": "p",
+    "text": "Segundo a OpenAI, a seleção do anúncio combina essas pistas com outros sinais avaliados automaticamente pelo sistema, como o contexto e a intenção da conversa em curso, a página de destino, o título e o texto do próprio anúncio. O anunciante não recebe acesso às conversas que originaram a apresentação do anúncio."
+   },
+   {
+    "type": "p",
+    "text": "Há outra diferença importante na Europa. Nesta fase, os anúncios personalizados não estão disponíveis no Espaço Económico Europeu nem na Suíça. A seleção baseia-se, assim, sobretudo no contexto da conversa atual e em informação contextual básica, como o idioma ou a localização geral."
+   },
+   {
+    "type": "p",
+    "text": "O Ads Manager permite ainda criar públicos personalizados, a partir do carregamento de listas de contactos (email, telefone ou variantes hash), para incluir, excluir ou ajustar o lanço de um grupo de anúncios quando o visualizador pertence a esse público. Esta funcionalidade não está disponível para campanhas dirigidas ao Espaço Económico Europeu ou à Suíça, a mesma restrição que já se aplica à personalização de anúncios."
+   },
+   {
+    "type": "p",
+    "text": "Na prática, para uma marca a anunciar em Portugal, os públicos personalizados não são, para já, uma opção de segmentação disponível."
+   },
+   {
+    "type": "h3",
+    "text": "Um canal a crescer depressa, mas ainda pequeno"
+   },
+   {
+    "type": "p",
+    "text": "Em menos de 200 dias, o Chat GPT Ads atingiu mil milhões de dólares de receita anualizada. A velocidade de crescimento é relevante. A dimensão ainda é bastante diferente da publicidade associada à pesquisa da Google. Em 2025, a rubrica «Google Search & other» gerou 224,5 mil milhões de dólares de receita. A comparação não é direta, uma é uma taxa de receita anualizada e a outra é receita efetivamente registada num ano, mas ajuda a colocar a dimensão atual do canal em perspetiva."
+   },
+   {
+    "type": "p",
+    "text": "Os primeiros resultados aconselham prudência. Num caso publicado pelo Search Engine Land, com cerca de 1.500 utilizadores que chegaram ao mesmo site, o tráfego do Google Ads converteu a 3,71% e o do Chat GPT Ads a 0,21%. O tempo de interação e as sessões com interação também foram inferiores. É um único caso, não um benchmark, e a própria OpenAI reconhece que ainda não existem referências de desempenho consolidadas por anunciante, setor ou tipo de campanha. A conclusão não é que o canal funciona ou não funciona, é que ainda precisa de ser testado e medido como um canal novo."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/image.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "A dimensão atual do canal e os primeiros sinais de performance comparada."
+   },
+   {
+    "type": "h3",
+    "text": "Em Portugal, a audiência já está na IA"
+   },
+   {
+    "type": "p",
+    "text": "A mudança no comportamento dos consumidores começou antes da publicidade. Segundo a Deloitte, 70% dos adultos portugueses inquiridos já utilizaram ferramentas de IA generativa, face a 41% em 2023, e o Chat GPT é a solução mais utilizada, com 61%. Num estudo da LLYC com a Appinio, 23,6% dos inquiridos afirmaram começar a sua jornada de pesquisa diretamente em assistentes de IA."
+   },
+   {
+    "type": "p",
+    "text": "Do lado das empresas, a adoção é bastante mais baixa. Em 2025, 11,5% das empresas portuguesas abrangidas pelas estatísticas do Eurostat utilizavam pelo menos uma tecnologia de IA. É neste desfasamento que surge uma oportunidade: as marcas podem começar a trabalhar a sua visibilidade nos sistemas de IA antes de o mercado atingir a maturidade de outros canais digitais."
+   },
+   {
+    "type": "h3",
+    "text": "Quando testar, e quando esperar"
+   },
+   {
+    "type": "p",
+    "text": "Faz sentido considerar um teste quando existe um negócio de e-commerce ou de geração de leads de consumidor, quando a marca já recebe tráfego orgânico proveniente do Chat GPT, quando consegue medir resultados para além do clique e quando existe orçamento próprio para experimentar sem retirar investimento de canais que já demonstraram retorno."
+   },
+   {
+    "type": "p",
+    "text": "Esperar pode ser mais racional quando a audiência-alvo está concentrada em planos sem publicidade, quando a categoria está sujeita a regras adicionais de elegibilidade, quando não existe medição preparada ou quando o teste teria de substituir investimento comprovadamente rentável."
+   },
+   {
+    "type": "p",
+    "text": "O principal erro seria tratar o Chat GPT Ads como mais uma campanha de Google Search e esperar os mesmos custos, volumes ou taxas de conversão. O erro oposto seria esperar que o canal pago amadurecesse e ignorar, entretanto, a visibilidade orgânica."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/image-2.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "Critérios de decisão antes de investir, e as duas frentes a trabalhar em paralelo."
+   },
+   {
+    "type": "h3",
+    "text": "Aspetos técnicos a ter em conta"
+   },
+   {
+    "type": "p",
+    "text": "Na configuração da conta, o logótipo da marca é um elemento obrigatório de validação, algo que não é habitual noutras plataformas de publicidade: a OpenAI exige a confirmação do nome da conta e do logótipo exatamente como devem aparecer no anúncio, e os anúncios não são veiculados enquanto este passo não estiver concluído."
+   },
+   {
+    "type": "p",
+    "text": "Ao nível de parametrização dos anúncios, existe menos capacidade de diversificação de títulos e descrições do que no Google Ads, mas a imagem do anúncio pode ser aproveitada para reforçar a mensagem."
+   },
+   {
+    "type": "p",
+    "text": "Outro ponto relevante é que a instalação do pixel de conversão não segue o modelo já conhecido do Meta Ads ou do Google Ads. Sempre que o código é copiado diretamente em Ads Manager → Conversions → Data Source → Copy data source, o snippet chega com debug:true incluído por defeito:"
+   },
+   {
+    "type": "p",
+    "text": "oaiq(“init”,{pixelId:”SEU_PIXEL_ID”,debug:true});"
+   },
+   {
+    "type": "p",
+    "text": "Este comportamento é intencional da parte da OpenAI, para facilitar o teste inicial, mas não deve seguir para produção. Antes de publicar o código numa tag nova ou de o substituir numa tag existente, deve remover-se o parâmetro debug:true."
+   },
+   {
+    "type": "p",
+    "text": "Há ainda outros ajustes específicos que estão a ser validados consoante o número de contas ativadas e o objetivo de cada campanha, nomeadamente ao nível do feed de dados para e-commerce em lojas online que não utilizam Shopify."
+   },
+   {
+    "type": "h3",
+    "text": "Nem todas as empresas, marcas e categorias podem anunciar"
+   },
+   {
+    "type": "p",
+    "text": "As Ads Policies da OpenAI, acrescentam um filtro essencial à decisão de investimento. Nesta fase, o foco está sobretudo em categorias de consumo, como lifestyle e bens para o lar, serviços locais, viagens e experiências, produtos digitais e educação. Para uma marca em Portugal, a elegibilidade deve ser validada antes de qualquer teste: os serviços financeiros e de saúde fora dos Estados Unidos são, em regra, proibidos nesta fase, os serviços jurídicos não são permitidos e continuam excluídas categorias como: álcool e tabaco, jogo, conteúdo político e drogas recreativas."
+   },
+   {
+    "type": "p",
+    "text": "As regras aplicam-se à experiência completa do anúncio. O anunciante tem de apresentar uma identidade e afiliações verdadeiras, usar apenas ativos de marca autorizados e encaminhar para uma página de destino coerente com a oferta. Alegações enganosas ou não fundamentadas, falsas associações e criativos que imitem a interface ou a voz do ChatGPT podem levar à rejeição do anúncio. Anúncios de imóveis ou ofertas de emprego específicas também não são permitidos, embora plataformas com múltiplos anúncios possam ser elegíveis quando o criativo e a landing page não promovem uma listagem concreta."
+   },
+   {
+    "type": "p",
+    "text": "A aprovação também não garante presença em qualquer conversa. A OpenAI bloqueia anúncios em contextos que classifica como inadequados ou sensíveis, incluindo situações de vulnerabilidade emocional, conversas sobre saúde mental e saúde pessoal, fraude, violência gráfica, autoagressão, política, desinformação, armas e bens regulados. A revisão abrange o anunciante, o criativo, a página de destino e a colocação. Esta combina sistemas automatizados com supervisão humana e continua depois da aprovação, podendo a entrega ser limitada ou o anúncio removido em caso de incumprimento."
+   },
+   {
+    "type": "h3",
+    "text": "Como ajudamos"
+   },
+   {
+    "type": "p",
+    "text": "Na Jelly, trabalhamos estas duas frentes em paralelo. Começamos por perceber onde a marca aparece nas respostas dos motores de IA, que concorrentes surgem e que fontes são utilizadas. A partir daí, trabalhamos a frente orgânica com metodologia GEO para aumentar a probabilidade de a marca ser encontrada, considerada e citada, não para garantir uma recomendação."
+   },
+   {
+    "type": "p",
+    "text": "Na componente paga, avaliamos se já existem condições para testar o ChatGPT Ads, preparamos a medição antes do investimento e definimos critérios claros para decidir se faz sentido escalar, ajustar ou esperar."
+   },
+   {
+    "type": "h3",
+    "text": "A IDEIA A RETER"
+   },
+   {
+    "type": "p",
+    "text": "A publicidade pode comprar espaço junto da resposta. A visibilidade orgânica constrói-se para tentar fazer parte dela."
+   },
+   {
+    "type": "h3",
+    "text": "Fontes"
+   },
+   {
+    "type": "p",
+    "text": "OpenAI, Testing ads in ChatGPT e ChatGPT Ads expands across Europe · Centro de Ajuda da OpenAI · Index Lab, disponibilidade por país · John Horn, Search Engine Land · Estudo SE Ranking · Forbes e Tech Times · Alphabet, resultados de 2025 · Deloitte Digital Consumer Trends, edição Portugal · LLYC e Appinio (jan. 2026) · Eurostat, uso de IA pelas empresas."
+   },
+   {
+    "type": "p",
+    "text": "Nota de Transparência: Este artigo reflete a nossa abordagem à inovação. O texto foi estruturado com o apoio de ferramentas de IA Co-Pilot e revisto, expandido e editado pela nossa equipa editorial. As infografias integradas foram criadas com recurso à Inteligência Artificial Generativa."
+   }
+  ]
+ },
+ {
   "slug": "o-que-e-geo-motores-de-ia",
   "legacyPath": "/o-que-e-geo-motores-de-ia/inteligencia-artificial/",
   "date": "2026-09-10",
