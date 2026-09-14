@@ -26,6 +26,7 @@
  *   npm run audio -- --so=<slug>
  *   npm run audio -- --desde=7             # o que saiu esta semana
  *   npm run audio -- --dry --desde=30      # o que isso ia custar, sem gravar
+ *   npm run audio -- --so=<slug> --guardar=/tmp/ouvir   # grava e não publica
  *   npm run audio                          # tudo o que falta ou mudou
  *
  * O último é o que a automação nunca corre: sem `--desde` nem `--limite` isto
@@ -38,7 +39,7 @@
  * `--forcar --lingua=pt --limite=10`, ouvindo o primeiro antes dos outros nove.
  *
  * Opções: --so= --desde= --lingua=pt|en --limite= --voz= --fornecedor=
- *         --modelo= --modelo-gemini= --formato= --forcar --dry
+ *         --modelo= --modelo-gemini= --formato= --forcar --dry --guardar=
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -71,6 +72,16 @@ const limite = Number(valor("limite") ?? 0) || Infinity;
  */
 const desde = Number(valor("desde") ?? 0) || 0;
 const dry = flag("dry");
+/**
+ * Gravar sem publicar.
+ *
+ * O `--dry` conta o que ia fazer e não grava nada; isto grava tudo e não
+ * publica nada — fica com os ficheiros numa pasta para se ouvirem antes de
+ * irem para o site. Entre uma estimativa e um artigo já publicado não havia
+ * nada, e passou a ser preciso haver: quem lê o português é um modelo em
+ * preview, e a maneira de saber se uma gravação presta continua a ser ouvi-la.
+ */
+const guardar = valor("guardar");
 const forcar = flag("forcar");
 const amostra = flag("amostra");
 const listar = flag("vozes");
@@ -87,23 +98,29 @@ const linguas = valor("lingua") ? [valor("lingua")] : ["pt", "en"];
 const MODELO = valor("modelo") ?? "eleven_multilingual_v2";
 const TETO = MODELO.includes("flash") || MODELO.includes("turbo") ? 35_000 : 9_000;
 /**
- * O tecto do Gemini, por pedido.
+ * O tecto do Gemini, por pedido, e porque é tão baixo.
  *
- * Não é um limite da API — é o que se mediu de ouvido. Seis mil caracteres
- * saem inteiros e em cinco minutos de áudio, com noventa e nove por cento do
- * texto na transcrição de volta. Muito acima disto a leitura acelera e a espera
- * passa dos três minutos por pedaço, que num runner com concorrência de um é
- * tempo a sério.
+ * Não é um limite da API: aos seis mil caracteres a API aceita e responde. É
+ * que a resposta deixa de ser de fiar. Medido em Setembro de 2026 com o mesmo
+ * pedaço repetido, aos seis mil houve pedidos a devolver noventa e quatro
+ * segundos de áudio para um texto de quatrocentos — o modelo lê um bocado e
+ * pára, com a voz certa e o sotaque certo, e o artigo acaba a meio de uma
+ * secção sem nada que o denuncie. Aos mil e quinhentos isso não apareceu, e o
+ * ritmo até fica constante, à volta de setenta milissegundos por caractere.
+ *
+ * O preço disto são cinco pedidos por artigo em vez de dois, e cinco emendas
+ * onde a ElevenLabs costurava com o `previous_text`. Os cortes são em fim de
+ * parágrafo, que é onde uma leitura respira de qualquer maneira.
  */
-const TETO_GEMINI = 6_000;
+const TETO_GEMINI = 1_500;
 
 /**
  * O ritmo de leitura, em caracteres por segundo.
  *
- * Medido com a instrução de realização que manda ler devagar. Serve a duas
- * coisas: estimar o custo num ensaio, onde ainda não há segundos nenhuns, e
- * saber quanto tempo devia demorar um pedaço — que é como se apanha o modelo a
- * zumbir depois de acabar de ler.
+ * Quinze, medido em pedaços deste tamanho e com a instrução que manda ler
+ * devagar. Não vale para pedaços grandes: aos seis mil o modelo acelera para
+ * vinte e picos, e foi essa diferença que fez a primeira versão desta conta dar
+ * por boas leituras que estavam truncadas a um terço.
  */
 const CARACTERES_POR_SEGUNDO = 15;
 const tetoDe = (fornecedor) => (fornecedor === "gemini" ? TETO_GEMINI : TETO);
@@ -306,42 +323,115 @@ async function pedeAoGemini({ texto, voz }) {
 /**
  * Quantas vezes se tenta, e o que se aceita.
  *
- * Isto é um modelo em preview e às vezes não pára de falar. Medido em Setembro
- * de 2026, quatro pedidos do mesmo parágrafo de 259 caracteres deram 130
- * segundos, 592 segundos, nenhum áudio, e um correcto: o que se ouve nos maus é
- * a frase, depois silêncio, depois um zumbido electrónico até ao fim. Nos
- * pedaços grandes de um artigo a sério isso não apareceu, mas «não apareceu nas
- * que ouvi» não é coisa que se publique sozinha num site.
+ * Isto é um modelo em preview e falha de duas maneiras, as duas caladas. Não
+ * pára de falar — quatro pedidos do mesmo parágrafo de 259 caracteres deram 130
+ * segundos, 592 segundos, nenhum áudio, e um correcto, e o que se ouve nos maus
+ * é a frase, depois silêncio, depois um zumbido até ao fim. Ou pára de falar
+ * cedo demais, que é pior: a voz certa, o sotaque certo, e o artigo a acabar a
+ * meio de uma secção sem nada que o denuncie.
  *
- * A defesa é a única que há sem ouvir: o texto diz quanto tempo deve demorar a
- * ser lido, e o que sair muito fora disso não é leitura. A margem é larga de
- * propósito — o ritmo varia entre treze e vinte e três caracteres por segundo
- * conforme o tamanho do pedaço — e o que se quer apanhar são os dobros e os
- * triplos, não uma voz mais pausada do que outra.
+ * A defesa é ouvir o que ele leu. A duração é o primeiro filtro, porque é de
+ * graça e apanha os disparates de uma ordem de grandeza; o juiz é a
+ * transcrição, que responde à única pergunta que interessa — está aqui o texto
+ * todo? Custa cêntimos de cêntimo contra os dez cêntimos da gravação, e sem ela
+ * isto não podia publicar sozinho de madrugada.
  */
 const TENTATIVAS = 3;
 const MARGEM = { minima: 0.45, maxima: 1.8 };
+/**
+ * Quanto do texto tem de aparecer na transcrição.
+ *
+ * Nunca dá cem por cento: quem transcreve junta palavras, come um artigo, e o
+ * que volta anda nos noventa e cinco a noventa e nove por cento numa leitura
+ * boa. Oitenta e cinco deixa passar essa folga e não deixa passar um terço do
+ * artigo em falta. O tecto apanha o contrário — uma transcrição muito maior do
+ * que o texto é a voz a inventar depois de acabar.
+ */
+const COBERTURA = { minima: 0.85, maxima: 1.3 };
 
-/** Fala um pedaço com o Gemini, e não devolve ruído por leitura. */
+const MODELO_OUVIDO = "gemini-2.5-flash";
+
+/** Sem acentos, sem pontuação, em minúsculas: como se comparam duas leituras. */
+const rasa = (texto) =>
+  texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/**
+ * O que a gravação diz, ouvida por quem não escreveu o texto.
+ *
+ * Se a transcrição em si falhar, devolve nada e quem chamou decide — uma
+ * verificação que não correu não é uma gravação má, e não se deita fora uma
+ * leitura boa por o verificador estar em baixo.
+ */
+async function transcreve(wave) {
+  const resposta = await fetch(`${GEMINI}/models/${MODELO_OUVIDO}:generateContent?key=${chaveGemini}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
+            { text: "Transcreve este áudio literalmente, do princípio ao fim, sem resumir. Só a transcrição." },
+            { inlineData: { mimeType: "audio/wav", data: wave.toString("base64") } },
+          ],
+        },
+      ],
+    }),
+  });
+  if (!resposta.ok) return undefined;
+  const dados = await resposta.json();
+  const texto = dados.candidates?.[0]?.content?.parts?.map((parte) => parte.text).join("");
+  return texto ? rasa(texto) : undefined;
+}
+
+/** Fala um pedaço com o Gemini, e não devolve por leitura o que não é leitura. */
 async function falaGemini({ texto, voz }) {
   const esperado = texto.length / CARACTERES_POR_SEGUNDO;
+  const palavras = rasa(texto).split(" ");
   const queixas = [];
+
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
     const { pcm, segundos, razao } = await pedeAoGemini({ texto, voz });
     if (!pcm) {
       queixas.push(`${tentativa}ª: ${razao}`);
+      console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
       continue;
     }
+
     const proporcao = segundos / esperado;
-    if (proporcao >= MARGEM.minima && proporcao <= MARGEM.maxima) return wav(pcm);
+    if (proporcao < MARGEM.minima || proporcao > MARGEM.maxima) {
+      queixas.push(
+        `${tentativa}ª: ${Math.round(segundos)}s para ${texto.length} caracteres (esperava-se ~${Math.round(esperado)}s)`,
+      );
+      console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
+      continue;
+    }
+
+    const wave = wav(pcm);
+    const ouvido = await transcreve(wave);
+    if (!ouvido) {
+      // A duração bate certo e não há quem confirme. Aceita-se, e diz-se.
+      console.warn(`  (não se conseguiu transcrever para confirmar — vai como está)`);
+      return wave;
+    }
+
+    const cobertura = ouvido.split(" ").length / palavras.length;
+    const acabou = ouvido.includes(palavras.slice(-3).join(" "));
+    if (cobertura >= COBERTURA.minima && cobertura <= COBERTURA.maxima && acabou) return wave;
+
     queixas.push(
-      `${tentativa}ª: ${Math.round(segundos)}s para ${texto.length} caracteres ` +
-        `(esperava-se ~${Math.round(esperado)}s)`,
+      `${tentativa}ª: leu ${Math.round(cobertura * 100)}% do texto` + (acabou ? "" : " e não chegou ao fim"),
     );
     console.warn(`  ↻ ${queixas[queixas.length - 1]} — outra vez`);
   }
+
   // Rebenta em vez de publicar: um artigo sem áudio nenhum apanha-se na corrida
-  // seguinte, um artigo com um minuto de zumbido fica no site até alguém o ouvir.
+  // seguinte, um artigo lido até meio fica no site até alguém dar por isso.
   throw new Error(`o Gemini não leu isto em condições em ${TENTATIVAS} tentativas — ${queixas.join("; ")}`);
 }
 
@@ -652,10 +742,11 @@ if (amostra) {
 
 // ── O trabalho ──────────────────────────────────────────────────────────────
 
-if (!tokenBlob && !dry) {
+if (!tokenBlob && !dry && !guardar) {
   console.error("falta BLOB_READ_WRITE_TOKEN");
   process.exit(2);
 }
+if (guardar) fs.mkdirSync(guardar, { recursive: true });
 for (const lingua of linguas) {
   if (!vozDe(lingua) && !dry) {
     console.error(`falta a voz de ${lingua}: corre --vozes, ouve com --amostra, e põe o id em ELEVENLABS_VOICE_${lingua.toUpperCase()}`);
@@ -719,6 +810,14 @@ for (const doc of docs) {
     const inteiro = path.join(pasta, `${doc.slug}-${lingua}.mp3`);
     await grava({ linhas, voz, destino: inteiro, pasta, nome: `${doc.slug}-${lingua}`, fornecedor });
     const segundos = segundosDe(inteiro);
+
+    if (guardar) {
+      const ficheiro = path.join(guardar, `${doc.slug}-${lingua}.mp3`);
+      fs.copyFileSync(inteiro, ficheiro);
+      console.log(`  ✓ ${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, "0")}  ${ficheiro}`);
+      if (feitos >= limite) break;
+      continue;
+    }
 
     const enviado = await put(`audio/${doc.slug}-${lingua}.mp3`, fs.readFileSync(inteiro), {
       access: "public",
@@ -810,5 +909,5 @@ if (quotaDepois && (caracteres || !caracteresGemini)) {
   }
 }
 
-if (feitos && !dry) await purgeSite();
+if (feitos && !dry && !guardar) await purgeSite();
 process.exit(0);
