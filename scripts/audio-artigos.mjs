@@ -27,6 +27,14 @@
  *   npm run audio -- --desde=7             # o que saiu esta semana
  *   npm run audio -- --dry --desde=30      # o que isso ia custar, sem gravar
  *   npm run audio -- --so=<slug> --guardar=/tmp/ouvir   # grava e não publica
+ *
+ * O Gemini tem cem pedidos por modelo por dia no escalão sem cartão, e um
+ * artigo gasta nove a quinze conforme as repetições — seis a dez artigos por
+ * dia, que chega de sobra para o que sai por semana e não chega para converter
+ * o arquivo. Com facturação ligada no projecto da Google o tecto sobe e passa a
+ * pagar-se ao consumo, uns dez cêntimos por artigo. Os pedaços aprovados ficam
+ * guardados, por isso uma corrida que apanhe a quota a meio continua no dia
+ * seguinte de onde parou.
  *   npm run audio                          # tudo o que falta ou mudou
  *
  * O último é o que a automação nunca corre: sem `--desde` nem `--limite` isto
@@ -344,7 +352,19 @@ async function pedeAoGemini({ texto, voz }) {
   if (!resposta.ok) {
     const dito = await resposta.text();
     const queixa = `HTTP ${resposta.status}: ${dito.slice(0, 200)}`;
-    // Um 500 ou um 429 é o servidor a ter um mau momento, e passa.
+    // A quota do dia. Tem de sair daqui à cabeça, porque é a única falha que
+    // não passa por esperar: são cem pedidos por modelo por dia no escalão sem
+    // cartão, e um artigo gasta nove a quinze. Tentar mais duas vezes é gastar
+    // minutos para receber o mesmo não, e «não leu isto em condições» seria uma
+    // mentira sobre o que aconteceu — leu-se tudo o que o dia dava.
+    if (resposta.status === 429 && /per_?day|PerDay/i.test(dito)) {
+      const espera = dito.match(/"retryDelay"\s*:\s*"(\d+)s"/)?.[1];
+      throw new Error(
+        `a quota diária do Gemini acabou${espera ? `, repõe daqui a ${Math.round(espera / 3600)}h` : ""}. ` +
+          `O que já foi lido fica guardado e a corrida seguinte continua daí.`,
+      );
+    }
+    // Um 500, ou um 429 de pedidos a mais por minuto, é passageiro.
     if (resposta.status >= 500 || resposta.status === 429) return { razao: queixa, passageiro: true };
     // Este 400 é o modelo a responder texto num sítio onde só devia sair som —
     // «Model tried to generate text, but it should only be used for TTS». Vem
