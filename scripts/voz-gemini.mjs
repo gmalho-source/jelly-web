@@ -18,10 +18,26 @@
  * O risco conhecido é o sotaque cair no Brasil, que foi exactamente o que
  * afastou a Cartesia. Ouve-se e vê-se.
  *
+ * O que se ouviu, em Setembro de 2026, com doze amostras do mesmo artigo.
+ * O sotaque aguenta: com a instrução abaixo, o `gemini-2.5-flash-preview-tts`
+ * deu português de Portugal em todas as vozes que se tentaram — vogais átonas
+ * fechadas, «s» final chiado, o «de» sem africação. A Vindemiatrix foi a mais
+ * limpa; a Charon é a voz de homem que se aguenta. Curiosamente o
+ * `gemini-3.1-flash-tts-preview`, que é mais novo, é aqui pior: a mesma Kore
+ * que no 2.5 sai de Lisboa, no 3.1 perde o «s» chiado e fica a meio do
+ * Atlântico. Quem trocar de modelo volta a ouvir tudo.
+ *
+ * O que ainda falha é o inglês no meio do português: «Ads Manager» sai com
+ * pronúncia inglesa a sério em vez da que um locutor português lhe daria, e
+ * houve vozes a ler «media» como «mídia», que é do Brasil. Num artigo de
+ * marketing isso aparece em cada parágrafo, e é o que falta resolver na
+ * instrução antes de isto substituir a ElevenLabs.
+ *
  *   GEMINI_API_KEY=… node scripts/voz-gemini.mjs --vozes
  *   GEMINI_API_KEY=… node scripts/voz-gemini.mjs --voz=Kore,Charon
+ *   GEMINI_API_KEY=… node scripts/voz-gemini.mjs --voz=Kore --artigo=<slug>
  *
- * Opções: --voz= --modelo= --instrucao= --saida=
+ * Opções: --voz= --modelo= --instrucao= --texto= --artigo= --saida=
  */
 import fs from "node:fs";
 import os from "node:os";
@@ -54,11 +70,41 @@ const INSTRUCAO =
     "Nunca português do Brasil: as vogais átonas são fechadas, o «s» final é chiado, e o " +
     "tratamento é o de Portugal.";
 
-const TEXTO =
+const APRESENTACAO =
   "A Jelly ajuda empresas a comunicar e a desempenhar melhor. " +
   "Ligamos os pontos entre branding, marketing, comunicação e tecnologia. " +
   "É o que fazemos todos os dias com os nossos clientes: dar qualidade de agência, " +
   "com a ambição de quem leva uma marca mais longe.";
+
+/**
+ * O princípio de um artigo verdadeiro, quando se lhe dá o slug.
+ *
+ * O parágrafo de apresentação chega para ouvir o sotaque, mas não chega para
+ * decidir: quatro frases curtas e escritas para serem ditas não põem à prova o
+ * que um artigo tem — números, siglas, nomes de produto em inglês no meio de
+ * uma frase portuguesa, e frases longas onde a entoação se perde. É aí que
+ * estas vozes se separam, e é por isso que vale mais julgá-las com o que elas
+ * vão mesmo ler.
+ *
+ * Lê o catálogo gerado e não o CMS: isto tem de correr sem base de dados.
+ */
+function artigo(slug) {
+  const catalogo = new URL("../src/content/generated/posts.json", import.meta.url);
+  const posts = JSON.parse(fs.readFileSync(catalogo, "utf8"));
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) {
+    const alguns = posts.slice(0, 5).map((p) => p.slug).join("\n  ");
+    throw new Error(`Não há artigo com o slug «${slug}». Alguns que há:\n  ${alguns}`);
+  }
+  // Os títulos das secções vão com o resto: quem ouve não vê os cabeçalhos, e
+  // uma voz que os atira sem pausa é um defeito que se quer ouvir agora.
+  const corpo = post.body.map((bloco) => bloco.text ?? "").filter(Boolean);
+  const leitura = [post.title, ...corpo].join("\n\n");
+  // Um minuto de leitura chega para julgar e não gasta a quota a dobrar.
+  return leitura.length > 1200 ? `${leitura.slice(0, 1200).replace(/\s+\S*$/, "")}…` : leitura;
+}
+
+const TEXTO = valor("texto") ?? (valor("artigo") ? artigo(valor("artigo")) : APRESENTACAO);
 
 async function api(caminho, corpo) {
   const resposta = await fetch(`${API}/${caminho}?key=${chave}`, {
@@ -124,7 +170,7 @@ for (const voz of vozes) {
     console.error(`${voz}: veio sem áudio — ${JSON.stringify(resposta).slice(0, 300)}`);
     continue;
   }
-  const destino = path.join(pasta, `gemini-${voz}.wav`);
+  const destino = path.join(pasta, `gemini-${MODELO.replace(/[^a-z0-9.]+/gi, "-")}-${voz}.wav`);
   fs.writeFileSync(destino, wav(Buffer.from(dados, "base64")));
   console.log(`${voz.padEnd(14)} ${destino}`);
 }
