@@ -6,10 +6,13 @@
 # poder correr todos os dias sem pagar tudo outra vez.
 #
 # O `--desde=7` é o que impede a corrida de atacar o catálogo inteiro. Sem ele
-# são trezentas e tal gravações e dois milhões e meio de caracteres, muito acima
-# de uma quota mensal: em setembro de 2026 uma corrida sem limite esgotou a
-# quota a meio de um artigo e deixou-o com português e sem inglês. O atraso de
-# anos grava-se à mão, com `--limite`, ao ritmo que os créditos aguentam.
+# são trezentas e tal gravações e dois milhões e meio de caracteres: em setembro
+# de 2026 uma corrida sem limite esgotou a quota da ElevenLabs a meio de um
+# artigo e deixou-o com português e sem inglês. Desde que o português passou a
+# ser lido pelo Gemini, o tecto que continua a existir é o do inglês — o
+# português não tem tecto, paga-se ao consumo, e o que o limita é o tempo: são
+# minutos por pedaço, e um artigo são cinco ou mais. O atraso de anos grava-se à
+# mão, com `--limite`.
 name: audio
 
 on:
