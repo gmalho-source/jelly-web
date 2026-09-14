@@ -1,6 +1,7 @@
 import { getPosts } from "@/lib/cms";
+import type { Post } from "@/content/types";
 import { resumoPublicavel } from "@/lib/resumo";
-import { slugFor } from "@/lib/slugs";
+import { capaDe, slugFor } from "@/lib/slugs";
 import { SITE_URL } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 
@@ -48,8 +49,8 @@ function tipoDaImagem(src: string): string | undefined {
  * buscar — a norma pede o atributo, não que ele seja exato, e nenhum leitor
  * descarrega uma capa por causa dele.
  */
-function capaDoItem(post: { cover?: { src: string; alt?: string; width?: number; height?: number } }): string[] {
-  const capa = post.cover;
+function capaDoItem(post: Post, locale: Locale): string[] {
+  const capa = capaDe(post, locale);
   if (!capa?.src) return [];
   const endereco = capa.src.startsWith("http") ? capa.src : `${SITE_URL.replace(/\/$/, "")}${capa.src}`;
   const tipo = tipoDaImagem(endereco);
@@ -97,7 +98,7 @@ export async function feedDoBlog(locale: Locale): Promise<string> {
         // Sem resumo, sem elemento: um `<description>` vazio faz alguns leitores
         // mostrarem uma linha em branco onde devia estar o princípio do artigo.
         resumo ? `      <description>${escapa(resumo)}</description>` : "",
-        ...capaDoItem(post),
+        ...capaDoItem(post, locale),
         "    </item>",
       ]
         .filter(Boolean)

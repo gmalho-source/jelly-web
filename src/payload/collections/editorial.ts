@@ -354,6 +354,21 @@ export const Posts: CollectionConfig = {
       ],
     },
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
+    /*
+     * A capa inglesa, quando a portuguesa não serve.
+     *
+     * Quase sempre serve: uma fotografia não tem língua. Serve mal quando tem
+     * texto lá dentro — o artigo dos ChatGPT Ads abre com um telemóvel a
+     * mostrar uma conversa em português, e no site inglês isso lê-se como um
+     * descuido. Vazio, o inglês usa a capa portuguesa, como em todo o resto.
+     */
+    {
+      name: "coverEn",
+      label: "Capa (EN)",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Só quando a capa portuguesa tem texto lá dentro. Vazio, o inglês usa a portuguesa." },
+    },
     {
       name: "body",
       label: "Corpo (PT)",

@@ -307,6 +307,7 @@ export function fetchPosts(fallback: Post[]) {
             : { pt: "Jelly", en: "Jelly" },
         tags: etiquetas.length ? etiquetas : undefined,
         cover: image(raw.cover as MediaDoc),
+        coverEn: image(raw.coverEn as MediaDoc),
         audio: audioDoArtigo(raw),
       };
     });

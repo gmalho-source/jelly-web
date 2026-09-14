@@ -12,7 +12,7 @@ import type { Locale } from "@/i18n/routing";
 import { getPost, getPostBody, getPosts, getRelatedPosts } from "@/lib/cms";
 import { resumoPublicavel } from "@/lib/resumo";
 import { alternates } from "@/lib/seo";
-import { slugFor } from "@/lib/slugs";
+import { capaDe, slugFor } from "@/lib/slugs";
 
 type Params = { locale: Locale; slug: string };
 
@@ -48,6 +48,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   setRequestLocale(locale);
 
   const post = await getPost(slug);
+  const capa = post ? capaDe(post, locale) : undefined;
   if (!post) notFound();
 
   // Chegou pelo endereço da outra língua: serve-se o certo, com 308, para não
@@ -171,12 +172,12 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
           <h1 className="editorial max-w-[26ch] text-display">{post.title[locale]}</h1>
           <hr className="mt-8 border-line" />
 
-          {post.cover?.src ? (
+          {capa?.src ? (
             <Image
-              src={post.cover.src}
-              alt={post.cover.alt ?? ""}
-              width={post.cover.width ?? 1200}
-              height={post.cover.height ?? 675}
+              src={capa.src}
+              alt={capa.alt ?? ""}
+              width={capa.width ?? 1200}
+              height={capa.height ?? 675}
               priority
               sizes="(max-width: 1200px) 100vw, 1040px"
               className="mt-8 w-full rounded-[20px] object-cover"

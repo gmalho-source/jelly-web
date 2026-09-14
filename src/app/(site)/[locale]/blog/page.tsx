@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { slugFor } from "@/lib/slugs";
+import { capaDe, slugFor } from "@/lib/slugs";
 import { getPosts } from "@/lib/cms";
 import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
 
@@ -95,10 +95,10 @@ export default async function BlogIndexPage({
           </p>
         </div>
         <div className="flex flex-col justify-end gap-4 text-sm text-fg-soft lg:items-end">
-          {featured.cover?.src ? (
+          {capaDe(featured, locale)?.src ? (
             <Image
-              src={featured.cover.src}
-              alt={featured.cover.alt ?? ""}
+              src={capaDe(featured, locale)!.src}
+              alt={capaDe(featured, locale)!.alt ?? ""}
               width={800}
               height={600}
               sizes="(max-width: 1024px) 100vw, 34vw"
@@ -129,9 +129,9 @@ export default async function BlogIndexPage({
         >
           {/* A miniatura é a mesma imagem do artigo: o índice deixa de ser uma
               lista de títulos e passa a mostrar do que fala cada texto. */}
-          {post.cover?.src ? (
+          {capaDe(post, locale)?.src ? (
             <Image
-              src={post.cover.src}
+              src={capaDe(post, locale)!.src}
               alt=""
               width={208}
               height={156}

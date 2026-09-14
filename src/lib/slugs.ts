@@ -42,3 +42,22 @@ export function findBySlug<T extends ComSlug>(items: T[], slug: string) {
     items.find((item) => item.oldSlugs?.includes(slug))
   );
 }
+
+/**
+ * A capa a mostrar nesta língua.
+ *
+ * Mesma regra do slug: onde não há inglesa, o inglês usa a portuguesa. Uma
+ * fotografia não tem língua — até ter texto lá dentro, e aí tem.
+ *
+ * Fica ao lado do `slugFor` porque é a mesma pergunta feita a outro campo, e
+ * porque estava a começar a ser respondida em cinco sítios: a página do
+ * artigo, a lista do blogue, a newsroom, o menu e o feed.
+ */
+export type ComCapa = {
+  cover?: { src: string; alt?: string; width?: number; height?: number };
+  coverEn?: { src: string; alt?: string; width?: number; height?: number };
+};
+
+export function capaDe(item: ComCapa, locale: Locale) {
+  return (locale === "en" ? item.coverEn : undefined) ?? item.cover;
+}

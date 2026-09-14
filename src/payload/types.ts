@@ -347,6 +347,10 @@ export interface Post {
     en?: string | null;
   };
   cover?: (number | null) | Media;
+  /**
+   * Só quando a capa portuguesa tem texto lá dentro. Vazio, o inglês usa a portuguesa.
+   */
+  coverEn?: (number | null) | Media;
   body?: {
     root: {
       type: string;
@@ -1827,6 +1831,7 @@ export interface PostsSelect<T extends boolean = true> {
         en?: T;
       };
   cover?: T;
+  coverEn?: T;
   body?: T;
   bodyEn?: T;
   lang?: T;
