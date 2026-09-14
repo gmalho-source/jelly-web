@@ -61,16 +61,24 @@ jobs:
           sudo apt-get install -y -qq ffmpeg
           ffmpeg -version | head -1
 
-      # Sem a chave não há nada a fazer, e um vermelho todas as noites é um
-      # email todas as noites a dizer o mesmo. Sai limpo e diz porquê.
-      - name: há chave?
+      # São precisas as duas: o português é lido pelo Gemini e o inglês pela
+      # ElevenLabs. Faltando uma, corre-se o que se pode em vez de não se correr
+      # nada — e um vermelho todas as noites é um email todas as noites a dizer
+      # o mesmo, por isso isto sai limpo e diz porquê.
+      - name: que chaves há?
         id: chave
         run: |
-          if [ -z "${{ secrets.ELEVENLABS_API_KEY }}" ]; then
-            echo "sem ELEVENLABS_API_KEY nos segredos do repositório: nada a fazer"
+          linguas=""
+          [ -n "${{ secrets.GEMINI_API_KEY }}" ] && linguas="pt" \
+            || echo "sem GEMINI_API_KEY: o português fica por ler"
+          [ -n "${{ secrets.ELEVENLABS_API_KEY }}" ] && linguas="${linguas:+$linguas,}en" \
+            || echo "sem ELEVENLABS_API_KEY: o inglês fica por ler"
+          if [ -z "$linguas" ]; then
+            echo "sem chaves nos segredos do repositório: nada a fazer"
             echo "corre=nao" >> "$GITHUB_OUTPUT"
           else
             echo "corre=sim" >> "$GITHUB_OUTPUT"
+            echo "linguas=$linguas" >> "$GITHUB_OUTPUT"
           fi
 
       # O slug e a janela entram por ambiente e não na linha de comandos. Isto é
@@ -80,19 +88,23 @@ jobs:
         if: steps.chave.outputs.corre == 'sim'
         run: |
           if [ -n "$SO" ]; then
-            npm run audio -- --so="$SO"
+            npm run audio -- --lingua="$LINGUAS" --so="$SO"
           else
-            npm run audio -- --desde="${DESDE:-7}"
+            npm run audio -- --lingua="$LINGUAS" --desde="${DESDE:-7}"
           fi
         env:
           SO: ${{ inputs.so }}
           DESDE: ${{ inputs.desde }}
+          LINGUAS: ${{ steps.chave.outputs.linguas }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
-          ELEVENLABS_VOICE_PT: ${{ secrets.ELEVENLABS_VOICE_PT }}
           ELEVENLABS_VOICE_EN: ${{ secrets.ELEVENLABS_VOICE_EN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Sem isto lê a Charon, que é a voz escolhida de ouvido. Só é preciso
+          # nos segredos para a trocar sem mexer no código.
+          GEMINI_VOICE_PT: ${{ secrets.GEMINI_VOICE_PT }}
           # A purga fecha o ciclo: o áudio fica gravado, mas o leitor só aparece
           # na página quando o cache do Next souber que ele existe.
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
