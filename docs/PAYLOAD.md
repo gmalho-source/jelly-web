@@ -370,6 +370,39 @@ a 16:9: metade delas são infografias e um recorte perdia o que dizem. Quando as
 medidas não são conhecidas, o browser descobre-as — inventar uma proporção
 esticava a imagem.
 
+### A importação traz o que o WordPress tem, e às vezes é pouco
+
+O guião escolhe o **maior** recorte que a página declarar: ordena o `srcset` pela
+largura e só fica com o `src` quando este é igual ou maior. Até setembro de 2026
+lia o **primeiro** recorte do `srcset`, e os artigos que migraram até aí tiveram
+sorte — o WordPress da casa lista por ordem decrescente e o primeiro era o maior.
+Num tema que liste por ordem crescente, o guião escolhia a miniatura e ninguém
+dava por isso até alguém abrir o artigo num ecrã grande.
+
+Mas o maior que o WordPress tem pode ser pequeno na mesma, e aí não há guião que
+salve. Os cartões de dados do artigo dos ChatGPT Ads tinham **531px de largura**
+no original — era o topo do `srcset`, não havia mais nada — e o site desenha-os
+até aos 1040px. O browser amplia, e o resultado é mole.
+
+**Como se sabe se é isso:** a coluna `width` em `media` diz o que o ficheiro tem,
+e a página diz a que largura o desenha. Se o ficheiro for mais estreito do que o
+desenho, está a ser ampliado e não há nada a afinar na compressão — só refazer a
+imagem. Nestes casos refez-se: reconstruiu-se o cartão em HTML com o design
+system e exportou-se a 2400px.
+
+### Refazer uma imagem é refazer as duas línguas
+
+Quando um cartão é reconstruído para uma língua, a outra fica de repente a
+parecer degradada — não porque mudou, mas porque passou a ter um vizinho nítido
+ao lado. Aconteceu exactamente isso: os cartões ingleses saíram a 2400px, os
+portugueses continuaram nos 531px do original, e o artigo português passou a
+ler-se como se tivesse piorado. Não tinha: as linhas de `media` estavam
+intactas, com a mesma data de criação e os mesmos bytes.
+
+A regra é simples e poupa a investigação: **uma imagem refeita é refeita nas duas
+línguas, na mesma sessão.** Se só uma puder ser feita, diz-se qual ficou por
+fazer em vez de se deixar a diferença à vista.
+
 ## Um nó do Lexical escrito à mão precisa de tudo
 
 O editor mostrava o artigo e logo o deixava vazio, com **«Minified Lexical error

@@ -59,16 +59,55 @@ function toBlocks(html) {
    * põe no `src` um SVG de 1x1 em base64 — foi assim que 155 imagens do corpo
    * dos artigos se perderam na primeira migração.
    */
+  /** O maior recorte de um `srcset`, com a largura que ele declara. */
+  const maiorDo = (srcset) =>
+    (srcset ?? "")
+      .split(",")
+      .map((entrada) => {
+        const [endereco, medida] = entrada.trim().split(/\s+/);
+        return { endereco, largura: Number((medida ?? "").replace("w", "")) || 0 };
+      })
+      .filter(({ endereco }) => endereco && !endereco.startsWith("data:"))
+      .sort((a, b) => b.largura - a.largura)[0];
+
+  /**
+   * O endereço verdadeiro da imagem, e o maior que houver.
+   *
+   * Duas coisas correm mal aqui, e só uma era conhecida.
+   *
+   * A primeira: o tema carrega as imagens em diferido e põe no `src` um SVG de
+   * 1x1 em base64 — foi assim que 155 imagens do corpo dos artigos se perderam
+   * na primeira migração. Por isso os `data-*` vêm à frente.
+   *
+   * A segunda passou despercebida até setembro de 2026: do `srcset` lia-se o
+   * **primeiro** recorte e não o maior. Os artigos que migraram até aí tiveram
+   * sorte — o WordPress da casa lista por ordem decrescente e o primeiro era o
+   * maior. Num tema que liste por ordem crescente, o guião escolhia a
+   * miniatura, e ninguém dava por isso até alguém abrir o artigo num ecrã
+   * grande. Agora ordena-se pela largura declarada e fica-se com a maior.
+   *
+   * O `srcset` ganha ao `src` quando é mais largo: o `src` é o recorte que o
+   * tema escolheu para aquele sítio, e o site novo desenha estas imagens até
+   * aos 1040px. Numa migração quer-se o maior que exista, não o que servia
+   * numa página com outra medida.
+   */
   const source = (image) => {
-    const candidates = [
+    const doSrcset = maiorDo(image.getAttribute("srcset") ?? image.getAttribute("data-srcset"));
+    const diretos = [
       image.getAttribute("data-src"),
       image.getAttribute("data-lazy-src"),
       image.getAttribute("data-large_image"),
       image.getAttribute("src"),
-      (image.getAttribute("srcset") ?? "").split(",")[0]?.trim().split(" ")[0],
-      (image.getAttribute("data-srcset") ?? "").split(",")[0]?.trim().split(" ")[0],
-    ];
-    return candidates.find((value) => value && !value.startsWith("data:")) ?? null;
+    ].find((value) => value && !value.startsWith("data:"));
+
+    // Sem larguras declaradas não há como comparar: fica o directo, como antes.
+    if (!doSrcset?.largura) return diretos ?? doSrcset?.endereco ?? null;
+    if (!diretos) return doSrcset.endereco;
+
+    // O `width` do próprio `<img>` diz o que o directo mede. Sem ele, o srcset
+    // maior ganha à mesma: uma largura declarada vale mais do que um palpite.
+    const larguraDireta = Number(image.getAttribute("width")) || 0;
+    return doSrcset.largura > larguraDireta ? doSrcset.endereco : diretos;
   };
 
   /**
