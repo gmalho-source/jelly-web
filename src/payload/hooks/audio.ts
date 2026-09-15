@@ -3,18 +3,16 @@ import type { CollectionAfterChangeHook } from "payload";
 /**
  * Publicar um artigo manda gravá-lo em voz alta.
  *
- * Não é aqui que ele se grava. Ler um artigo leva dezenas de minutos — o inglês
- * na ElevenLabs, o português em pedaços de mil e quinhentos caracteres que o
- * Gemini lê e que são conferidos um a um — e isto corre dentro do Next, onde
- * uma função tem segundos para responder. Carregar em Publicar e esperar não é
- * uma opção que exista. O que se faz é um pedido de milissegundos ao GitHub, e
- * o trabalho pesado corre no workflow `audio`, lá fora, com o slug deste artigo.
+ * Não é aqui que ele se grava. Ler um artigo leva quinze a vinte minutos com a
+ * ElevenLabs, e isto corre dentro do Next, onde uma função tem segundos para
+ * responder — carregar em Publicar e esperar não é uma opção que exista. O que
+ * se faz é um pedido de milissegundos ao GitHub, e o trabalho pesado corre no
+ * workflow `audio`, lá fora, com o slug deste artigo.
  *
  * Sem isto, um artigo novo esperava pela corrida da madrugada.
  *
  * Nunca dispara em rascunho: o que ainda não está publicado ainda vai mudar, e
- * cada gravação custa — créditos de uma quota mensal em inglês, cêntimos ao
- * consumo em português.
+ * cada gravação custa créditos de uma quota mensal.
  */
 
 const ENDERECO = "https://api.github.com";

@@ -10,8 +10,9 @@
  * corpo não mudou não volta a ser falado. Sem ela, cada correção de vírgula
  * obrigava a escolher entre pagar tudo outra vez e nunca mais acertar nada.
  *
- * Quem lê o quê. O português é lido pelo Gemini e o inglês pela ElevenLabs —
- * porquê cada um está em `FORNECEDORES`, mais abaixo, que é onde se troca.
+ * Quem lê o quê. As duas línguas na ElevenLabs. O Gemini está montado e
+ * desligado, com a conferência e a retoma que ele precisa já feitas — porquê
+ * está em `FORNECEDORES`, mais abaixo, que é onde se liga.
  *
  * O problema desta casa nunca foi o preço da síntese, foi o português europeu:
  * quase toda a síntese moderna assume o Brasil. A Cartesia cai no sotaque
@@ -159,36 +160,49 @@ const FORMATO = valor("formato") ?? "mp3_44100_64";
  * mesma frase em cada uma para se escolher de ouvido.
  */
 const VOZES = {
-  pt: process.env.GEMINI_VOICE_PT?.trim() || "Charon",
+  pt: process.env.ELEVENLABS_VOICE_PT?.trim(),
   en: process.env.ELEVENLABS_VOICE_EN?.trim(),
 };
-const vozDe = (lingua) => valor("voz")?.split(",")[0] ?? VOZES[lingua];
+/** A voz do Gemini, para quando o português lá for lido. Ver `FORNECEDORES`. */
+const VOZ_GEMINI = process.env.GEMINI_VOICE_PT?.trim() || "Charon";
+const vozDe = (lingua) =>
+  valor("voz")?.split(",")[0] ?? (fornecedorDe(lingua) === "gemini" ? VOZ_GEMINI : VOZES[lingua]);
 
 /**
- * Quem lê cada língua.
+ * Quem lê cada língua. As duas na ElevenLabs — e porque é que o Gemini está
+ * aqui montado e desligado.
  *
- * Em português é o Gemini, desde Setembro de 2026. O que mudou não foi o preço
- * da síntese, foi haver finalmente outra coisa que fala português de Portugal:
- * a ElevenLabs era a única que distinguia Portugal do Brasil, e o Gemini passou
- * a distinguir também, desde que se lho diga por instrução — doze amostras do
- * mesmo artigo e todas saíram de Lisboa. Ver `scripts/voz-gemini.mjs`, que é
- * onde isso se ouviu e está escrito.
+ * A voz não foi o problema. O Gemini fala português de Portugal se se lho pedir
+ * por instrução, coisa que nenhuma síntese por locale faz: doze amostras do
+ * mesmo artigo, todas saíram de Lisboa, e a Charon aguenta treze minutos
+ * seguidos sem escorregar. Isso ouviu-se e está escrito em
+ * `scripts/voz-gemini.mjs`.
  *
- * O que isto resolve é a quota. A conta da ElevenLabs tem um tecto mensal de
- * créditos e não deixa comprar por cima: em Setembro uma corrida esgotou-a a
- * meio de um artigo e deixou-o com português e sem inglês. Tirar o português de
- * lá liberta-a quase toda para o inglês, e o português passa a pagar-se ao
- * consumo, a cêntimos por artigo, sem tecto nenhum a meio do mês.
+ * O problema foi ele ser um preview e falhar calado. Num dia de medições
+ * apareceram cinco maneiras diferentes de a mesma gravação correr mal: ler a
+ * mais e encher o resto com zumbido, ler a menos e calar-se a meio de uma
+ * secção, responder texto em vez de som, tropeçar em erros de servidor a meio
+ * de nove pedidos, e o tecto de cem pedidos por dia. Nenhuma se vê sem ouvir o
+ * que saiu — é por isso que existe a conferência por transcrição, mais abaixo.
+ * Quatro tentativas de gravar um artigo e nenhuma correu sem a guarda ter de
+ * intervir.
  *
- * O inglês fica onde estava. O problema do pt-PT não existe em inglês, a voz já
- * foi escolhida de ouvido, e não se trocam duas coisas ao mesmo tempo.
+ * Trocar um fornecedor que lê por um fornecedor que precisa de ser vigiado a
+ * ler não é troca que se faça para poupar dez cêntimos. Fica para quando o
+ * modelo sair de preview: liga-se pondo `pt: "gemini"` aqui, ou por uma corrida
+ * só com `--fornecedor=gemini`, e todo o resto — a conferência, a divisão dos
+ * pedaços, a retoma — já está feito e medido.
  *
- * A voz de português é a Charon, escolhida de ouvido em Setembro de 2026. Fica
- * com um valor por omissão, ao contrário da voz inglesa, porque «Charon» diz a
- * quem lê isto daqui a um ano o que um identificador da ElevenLabs nunca disse.
- * `GEMINI_VOICE_PT` muda-a sem mexer no código.
+ * O que fica por resolver é o que trouxe esta pergunta ao princípio: a quota
+ * mensal da ElevenLabs, que não deixa comprar por cima e que em Setembro
+ * esgotou a meio de um artigo, deixando-o com português e sem inglês. Isso
+ * resolve-se no plano ou no ritmo das gravações, não no fornecedor.
+ *
+ * A voz de português do Gemini, se um dia se ligar, é a Charon. Fica com um
+ * valor por omissão, ao contrário das da ElevenLabs, porque «Charon» diz a quem
+ * lê isto daqui a um ano o que um identificador nunca disse.
  */
-const FORNECEDORES = { pt: "gemini", en: "elevenlabs" };
+const FORNECEDORES = { pt: "elevenlabs", en: "elevenlabs" };
 const fornecedorDe = (lingua) => valor("fornecedor") ?? FORNECEDORES[lingua];
 
 const chave = process.env.ELEVENLABS_API_KEY?.trim();

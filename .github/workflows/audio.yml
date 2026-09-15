@@ -6,13 +6,10 @@
 # poder correr todos os dias sem pagar tudo outra vez.
 #
 # O `--desde=7` é o que impede a corrida de atacar o catálogo inteiro. Sem ele
-# são trezentas e tal gravações e dois milhões e meio de caracteres: em setembro
-# de 2026 uma corrida sem limite esgotou a quota da ElevenLabs a meio de um
-# artigo e deixou-o com português e sem inglês. Desde que o português passou a
-# ser lido pelo Gemini, o tecto que continua a existir é o do inglês — o
-# português não tem tecto, paga-se ao consumo, e o que o limita é o tempo: são
-# minutos por pedaço, e um artigo são cinco ou mais. O atraso de anos grava-se à
-# mão, com `--limite`.
+# são trezentas e tal gravações e dois milhões e meio de caracteres, muito acima
+# de uma quota mensal: em setembro de 2026 uma corrida sem limite esgotou a
+# quota a meio de um artigo e deixou-o com português e sem inglês. O atraso de
+# anos grava-se à mão, com `--limite`, ao ritmo que os créditos aguentam.
 name: audio
 
 on:
@@ -64,24 +61,16 @@ jobs:
           sudo apt-get install -y -qq ffmpeg
           ffmpeg -version | head -1
 
-      # São precisas as duas: o português é lido pelo Gemini e o inglês pela
-      # ElevenLabs. Faltando uma, corre-se o que se pode em vez de não se correr
-      # nada — e um vermelho todas as noites é um email todas as noites a dizer
-      # o mesmo, por isso isto sai limpo e diz porquê.
-      - name: que chaves há?
+      # Sem a chave não há nada a fazer, e um vermelho todas as noites é um
+      # email todas as noites a dizer o mesmo. Sai limpo e diz porquê.
+      - name: há chave?
         id: chave
         run: |
-          linguas=""
-          [ -n "${{ secrets.GEMINI_API_KEY }}" ] && linguas="pt" \
-            || echo "sem GEMINI_API_KEY: o português fica por ler"
-          [ -n "${{ secrets.ELEVENLABS_API_KEY }}" ] && linguas="${linguas:+$linguas,}en" \
-            || echo "sem ELEVENLABS_API_KEY: o inglês fica por ler"
-          if [ -z "$linguas" ]; then
-            echo "sem chaves nos segredos do repositório: nada a fazer"
+          if [ -z "${{ secrets.ELEVENLABS_API_KEY }}" ]; then
+            echo "sem ELEVENLABS_API_KEY nos segredos do repositório: nada a fazer"
             echo "corre=nao" >> "$GITHUB_OUTPUT"
           else
             echo "corre=sim" >> "$GITHUB_OUTPUT"
-            echo "linguas=$linguas" >> "$GITHUB_OUTPUT"
           fi
 
       # O slug e a janela entram por ambiente e não na linha de comandos. Isto é
@@ -91,22 +80,22 @@ jobs:
         if: steps.chave.outputs.corre == 'sim'
         run: |
           if [ -n "$SO" ]; then
-            npm run audio -- --lingua="$LINGUAS" --so="$SO"
+            npm run audio -- --so="$SO"
           else
-            npm run audio -- --lingua="$LINGUAS" --desde="${DESDE:-7}"
+            npm run audio -- --desde="${DESDE:-7}"
           fi
         env:
           SO: ${{ inputs.so }}
           DESDE: ${{ inputs.desde }}
-          LINGUAS: ${{ steps.chave.outputs.linguas }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           PAYLOAD_SECRET: ${{ secrets.PAYLOAD_SECRET }}
           BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          ELEVENLABS_VOICE_PT: ${{ secrets.ELEVENLABS_VOICE_PT }}
           ELEVENLABS_VOICE_EN: ${{ secrets.ELEVENLABS_VOICE_EN }}
+          # O Gemini está montado e desligado (ver `FORNECEDORES` no script).
+          # A chave vai na mesma: sem ela, ligá-lo obrigava a mexer aqui também.
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # Sem isto lê a Charon, que é a voz escolhida de ouvido. Só é preciso
-          # nos segredos para a trocar sem mexer no código.
           GEMINI_VOICE_PT: ${{ secrets.GEMINI_VOICE_PT }}
           # A purga fecha o ciclo: o áudio fica gravado, mas o leitor só aparece
           # na página quando o cache do Next souber que ele existe.
