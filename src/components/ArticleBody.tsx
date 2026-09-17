@@ -26,7 +26,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
     // `flow-root` para uma imagem a contornar no fim do artigo não escapar
     // para o que vem a seguir; `@container` para o contorno ser decidido pela
     // largura desta coluna e não pela da janela.
-    <div className="@container max-w-[66ch] flow-root">
+    <div className="@container coluna-de-leitura flow-root">
       {body.map((block, index) => {
         if (block.type === "p") {
           const isFirst = index === dropCapIndex;

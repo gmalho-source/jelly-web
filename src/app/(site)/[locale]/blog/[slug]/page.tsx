@@ -190,7 +190,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             {body?.length ? (
               <ArticleBody blocks={body} />
             ) : post.body?.length ? (
-              <div className="max-w-[66ch]">
+              <div className="coluna-de-leitura">
                 {post.body.map((paragraph, index) => (
                   <p
                     key={index}
@@ -201,7 +201,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
                 ))}
               </div>
             ) : (
-              <p className="reading max-w-[66ch]">{resumo}</p>
+              <p className="reading coluna-de-leitura">{resumo}</p>
             )}
           </div>
 

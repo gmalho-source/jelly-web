@@ -392,6 +392,26 @@
   letter-spacing: -0.02em;
 }
 
+/*
+ * A medida da coluna de leitura.
+ *
+ * Estava em `66ch` em três sítios, e `ch` engana: é a largura do algarismo
+ * zero, e na Lora o zero é bem mais largo do que a letra média. Medido a
+ * 18px, aqueles 66ch davam 660px e **61 caracteres por linha** — abaixo dos 66
+ * a 75 que se lêem bem, e com 270px de coluna por usar ao lado. Lia-se
+ * estreito porque era estreito.
+ *
+ * `74ch` dá 740px e 68 caracteres por linha, medidos da mesma maneira. Fica
+ * uma folga à direita de propósito: é ela que deixa uma imagem do artigo
+ * respirar mais larga do que o texto sem sair da página.
+ *
+ * Quem mexer nisto mede outra vez, e mede caracteres por linha e não pixéis —
+ * trocar a Lora por outra letra muda o número sem mudar o `ch`.
+ */
+@utility coluna-de-leitura {
+  max-width: 74ch;
+}
+
 /* Corpo de artigo: Lora, com itálico verdadeiro e números old-style. */
 @utility reading {
   font-family: var(--font-reading);

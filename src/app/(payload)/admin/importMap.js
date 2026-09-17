@@ -25,6 +25,7 @@ import { BlockquoteFeatureClient as BlockquoteFeatureClient_e70f5e05f09f93e00b99
 import { HorizontalRuleFeatureClient as HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { InlineToolbarFeatureClient as InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { MarkdownImport as MarkdownImport_244644c11481654cefffd374751bd598 } from '@/payload/components/MarkdownImport'
+import { TraduzirArtigo as TraduzirArtigo_ebd22e68f11b41d703168be7740c60a8 } from '@/payload/components/TraduzirArtigo'
 import { ContagemArtigos as ContagemArtigos_058ebeba328e3db44c299c629c45dc13 } from '@/payload/components/ContagemArtigos'
 import { ContagemEtiqueta as ContagemEtiqueta_058ebeba328e3db44c299c629c45dc13 } from '@/payload/components/ContagemArtigos'
 import { TraduzirHistoria as TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b } from '@/payload/components/TraduzirHistoria'
@@ -75,6 +76,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#HorizontalRuleFeatureClient": HorizontalRuleFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#InlineToolbarFeatureClient": InlineToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/payload/components/MarkdownImport#MarkdownImport": MarkdownImport_244644c11481654cefffd374751bd598,
+  "@/payload/components/TraduzirArtigo#TraduzirArtigo": TraduzirArtigo_ebd22e68f11b41d703168be7740c60a8,
   "@/payload/components/ContagemArtigos#ContagemArtigos": ContagemArtigos_058ebeba328e3db44c299c629c45dc13,
   "@/payload/components/ContagemArtigos#ContagemEtiqueta": ContagemEtiqueta_058ebeba328e3db44c299c629c45dc13,
   "@/payload/components/TraduzirHistoria#TraduzirHistoria": TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b,

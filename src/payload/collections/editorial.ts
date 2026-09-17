@@ -12,6 +12,7 @@ import { categoryCounts, tagCounts } from "../endpoints/category-counts";
 import { gravaOArtigoFalado } from "../hooks/audio";
 import { slugDaEtiqueta } from "../hooks/slug-etiqueta";
 import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
+import { translatePost } from "../endpoints/translate-post";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
 const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
@@ -272,6 +273,10 @@ export const Posts: CollectionConfig = {
     // O resumo escrito pelo Claude. Não leva id: o corpo do artigo vem do
     // editor, para isto servir também um artigo ainda por gravar.
     { path: "/resumo", method: "post", handler: writeExcerpt },
+    // A tradução para inglês. Vai em pedaços e sem id, pelas mesmas razões: o
+    // texto vem do editor, e um artigo inteiro não cabe nos sessenta segundos
+    // que a função tem.
+    { path: "/traduzir", method: "post", handler: translatePost },
   ],
   fields: [
     {
@@ -381,6 +386,16 @@ export const Posts: CollectionConfig = {
           ],
         },
       },
+    },
+    /* O botão que passa o artigo a inglês: título, resumo e corpo de uma vez.
+       Fica aqui, entre os dois corpos, porque é aqui que se dá pela falta —
+       quem desce o artigo português até ao fim encontra a seguir o campo
+       inglês vazio. Anda pelos campos do formulário, e por isso serve também
+       um artigo acabado de escrever, ainda por gravar. */
+    {
+      name: "traduzirArtigo",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/TraduzirArtigo#TraduzirArtigo" } },
     },
     {
       name: "bodyEn",
