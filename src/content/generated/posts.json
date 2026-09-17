@@ -1,5 +1,134 @@
 [
  {
+  "slug": "o-crescimento-nao-se-adivinha-calcula-se",
+  "legacyPath": "/o-crescimento-nao-se-adivinha-calcula-se/artigos-opiniao/",
+  "date": "2026-09-17",
+  "updated": "2026-09-17",
+  "lang": "pt",
+  "title": "O Crescimento de um negócio não se adivinha, calcula-se.",
+  "excerpt": "[vc_column column_padding=”no-extra-padding” column_padding_tablet=”inherit” column_padding_phone=”inherit” column_padding_position=”all” flex_gap_desktop=”10px” column_element_direction_desktop=”default”…",
+  "author": "Jelly",
+  "category": "Opinião",
+  "categorySlug": "artigos-opiniao",
+  "readingMinutes": 6,
+  "cover": {
+   "src": "https://www.jelly.pt/wp-content/uploads/2026/09/ORA-Opportunity-Risk-Analysis-by-Informa-DB-with-Jelly.jpg",
+   "alt": "Dois profissionais apresentam uma estratégia de marketing digital com mapa geográfico e fluxo de canais para geração de receita numa sala de reuniões",
+   "width": 1536,
+   "height": 1024
+  },
+  "body": [
+   {
+    "type": "p",
+    "text": "Vivemos numa época em que se pergunta tudo à inteligência artificial, incluindo a pergunta mais cara de todas: onde é que a minha empresa deve crescer? A ironia é que a resposta mais fiável nunca esteve num modelo generativo. Esteve sempre no sítio menos glamoroso da empresa: a faturação. O que faltava era método para a ler. E é precisamente isso que a Análise de Oportunidade de Crescimento da Carteira de Clientes da Informa D&B faz, com uma metodologia que, apesar de anteceder o hype atual dos dados e da IA, se mantém não só atual como cada vez mais relevante."
+   },
+   {
+    "type": "h3",
+    "text": "Como funciona"
+   },
+   {
+    "type": "p",
+    "text": "O ponto de partida é desarmante de simples: a base de dados de clientes da empresa, com o NIF e as vendas realizadas a cada cliente no último ano. Esses registos são cruzados com a base de dados da Informa D&B, que reflete a totalidade do tecido empresarial a atuar em Portugal, com informação sobre (https://www.informadb.pt/pt/a-nossa-informacao/informacao-nacional), atualizada diariamente."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/jelly-crescimento-cartao-02-como-funciona-1920x1080-1.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "Esse match identifica e caracteriza cada cliente da carteira: setor de atividade, dimensão, região, antiguidade, desempenho financeiro, risco comercial. De repente, a carteira deixa de ser uma lista de faturas e passa a ser um retrato demográfico e financeiro de quem realmente compra à empresa. E quando sabemos quem são os nossos clientes e quanto vale cada um, conseguimos extrapolar para o mercado nacional."
+   },
+   {
+    "type": "h2",
+    "text": "A rede fina dos lookalikes"
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/jelly-crescimento-cartao-03-lookalikes-1080x1080-1.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "Aqui está o detalhe que separa esta metodologia de um exercício superficial. Se tenho dez clientes na indústria do calçado, seria fácil dizer que o meu mercado potencial são todas as empresas de calçado do país. Demasiado fácil, e por isso inútil."
+   },
+   {
+    "type": "p",
+    "text": "A análise cruza matrizes: setor versus dimensão de vendas, setor versus número de empregados, setor versus região, setor versus os rácios financeiros que interessa medir. É este cruzamento que produz uma rede fina, capaz de identificar não apenas empresas do mesmo setor, mas empresas verdadeiramente semelhantes aos meus melhores clientes, no enquadramento demográfico e no desempenho financeiro. Os meus dez clientes do calçado podem revelar cem lookalikes no mercado, e eu fico a saber quem são, um a um."
+   },
+   {
+    "type": "p",
+    "text": "Mais do que identificar, a análise qualifica. Sabendo quanto valem os meus clientes atuais de determinado perfil, o modelo assume que, se eu conquistar novos clientes semelhantes à minha taxa de penetração atual, o meu potencial em euros é de X. Deixa de ser uma intuição e passa a ser uma conta."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/jelly-crescimento-cartao-01-penetracao-1080x1080-1.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "Um exemplo concreto do tipo de leitura que isto permite: uma carteira de mil clientes ativos num mercado de atuação de 272 mil empresas representa uma taxa de penetração de 0,4%. A análise pode revelar um potencial de crescimento de faturação superior a 100%, e distinguir a parte desse potencial que está dentro da própria carteira da parte que está em novos clientes ainda por conquistar. Porque sim, a análise também destapa oportunidades de crescimento nos clientes que já temos, que é frequentemente o dinheiro mais barato de ir buscar."
+   },
+   {
+    "type": "h2",
+    "text": "Dois níveis de profundidade"
+   },
+   {
+    "type": "p",
+    "text": "A metodologia está disponível em dois níveis. O Diagnóstico da Carteira dá a visão macro: quantificação da carteira face ao mercado de atuação, perfil dos clientes por antiguidade, dimensão e região, caracterização do risco comercial da carteira (probabilidade de encerramento, incumprimento e resiliência) e a quantificação do potencial de crescimento, com a identificação dos segmentos mais promissores."
+   },
+   {
+    "type": "p",
+    "text": "A Análise de Oportunidade completa vai à rede fina: cruza o negócio com a antiguidade das empresas, com a dimensão, com os setores e subsetores, com as regiões, com o perfil exportador e importador, e identifica os maiores clientes em cada setor e em cada região. É uma verdadeira análise de mercado, que devolve uma visão objetiva do posicionamento atual da empresa: onde estou forte, onde estou ausente, onde a minha taxa de penetração está abaixo do que o meu próprio histórico prova ser possível."
+   },
+   {
+    "type": "h2",
+    "text": "Porque é que a metodologia se mantém atual"
+   },
+   {
+    "type": "p",
+    "text": "Poderia parecer que uma metodologia assente em matching de bases de dados estaria ultrapassada na era da IA. É o contrário, e por três razões de fundo."
+   },
+   {
+    "type": "p",
+    "text": "Primeiro, parte de dados próprios. Não de intenções declaradas, não de comportamentos inferidos, não de audiências estimadas: de transações reais, com valores reais. Numa altura em que o marketing digital enfrenta a erosão dos cookies e a opacidade crescente das plataformas, a verdade transacional da própria empresa é o ativo de dados mais subvalorizado que existe."
+   },
+   {
+    "type": "p",
+    "text": "Segundo, é um lookalike determinístico. As plataformas de publicidade popularizaram as audiências semelhantes, mas essas são probabilísticas e fechadas: o algoritmo diz que encontrou pessoas parecidas, e temos de acreditar. Aqui, o lookalike tem nome, NIF, morada, contas depositadas e rácios financeiros. Sei exatamente quem são as empresas, porque é que são semelhantes e quanto poderão valer. É a diferença entre confiar numa caixa negra e trabalhar com uma lista verificável."
+   },
+   {
+    "type": "p",
+    "text": "Terceiro, quantifica em euros, não em métricas de vaidade. O resultado final não é alcance nem impressões: é potencial de faturação, segmento a segmento. E isso muda a natureza da conversa dentro da empresa, porque o marketing deixa de pedir orçamento com base em promessas e passa a apresentar um mapa de oportunidade com base em aritmética."
+   },
+   {
+    "type": "image",
+    "src": "https://www.jelly.pt/wp-content/uploads/2026/09/jelly-crescimento-cartao-05-tres-razoes-1920x1080-1.png",
+    "alt": ""
+   },
+   {
+    "type": "p",
+    "text": "A IA não torna esta metodologia obsoleta; alimenta-se dela. Modelos e agentes só são tão bons quanto os dados que lhes damos, e uma carteira caracterizada ao NIF com potencial quantificado é matéria-prima de primeira para qualquer sistema inteligente de marketing e vendas. Como defendo há anos: mindset primeiro, ferramentas depois. A filosofia certa não envelhece; as ferramentas é que se vão atualizando à volta dela."
+   },
+   {
+    "type": "h2",
+    "text": "Do relatório ao terreno"
+   },
+   {
+    "type": "p",
+    "text": "Há, contudo, algo que não devemos esquecer: nenhuma análise cria valor enquanto estiver dentro de um PDF. O potencial identificado só se converte em faturação quando alimenta a operação, tanto do lado comercial quanto do marketing."
+   },
+   {
+    "type": "p",
+    "text": "É aqui que entra o trabalho que temos vindo a desenvolver na Jelly. Numa parceria exclusiva com a Informa D&B, integramos esta capacidade no plano tático das estratégias digitais que produzimos para os nossos clientes. Os segmentos de maior potencial identificados pela análise passam a orientar a prospeção comercial no terreno e, em simultâneo, o plano de performance e de conteúdos no digital. A mesma rede fina que diz à equipa comercial quem visitar diz à equipa de marketing quem impactar, com que mensagem e em que região. O resultado é uma visão coesa do plano de negócio da empresa, orquestrada por marketing e vendas a trabalhar sobre o mesmo mapa."
+   },
+   {
+    "type": "p",
+    "text": "No fundo, é isto que distingue as empresas que crescem de forma consistente das que crescem por acidente: as primeiras sabem exatamente onde está o seu próximo cliente, porque estudaram a sério os que já têm. O crescimento não se adivinha. Calcula-se."
+   }
+  ]
+ },
+ {
   "slug": "anuncios-no-chatgpt-marcas-portugal",
   "legacyPath": "/anuncios-no-chatgpt-marcas-portugal/paid-media/",
   "date": "2026-09-14",

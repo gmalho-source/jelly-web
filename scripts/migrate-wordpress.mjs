@@ -242,6 +242,31 @@ console.log("· utilizadores e categorias");
 const [users, categories] = await Promise.all([all("/users", { _fields: "id,name" }), all("/categories", { _fields: "id,name,slug" })]);
 const userById = new Map(users.map((user) => [user.id, user.name]));
 const categoryById = new Map(categories.map((category) => [category.id, category]));
+const categoryBySlug = new Map(categories.map((category) => [category.slug, category]));
+
+/**
+ * A categoria de um artigo, pela que o endereço antigo declara.
+ *
+ * O `categories` da API vem ordenado por id e não por importância: ler o
+ * primeiro é ler o id mais baixo. Um artigo com duas categorias saía na que
+ * tivesse entrado mais cedo no WordPress, que não tem nada que ver com a
+ * escolha de quem escreveu.
+ *
+ * O endereço sabe melhor. A estrutura de links do site antigo é
+ * `/artigo/categoria/`, e essa categoria é a principal — é a que o Yoast
+ * guarda e a que o site publica. «O crescimento não se adivinha» tem Marketing
+ * e Opinião; o endereço diz Opinião, e Opinião é o que estava certo.
+ *
+ * Isto não se percebeu a tempo: dos duzentos artigos migrados, quarenta e três
+ * ficaram na categoria errada por esta razão. Ficam como estão até alguém
+ * decidir mexer-lhes — trocar a categoria de um artigo publicado muda a página
+ * de categoria e o que lá se lê.
+ */
+function categoriaDe(post) {
+  const segmentos = new URL(post.link).pathname.split("/").filter(Boolean);
+  const doEndereco = segmentos.length === 2 ? categoryBySlug.get(segmentos[1]) : undefined;
+  return doEndereco ?? categoryById.get(post.categories?.[0]);
+}
 
 console.log("· artigos");
 /**
@@ -296,8 +321,8 @@ for (const post of rawPosts) {
     title: decode(post.title?.rendered),
     excerpt: summarize(decode(post.excerpt?.rendered), body),
     author: userById.get(post.author) ?? "Equipa Jelly",
-    category: categoryById.get(post.categories?.[0])?.name ?? "Jelly",
-    categorySlug: categoryById.get(post.categories?.[0])?.slug ?? "jelly",
+    category: categoriaDe(post)?.name ?? "Jelly",
+    categorySlug: categoriaDe(post)?.slug ?? "jelly",
     readingMinutes: Math.max(2, Math.round(words / 200)),
     cover: await media(post.featured_media),
     body,
