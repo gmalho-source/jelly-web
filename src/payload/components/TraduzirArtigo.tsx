@@ -1,6 +1,6 @@
 "use client";
 
-import { toast, useAllFormFields, useForm } from "@payloadcms/ui";
+import { toast, useField, useForm } from "@payloadcms/ui";
 import { useState } from "react";
 import { leResposta } from "./resposta";
 
@@ -29,6 +29,19 @@ import { leResposta } from "./resposta";
  *
  * Anda pelos campos do formulário e não pelo documento gravado, o que permite
  * traduzir um artigo acabado de escrever, ainda por gravar.
+ *
+ * Escrever num campo de texto rico a partir de fora tem um passo que não é
+ * óbvio, e que custou uma tentativa falhada: **não basta pôr o valor**. O
+ * componente do Lexical só se refaz quando o `initialValue` do campo muda de
+ * identidade — o efeito que o remonta depende de `initialValue` e não de
+ * `value` (vê-se em `@payloadcms/richtext-lexical/dist/field/Field.js`). Com um
+ * `setValue` apenas, a árvore inglesa entrava no formulário, o editor
+ * continuava a desenhar o campo vazio, e o botão dizia que tinha traduzido.
+ *
+ * Por isso os campos escrevem-se por despacho, com `value` e `initialValue` ao
+ * mesmo tempo. O `UPDATE` do redutor aceita as duas chaves, e como a árvore é
+ * um objecto novo o editor remonta com ela lá dentro. Quem escrever outro botão
+ * destes que faça o mesmo — o `setValue` sozinho engana quem o usa.
  */
 
 type No = { text?: unknown; children?: unknown; root?: unknown };
@@ -80,24 +93,26 @@ function pedacos(textos: string[]): string[][] {
 }
 
 export function TraduzirArtigo() {
-  const [campos] = useAllFormFields();
-  const { dispatchFields, getDataByPath } = useForm();
+  const tituloPtCampo = useField<string>({ path: "titlePt" });
+  const tituloEnCampo = useField<string>({ path: "titleEn" });
+  const resumoPtCampo = useField<string>({ path: "excerpt.pt" });
+  const resumoEnCampo = useField<string>({ path: "excerpt.en" });
+  const corpoPtCampo = useField<unknown>({ path: "body" });
+  const corpoEnCampo = useField<unknown>({ path: "bodyEn" });
+  const { dispatchFields } = useForm();
   const [busy, setBusy] = useState(false);
   const [passo, setPasso] = useState("");
 
-  const texto = (caminho: string) => String((campos?.[caminho] as { value?: unknown })?.value ?? "").trim();
-  const arvore = (caminho: string) => (campos?.[caminho] as { value?: unknown })?.value ?? getDataByPath(caminho);
-
-  const tituloPt = texto("titlePt");
-  const resumoPt = texto("excerpt.pt");
-  const corpoPt = arvore("body");
+  const tituloPt = String(tituloPtCampo.value ?? "").trim();
+  const resumoPt = String(resumoPtCampo.value ?? "").trim();
+  const corpoPt = corpoPtCampo.value;
 
   /* O que falta em inglês. Cada peça é independente: um artigo com o título
      inglês já escrito e o corpo por traduzir traduz só o corpo. */
   const falta = {
-    titulo: Boolean(tituloPt) && !texto("titleEn"),
-    resumo: Boolean(resumoPt) && !texto("excerpt.en"),
-    corpo: temTexto(corpoPt) && !temTexto(arvore("bodyEn")),
+    titulo: Boolean(tituloPt) && !String(tituloEnCampo.value ?? "").trim(),
+    resumo: Boolean(resumoPt) && !String(resumoEnCampo.value ?? "").trim(),
+    corpo: temTexto(corpoPt) && !temTexto(corpoEnCampo.value),
   };
   const nada = !falta.titulo && !falta.resumo && !falta.corpo;
 
@@ -130,13 +145,19 @@ export function TraduzirArtigo() {
 
       const escritas: string[] = [];
       let lido = 0;
+      /* `initialValue` além do `value` em todos, para o formulário ficar
+         coerente: o campo passa a ter o texto inglês como ponto de partida, e
+         não como uma alteração por cima de um vazio. */
+      const escreve = (path: string, value: unknown) =>
+        dispatchFields({ type: "UPDATE", path, value, initialValue: value });
+
       if (falta.titulo) {
-        dispatchFields({ type: "UPDATE", path: "titleEn", value: traduzido[lido] ?? "" });
+        escreve("titleEn", traduzido[lido] ?? "");
         lido += 1;
         escritas.push("título");
       }
       if (falta.resumo) {
-        dispatchFields({ type: "UPDATE", path: "excerpt.en", value: traduzido[lido] ?? "" });
+        escreve("excerpt.en", traduzido[lido] ?? "");
         lido += 1;
         escritas.push("resumo");
       }
@@ -148,7 +169,7 @@ export function TraduzirArtigo() {
         nosDeTexto(copia).forEach((no, indice) => {
           no.text = traduzido[lido + indice] ?? no.text;
         });
-        dispatchFields({ type: "UPDATE", path: "bodyEn", value: copia });
+        escreve("bodyEn", copia);
         escritas.push("corpo");
       }
 
