@@ -46,9 +46,22 @@ function toBlocks(html) {
   const root = parse(html ?? "", { blockTextElements: { script: false, style: false } });
   const blocks = [];
 
-  // O site atual é construído com WPBakery: os shortcodes vêm no meio do texto.
+  /*
+   * O site atual é construído com WPBakery: os shortcodes vêm no meio do texto.
+   *
+   * Antes disso salva-se um caso que a limpeza destruía. Há artigos onde alguém
+   * colou Markdown no editor do WordPress — `[mais de 1,6 milhões de
+   * empresas](https://…)` — e o WordPress publica isso à letra. Para a limpeza
+   * os parênteses rectos eram um shortcode: comia as palavras e deixava só o
+   * endereço entre parênteses no meio da frase, «com informação sobre
+   * (https://…), atualizada diariamente». O texto do link é o que a frase
+   * precisa; o endereço fica ao lado, que é o melhor que se pode fazer sem
+   * links dentro dos blocos.
+   */
+  const markdown = (value) => value.replace(/\[([^\]\[]{3,120})\]\((https?:\/\/[^)\s]+)\)/g, "$1 ($2)");
+
   const clean = (value) =>
-    value
+    markdown(value)
       .replace(/\[\/?[a-z0-9_]+[^\]]*\]/gi, " ")
       .replace(/\s+/g, " ")
       .trim();
