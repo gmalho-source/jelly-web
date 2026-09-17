@@ -291,18 +291,27 @@ function summarize(raw, body) {
       .trim();
 
   const candidate = clean(raw);
-  const restos = /\[[a-z0-9_/]/i.test(candidate) || /[a-z0-9_]=[”"']/i.test(candidate);
-  const usable = !restos && candidate.length >= 60 && !/^[”"'\s]*$/.test(candidate) ? candidate : "";
+  /* Código do construtor de páginas disfarçado de texto. Um recto aberto que
+     sobreviva à limpeza, ou a sintaxe de atributo `palavra=”`, que uma frase
+     escrita por uma pessoa não tem. O segundo apanha os que começam a meio de
+     um shortcode e por isso nem `[` têm: «(Founder & CEO)” font_container=…». */
+  const codigo = (valor) => /\[[a-z0-9_/]/i.test(valor) || /[a-z0-9_]{3,}=[”"']/i.test(valor);
+
+  const usable = !codigo(candidate) && candidate.length >= 60 && !/^[”"'\s]*$/.test(candidate) ? candidate : "";
 
   /* O primeiro parágrafo nem sempre é o princípio do artigo: em muitos dos
      importados é a assinatura de quem escreve — «Alícia Coquim Social Media &
      Content Manager». Isso não é um resumo. Procura-se primeiro uma frase a
      sério: comprida e com ponto. É a mesma regra do `resumoDoCorpo`, que é
-     quem faz isto do lado da leitura. */
+     quem faz isto do lado da leitura.
+
+     E há corpos onde o próprio primeiro parágrafo é shortcode — o do artigo da
+     nova equipa de gestão é. Esses caem aqui também, senão a rede tinha o
+     mesmo buraco que a coisa de que nos estamos a defender. */
   const paragrafos = body
     .filter((block) => block.type === "p")
     .map((block) => clean(block.text ?? ""))
-    .filter(Boolean);
+    .filter((texto) => texto && !codigo(texto));
   const fallback = paragrafos.find((p) => p.length >= 90 && /[.!?]/.test(p)) ?? paragrafos[0] ?? "";
   const text = usable || fallback;
   if (text.length <= 220) return text;

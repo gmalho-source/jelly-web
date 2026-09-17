@@ -17,6 +17,16 @@ import type { Block } from "@/content/types";
 /* Os shortcodes que o WordPress da Jelly usava, e a família toda por precaução. */
 const SHORTCODE = /\[[a-z_/][a-z0-9_-]*(?:[^\]]*)\]?/gi;
 const ENTIDADE = /&#\d+;|&[a-z]+;/gi;
+/*
+ * O que sobra quando não há sequer um parêntese recto para agarrar.
+ *
+ * Nem todos estes resumos começam no princípio de um shortcode: o do artigo da
+ * nova equipa de gestão começa a meio de um — «(Founder & CEO)”
+ * font_container=”tag:h5|…» — e sem o `[` inicial não há nada que a limpeza
+ * reconheça. O que denuncia estes é a sintaxe de atributo, `palavra=”`, que uma
+ * frase escrita por uma pessoa não tem.
+ */
+const ATRIBUTO = /[a-z0-9_]{3,}=[”"']/i;
 
 /** O texto sem shortcodes. Vazio, se não houver nada a não ser shortcodes. */
 export function semShortcodes(texto: string | undefined): string {
@@ -26,7 +36,8 @@ export function semShortcodes(texto: string | undefined): string {
     .replace(/\s+/g, " ")
     .trim();
   // Menos de doze caracteres não é uma frase, é o que sobrou de um shortcode.
-  return limpo.length < 12 ? "" : limpo;
+  if (limpo.length < 12) return "";
+  return ATRIBUTO.test(limpo) ? "" : limpo;
 }
 
 /**
