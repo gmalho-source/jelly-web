@@ -633,6 +633,30 @@ numa só.
 um artigo é marketing e tecnologia ao mesmo tempo?" — prateleira Marketing,
 etiquetas `marketing` e `tecnologia`.
 
+### Juntar duas categorias
+
+O WordPress tinha duas categorias chamadas **Marketing**, com slugs diferentes:
+`marketing-digital` com 93 artigos e `digital-marketing` com 5. A segunda era a
+categoria inglesa do site antigo, e a importação trouxe as duas como se fossem
+prateleiras distintas — o que na lista do painel se via como Marketing duas
+vezes, sem maneira de saber qual era qual.
+
+Juntar duas categorias é seguro por uma razão que vale a pena saber: **não há
+páginas de categoria no site novo**. Os endereços antigos de categoria — o
+`/category/…` do WordPress — caem todos no `/blog`, e a categoria de um artigo
+só aparece como etiqueta na peça e no índice da pesquisa. Nenhum link se parte.
+
+São três passos, e o do meio é o que se esquece:
+
+1. `update posts set category_id = <fica> where category_id = <sai>`
+2. `update _posts_v set version_category_id = <fica> where version_category_id = <sai>`
+   — sem isto, um rascunho antigo ressuscita a categoria apagada quando alguém
+   publicar esse artigo
+3. `delete from categories where id = <sai>`
+
+Depois: o `categorySlug` no `src/content/generated/posts.json`, que é o que o
+site lê se a base não responder, e uma purga.
+
 A alternativa, várias categorias por artigo, foi posta de lado por duas razões:
 parte a migalha de pão, que passaria a ter de escolher uma ao acaso, e
 transforma a categoria numa etiqueta com mais passos. Sub-categorias ao estilo
