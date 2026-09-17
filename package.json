@@ -36,7 +36,8 @@
     "equipa": "tsx scripts/equipa.mjs",
     "md:check": "tsx scripts/check-markdown.mjs",
     "prestadores:import": "tsx scripts/prestadores-import.mjs",
-    "audio": "tsx scripts/audio-artigos.mjs"
+    "audio": "tsx scripts/audio-artigos.mjs",
+    "posts:resumos": "tsx scripts/repair-excerpts.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

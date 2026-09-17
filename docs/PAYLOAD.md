@@ -587,6 +587,41 @@ estrutura da história nunca sai do servidor, e por isso não há nada nela que 
 modelo possa partir. Se voltarem menos textos do que os que foram, o painel diz
 que não deu em vez de escrever o texto errado no bloco errado.
 
+## O resumo de um artigo importado não é um resumo
+
+Cento e vinte dos artigos que vieram do WordPress trouxeram no campo do resumo
+o código do construtor de páginas em vez de texto — `[vc_column
+column_padding=…]`. O `excerpt.rendered` da API devolve isso quando ninguém
+escreveu um resumo à mão, e o importador aceitava-o porque a limpeza só
+apanhava shortcodes fechados: um bloco que abre e só fecha parágrafos adiante
+passava inteiro, e o que sobrava tinha caracteres que chegassem para parecer
+texto.
+
+A leitura defende-se disso desde cedo — o `resumoPublicavel` deita o código
+fora e usa a primeira frase do artigo. Mas essa defesa precisa do corpo, e há
+dois sítios que não o têm, porque a lista de artigos é lida sem os corpos de
+propósito: **o cartão grande do índice do blog e o RSS**. Nesses dois o código
+saía à vista, e o RSS é o que alimenta a newsletter.
+
+Três coisas, para não voltar:
+
+1. O importador rejeita um candidato a resumo onde sobrevivam um recto aberto
+   ou um `atributo=` depois da limpeza, e cai no corpo — na primeira frase a
+   sério, não no primeiro parágrafo, que em muitos artigos importados é a
+   assinatura de quem escreve.
+2. O índice e o RSS passam pelo `semShortcodes`. Sem resumo não desenham o
+   parágrafo nem o `<description>`: um item sem descrição lê-se melhor do que
+   um item com código.
+3. `npm run posts:resumos` grava nos artigos o resumo que o site já lhes
+   mostra — corre o mesmo `resumoPublicavel` sobre o mesmo corpo e guarda o
+   resultado. Não inventa nada e não toca num resumo escrito à mão. Depois de
+   correr, o botão **Escrever o resumo com IA** no painel serve para melhorar
+   um a um o que valer a pena.
+
+O resumo é a promessa que o artigo faz a quem chega de fora: é a primeira linha
+na página, é a *description* no Google e é o que sai no email. Vale a pena
+olhar para ele nos artigos que contam.
+
 ## Categoria e etiquetas
 
 **A categoria é a prateleira**: uma por artigo, exclusiva. É ela que aparece na

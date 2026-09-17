@@ -274,6 +274,14 @@ console.log("· artigos");
  * do construtor lá dentro na maioria dos artigos antigos — o que ia direto para
  * o índice do blog. Limpa-se, e se sobrar ruído usa-se o primeiro parágrafo do
  * corpo, cortado numa fronteira de palavra.
+ *
+ * A limpeza só apanhava shortcodes fechados — `[tag …]` com o recto do fim lá.
+ * O construtor de páginas escreve blocos que abrem e só fecham parágrafos
+ * adiante, e um desses passava inteiro pelo filtro: sobrava texto que tinha
+ * sessenta caracteres e por isso era dado como bom. Ficou publicado como resumo
+ * do artigo no índice e no RSS. Agora um recto aberto ou um `atributo=` que
+ * sobrevivam à limpeza chegam para desqualificar o candidato — o primeiro
+ * parágrafo do artigo é sempre melhor do que código do construtor.
  */
 function summarize(raw, body) {
   const clean = (value = "") =>
@@ -283,8 +291,19 @@ function summarize(raw, body) {
       .trim();
 
   const candidate = clean(raw);
-  const usable = candidate.length >= 60 && !/^[”"'\s]*$/.test(candidate) ? candidate : "";
-  const fallback = clean(body.find((block) => block.type === "p")?.text ?? "");
+  const restos = /\[[a-z0-9_/]/i.test(candidate) || /[a-z0-9_]=[”"']/i.test(candidate);
+  const usable = !restos && candidate.length >= 60 && !/^[”"'\s]*$/.test(candidate) ? candidate : "";
+
+  /* O primeiro parágrafo nem sempre é o princípio do artigo: em muitos dos
+     importados é a assinatura de quem escreve — «Alícia Coquim Social Media &
+     Content Manager». Isso não é um resumo. Procura-se primeiro uma frase a
+     sério: comprida e com ponto. É a mesma regra do `resumoDoCorpo`, que é
+     quem faz isto do lado da leitura. */
+  const paragrafos = body
+    .filter((block) => block.type === "p")
+    .map((block) => clean(block.text ?? ""))
+    .filter(Boolean);
+  const fallback = paragrafos.find((p) => p.length >= 90 && /[.!?]/.test(p)) ?? paragrafos[0] ?? "";
   const text = usable || fallback;
   if (text.length <= 220) return text;
   const cut = text.slice(0, 220);

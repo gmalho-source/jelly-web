@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { capaDe, slugFor } from "@/lib/slugs";
 import { getPosts } from "@/lib/cms";
+import { semShortcodes } from "@/lib/resumo";
 import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
 
 export async function generateMetadata({
@@ -42,12 +43,19 @@ export default async function BlogIndexPage({
     locale === "pt" ? "pt-PT" : "en-GB",
     { day: "numeric", month: "short", year: "numeric" },
   );
-  // O índice para a pesquisa no browser: só o que se lê numa sugestão, e o
-  // resumo cortado — o texto inteiro dos 181 artigos não tem de vir na página.
+  /* O índice para a pesquisa no browser: só o que se lê numa sugestão, e o
+     resumo cortado — o texto inteiro dos 181 artigos não tem de vir na página.
+
+     O `semShortcodes` está aqui por causa dos artigos que trouxeram do
+     WordPress o código do construtor no lugar do resumo. As páginas dos
+     artigos já se defendiam disso com o `resumoPublicavel`, que em último
+     caso vai buscar a primeira frase do corpo; esta lista não traz corpos,
+     por isso o que se pode fazer é não mostrar o código. Sem resumo, a
+     sugestão fica só com o título, que continua a ser o que se procura. */
   const paraPesquisa = posts.map((post) => ({
     slug: slugFor(post, locale),
     titulo: post.title[locale],
-    resumo: post.excerpt[locale].slice(0, 200),
+    resumo: semShortcodes(post.excerpt[locale]).slice(0, 200),
     categoria: post.category[locale],
     temas: (post.tags ?? []).map((tag) => tag.name[locale]),
     autor: post.author.name,
@@ -90,9 +98,11 @@ export default async function BlogIndexPage({
           <h2 className="editorial mt-3 max-w-[24ch] text-chapter">
             {featured.title[locale]}
           </h2>
-          <p className="mt-4 max-w-[56ch] text-md text-fg-soft">
-            {featured.excerpt[locale]}
-          </p>
+          {semShortcodes(featured.excerpt[locale]) ? (
+            <p className="mt-4 max-w-[56ch] text-md text-fg-soft">
+              {semShortcodes(featured.excerpt[locale])}
+            </p>
+          ) : null}
         </div>
         <div className="flex flex-col justify-end gap-4 text-sm text-fg-soft lg:items-end">
           {capaDe(featured, locale)?.src ? (

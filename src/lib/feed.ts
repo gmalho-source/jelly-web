@@ -84,9 +84,16 @@ export async function feedDoBlog(locale: Locale): Promise<string> {
   const itens = posts
     .map((post) => {
       const ligacao = `${base}/blog/${slugFor(post, locale)}`;
-      // O mesmo resumo que serve a página e a description do Google — já limpo
-      // dos shortcodes que vieram do WordPress.
-      const resumo = resumoPublicavel(post.excerpt[locale], post.blocks) || post.excerpt[locale] || "";
+      /* O mesmo resumo que serve a página e a description do Google — já limpo
+         dos shortcodes que vieram do WordPress.
+
+         A rede que estava aqui no fim, `|| post.excerpt[locale]`, desfazia o
+         trabalho: quando a limpeza dava vazio — que é precisamente o caso dos
+         artigos cujo resumo é código do construtor — repunha o código no RSS.
+         Esta lista não traz os corpos, por isso não há primeira frase a que
+         recorrer; sem resumo, o item vai sem `description`, e um leitor sabe
+         lidar com isso melhor do que com `[vc_column column_padding=…]`. */
+      const resumo = resumoPublicavel(post.excerpt[locale], post.blocks);
       return [
         "    <item>",
         `      <title>${escapa(post.title[locale])}</title>`,

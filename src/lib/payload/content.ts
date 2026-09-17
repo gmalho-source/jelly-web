@@ -52,7 +52,7 @@ function image(media: MediaDoc) {
 }
 
 /** Lexical → os blocos que o ArticleBody desenha. */
-function fromLexical(root: unknown): Block[] {
+export function fromLexical(root: unknown): Block[] {
   const children = ((root as { root?: { children?: Doc[] } })?.root?.children ?? []) as Doc[];
   const blocks: Block[] = [];
 
