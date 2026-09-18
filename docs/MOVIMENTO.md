@@ -105,6 +105,13 @@ baixo, e o progresso de duas linhas já assentes e à vista recua: esmoreciam pa
 0,95 e 0,80 à frente de quem tinha acabado de carregar. Uma lista que muda de
 altura entra como um bloco só.
 
+Onde acaba esta regra: o que ela proíbe é **uma lista que muda de altura com
+entradas ligadas ao scroll por baixo**. As notas da homepage mudam de altura ao
+rato — a linha apontada cresce e mostra a capa — e isso é outra coisa, porque
+não há nenhuma entrada a recuar. O preço que sobra é real e foi aceite com o
+cliente a decidir: o que está por baixo desce enquanto o rato está em cima.
+Uma lista a que se acrescente `entra` linha a linha perde esse direito.
+
 **O fim do documento com janela larga.** Um bloco a poucos ecrãs do fundo nunca
 chega a subir o suficiente para completar uma janela medida em `cover` — ficava
 a meio, meio transparente, para sempre. Daí `entra-perto`.
@@ -179,7 +186,17 @@ oferta, logo abaixo da abertura, não se anima: pode estar no ecrã à chegada. 
 página-mãe de Tecnologia e as suas quatro páginas de serviço repetem a fórmula
 tal e qual — o mesmo topo, os mesmos gráficos com quatro desenhos novos, e o
 mesmo `PaginaDeServico` que desenha as dez do Marketing — de propósito: duas
-famílias com o mesmo esqueleto leem-se como uma casa. Os
-projetos, o Sobre e a homepage
-continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
+famílias com o mesmo esqueleto leem-se como uma casa.
+
+Da homepage só o índice das notas se mexe, e ao rato e não ao scroll: a linha
+apontada ganha cem pixéis de altura e a capa do artigo acende-se por trás do
+título (`.nota-linha` e `.capa-da-nota`, no fim do `globals.css`). Duas coisas
+que se aprenderam a fazer isto e que valem para qualquer imagem por trás de
+texto: **o véu tem de chegar aos dois terços da imagem** — com menos, metade dos
+títulos desta casa deixa de se ler sobre a parte escura de uma fotografia — e
+**o vermelho do hover sai onde a imagem entra**, porque vermelho sobre fotografia
+escura é a pior combinação das duas; a linha a crescer já é resposta que chegue.
+Medido a 1440: 133px em repouso, 233px apontada, e o vermelho a voltar sozinho a
+quem pediu menos movimento, que é quem não vê nem o crescimento nem a capa. Os
+projetos e o Sobre continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.
