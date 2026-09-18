@@ -271,17 +271,22 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
         margens negativos anulam o respiro do artigo para ela encostar aos três
         lados da folha clara e fechá-la em baixo. De ponta a ponta do ecrã era
         outra coisa — passava por cima do desenho de folha sobre tinta que a
-        página inteira tem, e a lavanda ficava encostada ao rodapé escuro.
+        página inteira tem, e a cor ficava encostada ao rodapé escuro.
 
-        A cor é a lavanda da paleta e não o
-        vermelho da casa: o vermelho é a cor com que a Jelly pede — está nas
-        secções de acção, e já está aqui em cima na subscrição, que é o pedido
-        verdadeiro desta página. Três ligações para outros artigos não são um
-        pedido, e pintá-las de vermelho punha a cor mais forte da casa no sítio
-        menos importante da página. A pastel separa sem gritar, e deixa o
-        vermelho valer o que vale quando aparece.
+        A cor é o coral da paleta e não o vermelho da casa. O vermelho é a cor
+        com que a Jelly pede — está nas secções de acção, e já está aqui em cima
+        na subscrição, que é o pedido verdadeiro desta página; três ligações
+        para outros artigos não são um pedido. E não passa no contraste: sobre
+        vermelho os títulos dão 4,02 para 1 em tinta e 4,47 em branco, contra os
+        4,5 que texto normal precisa. Sobre coral dão 8,92.
+
+        Contra o coral ficou um reparo meu, que não venceu e fica escrito: é o
+        vermelho da casa desbotado, e a seguir ao vermelho pode ler-se como o
+        mesmo tom mal impresso. Dentro da folha o reparo enfraquece — a área é
+        pequena, a tinta da página ladeia-a dos dois lados, e não há vermelho
+        nenhum encostado.
       */}
-      <section className="faixa-relacionados surface-accent-lavender -mx-5 -mb-16 mt-16 px-5 py-14 sm:-mx-8 sm:px-8 lg:py-16">
+      <section className="faixa-relacionados surface-accent-coral -mx-5 -mb-16 mt-16 px-5 py-14 sm:-mx-8 sm:px-8 lg:py-16">
         {/* O rótulo em tinta esbatida e não no vermelho do `eyebrow`: sobre
             qualquer pastel da paleta o vermelho dá 2,2 para 1 de contraste, e
             sobre o próprio vermelho da casa dá 1 para 1 — desaparece. */}
