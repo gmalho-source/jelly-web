@@ -121,7 +121,8 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
   ];
 
   return (
-    <article className="sheet-in surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
+    <>
+      <article className="sheet-in surface-paper mx-auto max-w-[1200px] px-5 py-16 sm:px-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Breadcrumbs items={crumbs} />
       <div className="mt-8 grid gap-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-14">
@@ -257,20 +258,53 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             </div>
           ) : null}
 
-          <div className="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-3">
+        </div>
+      </div>
+      </article>
+
+      {/*
+        O que se lê a seguir.
+
+        Era um bloco dentro da coluna do artigo, com a mesma cor do que estava
+        por cima e o rótulo «Relacionado» repetido três vezes — uma por título.
+        Repetido não é um rótulo, é ruído: o rótulo é do grupo e diz-se uma vez.
+
+        Passa a faixa de ponta a ponta, com superfície própria, porque é onde o
+        artigo acaba e outra coisa começa. A cor é a lavanda da paleta e não o
+        vermelho da casa: o vermelho é a cor com que a Jelly pede — está nas
+        secções de acção, e já está aqui em cima na subscrição, que é o pedido
+        verdadeiro desta página. Três ligações para outros artigos não são um
+        pedido, e pintá-las de vermelho punha a cor mais forte da casa no sítio
+        menos importante da página. A pastel separa sem gritar, e deixa o
+        vermelho valer o que vale quando aparece.
+      */}
+      <section className="faixa-relacionados surface-accent-lavender">
+        <div className="mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-16">
+          {/* O rótulo em tinta esbatida e não no vermelho do `eyebrow`: sobre
+              qualquer pastel da paleta o vermelho dá 2,2 para 1 de contraste, e
+              sobre o próprio vermelho da casa dá 1 para 1 — desaparece. */}
+          <span className="eyebrow text-fg-soft">{t("related")}</span>
+          <div className="mt-6 grid gap-8 sm:grid-cols-3">
             {related.map((item) => (
-              <Link key={item.slug} href={{ pathname: "/blog/[slug]", params: { slug: slugFor(item, locale) } }}>
-                <span className="eyebrow text-fg-soft">{t("related")}</span>
-                <h3 className="editorial mt-2 text-lg hover:text-red">{item.title[locale]}</h3>
+              <Link
+                key={item.slug}
+                href={{ pathname: "/blog/[slug]", params: { slug: slugFor(item, locale) } }}
+                className="group"
+              >
+                <h3 className="editorial text-lg transition-colors duration-200 group-hover:text-red">
+                  {item.title[locale]}
+                </h3>
               </Link>
             ))}
           </div>
-
-          <Link href="/blog" className="mt-10 inline-block text-sm font-semibold text-red">
+          <Link
+            href="/blog"
+            className="mt-10 inline-block border-b border-fg pb-1 text-sm font-semibold transition-colors duration-200 hover:text-red"
+          >
             ← {t("back")}
           </Link>
         </div>
-      </div>
-    </article>
+      </section>
+    </>
   );
 }
