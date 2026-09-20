@@ -420,9 +420,23 @@ export interface Author {
    */
   photo?: (number | null) | Media;
   /**
-   * Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo.
+   * Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo. Aceita negrito, itálico e links, e os links abrem sempre em separador novo.
    */
-  bio?: string | null;
+  bio?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
