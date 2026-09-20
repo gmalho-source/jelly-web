@@ -241,7 +241,12 @@ function autor(raw: Doc): Autor {
     return {
       name: text(ficha.name) || "Jelly",
       ...(text(ficha.role) ? { role: text(ficha.role) } : {}),
-      ...(text(ficha.bio) ? { bio: text(ficha.bio) } : {}),
+      // A apresentação vem com marcação; `pedacos` junta-a numa linha só, que é
+      // o que o campo promete e o que cabe no fim de um artigo.
+      ...((() => {
+        const frase = pedacos(ficha.bio);
+        return frase.length ? { bio: frase } : {};
+      })()),
       ...((() => {
         const foto = image(ficha.photo as MediaDoc);
         return foto ? { photo: foto } : {};
@@ -761,7 +766,10 @@ export async function fetchAuthorByName(name: string): Promise<Autor | undefined
     return {
       name: text(raw.name) || name,
       ...(text(raw.role) ? { role: text(raw.role) } : {}),
-      ...(text(raw.bio) ? { bio: text(raw.bio) } : {}),
+      ...((() => {
+        const frase = pedacos(raw.bio);
+        return frase.length ? { bio: frase } : {};
+      })()),
       ...(foto ? { photo: foto } : {}),
     };
   } catch (error) {

@@ -125,6 +125,32 @@ const LINHA = lexicalEditor({
 });
 
 /**
+ * Um campo com marcação, sem o par de línguas.
+ *
+ * A apresentação de um autor é isto: uma frase só, que vive no fim de um
+ * artigo. Passou a aceitar marcação porque quem escreve precisa de poder
+ * apontar para o LinkedIn ou para o sítio da pessoa, e um endereço escrito por
+ * extenso no meio de uma frase de apresentação lê-se mal.
+ *
+ * A régua é a curta, a mesma dos pontos de uma lista: negrito, itálico e
+ * links, e mais nada. Um currículo dentro de um campo que se chama «uma linha»
+ * seria o campo a prometer uma coisa e a entregar outra.
+ */
+export function rico(
+  name: string,
+  label: string,
+  options: { linha?: boolean; descricao?: string } = {},
+): Field {
+  return {
+    name,
+    label,
+    type: "richText",
+    editor: options.linha ? LINHA : PARAGRAFOS,
+    ...(options.descricao ? { admin: { description: options.descricao } } : {}),
+  };
+}
+
+/**
  * O mesmo par { pt, en } do `locale`, mas com marcação.
  *
  * `linha` escolhe a régua curta — a das listas. Sem ela, a régua dos

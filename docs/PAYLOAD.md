@@ -403,6 +403,32 @@ A regra é simples e poupa a investigação: **uma imagem refeita é refeita nas
 línguas, na mesma sessão.** Se só uma puder ser feita, diz-se qual ficou por
 fazer em vez de se deixar a diferença à vista.
 
+## A apresentação de um autor aceita marcação
+
+Em **Editorial → Autores**, o campo «Uma linha» deixou de ser texto simples e
+passou a ter editor: **negrito, itálico e links**, e mais nada. É a régua curta,
+a mesma dos pontos de uma lista de vaga — um currículo dentro de um campo
+chamado «uma linha» seria o campo a prometer uma coisa e a entregar outra.
+
+**Os links abrem sempre em separador novo.** Não é opção de quem escreve: é a
+página que o decide, porque ali os links são o LinkedIn ou o sítio da pessoa e
+sair do artigo sem poder voltar com um clique é perder a leitura. No corpo de um
+artigo é ao contrário — há links para dentro da própria casa, e abrir um
+separador para ir de uma página da Jelly para outra é um tique. Por isso o
+`Inline` recebe `novoSeparador` e não o herda.
+
+A mudança levou SQL, porque o Payload guarda texto rico em `jsonb` e a coluna
+era `varchar`: `scripts/sql/2026-09-20-apresentacao-do-autor-com-marcacao.sql`.
+O `using` converte a apresentação que já lá estiver num parágrafo com uma linha
+de texto dentro, que é a árvore que o editor abre.
+
+**A ordem entre o SQL e o deploy não é crítica aqui**, e isso mediu-se: com a
+coluna ainda em `varchar`, o código novo lê a string, não encontra árvore
+nenhuma e esconde a apresentação; com a coluna já em `jsonb` e o código antigo,
+o `text()` recebe um objecto e devolve vazio. Os dois lados degradam para «a
+apresentação não aparece», nenhum estoira. Mas a apresentação só volta ao ar
+quando as duas metades estiverem feitas.
+
 ## Um nó do Lexical escrito à mão precisa de tudo
 
 O editor mostrava o artigo e logo o deixava vazio, com **«Minified Lexical error

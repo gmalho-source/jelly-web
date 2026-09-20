@@ -11,14 +11,26 @@ import type { Block, Span } from "@/content/types";
  * O texto migrado não tem marcação nenhuma, e por isso quem o desenha continua
  * a poder escrever a string directa sem passar por aqui.
  */
-export function Inline({ spans }: { spans: Span[] }) {
+export function Inline({ spans, novoSeparador }: { spans: Span[]; novoSeparador?: boolean }) {
   return (
     <>
       {spans.map((span, index) => {
         const content = span.bold ? <strong className="font-semibold">{span.text}</strong> : span.italic ? <em>{span.text}</em> : span.text;
         if (span.href) {
           return (
-            <a key={index} href={span.href} className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
+            <a
+              key={index}
+              href={span.href}
+              /* `novoSeparador` é uma escolha de quem desenha a página, e não
+                 uma regra da casa. Na apresentação de um autor os links são o
+                 LinkedIn ou o sítio da pessoa — sair do artigo para lá e não
+                 poder voltar com um clique é perder a leitura. No corpo de um
+                 artigo há links para dentro da própria casa, e abrir um
+                 separador para ir de uma página da Jelly para outra é um tique,
+                 não uma cortesia. Por isso pede-se, não se herda. */
+              {...(novoSeparador ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="text-red underline decoration-1 underline-offset-2 hover:no-underline"
+            >
               {content}
             </a>
           );

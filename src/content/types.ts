@@ -88,7 +88,8 @@ export type TeamMember = {
 export type Autor = {
   name: string;
   role?: string;
-  bio?: string;
+  /** A frase de apresentação, com a marcação que o painel deixa escrever. */
+  bio?: Span[];
   photo?: { src: string; alt?: string; width?: number; height?: number };
 };
 

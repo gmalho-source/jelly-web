@@ -6,6 +6,7 @@ import { ArticleBody } from "@/components/ArticleBody";
 import { SubscribeForm } from "@/app/(site)/[locale]/subscrever/SubscribeForm";
 import { copyDaSubscricao } from "@/app/(site)/[locale]/subscrever/copy";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Inline } from "@/components/Marcado";
 import { OuvirArtigo } from "@/components/OuvirArtigo";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -237,7 +238,7 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
             </div>
           </div>
 
-          {post.author.bio ? (
+          {post.author.bio?.length ? (
             <div className="mt-12 flex items-start gap-4 border-t border-line pt-8">
               {post.author.photo?.src ? (
                 <Image
@@ -252,7 +253,9 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
               <div>
                 <p className="text-md font-semibold text-fg">{post.author.name}</p>
                 {post.author.role ? <p className="text-sm text-fg-soft">{post.author.role}</p> : null}
-                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">{post.author.bio}</p>
+                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">
+                  <Inline spans={post.author.bio} novoSeparador />
+                </p>
               </div>
             </div>
           ) : null}

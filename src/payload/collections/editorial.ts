@@ -6,7 +6,7 @@ import {
   revalidateOnChange,
   revalidateOnDelete,
 } from "../hooks/revalidate";
-import { locale, oldSlugsField, slugEnField, slugField } from "../fields";
+import { locale, oldSlugsField, rico, slugEnField, slugField } from "../fields";
 import { importMarkdown } from "../endpoints/markdown-import";
 import { categoryCounts, tagCounts } from "../endpoints/category-counts";
 import { gravaOArtigoFalado } from "../hooks/audio";
@@ -240,12 +240,12 @@ export const Authors: CollectionConfig = {
       relationTo: "media",
       admin: { description: "De rosto e quadrada, se possível: é assim que sai no artigo." },
     },
-    {
-      name: "bio",
-      label: "Uma linha",
-      type: "textarea",
-      admin: { description: "Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo." },
-    },
+    rico("bio", "Uma linha", {
+      linha: true,
+      descricao:
+        "Opcional. Uma frase, não um currículo — é o que cabe no fim de um artigo. " +
+        "Aceita negrito, itálico e links, e os links abrem sempre em separador novo.",
+    }),
   ],
 };
 
