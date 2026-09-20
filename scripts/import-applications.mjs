@@ -60,7 +60,10 @@ const VAGAS = {
   "copywriter-freelancer-part-time": ["Copywriter", "marketing"],
   "marketing-social-media-assistant-estagio-profissional-iefp": ["Marketing & Social Media Assistant (estágio)", "marketing"],
   "designer-senior-multidisciplinar": ["Designer Sénior Multidisciplinar", "design"],
-  "designer-de-branding": ["Designer de Branding", "design"],
+  // O endereço da vaga de branding leva o «freelancer» no fim; sem ele as 34
+  // candidaturas entravam sem vaga nem função, como se fossem espontâneas.
+  "designer-de-branding-freelancer": ["Designer de Branding", "design"],
+  "head-of-design": ["Head of Design", "design"],
   "video-editor-e-motion-designer": ["Video Editor e Motion Designer", "multimedia"],
 };
 
@@ -150,15 +153,34 @@ for (const nome of ficheiros) {
     const email = limpa(linha.Email).toLowerCase();
     if (!email) continue;
 
-    // O id do registo antigo repete-se entre formulários: junta-se o ficheiro.
-    const legacyId = `${slug(nome.replace(/\.csv$/, ""))}#${limpa(linha["ID do Registo"]) || createHash("sha1").update(`${email}${data}`).digest("hex").slice(0, 10)}`;
+    /*
+     * A marca que diz se esta candidatura já entrou.
+     *
+     * Era o nome do ficheiro mais o id do registo, e isso partiu-se: o mesmo
+     * formulário exportado outra vez chega com outro nome — o painel antigo
+     * põe-lhe um prefixo aleatório — e a mesma candidatura passava a ser uma
+     * candidatura nova. Medido numa segunda exportação: 81 das 142 linhas já
+     * estavam na base e teriam entrado em duplicado.
+     *
+     * Quem manda é o id do registo, que é único em todo o formulário antigo.
+     * A chave continua a escrever-se com o ficheiro à frente, para as que já lá
+     * estão não mudarem de nome; a procura é que passa a ser só pelo id.
+     */
+    const registoId = limpa(linha["ID do Registo"]);
+    const marca = registoId || createHash("sha1").update(`${email}${data}`).digest("hex").slice(0, 10);
+    const legacyId = `${slug(nome.replace(/\.csv$/, ""))}#${marca}`;
 
     if (data < desde) {
       antigas.push({ ficheiro: nome, ...linha });
       continue;
     }
 
-    const jaLa = await payload.find({ collection: "applications", where: { legacyId: { equals: legacyId } }, limit: 1, depth: 0 });
+    const jaLa = await payload.find({
+      collection: "applications",
+      where: registoId ? { legacyId: { like: `%#${registoId}` } } : { legacyId: { equals: legacyId } },
+      limit: 1,
+      depth: 0,
+    });
     if (jaLa.docs.length) {
       repetidas += 1;
       continue;
