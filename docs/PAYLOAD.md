@@ -327,9 +327,24 @@ coluna, o drizzle pergunta e há que confirmar.
 
 Desde que a base de produção deixou de ser alcançável de fora da Vercel, a
 mudança vai como SQL escrito à mão em `scripts/sql/`, um ficheiro por deploy,
-corrido no SQL Editor da Neon **antes** do deploy. É aditivo por regra — juntar
-colunas e valores de enum, nunca apagar — e o ficheiro fica no repositório a
-dizer a que mudança pertence.
+corrido **antes** do deploy. É aditivo por regra — juntar colunas e valores de
+enum, nunca apagar — e o ficheiro fica no repositório a dizer a que mudança
+pertence.
+
+Onde há `DATABASE_URL`, o ficheiro corre-se com `npm run sql`, e por omissão é
+um ensaio: abre uma transação, corre o ficheiro inteiro, e desfaz tudo. Só com
+`--gravar` é que confirma. Um ficheiro que não sobreviva ao ensaio não tem nada
+que ir à produção, e vale a pena correr o ensaio **duas vezes seguidas** — um
+ficheiro que só corre uma vez é um ficheiro que não se pode repetir depois de
+uma falha a meio.
+
+```bash
+npm run sql scripts/sql/2026-09-20-paredes-de-logos.sql            # ensaio
+npm run sql scripts/sql/2026-09-20-paredes-de-logos.sql -- --gravar
+```
+
+Sem `DATABASE_URL` à mão, o caminho continua a ser colar o ficheiro no SQL
+Editor da Neon.
 
 Isto serve enquanto somos poucos a mexer. A forma certa, quando o site estiver
 no ar a sério, é gerar migrações com `payload migrate:create`, guardá-las no
@@ -753,6 +768,43 @@ colunas, `category` e `_status`. Sem o `select` vinha o corpo de cada artigo —
 A leitura é feita sem `draft: true` de propósito: com ele o Payload devolve a
 última versão de cada artigo, que pode ter uma categoria diferente da publicada,
 e a coluna passava a contar o que alguém ainda está a pensar em vez do que está.
+
+## As paredes de logos
+
+Um logo vive na coleção **Logos**, e cada logo pertence a uma **parede** —
+`Casa → Paredes de logos`. A parede é uma tabela e não um campo de texto: era um
+varchar em cada registo, e quarenta e quatro registos com «Clientes» escrito à
+mão são quarenta e quatro oportunidades de escrever «clientes» e ficar com duas
+paredes onde devia haver uma.
+
+O que liga a parede à página é o **slug** da parede. Não é um endereço — nenhuma
+parede tem página própria — é o nome curto por onde a página a pede:
+
+| Parede | Slug | Onde aparece |
+| --- | --- | --- |
+| Clientes | `clientes` | homepage, `/clientes`, `/proposta` |
+| Parceiros de marketing | `parceiros-marketing` | faixa no fim de `/servicos/marketing` |
+| Parceiros de tecnologia | `parceiros-tecnologia` | faixa no fim de `/servicos/tecnologia` |
+| Tecnologias Web | `tecnologias-web` | ainda em lado nenhum |
+| Inteligência artificial | `ia` | ainda em lado nenhum |
+
+Mudar o slug não dá erro: dá uma faixa vazia, que é pior. Mudar o **nome** da
+parede não parte nada — é para isso que ela é uma tabela.
+
+Numa parede de parceiros, a **imagem é opcional**: sem ela, a marca aparece
+escrita, no mesmo tamanho e na mesma fila dos logos. Não é um estado de erro. Os
+selos de parceiro — o da Google, o da Meta — só o próprio parceiro os emite, e
+até lá o nome vale mais do que um buraco na fila. Carregar o logo mais tarde
+substitui o nome sem mexer em código.
+
+Na parede de clientes o site ignora os registos sem imagem: aquela parede
+desenha-se, e um nome escrito no meio de quarenta logos lê-se como um logo que
+faltou carregar.
+
+As duas faixas de parceiros estavam escritas em `src/content/marketing.ts` e
+`src/content/tecnologia.ts`, uma lista de nomes cada. Deixaram de estar: o que
+ficou no código é o chapéu da faixa, que é texto da página. Acrescentar um
+parceiro é acrescentar um registo em Logos, e não um deploy.
 
 ## Passar a equipa para o painel
 

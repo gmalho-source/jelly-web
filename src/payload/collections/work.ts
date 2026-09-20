@@ -1,7 +1,12 @@
 import type { Block, CollectionConfig } from "payload";
 import { slugDaPessoa } from "@/lib/equipa";
 import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
-import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import {
+  revalidateEverythingOnChange,
+  revalidateEverythingOnDelete,
+  revalidateOnChange,
+  revalidateOnDelete,
+} from "../hooks/revalidate";
 import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
 import { translateStory } from "../endpoints/translate-story";
 import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
@@ -365,16 +370,74 @@ export const Clients: CollectionConfig = {
  * Logo não traz nomes, por isso não há forma de casar um logo com um cliente
  * sem inventar. Quem quiser ligar os dois faz isso à mão, no painel.
  */
+/**
+ * As paredes: os temas por onde os logos se arrumam.
+ *
+ * Era um campo de texto dentro de cada logo, e um campo de texto escreve-se de
+ * maneira diferente de cada vez — «Tecnologias Web» num registo, «tecnologias
+ * web» no seguinte, e ficam duas paredes onde devia haver uma. Aqui o nome da
+ * parede existe uma vez só e cada logo aponta para ele: mudar o nome muda-o em
+ * todo o lado, e não há como escrevê-lo mal a meio de uma lista de quarenta.
+ *
+ * O slug é o que liga a parede à página. É por ele que a homepage pede
+ * `clientes` e a página de Marketing pede `parceiros-marketing`. Nenhuma parede
+ * tem página própria, por isso mudá-lo não parte endereço nenhum — tira é a
+ * parede do sítio onde ela aparece, e isso não dá erro: dá uma faixa vazia.
+ */
+export const LogoWalls: CollectionConfig = {
+  slug: "logo-walls",
+  labels: { singular: "Parede", plural: "Paredes de logos" },
+  admin: {
+    useAsTitle: "name",
+    group: "Casa",
+    defaultColumns: ["name", "slug"],
+    description: "Os temas por onde os logos se arrumam. Cada página mostra a parede que lhe corresponde.",
+  },
+  defaultSort: "name",
+  access: { read: () => true },
+  hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
+  fields: [
+    { name: "name", label: "Nome", type: "text", required: true },
+    // Escrito por extenso, e não o `slugField` da casa: aquele avisa que mudar
+    // um slug parte endereços, e aqui não há endereço nenhum para partir. O que
+    // se parte é a ligação entre a parede e a página que a mostra.
+    {
+      name: "slug",
+      type: "text",
+      required: true,
+      unique: true,
+      index: true,
+      admin: { description: "É por aqui que uma página escolhe a parede que mostra. Mudar isto deixa essa página sem parede." },
+    },
+  ],
+};
+
 export const Logos: CollectionConfig = {
   slug: "logos",
-  labels: { singular: "Logo", plural: "Parede de logos" },
-  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "gallery", "order"] },
+  labels: { singular: "Logo", plural: "Logos" },
+  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "wall", "order"] },
+  defaultSort: "order",
   access: { read: () => true },
-  hooks: { afterChange: [revalidateOnChange(() => ["/", "/clientes"])], afterDelete: [revalidateOnDelete(() => ["/", "/clientes"])] },
+  // Uma parede aparece em mais do que uma página, e as paredes de parceiros
+  // aparecem em páginas que isto não sabe nomear. Revalida-se tudo.
+  hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   fields: [
     { name: "name", label: "Nome", type: "text" },
-    { name: "gallery", label: "Parede", type: "text", required: true, defaultValue: "Clientes" },
-    { name: "image", label: "Imagem", type: "upload", relationTo: "media", required: true },
+    {
+      name: "wall",
+      label: "Parede",
+      type: "relationship",
+      relationTo: "logo-walls",
+      required: true,
+      admin: { description: "Em que parede esta marca aparece." },
+    },
+    {
+      name: "image",
+      label: "Imagem",
+      type: "upload",
+      relationTo: "media",
+      admin: { description: "Sem imagem, a marca aparece escrita — é o que serve enquanto o logo não existir." },
+    },
     { name: "link", label: "Site", type: "text" },
     { name: "order", label: "Ordem", type: "number" },
   ],

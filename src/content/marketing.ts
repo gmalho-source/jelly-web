@@ -140,8 +140,10 @@ export const marketing = {
        com narrativa escrita que têm marketing na disciplina. Só esses aparecem
        no site — um projeto sem história não tem página para onde ir. */
     casos: ["informa-db", "agriloja", "vorwerk", "nuk"],
+    /* Os parceiros vêm da parede "parceiros-marketing" no painel: uma lista escrita no código
+       obriga a um deploy para acrescentar um selo, e um selo de parceiro
+       renova-se. O chapéu fica aqui porque é texto da página, não é conteúdo. */
     parceirosEyebrow: { pt: "Parceiros e certificações", en: "Partners and certifications" },
-    parceiros: ["Google Partner", "Meta Business Partner", "Informa D&B", "Brevo", "Mailchimp", "Pipedrive", "HighLevel"],
   },
 
   ia: {

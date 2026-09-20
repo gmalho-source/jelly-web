@@ -8,7 +8,18 @@ import { projects } from "@/content/projects";
 import { planosDeCodigo } from "@/content/jellycare";
 import { clients, milestones, services } from "@/content/site";
 import { team } from "@/content/team";
-import type { ArchivedProject, CarePlan, Department, Job, LogoGallery, MigratedPost, NewsItem, Post, Project } from "@/content/types";
+import type {
+  ArchivedProject,
+  CarePlan,
+  Department,
+  Job,
+  LogoGallery,
+  LogoOnWall,
+  MigratedPost,
+  NewsItem,
+  Post,
+  Project,
+} from "@/content/types";
 import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
@@ -226,10 +237,24 @@ export async function getArchivedProject(slug: string): Promise<ArchivedProject 
 
 const getLogoGalleries = fromStore("logos", async () => fetchLogoGalleries(logoGalleries as LogoGallery[]));
 
-/** Logos de clientes, das galerias Smart Logo do site antigo. */
-export async function getClientLogos(gallery = "Clientes") {
-  const galleries = await getLogoGalleries();
-  return galleries.find((item) => item.gallery.toLowerCase() === gallery.toLowerCase())?.logos ?? [];
+/**
+ * Uma parede inteira, pelo slug com que o painel a conhece.
+ *
+ * É este nome curto que decide o que aparece onde: a página escolhe a parede,
+ * e quem manda na parede é o painel.
+ */
+export async function getLogoWall(slug: string) {
+  const walls = await getLogoGalleries();
+  return walls.find((wall) => wall.slug === slug)?.logos ?? [];
+}
+
+/**
+ * A parede de clientes, só com os que têm imagem: esta parede desenha-se, e um
+ * nome escrito no meio de quarenta logos lia-se como um logo em falta.
+ */
+export async function getClientLogos(gallery = "clientes") {
+  const logos = await getLogoWall(gallery);
+  return logos.filter((logo): logo is LogoOnWall & { src: string } => Boolean(logo.src));
 }
 
 /**

@@ -237,8 +237,15 @@ export type ArchivedProject = {
 export type LogoGallery = {
   gallery: string;
   slug: string;
-  logos: { src: string; name: string; link: string | null }[];
+  logos: LogoOnWall[];
 };
+
+/**
+ * Uma marca numa parede. Sem imagem, é o nome que vai para o ecrã: é o que
+ * mantém uma faixa de parceiros completa enquanto faltam os selos que só o
+ * próprio parceiro emite.
+ */
+export type LogoOnWall = { src: string | null; name: string; link: string | null };
 
 /** Uma pergunta que só existe numa vaga. */
 export type JobQuestion = {

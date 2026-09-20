@@ -19,7 +19,7 @@ import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
 import { BillingAttempts, BillingTokens, Prestadores } from "./src/payload/collections/prestadores";
-import { Clients, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
+import { Clients, LogoWalls, Logos, Milestones, Projects, Services, TeamMembers } from "./src/payload/collections/work";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
@@ -79,6 +79,7 @@ export default buildConfig({
     Services,
     NewsItems,
     Clients,
+    LogoWalls,
     Logos,
     TeamMembers,
     Milestones,

@@ -585,20 +585,39 @@ export function fetchNews(fallback: NewsItem[]) {
   }, fallback);
 }
 
+/**
+ * As paredes, e os logos dentro de cada uma.
+ *
+ * As paredes vêm primeiro e por nome: são elas que dão a ordem e o nome, e uma
+ * parede ainda sem logos existe à mesma — é o estado normal de uma parede
+ * acabada de criar. Os logos entram depois, pela ordem escrita em cada um.
+ */
 export function fetchLogoGalleries(fallback: LogoGallery[]) {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "logos", sort: "order", ...all });
-    const byGallery = new Map<string, LogoGallery>();
-    for (const raw of docs as unknown as Doc[]) {
-      const media = image(raw.image as MediaDoc);
-      if (!media) continue;
-      const gallery = text(raw.gallery) || "Clientes";
-      if (!byGallery.has(gallery)) {
-        byGallery.set(gallery, { gallery, slug: gallery.toLowerCase().replace(/\s+/g, "-"), logos: [] });
-      }
-      byGallery.get(gallery)!.logos.push({ src: media.src, name: text(raw.name), link: text(raw.link) || null });
+    const [paredes, logos] = await Promise.all([
+      payload.find({ collection: "logo-walls", sort: "name", limit: 0, depth: 0 }),
+      payload.find({ collection: "logos", sort: "order", ...all }),
+    ]);
+
+    const byId = new Map<number | string, LogoGallery>();
+    for (const raw of paredes.docs as unknown as Doc[]) {
+      const slug = text(raw.slug);
+      if (!slug) continue;
+      byId.set(raw.id as number | string, { gallery: text(raw.name), slug, logos: [] });
     }
-    return [...byGallery.values()];
+
+    for (const raw of logos.docs as unknown as Doc[]) {
+      const wall = raw.wall as Doc | number | string | null;
+      const parede = byId.get(typeof wall === "object" && wall ? (wall.id as number | string) : (wall as number | string));
+      if (!parede) continue;
+      const media = image(raw.image as MediaDoc);
+      const name = text(raw.name);
+      // Sem imagem e sem nome não há nada para pôr no ecrã.
+      if (!media && !name) continue;
+      parede.logos.push({ src: media?.src ?? null, name, link: text(raw.link) || null });
+    }
+
+    return [...byId.values()];
   }, fallback);
 }
 

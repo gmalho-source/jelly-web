@@ -3,10 +3,11 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
 import { GraficoDeArea } from "@/components/GraficoDeArea";
 import { marketing } from "@/content/marketing";
 import { servicoDeMarketing } from "@/content/marketing-servicos";
-import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
+import { getLogoWall, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -58,7 +59,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
   setRequestLocale(locale);
   const t = await getTranslations("services");
   const m = marketing;
-  const [service, all] = await Promise.all([getService(SLUG), getServices()]);
+  const [service, all, parceiros] = await Promise.all([getService(SLUG), getServices(), getLogoWall("parceiros-marketing")]);
   const casos = await getProjectsBySlugs(service?.caseSlugs?.length ? service.caseSlugs : [...m.trabalho.casos]);
   const outros = all.filter((item) => item.slug !== SLUG);
   const ia = all.find((item) => item.slug === "inteligencia-artificial");
@@ -325,14 +326,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
               ))}
             </div>
           ) : null}
-          <div className="entra mt-12">
-            <span className="eyebrow text-red">{m.trabalho.parceirosEyebrow[locale]}</span>
-            <ul className="mt-4 flex flex-wrap gap-x-9 gap-y-3 text-[12px] font-semibold uppercase tracking-[0.06em] text-fg-soft">
-              {m.trabalho.parceiros.map((p) => (
-                <li key={p}>{p}</li>
-              ))}
-            </ul>
-          </div>
+          <FaixaDeParceiros eyebrow={m.trabalho.parceirosEyebrow[locale]} logos={parceiros} />
         </div>
       </section>
 

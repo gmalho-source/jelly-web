@@ -177,8 +177,10 @@ export const tecnologia = {
        narrativa escrita e desenvolvimento na disciplina — uma loja, um
        personalizador, uma plataforma financeira, uma app e um leilão online. */
     casos: ["agriloja", "decathlon", "unicambio", "take1-mobile-app", "artbid"],
+    /* Os parceiros vêm da parede "parceiros-tecnologia" no painel: uma lista escrita no código
+       obriga a um deploy para acrescentar um selo, e um selo de parceiro
+       renova-se. O chapéu fica aqui porque é texto da página, não é conteúdo. */
     parceirosEyebrow: { pt: "Parceiros e stack", en: "Partners and stack" },
-    parceiros: ["Pipedrive Partner", "Iubenda Certified Partner", "Shopify", "WooCommerce", "WordPress", "Zoho", "Google Workspace", "Next.js", "Payload CMS", "Vercel"],
   },
 
   cuidar: {

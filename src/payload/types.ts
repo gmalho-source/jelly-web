@@ -79,6 +79,7 @@ export interface Config {
     services: Service;
     news: News;
     clients: Client;
+    'logo-walls': LogoWall;
     logos: Logo;
     team: Team;
     milestones: Milestone;
@@ -112,6 +113,7 @@ export interface Config {
     services: ServicesSelect<false> | ServicesSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    'logo-walls': LogoWallsSelect<false> | LogoWallsSelect<true>;
     logos: LogosSelect<false> | LogosSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
@@ -919,14 +921,36 @@ export interface Client {
   createdAt: string;
 }
 /**
+ * Os temas por onde os logos se arrumam. Cada página mostra a parede que lhe corresponde.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logo-walls".
+ */
+export interface LogoWall {
+  id: number;
+  name: string;
+  /**
+   * É por aqui que uma página escolhe a parede que mostra. Mudar isto deixa essa página sem parede.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "logos".
  */
 export interface Logo {
   id: number;
   name?: string | null;
-  gallery: string;
-  image: number | Media;
+  /**
+   * Em que parede esta marca aparece.
+   */
+  wall: number | LogoWall;
+  /**
+   * Sem imagem, a marca aparece escrita — é o que serve enquanto o logo não existir.
+   */
+  image?: (number | null) | Media;
   link?: string | null;
   order?: number | null;
   updatedAt: string;
@@ -1657,6 +1681,10 @@ export interface PayloadLockedDocument {
         value: number | Client;
       } | null)
     | ({
+        relationTo: 'logo-walls';
+        value: number | LogoWall;
+      } | null)
+    | ({
         relationTo: 'logos';
         value: number | Logo;
       } | null)
@@ -2278,11 +2306,21 @@ export interface ClientsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logo-walls_select".
+ */
+export interface LogoWallsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "logos_select".
  */
 export interface LogosSelect<T extends boolean = true> {
   name?: T;
-  gallery?: T;
+  wall?: T;
   image?: T;
   link?: T;
   order?: T;
