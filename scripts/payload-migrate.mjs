@@ -422,8 +422,13 @@ async function migrateHouse(payload, written) {
   }
 
   // A parede de logos vem do Smart Logo do site antigo, sem nomes: fica como
-  // coleção própria, e quem quiser ligá-la aos clientes fá-lo no painel.
+  // coleção própria, e quem quiser ligá-la aos clientes fá-lo no painel. Cada
+  // galeria de lá é uma parede aqui — o nome da parede é um registo, não um
+  // texto repetido dentro de cada logo.
   for (const gallery of readJson("src/content/generated/client-logos.json")) {
+    const parede = (
+      await upsert(payload, "logo-walls", { slug: { equals: gallery.slug } }, { name: gallery.gallery, slug: gallery.slug })
+    ).id;
     for (const [index, logo] of gallery.logos.entries()) {
       const image = await upload(payload, logo.src, logo.name || gallery.gallery);
       if (!image) continue;
@@ -431,7 +436,7 @@ async function migrateHouse(payload, written) {
         payload,
         "logos",
         { image: { equals: image } },
-        { name: logo.name || "", gallery: gallery.gallery, image, link: logo.link ?? undefined, order: index + 1 },
+        { name: logo.name || "", wall: parede, image, link: logo.link ?? undefined, order: index + 1 },
       );
       note("logos", 1);
     }
