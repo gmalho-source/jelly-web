@@ -614,7 +614,12 @@ export function fetchLogoGalleries(fallback: LogoGallery[]) {
       const name = text(raw.name);
       // Sem imagem e sem nome não há nada para pôr no ecrã.
       if (!media && !name) continue;
-      parede.logos.push({ src: media?.src ?? null, name, link: text(raw.link) || null });
+      parede.logos.push({
+        src: media?.src ?? null,
+        name,
+        link: text(raw.link) || null,
+        ...(media?.width && media?.height ? { width: media.width, height: media.height } : {}),
+      });
     }
 
     return [...byId.values()];

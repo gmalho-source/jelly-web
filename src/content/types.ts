@@ -245,7 +245,14 @@ export type LogoGallery = {
  * mantém uma faixa de parceiros completa enquanto faltam os selos que só o
  * próprio parceiro emite.
  */
-export type LogoOnWall = { src: string | null; name: string; link: string | null };
+export type LogoOnWall = {
+  src: string | null;
+  name: string;
+  link: string | null;
+  /** Do ficheiro. É a forma da marca que decide o tamanho a que ela se desenha. */
+  width?: number;
+  height?: number;
+};
 
 /** Uma pergunta que só existe numa vaga. */
 export type JobQuestion = {
