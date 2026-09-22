@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -65,6 +66,12 @@ export default async function SiteLayout({
           <main className="pb-24 pt-6 sm:pb-0 sm:pt-24">{children}</main>
           <SiteFooter />
         </NextIntlClientProvider>
+        {/* As medições de velocidade reais, da Vercel: o que os visitantes
+            sentem, e não o que um teste sintético diz. Fica só no site — o
+            painel, a área de faturação e a proposta têm cada um o seu layout de
+            raiz e ficam de fora, que é onde não há visitantes para medir e há
+            endereços que não têm de sair daqui. */}
+        <SpeedInsights />
       </body>
     </html>
   );
