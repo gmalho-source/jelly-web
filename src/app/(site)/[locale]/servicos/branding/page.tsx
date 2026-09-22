@@ -102,10 +102,11 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
       </header>
 
       {/* ── O filme ────────────────────────────────────────────────────────
-          A equipa à mesa a escolher cores, no fotograma inteiro: em cor plena,
-          sem gradiente e sem texto por cima — o assunto do filme é a cor, e a
-          frase já ficou dita. A moldura deriva contra o texto (`paralaxe`),
-          com respiro por baixo para não entrar na faixa vermelha. */}
+          Um livro de marca numa mesa escura, a preto e branco, no fotograma
+          inteiro: sem gradiente e sem texto por cima — a frase já ficou dita, e
+          o que se vê é o objeto que sai daqui. A moldura deriva contra o texto
+          (`paralaxe`), com respiro por baixo para não entrar na faixa
+          vermelha. */}
       <section className="surface-ink pb-14 lg:pb-16">
         <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
           <div className="paralaxe relative aspect-video overflow-hidden rounded-[6px] bg-[#1d2126]">
