@@ -1,6 +1,5 @@
 import type { PayloadHandler } from "payload";
 import { markdownParaLexical } from "@/lib/markdown-lexical";
-import config from "@/../payload.config";
 
 /**
  * Um ficheiro Markdown a povoar um artigo: texto, formatação e imagens.
@@ -36,7 +35,13 @@ export const importMarkdown: PayloadHandler = async (req) => {
       });
       return guardada.id;
     },
-    { nome, config: await config },
+    // A configuração vem do pedido e não de `@payload-config`. Importá-la aqui
+    // fechava um círculo — a configuração carrega as coleções, as coleções
+    // carregam este endpoint, e o endpoint voltava à configuração —, e um
+    // círculo à volta da configuração deixa o leitor do CMS a meio de arrancar
+    // em qualquer rota que entre por ele em execução. O `req.payload.config` é
+    // a mesma configuração, já resolvida, sem passar por cima de ninguém.
+    { nome, config: req.payload.config },
   );
 
   return Response.json(importado);

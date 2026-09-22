@@ -1,10 +1,10 @@
 import { cache } from "react";
 import { getPayload, type Payload } from "payload";
 import config from "@payload-config";
-import { env } from "@/lib/env";
+import { payloadConfigured } from "./configured";
 
 /** Sem base de dados, o site serve o conteúdo local do repositório. */
-export const payloadConfigured = Boolean(env(process.env.DATABASE_URL));
+export { payloadConfigured };
 
 /**
  * Instância local do Payload. Não passa pela rede: corre no mesmo processo do

@@ -39,7 +39,7 @@ import {
   fetchTeam,
 } from "@/lib/payload/content";
 import { CMS_TAG } from "@/lib/cms-tag";
-import { payloadConfigured } from "@/lib/payload/client";
+import { payloadConfigured } from "@/lib/payload/configured";
 
 /**
  * Camada de conteúdo — a única porta entre as páginas e a origem dos dados.
