@@ -1,6 +1,6 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from "payload";
-import { CMS_TAG } from "@/lib/cms";
+import { CMS_TAG } from "@/lib/cms-tag";
 
 /**
  * Publicar no painel tem de mudar o site à vista, não no próximo deploy. O

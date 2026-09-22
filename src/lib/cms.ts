@@ -38,6 +38,7 @@ import {
   fetchServices,
   fetchTeam,
 } from "@/lib/payload/content";
+import { CMS_TAG } from "@/lib/cms-tag";
 import { payloadConfigured } from "@/lib/payload/client";
 
 /**
@@ -49,6 +50,9 @@ import { payloadConfigured } from "@/lib/payload/client";
  * deixa o site de pé mesmo a meio de uma migração.
  */
 export const cmsConfigured = payloadConfigured;
+
+/** Etiqueta única: publicar qualquer coisa manda buscar tudo outra vez. */
+export { CMS_TAG };
 
 /**
  * Uma leitura por coleção e por deploy, não uma por página.
@@ -65,8 +69,6 @@ function fromStore<T>(name: string, load: () => Promise<T>) {
   return cache(unstable_cache(load, ["cms", name], { revalidate: false, tags: [CMS_TAG] }));
 }
 
-/** Etiqueta única: publicar qualquer coisa manda buscar tudo outra vez. */
-export const CMS_TAG = "cms";
 
 const localProjects = [...projects].sort((a, b) => a.order - b.order);
 

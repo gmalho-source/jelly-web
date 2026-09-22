@@ -1,6 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { CMS_TAG } from "@/lib/cms";
+import { CMS_TAG } from "@/lib/cms-tag";
 import { env } from "@/lib/env";
 
 /**
