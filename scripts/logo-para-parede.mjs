@@ -17,6 +17,10 @@
  * convertido com a densidade por omissão sobe com os 150 px do desenho e fica
  * esborratado no ecrã.
  *
+ * Uma marca que já esteja noutra parede não precisa de subir outra vez: com
+ * `--imagem=<id>` aponta-se ao ficheiro que já lá está, e as duas paredes
+ * mostram o mesmo logo sem duas cópias no armazenamento.
+ *
  * Com `--ensaio` diz o que faria e não grava.
  */
 import fs from "node:fs";
@@ -34,11 +38,12 @@ const paredeSlug = valor("parede");
 const nome = valor("nome");
 const ficheiro = valor("ficheiro");
 const link = valor("link");
+const imagemExistente = valor("imagem");
 const alt = valor("alt");
 const ordem = valor("ordem");
 
-if (!paredeSlug || !nome || !ficheiro) {
-  console.error("Falta --parede, --nome ou --ficheiro.");
+if (!paredeSlug || !nome || (!ficheiro && !imagemExistente)) {
+  console.error("Falta --parede, --nome e um de --ficheiro ou --imagem.");
   process.exit(1);
 }
 
@@ -63,27 +68,46 @@ if (!parede) {
   process.exit(1);
 }
 
-let { corpo, nome: ficheiroNome } = await bytes(ficheiro);
+/** A imagem: ou já existe na biblioteca, ou sobe agora. */
+async function imagemDoLogo() {
+  if (imagemExistente) {
+    const doc = await payload.findByID({ collection: "media", id: imagemExistente, depth: 0 }).catch(() => null);
+    if (!doc) {
+      console.error(`Não há imagem com o id ${imagemExistente}.`);
+      process.exit(1);
+    }
+    console.log(`${nome} → ${parede.name} (imagem #${doc.id}, já na biblioteca)`);
+    return doc.id;
+  }
+  return subir();
+}
+
+async function subir() {
+  let { corpo, nome: ficheiroNome } = await bytes(ficheiro);
 // Um SVG é desenho, não pixels: desenha-se aqui, em grande, antes de subir.
 if (/\.svg$/i.test(ficheiroNome) || corpo.subarray(0, 300).toString("utf8").includes("<svg")) {
   corpo = await sharp(corpo, { density: 600 }).resize({ width: 640 }).png().toBuffer();
   ficheiroNome = ficheiroNome.replace(/\.svg$/i, "") + ".png";
 }
 
-const extensao = path.extname(ficheiroNome).slice(1).toLowerCase();
-const { width, height } = await sharp(corpo).metadata();
-console.log(`${nome} → ${parede.name} (${width}×${height}, ${Math.round(corpo.byteLength / 1024)} kB)`);
+  const extensao = path.extname(ficheiroNome).slice(1).toLowerCase();
+  const { width, height } = await sharp(corpo).metadata();
+  console.log(`${nome} → ${parede.name} (${width}×${height}, ${Math.round(corpo.byteLength / 1024)} kB)`);
+  if (ensaio) return "ensaio";
+  const criada = await payload.create({
+    collection: "media",
+    data: { alt: alt || nome, title: nome },
+    file: { name: ficheiroNome, data: corpo, mimetype: tipos[extensao] ?? "image/png", size: corpo.byteLength },
+  });
+  return criada.id;
+}
+
+const imagem = await imagemDoLogo();
 
 if (ensaio) {
   console.log("ensaio: nada gravado");
   process.exit(0);
 }
-
-const imagem = await payload.create({
-  collection: "media",
-  data: { alt: alt || nome, title: nome },
-  file: { name: ficheiroNome, data: corpo, mimetype: tipos[extensao] ?? "image/png", size: corpo.byteLength },
-});
 
 const existentes = await payload.find({
   collection: "logos",
@@ -95,7 +119,7 @@ const existentes = await payload.find({
 const dados = {
   name: nome,
   wall: parede.id,
-  image: imagem.id,
+  image: imagem,
   ...(link ? { link } : {}),
   ...(ordem ? { order: Number(ordem) } : {}),
 };

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CookieConsent } from "@/components/CookieConsent";
+import { MedicoesDaVercel } from "@/components/MedicoesDaVercel";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { routing, type Locale } from "@/i18n/routing";
@@ -68,12 +67,12 @@ export default async function SiteLayout({
           <SiteFooter />
         </NextIntlClientProvider>
         {/* As medições da Vercel: a velocidade que os visitantes sentem, e a
-            contagem de visitas e páginas. Ficam só no site — o painel, a área de
-            faturação e a proposta têm cada um o seu layout de raiz e ficam de
-            fora, que é onde não há visitantes para contar e há endereços que não
-            têm de sair daqui. */}
-        <SpeedInsights />
-        <Analytics />
+            contagem de visitas e páginas — esta presa ao consentimento, como se
+            explica lá dentro. Ficam só no site: o painel, a área de faturação e
+            a proposta têm cada um o seu layout de raiz e ficam de fora, que é
+            onde não há visitantes para contar e há endereços que não têm de
+            sair daqui. */}
+        <MedicoesDaVercel />
       </body>
     </html>
   );
