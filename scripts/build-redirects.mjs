@@ -60,6 +60,21 @@ const PAGES = {
   "/entidades-resolucao-alternativa-litigios/": "/legal/resolucao-de-litigios",
   "/servicos/rgpd-regulamento-geral-protecao-dados/": "/legal/politica-de-privacidade",
   "/subscrever-newsletter-jellycode/": "/blog",
+  /*
+   * A área de faturação dos prestadores.
+   *
+   * `billing.jelly.pt` já manda para cá — 301 para `/login-faturacao/`, feito
+   * no alojamento antigo — e no site atual esse endereço responde 404. Quem
+   * tem o subdomínio nos favoritos bate numa parede hoje. Estas duas linhas
+   * fazem-no aterrar em `/billing` no dia em que o www passar para aqui.
+   *
+   * O destino certo a prazo é outro: com `billing.jelly.pt` apontado à Vercel,
+   * o middleware serve `/billing/*` nesse host sem redirecionamento nenhum e
+   * sem mudar o endereço na barra. Estas linhas são a rede por baixo, para os
+   * links antigos que já andam por aí.
+   */
+  "/login-faturacao/": "/billing",
+  "/login-faturacao-recuperacao-de-email/": "/billing",
   "/confirmacao-consulta-marketing-digital/": "/contactos",
   "/404-pt/": "/",
   "/impacto-do-comercio-eletronico-no-setor-de-i-gaming/": "/blog",

@@ -4698,5 +4698,15 @@
     "source": "/inteligencia-artificial/pre-qualificacao-leads-agentes-ia",
     "destination": "/pre-qualificacao-leads-agentes-ia",
     "permanent": true
+  },
+  {
+    "source": "/login-faturacao",
+    "destination": "/billing",
+    "permanent": true
+  },
+  {
+    "source": "/login-faturacao-recuperacao-de-email",
+    "destination": "/billing",
+    "permanent": true
   }
 ]

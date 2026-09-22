@@ -79,8 +79,17 @@ src/
 ## billing.jelly.pt
 
 Subdomínio próprio para prestadores **registados**. O middleware reescreve
-`billing.jelly.pt/*` para as rotas internas `/billing/*`, e um pedido a
-`www.jelly.pt/billing/*` é redirecionado para o subdomínio.
+`billing.jelly.pt/*` para as rotas internas `/billing/*`, sem as expor no
+endereço. Em qualquer outro host a mesma área responde em `/billing`, sem
+redirecionamento para o subdomínio: enquanto `billing.jelly.pt` apontar para o
+alojamento antigo, a página tem de existir neste site — e quando apontar para
+aqui, um 301 de lá não pode encontrar um 302 a mandá-lo de volta.
+
+Os endereços antigos `/login-faturacao` e `/login-faturacao-recuperacao-de-email`
+são 301 para `/billing`, como qualquer outro endereço do site antigo. Não é
+decoração: `billing.jelly.pt` já redireciona para `jelly.pt/login-faturacao/`
+— feito no alojamento antigo, em nginx — e hoje esse endereço responde 404.
+Quem tem o subdomínio nos favoritos bate numa parede até o www passar para cá.
 
 1. O prestador abre `billing.jelly.pt` e escreve o email no campo de login.
 2. `POST /api/request-link` valida o formato, aplica rate limit (3 por email por
@@ -104,7 +113,10 @@ Fase 2: estado dos pagamentos lido da API do Monday, em leitura apenas.
   mantêm a assinatura.
 - `src/lib/billing/providers.ts` lê `BILLING_ALLOWED_EMAILS`: ligar ao board de
   prestadores do Monday (ou a uma coleção do Payload) como fonte de verdade.
-- DNS de `billing.jelly.pt` para a Vercel e domínio adicionado ao projeto.
+- DNS de `billing.jelly.pt` para a Vercel e domínio adicionado ao projeto. É
+  isto que fecha a história: o subdomínio deixa de dar três saltos até `/billing`
+  e passa a servir a área no seu próprio endereço. O 301 antigo, em nginx, sai
+  com o alojamento antigo.
 
 ## Documentos de decisão
 
