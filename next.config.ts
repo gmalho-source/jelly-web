@@ -61,16 +61,17 @@ const nextConfig: NextConfig = {
     return [
       {
         /*
-         * As imagens das assinaturas de email, que vieram do alojamento
-         * anterior nos mesmos endereços que sempre tiveram — há emails
-         * enviados há anos a pedi-las, e esses não se reescrevem.
+         * As duas pastas que vieram do alojamento anterior nos mesmos
+         * endereços que sempre tiveram: as imagens das assinaturas de email, e
+         * o arquivo de imagens do site antigo. Há emails enviados há anos a
+         * pedi-las, e esses não se reescrevem.
          *
-         * Fora do índice: são caras e ícones de uma pasta de serviço, não
-         * páginas. E em cache por um dia, com uma semana de tolerância, porque
-         * quem as pede são os intermediários de email, muitas vezes, e o
-         * ficheiro raramente muda.
+         * Fora do índice: são ficheiros de serviço e um arquivo de 2011, não
+         * conteúdo desta casa — nenhuma página daqui lhes toca. E em cache por
+         * um dia, com uma semana de tolerância, porque quem as pede são os
+         * intermediários de email, muitas vezes, e o ficheiro nunca muda.
          */
-        source: "/assinaturas/:path*",
+        source: "/:arquivo(assinaturas|images)/:path*",
         headers: [
           { key: "X-Robots-Tag", value: "noindex" },
           { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
