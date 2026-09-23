@@ -25,7 +25,6 @@ export function CookieConsent({ locale }: { locale: Locale }) {
     cookiePolicyInOtherWindow: true,
     countryDetection: true,
     enableLgpd: true,
-    enableUspr: true,
     lgpdAppliesGlobally: false,
     perPurposeConsent: true,
     reloadOnConsent: true,
@@ -82,14 +81,16 @@ export function CookieConsent({ locale }: { locale: Locale }) {
           ].join(""),
         }}
       />
-      {/* Estes dois são bloqueantes de propósito, e o aviso do eslint fica
-          silenciado com a razão à vista: o bloqueio automático só intercepta o
-          que ainda não correu, e o `stub` tem de definir a função do GPP antes
-          de alguém a chamar. Postos em `async` deixavam de servir para nada. */}
+      {/* Bloqueante de propósito, e o aviso do eslint fica silenciado com a
+          razão à vista: o bloqueio automático só intercepta o que ainda não
+          correu. Posto em `async` deixava de servir para nada.
+
+          Era acompanhado pelo `stub.js` do GPP, o sinal de privacidade
+          americano, que vinha com o `enableUspr`. Saíram os dois: a casa não
+          serve aquele mercado, e o guião custava 750ms a bloquear o desenho da
+          página — medido pelo Lighthouse, num domínio a mais só para ele. */}
       {/* eslint-disable-next-line @next/next/no-sync-scripts */}
       <script src="https://cs.iubenda.com/autoblocking/2943535.js" />
-      {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <script src="https://cdn.iubenda.com/cs/gpp/stub.js" />
       {/* O guião do banner entra depois da hidratação, e não como etiqueta no
           documento, por duas razões. Uma: o React iça os guiões `async` para o
           topo, e o deles ficava antes da configuração que tem de ler. Outra: em
