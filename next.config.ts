@@ -60,6 +60,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        /*
+         * As imagens das assinaturas de email, que vieram do alojamento
+         * anterior nos mesmos endereços que sempre tiveram — há emails
+         * enviados há anos a pedi-las, e esses não se reescrevem.
+         *
+         * Fora do índice: são caras e ícones de uma pasta de serviço, não
+         * páginas. E em cache por um dia, com uma semana de tolerância, porque
+         * quem as pede são os intermediários de email, muitas vezes, e o
+         * ficheiro raramente muda.
+         */
+        source: "/assinaturas/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex" },
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
+      {
         // A área de faturação nunca é indexada nem embebida.
         source: "/billing/:path*",
         headers: [

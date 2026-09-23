@@ -47,5 +47,8 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|_vercel|.*\\..*).*)"],
+  // `assinaturas` está aqui por causa de um ficheiro sem extensão que veio do
+  // alojamento antigo: a regra seguinte só deixa passar o que tem ponto no
+  // nome, e sem esta a pasta não se comportava toda da mesma maneira.
+  matcher: ["/((?!_next|_vercel|assinaturas|.*\\..*).*)"],
 };
