@@ -135,7 +135,15 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </div>
             <span className="text-sm font-semibold text-red group-hover:underline">{t("teamLink")} →</span>
           </div>
-          <ul aria-hidden="true" className="mt-8 grid grid-cols-3 gap-px bg-paper-3 sm:grid-cols-6">
+          {/* Dez pixéis entre os quadrados, que é o mesmo intervalo dos cartões da
+              página da equipa — as duas páginas mostram a mesma gente e passam a
+              respirar igual. Era `gap-px` sobre `bg-paper-3`, o fio de um pixel
+              que a casa usa nas grelhas de texto aqui ao lado: entre fotografias
+              lia-se como uma tira contínua de caras coladas. Sem o fundo no `ul`,
+              porque a esta distância deixava de ser um fio e passava a ser uma
+              faixa cinzenta; fica só por baixo de cada quadrado, à espera da
+              fotografia. */}
+          <ul aria-hidden="true" className="mt-8 grid grid-cols-3 gap-[10px] sm:grid-cols-6">
             {caras.map((cara) => (
               <li key={cara.nome} className="relative aspect-square overflow-clip bg-paper-3">
                 {cara.src ? (
