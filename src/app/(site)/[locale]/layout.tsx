@@ -55,6 +55,18 @@ export default async function SiteLayout({
   return (
     <html lang={locale}>
       <head>
+        {/* Ligação adiantada aos três domínios de fora que a primeira dobra usa.
+            Numa ligação de telemóvel, cada domínio novo paga DNS, ligação e TLS
+            antes de pedir o primeiro byte — são centenas de milissegundos que
+            não aparecem em lado nenhum a não ser no relógio. Os dois da Iubenda
+            são guiões que bloqueiam o desenho da página, e o terceiro serve
+            todas as fotografias.
+
+            O Lighthouse mediu 1830ms nos dois guiões da Iubenda. Isto não os
+            torna mais pequenos; tira-lhes a espera de arranque. */}
+        <link rel="preconnect" href="https://cs.iubenda.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.iubenda.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://vndty5nncbevu59o.public.blob.vercel-storage.com" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/BreeSerif-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Depois das letras, que são pedidos, e antes de tudo o que executa. */}

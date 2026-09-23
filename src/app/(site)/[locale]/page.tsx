@@ -128,6 +128,11 @@ export default async function HomePage({
                     width={photo.width ?? 1600}
                     height={photo.height ?? 1600}
                     priority={index === 0}
+                    // O `priority` do Next escreve o `preload`, mas não lhe põe
+                    // a prioridade alta — e é isso que o Lighthouse pede em
+                    // «Deteção de pedidos de LCP». Esta é a imagem do LCP da
+                    // homepage: sai daqui dito.
+                    {...(index === 0 ? { fetchPriority: "high" as const } : {})}
                     sizes="(max-width: 1024px) 100vw, 44vw"
                     className={
                       heroImages.length > 1

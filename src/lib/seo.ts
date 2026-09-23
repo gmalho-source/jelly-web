@@ -2,10 +2,29 @@ import { envOr } from "@/lib/env";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
-export const SITE_URL = envOr(process.env.NEXT_PUBLIC_SITE_URL, "https://www.jelly.pt").replace(/\/$/, "");
-
 /** O domínio público do site. Tudo o que não é isto é staging ou preview. */
 export const PRODUCTION_URL = "https://www.jelly.pt";
+
+/**
+ * O endereço com que o site fala de si próprio: canónicos, hreflang, sitemap,
+ * imagens de partilha.
+ *
+ * Numa implantação de produção na Vercel é o domínio público, e ponto — não se
+ * pergunta a uma variável de ambiente. Perguntava, e a variável ficou no
+ * endereço de pré-visualização no dia em que o www passou para cá. O site
+ * esteve no ar a dizer `noindex, nofollow` em todas as páginas, com o
+ * `robots.txt` a proibir o rastreio inteiro, com todos os canónicos a apontar
+ * para o `.vercel.app` e com as 428 entradas do sitemap no domínio errado.
+ * Ninguém deu por isso, porque nada falha: o site abre, está bonito, e é
+ * invisível.
+ *
+ * Fora da produção — pré-visualizações e a máquina de quem desenvolve — vale a
+ * variável, que é onde ela serve mesmo: ali o endereço muda a cada implantação
+ * e não há constante que o saiba.
+ */
+const CONFIGURADO = envOr(process.env.NEXT_PUBLIC_SITE_URL, PRODUCTION_URL).replace(/\/$/, "");
+
+export const SITE_URL = process.env.VERCEL_ENV === "production" ? PRODUCTION_URL : CONFIGURADO;
 
 /**
  * Staging e previews ficam fora do Google. Sem isto, jelly-web-pi.vercel.app
