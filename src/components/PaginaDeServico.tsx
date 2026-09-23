@@ -193,7 +193,12 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
           <Grelha
             colunas={3}
             className="mt-12"
-            celulas={servico.fazemos.itens.map((item) => ({ chave: item.nome.pt, titulo: item.nome[locale], corpo: item.corpo[locale] }))}
+            celulas={servico.fazemos.itens.map((item) => ({
+              chave: item.nome.pt,
+              titulo: item.nome[locale],
+              corpo: item.corpo[locale],
+              ...(item.leva ? { href: item.leva } : {}),
+            }))}
           />
         </div>
       </section>

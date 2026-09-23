@@ -72,7 +72,11 @@ export const SERVICOS_DE_TECNOLOGIA: ServicoDeTecnologia[] = [
         { nome: { pt: "Performance", en: "Performance" }, corpo: { pt: "Orçamento fixado antes do primeiro ecrã e Core Web Vitals medidos em utilizadores reais, não num laboratório.", en: "A budget fixed before the first screen and Core Web Vitals measured on real users, not in a lab." } },
         { nome: { pt: "Acessibilidade WCAG 2.2", en: "WCAG 2.2 accessibility" }, corpo: { pt: "Auditoria, correção e declaração de acessibilidade, ao nível AA, com o European Accessibility Act em vigor.", en: "Audit, fixes and an accessibility statement, at level AA, with the European Accessibility Act in force." } },
         { nome: { pt: "Migrações sem perder tráfego", en: "Migrations without losing traffic" }, corpo: { pt: "Inventário de URLs, mapa de redirecionamentos 301, títulos e dados estruturados preservados, medição antes e depois.", en: "URL inventory, 301 redirect map, titles and structured data preserved, before-and-after measurement." } },
-        { nome: { pt: "JellyCARE", en: "JellyCARE" }, corpo: { pt: "Depois de publicar: checkup diário de segurança, atualizações, backups e relatório mensal. Sem fidelização.", en: "After launch: daily security checkup, updates, backups and a monthly report. No lock-in." } },
+        /* A única célula desta grelha que leva a outro sítio: o JellyCARE não é
+           uma parte do site que se está a comprar, é um plano com página e preço
+           próprios. A página já acaba com um remate a apontar para lá; isto é
+           para quem lê a grelha e quer ir ver na altura em que lhe ocorre. */
+        { nome: { pt: "JellyCARE", en: "JellyCARE" }, corpo: { pt: "Depois de publicar: checkup diário de segurança, atualizações, backups e relatório mensal. Sem fidelização.", en: "After launch: daily security checkup, updates, backups and a monthly report. No lock-in." }, leva: "/jellycare" },
       ],
     },
     passos: {

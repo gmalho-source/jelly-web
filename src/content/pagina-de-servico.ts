@@ -12,7 +12,20 @@ import type { Localized } from "./types";
  * Este é o tipo que as duas famílias partilham; a área de cada uma é o
  * parâmetro. O componente `PaginaDeServico` desenha qualquer entrada disto.
  */
-export type Passo = { nome: Localized; corpo: Localized };
+/**
+ * Uma célula da grelha do «o que fazemos» ou um passo do «como trabalhamos».
+ *
+ * `leva` é opcional e quase sempre vazio: uma célula que aponta para outro
+ * sítio é a excepção, não a regra. Serve para o que não se compra ali — o
+ * JellyCARE é um plano com página própria, não um item de um site. Como no
+ * `remate`, é uma rota do `routing.ts` e não um endereço solto, para o `Link`
+ * traduzido a levar ao sítio certo nas duas línguas.
+ */
+export type Passo = {
+  nome: Localized;
+  corpo: Localized;
+  leva?: Exclude<keyof typeof routing.pathnames, `${string}[${string}`>;
+};
 export type Pergunta = { pergunta: Localized; resposta: Localized };
 export type Formato = { nome: Localized; ideal: Localized; itens: Localized[] };
 
