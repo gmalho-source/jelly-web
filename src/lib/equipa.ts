@@ -33,6 +33,38 @@ const CORES = [
   "var(--color-red-deep)",
 ] as const;
 
+/**
+ * Uma amostra que muda de dia para dia.
+ *
+ * A página «Sobre» mostra seis caras de vinte e uma, e mostrava as seis
+ * primeiras — que, com a lista do painel ordenada por nome, eram sempre as
+ * mesmas seis. Quinze pessoas da casa não apareciam nunca.
+ *
+ * Sorteia-se, mas não a cada visita: a semente é o dia. Toda a gente vê as
+ * mesmas seis no mesmo dia, o servidor e o browser concordam — que é o que
+ * evita o salto à chegada de que o `coresDaEquipa` aqui ao lado fala — e
+ * amanhã são outras. Com seis lugares e vinte e uma pessoas, a casa inteira
+ * passa por ali em poucos dias.
+ *
+ * O baralho é um Fisher-Yates com um gerador próprio: o `Math.random` não
+ * aceita semente, e sem semente isto não seria reproduzível nem verificável.
+ */
+export function amostraDoDia<T>(lista: T[], quantos: number, dia = Math.floor(Date.now() / 86_400_000)): T[] {
+  const baralhada = [...lista];
+  // Gerador congruencial linear, os números do Numerical Recipes. Chega bem
+  // para escolher seis caras; não chega para nada que precise de segredo.
+  let estado = (dia * 1_664_525 + 1_013_904_223) >>> 0;
+  const proximo = () => {
+    estado = (estado * 1_664_525 + 1_013_904_223) >>> 0;
+    return estado / 4_294_967_296;
+  };
+  for (let i = baralhada.length - 1; i > 0; i--) {
+    const j = Math.floor(proximo() * (i + 1));
+    [baralhada[i], baralhada[j]] = [baralhada[j], baralhada[i]];
+  }
+  return baralhada.slice(0, quantos);
+}
+
 /** Um número estável a partir do nome. Não é aleatório: é sempre o mesmo. */
 function semente(nome: string) {
   let valor = 0;

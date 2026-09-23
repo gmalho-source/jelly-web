@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { amostraDoDia } from "@/lib/equipa";
 import { alternates } from "@/lib/seo";
 import Image from "next/image";
 import { getTeam } from "@/lib/cms";
@@ -17,6 +18,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return { title: t("eyebrow"), description: t("credoLead"), alternates: alternates("/sobre", locale) };
 }
 
+/*
+ * A página redesenha-se uma vez por dia.
+ *
+ * É estática como as outras, e as outras só se redesenham quando o painel purga
+ * o site. Aqui isso não chegava: o sorteio das caras tem o dia por semente, e
+ * uma página congelada no dia em que foi construída mostrava as mesmas seis
+ * caras até ao deploy seguinte — que é exactamente o que isto veio resolver.
+ *
+ * Um dia, e não uma hora: são vinte e uma pessoas, e a casa inteira passa pela
+ * chamada em poucos dias. Mudar este número muda o ritmo, nada mais.
+ */
+export const revalidate = 86400;
+
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -24,12 +38,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const t = await getTranslations("about");
   const team = await getTeam();
 
-  // Seis caras para a chamada da equipa. As primeiras da lista, que é a ordem
-  // que o painel define.
-  const caras = team
-    .filter((membro) => membro.photo?.src)
-    .slice(0, 6)
-    .map((membro) => ({ nome: membro.name, src: membro.photo?.src }));
+  // Seis caras para a chamada da equipa, sorteadas com o dia por semente: hoje
+  // estas, amanhã outras, e a mesma página para toda a gente no mesmo dia. Eram
+  // as seis primeiras da lista do painel, que está por ordem de nome — as mesmas
+  // seis sempre, e quinze pessoas da casa que não apareciam nunca.
+  const caras = amostraDoDia(
+    team.filter((membro) => membro.photo?.src),
+    6,
+  ).map((membro) => ({ nome: membro.name, src: membro.photo?.src }));
 
   const stats = [
     // Contado, não escrito: em janeiro passava a estar errado sem ninguém notar.
