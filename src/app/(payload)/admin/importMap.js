@@ -39,6 +39,7 @@ import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } fro
 import { EncolheImagem as EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec } from '@/payload/components/EncolheImagem'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
 import { PesoDoVideo as PesoDoVideo_a9741b34d3164464267faa6032c6f6b7 } from '@/payload/components/PesoDoVideo'
+import { GerarPalavraPasse as GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4 } from '@/payload/components/GerarPalavraPasse'
 import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
@@ -90,6 +91,7 @@ export const importMap = {
   "@/payload/components/EncolheImagem#EncolheImagem": EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,
   "@/payload/components/PesoDoVideo#PesoDoVideo": PesoDoVideo_a9741b34d3164464267faa6032c6f6b7,
+  "@/payload/components/GerarPalavraPasse#GerarPalavraPasse": GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4,
   "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelMarca#PainelLogo": PainelLogo_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,

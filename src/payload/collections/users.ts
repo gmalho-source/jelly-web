@@ -14,6 +14,13 @@ export const Users: CollectionConfig = {
   admin: { useAsTitle: "email", group: "Casa", defaultColumns: ["email", "name", "roles"] },
   auth: true,
   fields: [
+    // Entra a seguir aos campos de entrada, que o Payload desenha sozinho: o
+    // email, a palavra-passe e a confirmação. É aí que o botão faz falta.
+    {
+      name: "gerarPalavraPasse",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/GerarPalavraPasse#GerarPalavraPasse" } },
+    },
     { name: "name", label: "Nome", type: "text" },
     {
       name: "roles",
