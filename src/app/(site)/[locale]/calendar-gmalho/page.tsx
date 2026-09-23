@@ -16,6 +16,7 @@ const COPY = {
     assinatura: "Gonçalo Malho Rodrigues",
     iframe: "Marcação de reuniões com Gonçalo Malho Rodrigues",
     retrato: "Retrato de Gonçalo Malho Rodrigues",
+    aCarregar: "A carregar o calendário…",
     fallback: "O calendário não abre? Abra-o numa janela nova",
   },
   en: {
@@ -25,6 +26,7 @@ const COPY = {
     assinatura: "Gonçalo Malho Rodrigues",
     iframe: "Meeting scheduling with Gonçalo Malho Rodrigues",
     retrato: "Portrait of Gonçalo Malho Rodrigues",
+    aCarregar: "Loading the calendar…",
     fallback: "Calendar not loading? Open it in a new window",
   },
 } as const;
@@ -87,11 +89,23 @@ export default async function CalendarioPage({ params }: { params: Promise<{ loc
         </div>
       </div>
 
-      <div className="mt-10 overflow-hidden rounded-2xl bg-paper-2">
+      {/* A ligação adiantada ao domínio do Google. A moldura só começa a pedir
+          a página depois de o browser a desenhar, e aí paga DNS, ligação e TLS
+          a um domínio que ainda não conhece — num telemóvel são centenas de
+          milissegundos antes do primeiro byte do calendário. */}
+      <link rel="preconnect" href="https://calendar.google.com" />
+
+      {/* O aviso fica por baixo da moldura, não dentro: uma moldura vazia é
+          transparente, por isso lê-se enquanto o Google não pinta, e desaparece
+          sozinho quando ele pinta. Sem um só byte de JavaScript. */}
+      <div className="relative mt-10 overflow-hidden rounded-2xl bg-paper-2">
+        <p className="absolute inset-0 grid place-items-center px-6 text-center text-sm text-ink/60">
+          {copy.aCarregar}
+        </p>
         <iframe
           src={`${AGENDA}?gv=true`}
           title={copy.iframe}
-          className="block h-[680px] w-full border-0 sm:h-[720px]"
+          className="relative block h-[680px] w-full border-0 sm:h-[720px]"
         />
       </div>
 
