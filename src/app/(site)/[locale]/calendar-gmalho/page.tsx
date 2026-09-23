@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
@@ -14,6 +15,7 @@ const COPY = {
     lead: "Os horários em baixo são os que tenho livres. Escolha o que lhe der jeito e recebe o convite por email, já com a ligação para a videochamada.",
     assinatura: "Gonçalo Malho Rodrigues, Founder & CEO da Jelly",
     iframe: "Marcação de reuniões com Gonçalo Malho Rodrigues",
+    retrato: "Retrato de Gonçalo Malho Rodrigues",
     fallback: "O calendário não abre? Abra-o numa janela nova",
   },
   en: {
@@ -22,6 +24,7 @@ const COPY = {
     lead: "The slots below are the ones I have free. Choose whichever suits you and the invitation arrives by email, with the video call link already in it.",
     assinatura: "Gonçalo Malho Rodrigues, Founder & CEO at Jelly",
     iframe: "Meeting scheduling with Gonçalo Malho Rodrigues",
+    retrato: "Portrait of Gonçalo Malho Rodrigues",
     fallback: "Calendar not loading? Open it in a new window",
   },
 } as const;
@@ -59,10 +62,30 @@ export default async function CalendarioPage({ params }: { params: Promise<{ loc
 
   return (
     <section data-pagina="calendar-gmalho" className="mx-auto max-w-[900px] px-5 py-16 sm:px-8 lg:py-24">
-      <span className="eyebrow">{copy.eyebrow}</span>
-      <h1 className="mt-5 text-display">{copy.titulo}</h1>
-      <p className="subtitle mt-5 max-w-[52ch] text-fg-soft">{copy.lead}</p>
-      <p className="mt-2 text-sm text-fg-soft">{copy.assinatura}</p>
+      {/* O retrato ao lado do texto, e não por cima: quem abre o link foi
+          convidado por uma pessoa, e é a cara dessa pessoa que confirma que
+          chegou ao sítio certo. Redondo porque é um retrato, não uma
+          fotografia de página. */}
+      <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
+        <Image
+          src="/media/equipa/goncalo-malho-rodrigues-redondo.webp"
+          alt={copy.retrato}
+          width={640}
+          height={640}
+          priority
+          sizes="(min-width: 640px) 160px, 112px"
+          className="h-28 w-28 shrink-0 rounded-full object-cover sm:h-40 sm:w-40"
+        />
+        <div className="min-w-0">
+          <span className="eyebrow">{copy.eyebrow}</span>
+          {/* `chapter` e não `display`: isto é uma página de serviço para um
+              link, não um herói. Ao tamanho do herói, o título empurrava o
+              retrato para um canto e o calendário para fora do ecrã. */}
+          <h1 className="mt-4 text-chapter">{copy.titulo}</h1>
+          <p className="subtitle mt-4 max-w-[52ch] text-fg-soft">{copy.lead}</p>
+          <p className="mt-2 text-sm text-fg-soft">{copy.assinatura}</p>
+        </div>
+      </div>
 
       <div className="mt-10 overflow-hidden rounded-2xl bg-paper-2">
         <iframe
