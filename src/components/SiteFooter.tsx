@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/routing";
 import { getServices } from "@/lib/cms";
 import { slugFor } from "@/lib/slugs";
 import { JellyWordmark } from "./JellyLogo";
+import { RedesSociais } from "./RedesSociais";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
 export async function SiteFooter() {
@@ -92,6 +93,7 @@ export async function SiteFooter() {
               </Link>
             </li>
           </ul>
+          <RedesSociais rotulo={(rede) => footer("social", { rede })} />
         </div>
         {/* Legal e Livro de Reclamações: a lei portuguesa obriga ao segundo, e o
             primeiro é onde se responde a quem pergunta o que fazemos com dados. */}

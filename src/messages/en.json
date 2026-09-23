@@ -97,7 +97,8 @@
     "tech": "Technology",
     "workCol": "Work",
     "contactCol": "Contact",
-    "complaints": "Complaints book"
+    "complaints": "Complaints book",
+    "social": "Jelly on {rede}"
   },
   "billing": {
     "area": "Providers area",

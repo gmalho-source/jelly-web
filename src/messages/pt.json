@@ -97,7 +97,8 @@
     "tech": "Tecnologia",
     "workCol": "Trabalho",
     "contactCol": "Contacto",
-    "complaints": "Livro de Reclamações"
+    "complaints": "Livro de Reclamações",
+    "social": "Jelly no {rede}"
   },
   "billing": {
     "area": "Área de prestadores",

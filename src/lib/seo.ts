@@ -1,6 +1,7 @@
 import { envOr } from "@/lib/env";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { REDES } from "@/content/redes";
 
 /** O domínio público do site. Tudo o que não é isto é staging ou preview. */
 export const PRODUCTION_URL = "https://www.jelly.pt";
@@ -86,5 +87,8 @@ export function organizationJsonLd() {
       addressCountry: "PT",
     },
     knowsAbout: ["Branding", "Marketing digital", "Paid media", "SEO", "Inteligência artificial", "E-commerce", "CRM"],
+    // As contas oficiais. É por aqui que o Google liga esta empresa aos perfis
+    // dela em vez de os tratar como de alguém com o mesmo nome.
+    sameAs: REDES.map((rede) => rede.url),
   };
 }
