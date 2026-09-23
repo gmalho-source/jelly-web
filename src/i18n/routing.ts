@@ -48,6 +48,10 @@ export const routing = defineRouting({
     // confirma a subscrição.
     "/subscrever": { pt: "/subscrever", en: "/subscribe" },
     "/subscrever/[token]": { pt: "/subscrever/[token]", en: "/subscribe/[token]" },
+    // A página de marcação de reuniões do Gonçalo. O endereço é o mesmo nas
+    // duas línguas e não se traduz: é um link que já anda escrito em emails,
+    // propostas e assinaturas, e um link que muda de forma é um link partido.
+    "/calendar-gmalho": { pt: "/calendar-gmalho", en: "/calendar-gmalho" },
     // O link que vai na carta a quem se candidatou por fora do formulário.
     "/confirmar-candidatura/[token]": { pt: "/confirmar-candidatura/[token]", en: "/confirm-application/[token]" },
   },
