@@ -9,7 +9,9 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/billing/"] }],
+    // Sem `host`: era uma directiva do Yandex que o Google ignora, e ignorar
+    // com aviso é pior do que não estar lá. Quem manda no domínio preferido é
+    // o redireccionamento de jelly.pt para www e a etiqueta canónica.
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }
