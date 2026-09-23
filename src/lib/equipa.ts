@@ -34,26 +34,32 @@ const CORES = [
 ] as const;
 
 /**
- * Seis caras ao acaso, de cada vez que a página é desenhada.
+ * Uma amostra que muda de dia para dia.
  *
- * A página «Sobre» mostra seis de vinte e uma, e mostrava as seis primeiras —
- * que, com a lista do painel ordenada por nome, eram sempre as mesmas seis.
- * Quinze pessoas da casa não apareciam nunca.
+ * A página «Sobre» mostra seis caras de vinte e uma, e mostrava as seis
+ * primeiras — que, com a lista do painel ordenada por nome, eram sempre as
+ * mesmas seis. Quinze pessoas da casa não apareciam nunca.
  *
- * Isto é sorte verdadeira, e é por isso que a página que a usa tem de ser
- * desenhada a cada pedido: numa página estática o sorteio acontecia uma vez, na
- * compilação, e ficava lá preso até ao deploy seguinte. Foi assim numa primeira
- * versão, com o dia por semente e uma revalidação diária; a casa preferiu que
- * mudasse a cada visita.
+ * Sorteia-se, mas não a cada visita: a semente é o dia. Toda a gente vê as
+ * mesmas seis no mesmo dia, o servidor e o browser concordam — que é o que
+ * evita o salto à chegada de que o `coresDaEquipa` aqui ao lado fala — e
+ * amanhã são outras. Com seis lugares e vinte e uma pessoas, a casa inteira
+ * passa por ali em poucos dias.
  *
- * O sorteio corre só no servidor. Se corresse também no browser, o React
- * encontrava caras diferentes das que recebeu e trocava-as à chegada — é o
- * mesmo perigo de que o `coresDaEquipa` aqui ao lado fala.
+ * O baralho é um Fisher-Yates com um gerador próprio: o `Math.random` não
+ * aceita semente, e sem semente isto não seria reproduzível nem verificável.
  */
-export function amostraAoAcaso<T>(lista: T[], quantos: number): T[] {
+export function amostraDoDia<T>(lista: T[], quantos: number, dia = Math.floor(Date.now() / 86_400_000)): T[] {
   const baralhada = [...lista];
+  // Gerador congruencial linear, os números do Numerical Recipes. Chega bem
+  // para escolher seis caras; não chega para nada que precise de segredo.
+  let estado = (dia * 1_664_525 + 1_013_904_223) >>> 0;
+  const proximo = () => {
+    estado = (estado * 1_664_525 + 1_013_904_223) >>> 0;
+    return estado / 4_294_967_296;
+  };
   for (let i = baralhada.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(proximo() * (i + 1));
     [baralhada[i], baralhada[j]] = [baralhada[j], baralhada[i]];
   }
   return baralhada.slice(0, quantos);

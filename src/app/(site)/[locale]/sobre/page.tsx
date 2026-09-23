@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { amostraAoAcaso } from "@/lib/equipa";
+import { amostraDoDia } from "@/lib/equipa";
 import { alternates } from "@/lib/seo";
 import Image from "next/image";
 import { getTeam } from "@/lib/cms";
@@ -19,22 +19,17 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 }
 
 /*
- * A única página do site que se desenha a cada pedido.
+ * A página redesenha-se uma vez por dia.
  *
- * As seis caras da chamada da equipa são sorteadas, e quem visita duas vezes vê
- * duas escolhas diferentes. Isso obriga a isto: numa página estática o sorteio
- * acontecia uma vez, na compilação, e ficava preso até ao deploy seguinte.
+ * É estática como as outras, e as outras só se redesenham quando o painel purga
+ * o site. Aqui isso não chegava: o sorteio das caras tem o dia por semente, e
+ * uma página congelada no dia em que foi construída mostrava as mesmas seis
+ * caras até ao deploy seguinte — que é exactamente o que isto veio resolver.
  *
- * O que se perde é a entrega a partir do CDN — esta página passa a ser montada
- * no servidor a cada visita. O que não se perde é a leitura do CMS: os dados
- * continuam a vir do cache da casa, portanto não há uma ida à base de dados por
- * visitante, há um desenho de página.
- *
- * Uma versão anterior sorteava com o dia por semente e revalidava de 24 em 24
- * horas, o que mantinha a página estática. Ficou registado aqui porque é o
- * caminho de volta, se um dia o tráfego desta página o justificar.
+ * Um dia, e não uma hora: são vinte e uma pessoas, e a casa inteira passa pela
+ * chamada em poucos dias. Mudar este número muda o ritmo, nada mais.
  */
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -43,10 +38,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const t = await getTranslations("about");
   const team = await getTeam();
 
-  // Seis caras para a chamada da equipa, sorteadas a cada visita. Eram as seis
-  // primeiras da lista do painel, que está por ordem de nome — as mesmas seis
-  // sempre, e quinze pessoas da casa que não apareciam nunca.
-  const caras = amostraAoAcaso(
+  // Seis caras para a chamada da equipa, sorteadas com o dia por semente: hoje
+  // estas, amanhã outras, e a mesma página para toda a gente no mesmo dia. Eram
+  // as seis primeiras da lista do painel, que está por ordem de nome — as mesmas
+  // seis sempre, e quinze pessoas da casa que não apareciam nunca.
+  const caras = amostraDoDia(
     team.filter((membro) => membro.photo?.src),
     6,
   ).map((membro) => ({ nome: membro.name, src: membro.photo?.src }));
