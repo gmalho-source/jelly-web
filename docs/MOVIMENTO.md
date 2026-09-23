@@ -128,7 +128,7 @@ não se viam a olho:
    menos de 250px ou menos de 20px, não se vê.
 3. **Com `reducedMotion: "reduce"`** e sem suporte: zero elementos transparentes.
 
-## Duas armadilhas de medida
+## Três armadilhas de medida
 
 **`entry` mede-se contra a altura do elemento.** Um fio de um pixel tem uma
 janela de um pixel: a frase de impacto tinha o fio a passar de nada a tudo em
@@ -140,6 +140,20 @@ ecrã.
 camadas da Imunidade têm 1495 pixéis e o fio cresce ao longo da leitura toda; as
 fases de um serviço têm 658, e com a mesma janela o fio chegava aos 100% com a
 segunda fase ainda por ler. Daí `camada-fio-curto`.
+
+**Cortar a duração não pára um laço infinito.** O bloco de
+`prefers-reduced-motion` no topo do `globals.css` põe todas as animações a
+0,01ms. Num gesto que corre uma vez isso é o mesmo que não haver gesto — salta
+para o fim e fica lá. Num `infinite` é o contrário: são cem mil voltas por
+segundo, e o elemento aparece onde calhar a cada fotograma. A fita (`marquee`)
+esteve assim desde que existe, e ninguém deu por isso porque a olho o que se vê
+é uma fita quieta que de vez em quando estremece.
+
+Mediu-se assim, e é assim que se mede outra vez: em `reducedMotion: "reduce"`,
+ler a transformação oito vezes de 250 em 250ms e olhar para a diferença entre a
+maior e a menor. Zero é parado. A fita de capas dava 2434px e a dos parceiros
+617px. A correcção é `animation: none` para essa media query, como o `Ticker`
+sempre teve.
 
 ## Verificar contra o conteúdo verdadeiro, não o de recurso
 

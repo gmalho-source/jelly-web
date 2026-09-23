@@ -239,8 +239,8 @@
   user-select: none;
 }
 
-/* Fita de capas: anda sozinha, devagar, e para quando o sistema pede menos
-   movimento (o bloco de prefers-reduced-motion acima corta a duração). */
+/* Fita que anda sozinha, devagar: as capas na homepage, os parceiros no fim das
+   páginas de serviço. */
 @keyframes marquee-slide {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
@@ -256,6 +256,17 @@
 
 .marquee:hover .marquee-track {
   animation-play-state: paused;
+}
+
+/* Quem pede menos movimento não quer isto a 0,01ms — quer isto parado.
+   O bloco geral lá em cima corta a duração de tudo, e num gesto que corre uma
+   vez isso equivale a não haver gesto. Num laço `infinite` não: cem mil voltas
+   por segundo, e a fita fica onde calhar a cada fotograma. Medido com o
+   Playwright em `reducedMotion: "reduce"`: a fita de capas saltava 2434px entre
+   amostras e a dos parceiros 617px. Era tremor à frente de quem pediu sossego.
+   O `Ticker` da casa já fazia isto bem; a fita é que ficou por fazer. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
 }
 
 /* Entrada das linhas do índice: sobem 8 px e aparecem, com desfasamento por
