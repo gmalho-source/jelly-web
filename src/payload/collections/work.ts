@@ -198,12 +198,13 @@ export const Projects: CollectionConfig = {
     locale("team", "Equipa"),
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
     {
-      name: "hideCoverInBody",
-      label: "Não mostrar a capa dentro da página",
-      type: "checkbox",
+      name: "heroImage",
+      label: "Imagem do topo",
+      type: "upload",
+      relationTo: "media",
       admin: {
         description:
-          "A capa continua a identificar o projeto na grelha e no índice, e continua a servir de primeiro fotograma aos vídeos do caso. Deixa apenas de aparecer no corpo da página — útil quando a história já abre com uma imagem melhor.",
+          "Opcional. A página do caso abre com uma imagem grande e o título por cima; vazio, essa imagem é a capa. Serve para quando a capa identifica bem o projeto — na grelha, no índice, como primeiro fotograma dos vídeos — mas não aguenta um topo de 560px, que é o caso das capas que são um logótipo num fundo liso.",
       },
     },
     { name: "story", label: "História", type: "blocks", blocks: storyBlocks },

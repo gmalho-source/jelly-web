@@ -215,7 +215,8 @@ export type ArchivedProject = {
    * projetos que já existem têm o campo vazio, e um campo vazio tem de querer
    * dizer «mostra», que é o que o site fazia antes de isto existir.
    */
-  hideCoverInBody?: boolean;
+  /** A imagem do topo da página. Vazia, o topo usa a capa. */
+  heroImage?: { src: string; alt?: string; title?: string } | null;
   date: string;
   year: string;
   disciplines: string[];

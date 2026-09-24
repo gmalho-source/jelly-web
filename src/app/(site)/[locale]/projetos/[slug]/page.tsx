@@ -59,9 +59,10 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const eyebrow = archived?.subtitle || project?.disciplines[locale] || archived?.disciplines.join(" · ") || "";
   const lead = project?.summary[locale] || archived?.summary || "";
   const cover = archived?.cover?.src;
-  // A capa, quando existe, é o topo da página: a fotografia primeiro e o
-  // título por cima dela. Um caso vende-se pelo que se vê antes de se ler.
-  const capaNoTopo = Boolean(cover) && !archived?.hideCoverInBody;
+  // O topo da página: a imagem primeiro e o título por cima dela — um caso
+  // vende-se pelo que se vê antes de se ler. A capa serve quase sempre; quando
+  // não serve, escolhe-se outra no painel, e é essa que manda aqui.
+  const topo = archived?.heroImage ?? archived?.cover;
   // A história inglesa sai do mesmo sítio no painel: é a mesma estrutura com os
   // textos na outra língua, e cada bloco por traduzir serve o português.
   const story = (locale === "en" ? archived?.storyEn : archived?.story) ?? archived?.story ?? [];
@@ -80,7 +81,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="surface-ink mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
-      {capaNoTopo && cover ? (
+      {topo?.src ? (
         /* A capa a fazer de topo. O véu por cima dela não é decoração: uma
            fotografia clara come um título branco, e qual delas vai ser clara
            não se sabe de antemão — são cinquenta e quatro capas de clientes
@@ -93,8 +94,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               conta está no globals.css, ao lado da classe. */}
           <div className="capa-paralaxe absolute inset-x-0 -top-[30%] h-[132%]">
             <Image
-              src={cover}
-              alt={archived?.cover?.alt || client}
+              src={topo.src}
+              alt={topo.alt || client}
               fill
               priority
               sizes="(max-width: 1200px) 100vw, 1140px"

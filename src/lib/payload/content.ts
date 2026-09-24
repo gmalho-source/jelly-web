@@ -412,7 +412,6 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         legacyPath: text(raw.legacyPath) || null,
         client: text(raw.client),
-        hideCoverInBody: raw.hideCoverInBody === true,
         date: text(raw.date).slice(0, 10),
         year: text(raw.year) || text(raw.date).slice(0, 4),
         disciplines: (raw.disciplines as string[] | null) ?? [],
@@ -422,6 +421,7 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         story: fromStory(raw.story, "pt"),
         storyEn: fromStory(raw.story, "en"),
         cover: image(raw.cover as MediaDoc) ?? null,
+        heroImage: image(raw.heroImage as MediaDoc) ?? null,
         images: [],
       }),
     );
