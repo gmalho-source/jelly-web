@@ -38,7 +38,15 @@ const anda = (no, slug) => {
   if (!no || typeof no !== "object") return;
   for (const [chave, valor] of Object.entries(no)) {
     if ((chave === "mp4" || chave === "webm") && typeof valor === "string" && valor) {
-      const nome = decodeURIComponent(valor.split("/").pop());
+      // Decifra-se até parar de mudar: os vídeos do Louis Bourgon estão
+      // guardados com a cifra feita duas vezes — «%2520» em vez de «%20» — e
+      // uma decifra só deixava-os com os «%20» à vista, sem casar com nada.
+      let nome = valor.split("/").pop();
+      for (let volta = 0; volta < 3; volta += 1) {
+        const decifrado = decodeURIComponent(nome);
+        if (decifrado === nome) break;
+        nome = decifrado;
+      }
       if (!pedidos.has(nome)) pedidos.set(nome, []);
       pedidos.get(nome).push(slug);
     } else anda(valor, slug);
@@ -49,15 +57,32 @@ for (const projeto of projetos) {
   anda(projeto.storyEn, projeto.slug);
 }
 
-// O disco não distingue maiúsculas da mesma maneira em todo o lado, e há
-// endereços escritos com «.webM». Compara-se por minúsculas.
+/*
+ * Os nomes não batem certo à letra, e não é por acaso: são ficheiros de 2019 a
+ * 2025, carregados à mão para um WordPress que lhes mexeu no nome. Há «.webM»
+ * com M grande, há acentos guardados de duas maneiras diferentes, e há um
+ * «kompetenza-projects .webm» com um espaço a mais que o endereço não tem.
+ *
+ * Compara-se por uma chave sem maiúsculas, sem espaços e com os acentos
+ * normalizados. O que se envia é sempre o nome que a história pede, e não o que
+ * está no disco — assim o endereço resolve sem se mexer no painel.
+ */
+const chave = (nome) => nome.normalize("NFC").toLowerCase().replace(/\s+/g, "");
+
+/*
+ * E um caso que nenhuma regra apanha: a história pede o ficheiro com o sufixo
+ * do conversor e a pasta tem-no sem ele. É o mesmo vídeo — o «Video 3» da NUK.
+ */
+const APELIDOS = new Map([["video3-nukestratégia(video-converter.com).mp4", "video3-nukestratégia.mp4"]]);
+
 const naPasta = new Map();
-for (const nome of await readdir(pasta)) naPasta.set(nome.toLowerCase(), nome);
+for (const nome of await readdir(pasta)) naPasta.set(chave(nome), nome);
 
 const encontrados = [];
 const emFalta = [];
 for (const [nome, slugs] of pedidos) {
-  const real = naPasta.get(nome.toLowerCase());
+  const k = chave(nome);
+  const real = naPasta.get(k) ?? naPasta.get(APELIDOS.get(k) ?? "");
   if (real) encontrados.push({ pedido: nome, real, slugs });
   else emFalta.push({ nome, slugs });
 }
