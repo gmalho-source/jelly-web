@@ -37,7 +37,27 @@ const onNeon = /\.neon\.tech(?::|\/|$)/.test(new URL(databaseUrl || "postgresql:
 export default buildConfig({
   admin: {
     user: Users.slug,
-    meta: { titleSuffix: " · Jelly" },
+    meta: {
+      titleSuffix: " · Jelly",
+      /*
+       * O separador do painel passa a ter o monograma da casa em vez do do
+       * Payload. É o mesmo desenho de components/JellyLogo.tsx, recortado à
+       * volta da letra: num separador de 16px o que se lê é a forma, e uma
+       * forma com ar à volta desaparece. Preto sobre branco, e não o vermelho
+       * do ícone do site, para se distinguir à primeira o painel do sítio
+       * público — costumam estar lado a lado no mesmo browser.
+       *
+       * Três entradas por uma razão prática: o SVG é o que o Chrome e o
+       * Firefox preferem e o único que fica nítido em qualquer tamanho; o PNG
+       * de 32 é para quem não lê SVG; o de 512 é o que o telemóvel guarda
+       * quando se põe o painel no ecrã inicial.
+       */
+      icons: [
+        { rel: "icon", type: "image/svg+xml", url: "/brand/jelly-favicon-admin.svg" },
+        { rel: "icon", type: "image/png", sizes: "32x32", url: "/brand/jelly-favicon-admin-32.png" },
+        { rel: "apple-touch-icon", type: "image/png", sizes: "512x512", url: "/brand/jelly-favicon-admin-512.png" },
+      ],
+    },
     // 30/06/2026, e não «junho 30º 2026, 12:00 AM».
     dateFormat: "dd/MM/yyyy",
     // Inicial em vez de gravatar: uma fotografia de perfil não vale um pedido a
