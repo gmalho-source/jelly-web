@@ -59,9 +59,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const eyebrow = archived?.subtitle || project?.disciplines[locale] || archived?.disciplines.join(" · ") || "";
   const lead = project?.summary[locale] || archived?.summary || "";
   const cover = archived?.cover?.src;
-  // A capa continua a ser a capa em toda a parte; aqui decide-se só se ela
-  // entra no corpo desta página.
-  const capaNoCorpo = Boolean(cover) && !archived?.hideCoverInBody;
+  // A capa, quando existe, é o topo da página: a fotografia primeiro e o
+  // título por cima dela. Um caso vende-se pelo que se vê antes de se ler.
+  const capaNoTopo = Boolean(cover) && !archived?.hideCoverInBody;
   // A história inglesa sai do mesmo sítio no painel: é a mesma estrutura com os
   // textos na outra língua, e cada bloco por traduzir serve o português.
   const story = (locale === "en" ? archived?.storyEn : archived?.story) ?? archived?.story ?? [];
@@ -80,13 +80,43 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="surface-ink mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
-      <header className="grid items-end gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
-        <div>
-          {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
-          <h1 className="mt-5 max-w-[22ch] text-display">{headline}</h1>
-        </div>
+      {capaNoTopo && cover ? (
+        /* A capa a fazer de topo. O véu por cima dela não é decoração: uma
+           fotografia clara come um título branco, e qual delas vai ser clara
+           não se sabe de antemão — são cinquenta e quatro capas de clientes
+           diferentes. O degradê é mais fechado em baixo, que é onde o texto
+           assenta, e quase transparente em cima, para a imagem se ver. */
+        <header className="relative isolate overflow-hidden rounded-[20px]">
+          <Image
+            src={cover}
+            alt={archived?.cover?.alt || client}
+            fill
+            priority
+            sizes="(max-width: 1200px) 100vw, 1140px"
+            className="object-cover"
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10" />
+          <div className="relative flex min-h-[380px] flex-col justify-end p-6 sm:min-h-[480px] sm:p-10 lg:min-h-[560px] lg:p-12">
+            {eyebrow ? <span className="eyebrow text-paper/85">{eyebrow}</span> : null}
+            <h1 className="mt-4 max-w-[22ch] text-display text-paper">{headline}</h1>
+          </div>
+        </header>
+      ) : (
+        <header className="grid items-end gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
+          <div>
+            {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
+            <h1 className="mt-5 max-w-[22ch] text-display">{headline}</h1>
+          </div>
+        </header>
+      )}
+
+      {/* A ficha do caso desce para debaixo da capa, ao lado da abertura: em
+          cima competia com o título, aqui é o primeiro detalhe de quem já
+          decidiu continuar a ler. */}
+      <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
+        {lead ? <p className="subtitle max-w-[58ch] text-lg">{lead}</p> : null}
         {facts.length ? (
-          <dl className="text-[13px]">
+          <dl className="text-[13px] lg:mt-1">
             {facts.map((fact) => (
               <div key={fact.term} className="flex justify-between gap-4 border-b border-line py-2.5">
                 <dt className="text-fg-soft">{fact.term}</dt>
@@ -95,21 +125,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             ))}
           </dl>
         ) : null}
-      </header>
-
-      {lead ? <p className="subtitle mt-10 max-w-[58ch] text-lg">{lead}</p> : null}
-
-      {capaNoCorpo && cover ? (
-        <Image
-          src={cover}
-          alt={archived?.cover?.alt || client}
-          width={1600}
-          height={900}
-          priority
-          sizes="(max-width: 1200px) 100vw, 1140px"
-          className="mt-10 w-full rounded-[20px] object-cover"
-        />
-      ) : null}
+      </div>
 
       {kpis.length ? (
         <dl className="mt-12 grid grid-cols-1 border-t border-line sm:grid-cols-3">
