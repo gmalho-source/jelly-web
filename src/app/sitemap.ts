@@ -4,13 +4,18 @@ import { routing, type Locale } from "@/i18n/routing";
 import { PILARES } from "@/content/pilares";
 import { SERVICOS_DE_MARKETING } from "@/content/marketing-servicos";
 import { SERVICOS_DE_TECNOLOGIA } from "@/content/tecnologia-servicos";
-import { getPosts, getProjects, getServices } from "@/lib/cms";
+import { getArchivedProjects, getPosts, getProjects, getServices } from "@/lib/cms";
 import { SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
 /** Só conteúdo. Taxonomias e páginas de sistema ficam fora, por decisão. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, services, posts] = await Promise.all([getProjects(), getServices(), getPosts()]);
+  const [projects, services, posts, arquivo] = await Promise.all([
+    getProjects(),
+    getServices(),
+    getPosts(),
+    getArchivedProjects(),
+  ]);
 
   type Href = Parameters<typeof getPathname>[0]["href"];
 
@@ -62,6 +67,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   for (const project of projects) {
     add((locale) => ({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }), 0.7);
+  }
+  /*
+   * E o arquivo, que estava de fora e não devia. São páginas de verdade — têm
+   * história escrita, capa, vídeo — e são a maior parte do trabalho que esta
+   * casa mostra: cinco casos escritos contra cinquenta e tal arquivados. Ficar
+   * fora do mapa era dizer ao Google que só existem cinco.
+   *
+   * Prioridade abaixo da dos casos escritos, que esses é que são a montra. O
+   * `getArchivedProjects` já tira os que também estão escritos, por isso não há
+   * endereços repetidos.
+   */
+  for (const peca of arquivo) {
+    add((locale) => ({ pathname: "/projetos/[slug]", params: { slug: slugFor(peca, locale) } }), 0.5);
   }
   for (const post of posts) {
     add((locale) => ({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }), 0.5, post.date);
