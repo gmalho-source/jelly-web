@@ -63,6 +63,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   // vende-se pelo que se vê antes de se ler. A capa serve quase sempre; quando
   // não serve, escolhe-se outra no painel, e é essa que manda aqui.
   const topo = archived?.heroImage ?? archived?.cover;
+  // Um vídeo sem primeiro fotograma é um retângulo à espera, e por isso a capa
+  // servia de fotograma a todos. Com a capa no topo da página isso passou a pôr
+  // a mesma fotografia duas vezes na mesma página — era o que se via no caso do
+  // Pedro Chagas Freitas. A capa continua a servir, mas só quando o topo está
+  // ocupado por outra imagem; senão, o vídeo fica com o seu próprio poster ou
+  // com nenhum, e quem quiser um escolhe-o no painel.
+  const posterDosVideos = topo?.src === cover ? undefined : cover;
   // A história inglesa sai do mesmo sítio no painel: é a mesma estrutura com os
   // textos na outra língua, e cada bloco por traduzir serve o português.
   const story = (locale === "en" ? archived?.storyEn : archived?.story) ?? archived?.story ?? [];
@@ -160,7 +167,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       <CaseStory
         blocks={story}
         client={client}
-        poster={cover}
+        poster={posterDosVideos}
         textos={{
           ver: t("galleryOpen"),
           fechar: t("galleryClose"),
