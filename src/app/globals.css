@@ -1442,14 +1442,16 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
    A conta da folga, que é o que distingue isto do topo de Marketing. Lá a
    camada sangra para fora do ecrã e o que descobre em cima já ninguém vê;
    aqui a moldura tem as quatro margens à vista, e uma camada do tamanho dela
-   descobria uma tira vazia em cima assim que começasse a descer. Por isso a
-   camada tem mais 12% de altura, começa 12% acima, e deriva um pouco menos do
-   que isso — 10% da própria altura, que são 11,2% da moldura. A folga que
-   sobra é de propósito: com a deriva a dar exactamente os 12%, a camada
-   acabava o percurso a 0,08px de descobrir a tira, e a 0,08px de distância
-   está um arredondamento. Numa capa de 560px são 63px de deriva, que se vêem.
+   descobria uma tira vazia em cima assim que começasse a descer. A regra é
+   uma: a camada tem de ser mais alta do que a moldura pelo menos tanto quanto
+   deriva. Aqui tem mais 32% de altura, começa 30% acima e deriva 28% — os 2%
+   que sobram de cada lado são a margem para o arredondamento, e a primeira
+   versão, que não os tinha, acabava o percurso a 0,08px de descobrir a tira.
 
-   O título sobe 40px no mesmo percurso. Contra os 63px da fotografia, dá 103
+   Numa capa de 560px são 157px de deriva. A primeira versão fazia 63 e era
+   subtil de mais — o scroll passava e a fotografia parecia quieta.
+
+   O título sobe 80px no mesmo percurso. Contra os 157 da fotografia, dá 237
    de afastamento entre os dois: é disso que a paralaxe se faz.
 
    Linear, pela razão de sempre: o scroll já é o compasso. Em repouso — sem
@@ -1457,11 +1459,11 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
    título está no lugar: não se perde nada. */
 @keyframes capa-paralaxe {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, 10%, 0); }
+  to { transform: translate3d(0, 21.2%, 0); }
 }
 @keyframes capa-paralaxe-titulo {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, -40px, 0); }
+  to { transform: translate3d(0, -80px, 0); }
 }
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {

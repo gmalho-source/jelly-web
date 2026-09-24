@@ -87,11 +87,11 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
            diferentes. O degradê é mais fechado em baixo, que é onde o texto
            assenta, e quase transparente em cima, para a imagem se ver. */
         <header className="relative isolate overflow-hidden rounded-[20px]">
-          {/* A camada tem mais 12% de altura do que a moldura e começa 12%
+          {/* A camada tem mais 32% de altura do que a moldura e começa 30%
               acima: é essa folga que a paralaxe gasta a descer, e é por ela
-              existir que nunca aparece uma tira vazia em cima. A conta está
-              no globals.css, ao lado da classe. */}
-          <div className="capa-paralaxe absolute inset-x-0 -top-[12%] h-[112%]">
+              existir que nunca aparece uma tira vazia em cima nem em baixo. A
+              conta está no globals.css, ao lado da classe. */}
+          <div className="capa-paralaxe absolute inset-x-0 -top-[30%] h-[132%]">
             <Image
               src={cover}
               alt={archived?.cover?.alt || client}
