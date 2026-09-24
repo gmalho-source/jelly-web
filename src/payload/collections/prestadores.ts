@@ -25,6 +25,11 @@ export const Prestadores: CollectionConfig = {
     useAsTitle: "nome",
     group: "Faturação",
     defaultColumns: ["nome", "email", "estado", "pool"],
+    // A caixa de procura da lista só vê o campo do título — aqui, o nome. Sem
+    // isto, procurar por um email não dá nada, e quem procura conclui que a
+    // ficha não existe. Conclui mal: ela existe, e só aparece quando se tenta
+    // criar outra com o mesmo email e o painel recusa por ser repetido.
+    listSearchableFields: ["nome", "email"],
     description:
       "Quem fatura à Jelly. Só um prestador «qualificado» consegue entrar em billing.jelly.pt — o link de acesso verifica isto no momento em que é usado.",
   },
