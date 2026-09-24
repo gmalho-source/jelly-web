@@ -1,20 +1,24 @@
 import type { MetadataRoute } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
+import { legalPages } from "@/content/legal";
 import { PILARES } from "@/content/pilares";
 import { SERVICOS_DE_MARKETING } from "@/content/marketing-servicos";
 import { SERVICOS_DE_TECNOLOGIA } from "@/content/tecnologia-servicos";
-import { getArchivedProjects, getPosts, getProjects, getServices } from "@/lib/cms";
+import { getArchivedProjects, getJobs, getPosts, getProjects, getServices, getTeam } from "@/lib/cms";
 import { SITE_URL } from "@/lib/seo";
+import { slugDaPessoa } from "@/lib/equipa";
 import { slugFor } from "@/lib/slugs";
 
 /** Só conteúdo. Taxonomias e páginas de sistema ficam fora, por decisão. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projects, services, posts, arquivo] = await Promise.all([
+  const [projects, services, posts, arquivo, equipa, vagas] = await Promise.all([
     getProjects(),
     getServices(),
     getPosts(),
     getArchivedProjects(),
+    getTeam(),
+    getJobs(),
   ]);
 
   type Href = Parameters<typeof getPathname>[0]["href"];
@@ -42,6 +46,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   add("/", 1);
   add("/sobre", 0.8);
+  // A página-mãe dos serviços. Estava de fora, com as dezassete filhas dentro.
+  add("/servicos", 0.9);
+  add("/equipa", 0.7);
+  add("/recrutamento", 0.7);
+  add("/subscrever", 0.4);
   add("/projetos", 0.8);
   add("/clientes", 0.7);
   add("/blog", 0.7);
@@ -80,6 +89,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
    */
   for (const peca of arquivo) {
     add((locale) => ({ pathname: "/projetos/[slug]", params: { slug: slugFor(peca, locale) } }), 0.5);
+  }
+  // As pessoas da casa, uma página cada. É por elas que muita gente chega.
+  for (const pessoa of equipa) {
+    add({ pathname: "/equipa/[slug]", params: { slug: slugDaPessoa(pessoa.name) } }, 0.5);
+  }
+  // As vagas abertas. Fechadas, saem daqui na leitura seguinte.
+  for (const vaga of vagas) {
+    add({ pathname: "/recrutamento/[slug]", params: { slug: vaga.slug } }, 0.6);
+  }
+  // As legais. Prioridade baixa porque ninguém as procura — mas existem, são
+  // obrigatórias, e uma página que existe e não está no mapa é uma página que
+  // o Google encontra por acaso.
+  for (const pagina of legalPages) {
+    add({ pathname: "/legal/[slug]", params: { slug: pagina.slug } }, 0.3);
   }
   for (const post of posts) {
     add((locale) => ({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }), 0.5, post.date);

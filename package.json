@@ -14,7 +14,7 @@
     "migrate": "node scripts/migrate-wordpress.mjs",
     "redirects": "node scripts/build-redirects.mjs",
     "import": "node scripts/import-wordpress-xml.mjs",
-    "preflight": "npm run typecheck && npm run lint && npm run build",
+    "preflight": "npm run typecheck && npm run lint && npm run mapa && npm run build",
     "sql": "node scripts/run-sql.mjs",
     "payload:migrate": "tsx scripts/payload-migrate.mjs",
     "payload:types": "payload generate:types",
@@ -40,7 +40,8 @@
     "prestadores:import": "tsx scripts/prestadores-import.mjs",
     "audio": "tsx scripts/audio-artigos.mjs",
     "posts:resumos": "tsx scripts/repair-excerpts.mjs",
-    "videos:portefolio": "node scripts/videos-do-portefolio.mjs"
+    "videos:portefolio": "node scripts/videos-do-portefolio.mjs",
+    "mapa": "node scripts/mapa-completo.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
