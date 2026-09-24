@@ -17,8 +17,22 @@ import { basename } from "node:path";
 import { put } from "@vercel/blob";
 import projetos from "../src/content/generated/projects.json" with { type: "json" };
 
-/** Sem maiúsculas, sem espaços, sem sublinhados, acentos normalizados. */
-const chave = (nome) => nome.normalize("NFC").toLowerCase().replace(/[\s_]+/g, "");
+/*
+ * A chave com que se reconhece um ficheiro, e é preciso ser grosseira.
+ *
+ * Entre o disco, o WordPress e o mecanismo dos anexos, o mesmo vídeo chega
+ * escrito de todas as maneiras: espaços virados sublinhados, parênteses
+ * perdidos pelo caminho, e o «é» de «Estratégia» desmontado em «e» mais acento
+ * e depois substituído por um sublinhado. Ficam só as letras e os algarismos,
+ * sem acentos — verificado contra os quarenta e oito nomes que as histórias
+ * pedem, e não há dois que dêem a mesma chave.
+ */
+const chave = (nome) =>
+  nome
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9.]/g, "");
 /** Os anexos chegam com um prefixo de oito dígitos hexadecimais. */
 const semPrefixo = (nome) => nome.replace(/^[0-9a-f]{8}-/, "");
 
@@ -40,7 +54,7 @@ const anda = (no) => {
 };
 for (const projeto of projetos) { anda(projeto.story); anda(projeto.storyEn); }
 // O «Video 3» da NUK está no disco sem o sufixo do conversor que a história pede.
-pedidos.set("video3-nukestratégia.mp4", pedidos.get("video3-nukestratégia(video-converter.com).mp4"));
+pedidos.set(chave("Video 3 - NUK Estratégia.mp4"), pedidos.get(chave("Video 3 - NUK Estratégia (video-converter.com).mp4")));
 
 const ficheiros = process.argv.slice(2);
 if (!ficheiros.length) {
