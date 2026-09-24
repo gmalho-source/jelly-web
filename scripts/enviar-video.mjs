@@ -71,11 +71,20 @@ for (const caminho of ficheiros) {
     falhas += 1;
     continue;
   }
-  const { url } = await put(`video/portefolio/${nome}`, createReadStream(caminho), {
-    access: "public",
-    addRandomSuffix: false,
-    contentType: nome.toLowerCase().endsWith(".webm") ? "video/webm" : "video/mp4",
-  });
+  try {
+    await put(`video/portefolio/${nome}`, createReadStream(caminho), {
+      access: "public",
+      addRandomSuffix: false,
+      contentType: nome.toLowerCase().endsWith(".webm") ? "video/webm" : "video/mp4",
+    });
+  } catch (erro) {
+    // O Blob recusa gravar por cima, e ainda bem: mandar o mesmo ficheiro duas
+    // vezes é coisa que acontece. Não é falha — é trabalho já feito. Substituir
+    // um vídeo de propósito faz-se apagando-o primeiro, com a mão.
+    if (!/already exists/i.test(String(erro?.message))) throw erro;
+    console.log(`  =  ${nome} — já lá estava, não repeti`);
+    continue;
+  }
   // A prova é o endereço que a página usa, com o salto pelo meio.
   const publico = `https://www.jelly.pt/video/portefolio/${encodeURIComponent(nome)}`;
   let estado = "sem resposta";
@@ -88,6 +97,5 @@ for (const caminho of ficheiros) {
   }
   console.log(`  ✓  ${nome}\n       ${estado}`);
   if (!estado.startsWith("200")) falhas += 1;
-  void url;
 }
 process.exit(falhas ? 1 : 0);
