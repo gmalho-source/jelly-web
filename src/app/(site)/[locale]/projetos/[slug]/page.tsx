@@ -11,6 +11,24 @@ import { slugFor } from "@/lib/slugs";
 
 type Params = { locale: Locale; slug: string };
 
+/** A seta de voltar. Traço e não mancha, como o resto dos sinais da casa. */
+function Seta() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="h-5 w-5"
+    >
+      <path d="M14.5 5 7.5 12l7 7" />
+    </svg>
+  );
+}
+
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const locale = params.locale as Locale;
   const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
@@ -88,6 +106,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   return (
     <article className="surface-ink mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
+      {/* A seta de volta à galeria, no canto de cima. A página de um caso é
+          quase sempre a primeira que alguém abre — chega-lhe por um link ou
+          por uma pesquisa — e sem isto o caminho para o resto do trabalho é
+          descer a página inteira até ao fim. Leva o nome escrito em `title` e
+          em `aria-label`: uma seta sozinha é um símbolo, e um símbolo tem de
+          se poder ler. */}
       {topo?.src ? (
         /* A capa a fazer de topo. O véu por cima dela não é decoração: uma
            fotografia clara come um título branco, e qual delas vai ser clara
@@ -110,6 +134,17 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
             />
           </div>
           <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10" />
+          {/* Sobre a fotografia, e por isso com fundo próprio: o véu do topo é
+              quase transparente aí em cima, e uma seta clara sobre uma imagem
+              clara não se vê. */}
+          <Link
+            href="/projetos"
+            title={t("back")}
+            aria-label={t("back")}
+            className="absolute left-6 top-6 z-10 grid h-11 w-11 place-items-center rounded-full bg-ink/55 text-paper backdrop-blur-sm transition-colors duration-200 hover:bg-red sm:left-10 sm:top-10 lg:left-12 lg:top-12"
+          >
+            <Seta />
+          </Link>
           <div className="relative flex min-h-[380px] flex-col justify-end p-6 sm:min-h-[480px] sm:p-10 lg:min-h-[560px] lg:p-12">
             <div className="capa-paralaxe-titulo">
               {eyebrow ? <span className="eyebrow text-paper/85">{eyebrow}</span> : null}
@@ -120,6 +155,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       ) : (
         <header className="grid items-end gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
           <div>
+            {/* Sem capa não há fotografia por baixo, e a seta pode andar com o
+                nome à vista em vez de o esconder num `title`. */}
+            <Link href="/projetos" title={t("back")} className="link-quiet mb-6 inline-flex items-center gap-2 text-sm text-fg-soft">
+              <Seta />
+              {t("back")}
+            </Link>
             {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
             <h1 className="mt-5 max-w-[22ch] text-display">{headline}</h1>
           </div>
