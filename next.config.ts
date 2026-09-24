@@ -52,6 +52,23 @@ const nextConfig: NextConfig = {
        */
       { source: "/servicos/tecnologia/performance-acessibilidade-migracoes", destination: "/servicos/tecnologia/websites-ecommerce", permanent: true },
       { source: "/en/services/technology/performance-accessibility-migrations", destination: "/en/services/technology/websites-ecommerce", permanent: true },
+      /*
+       * Os vídeos dos casos. Viviam em jelly.pt/video/portefolio/, caíram com
+       * o alojamento antigo, e voltam no Blob da Vercel — com os mesmos nomes,
+       * de propósito. Assim não se mexe em nenhum dos cinquenta blocos de
+       * vídeo do painel, e qualquer outro sítio que aponte para a pasta antiga
+       * passa a funcionar também.
+       *
+       * Temporário e não permanente: um 308 fica guardado no browser de quem
+       * passou por aqui, e enquanto estes ficheiros ainda vão ser recomprimidos
+       * não quero um destino gravado para sempre em máquinas que não controlo.
+       * Passa a permanente quando assentarem.
+       */
+      {
+        source: "/video/portefolio/:ficheiro",
+        destination: "https://vndty5nncbevu59o.public.blob.vercel-storage.com/video/portefolio/:ficheiro",
+        permanent: false,
+      },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
