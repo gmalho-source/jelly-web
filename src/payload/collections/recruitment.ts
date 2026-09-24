@@ -306,6 +306,9 @@ export const Applications: CollectionConfig = {
     useAsTitle: "name",
     group: "Recrutamento",
     defaultColumns: ["name", "job", "status", "rating", "createdAt"],
+    // Como nas mensagens: uma candidatura procura-se tantas vezes pelo endereço
+    // de quem a mandou como pelo nome.
+    listSearchableFields: ["name", "email"],
     // Fora da vista de quem não trata disto: são dados pessoais, não conteúdo.
     hidden: ({ user }) => !temPerfil(user as ComPerfis, "recrutamento"),
   },
