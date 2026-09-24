@@ -23,6 +23,7 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `entra-perto` | o mesmo, janela curta | um bloco a poucos ecrãs do fundo do documento |
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
+| `capa-paralaxe` + `capa-paralaxe-titulo` | a fotografia desce 63px e o título sobe 40 | a capa de um caso, no topo da página |
 
 Em Branding, o filme da equipa vem logo a seguir ao manifesto, em 16:9 inteiro
 e com a `paralaxe` da moldura: fora do topo, que tem `overflow: hidden`, e por
@@ -211,6 +212,18 @@ títulos desta casa deixa de se ler sobre a parte escura de uma fotografia — e
 **o vermelho do hover sai onde a imagem entra**, porque vermelho sobre fotografia
 escura é a pior combinação das duas; a linha a crescer já é resposta que chegue.
 Medido a 1440: 133px em repouso, 233px apontada, e o vermelho a voltar sozinho a
-quem pediu menos movimento, que é quem não vê nem o crescimento nem a capa. Os
-projetos e o Sobre continuam parados. Quando lá se chegar, é para reutilizar estas classes e não
+quem pediu menos movimento, que é quem não vê nem o crescimento nem a capa.
+
+A página de um caso já se mexe: a capa é o topo, e desce contra o título
+enquanto se lê (`capa-paralaxe`, `capa-paralaxe-titulo`). Mede-se em
+`scroll(root)`, como o topo de Marketing, porque a moldura tem
+`overflow: hidden`. A conta que interessa é a da folga: a camada tem mais 12%
+de altura do que a moldura e deriva 11,2% dela, e a diferença entre os dois
+números é o que impede uma tira vazia de aparecer em cima no fim do percurso.
+Medido a 1280 e a 390: 63px e 43px de deriva ao longo de 900px de scroll, e a
+folga em cima nunca positiva — o pior caso ficou com 4,5px de margem. Com a
+deriva a dar os 12% certos, essa margem era de 0,08px, que é o mesmo que não
+haver.
+
+O Sobre continua parado. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.

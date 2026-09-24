@@ -87,18 +87,26 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
            diferentes. O degradê é mais fechado em baixo, que é onde o texto
            assenta, e quase transparente em cima, para a imagem se ver. */
         <header className="relative isolate overflow-hidden rounded-[20px]">
-          <Image
-            src={cover}
-            alt={archived?.cover?.alt || client}
-            fill
-            priority
-            sizes="(max-width: 1200px) 100vw, 1140px"
-            className="object-cover"
-          />
+          {/* A camada tem mais 12% de altura do que a moldura e começa 12%
+              acima: é essa folga que a paralaxe gasta a descer, e é por ela
+              existir que nunca aparece uma tira vazia em cima. A conta está
+              no globals.css, ao lado da classe. */}
+          <div className="capa-paralaxe absolute inset-x-0 -top-[12%] h-[112%]">
+            <Image
+              src={cover}
+              alt={archived?.cover?.alt || client}
+              fill
+              priority
+              sizes="(max-width: 1200px) 100vw, 1140px"
+              className="object-cover"
+            />
+          </div>
           <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/10" />
           <div className="relative flex min-h-[380px] flex-col justify-end p-6 sm:min-h-[480px] sm:p-10 lg:min-h-[560px] lg:p-12">
-            {eyebrow ? <span className="eyebrow text-paper/85">{eyebrow}</span> : null}
-            <h1 className="mt-4 max-w-[22ch] text-display text-paper">{headline}</h1>
+            <div className="capa-paralaxe-titulo">
+              {eyebrow ? <span className="eyebrow text-paper/85">{eyebrow}</span> : null}
+              <h1 className="mt-4 max-w-[22ch] text-display text-paper">{headline}</h1>
+            </div>
           </div>
         </header>
       ) : (

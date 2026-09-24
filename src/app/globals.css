@@ -1429,6 +1429,57 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   }
 }
 
+/* ── A capa de um caso, no topo da página ──────────────────────────────────
+   A fotografia deriva para baixo enquanto se desce, e o título sobe contra
+   ela. É a paralaxe de um fundo, como a do topo de Marketing, e não a da
+   moldura de uma fotografia (`.paralaxe`): a moldura aqui tem cantos redondos
+   e `overflow: hidden`, e é dentro dela que a camada se mexe.
+
+   Mede-se em `scroll(root)` pela mesma razão que lá: para `view()`, uma
+   moldura com `overflow: hidden` é um contentor de scroll onde a camada nunca
+   se mexe.
+
+   A conta da folga, que é o que distingue isto do topo de Marketing. Lá a
+   camada sangra para fora do ecrã e o que descobre em cima já ninguém vê;
+   aqui a moldura tem as quatro margens à vista, e uma camada do tamanho dela
+   descobria uma tira vazia em cima assim que começasse a descer. Por isso a
+   camada tem mais 12% de altura, começa 12% acima, e deriva um pouco menos do
+   que isso — 10% da própria altura, que são 11,2% da moldura. A folga que
+   sobra é de propósito: com a deriva a dar exactamente os 12%, a camada
+   acabava o percurso a 0,08px de descobrir a tira, e a 0,08px de distância
+   está um arredondamento. Numa capa de 560px são 63px de deriva, que se vêem.
+
+   O título sobe 40px no mesmo percurso. Contra os 63px da fotografia, dá 103
+   de afastamento entre os dois: é disso que a paralaxe se faz.
+
+   Linear, pela razão de sempre: o scroll já é o compasso. Em repouso — sem
+   suporte, ou a quem pediu menos movimento — a camada cobre a moldura e o
+   título está no lugar: não se perde nada. */
+@keyframes capa-paralaxe {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, 10%, 0); }
+}
+@keyframes capa-paralaxe-titulo {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -40px, 0); }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .capa-paralaxe {
+      animation: capa-paralaxe linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+      will-change: transform;
+    }
+    .capa-paralaxe-titulo {
+      animation: capa-paralaxe-titulo linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100svh;
+      will-change: transform;
+    }
+  }
+}
+
 /* ── A página de Branding ──────────────────────────────────────────────────
    Três coisas que só existem lá: o manifesto que entra palavra a palavra, a
    secção do trabalho que toma a cor da marca no ecrã, e o espécime da
