@@ -270,26 +270,6 @@ export function IndexSheet({
   /** O que a janela mostra: o item onde o cursor está. */
   const destaque = results.length ? results[active] : undefined;
 
-  /*
-   * Um clique em qualquer sítio da folha que não seja uma coisa em que se
-   * carrega fecha-a: o fundo, os títulos das bandas, o espaço à volta da lista,
-   * a janela quando não tem nada. É o gesto de quem quer sair — e a cruz no
-   * canto fica, para quem a procura.
-   *
-   * O que conta como «coisa em que se carrega» é o que o browser já trata como
-   * tal (ligações, botões, o campo), mais a faixa da procura inteira: tocar ao
-   * lado do texto do campo é querer escrever, não fechar. Aí o clique vai para
-   * o campo.
-   *
-   * E o clique tem de começar e acabar fora delas. Quem selecciona o que
-   * escreveu e larga o rato no fundo não pediu para fechar — o browser entrega
-   * esse clique ao antepassado comum, que é a folha, e sem esta guarda ela
-   * fechava-se com a procura a meio.
-   */
-  const comecouNoVazio = useRef(false);
-  const eVazio = (alvo: EventTarget | null) =>
-    alvo instanceof Element && !alvo.closest("a, button, input, [data-procura]");
-
   function close() {
     setOpenedOn(null);
     setQuery("");
@@ -509,10 +489,6 @@ export function IndexSheet({
           role="dialog"
           aria-modal="true"
           aria-label={copy.index}
-          onPointerDown={(event) => (comecouNoVazio.current = eVazio(event.target))}
-          onClick={(event) => {
-            if (comecouNoVazio.current && eVazio(event.target)) close();
-          }}
           className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl"
         >
           <div className="flex items-center gap-4 border-b border-paper/15 px-5 py-4 sm:px-8">
@@ -532,11 +508,7 @@ export function IndexSheet({
               que são o que diz que isto procura projetos e artigos e não só
               páginas.
             */}
-            <span
-              data-procura
-              onClick={() => input.current?.focus()}
-              className="relative min-w-0 flex-1"
-            >
+            <span className="relative min-w-0 flex-1">
               <input
                 ref={input}
                 value={query}

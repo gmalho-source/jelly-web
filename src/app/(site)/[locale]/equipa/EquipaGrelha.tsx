@@ -34,7 +34,7 @@ export function EquipaGrelha({ pessoas }: { pessoas: Pessoa[] }) {
   const cores = coresDaEquipa(pessoas.map((pessoa) => pessoa.nome));
 
   return (
-    <ul className="grid grid-cols-1 gap-[10px] sm:grid-cols-2 lg:grid-cols-3">
+    <ul data-grelha-equipa className="grid grid-cols-1 gap-[10px] sm:grid-cols-2 lg:grid-cols-3">
       {pessoas.map((pessoa) => {
         const slug = slugDaPessoa(pessoa.nome);
         const cor = cores.get(pessoa.nome);

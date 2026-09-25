@@ -8,7 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import { getTeam } from "@/lib/cms";
 import { coresDaEquipa, slugDaPessoa } from "@/lib/equipa";
 import { alternates } from "@/lib/seo";
-import { SairComEsc } from "./SairComEsc";
+import { SairDaPessoa } from "../VoltaAGrelha";
 
 type Params = { locale: Locale; slug: string };
 
@@ -90,8 +90,11 @@ export default async function PessoaPage({ params }: { params: Promise<Params> }
   // menu: o `main` do site empurra tudo 96px para baixo, e sem os descontar a
   // página ficava um ecrã mais 96 e obrigava a rolar para ver o fim dela.
   return (
-    <article className="surface-paper grid lg:min-h-[calc(100svh-6rem)] lg:grid-cols-[minmax(0,46%)_minmax(0,1fr)]">
-      <SairComEsc />
+    <article
+      data-sair-no-clique
+      className="surface-paper grid lg:min-h-[calc(100svh-6rem)] lg:grid-cols-[minmax(0,46%)_minmax(0,1fr)]"
+    >
+      <SairDaPessoa />
 
       {/* O retrato, assente na cor da pessoa. */}
       <div style={{ backgroundColor: pessoa.cor }} className="p-4 sm:p-6 lg:p-8">
@@ -145,11 +148,15 @@ export default async function PessoaPage({ params }: { params: Promise<Params> }
           ) : null}
         </div>
 
-        {/* As pessoas do lado: da última passa-se à primeira, sem beco. */}
+        {/* As pessoas do lado: da última passa-se à primeira, sem beco.
+
+            `replace`: andar de pessoa em pessoa não empilha histórico. Quem viu
+            seis pessoas e sai volta à grelha, e não à quinta. */}
         <nav aria-label={t("eyebrow")} className="flex items-center justify-between gap-6 border-t border-line pt-5 text-sm">
           {pessoa.anterior ? (
             <Link
               href={{ pathname: "/equipa/[slug]", params: { slug: pessoa.anterior.slug } }}
+              replace
               className="link-quiet text-fg-soft"
             >
               <span aria-hidden="true">←</span> {pessoa.anterior.nome}
@@ -161,6 +168,7 @@ export default async function PessoaPage({ params }: { params: Promise<Params> }
           {pessoa.seguinte ? (
             <Link
               href={{ pathname: "/equipa/[slug]", params: { slug: pessoa.seguinte.slug } }}
+              replace
               className="link-quiet text-right text-fg-soft"
             >
               {pessoa.seguinte.nome} <span aria-hidden="true">→</span>

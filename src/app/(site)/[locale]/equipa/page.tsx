@@ -5,6 +5,7 @@ import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { getTeam } from "@/lib/cms";
 import { EquipaGrelha, type Pessoa } from "./EquipaGrelha";
+import { MarcaGrelha } from "./VoltaAGrelha";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -50,6 +51,7 @@ export default async function EquipaPage({ params }: { params: Promise<{ locale:
       </section>
 
       <section className="mx-auto max-w-[1200px] px-5 pb-20 sm:px-8">
+        <MarcaGrelha />
         <EquipaGrelha pessoas={pessoas} />
       </section>
 
