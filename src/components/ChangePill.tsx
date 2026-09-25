@@ -1,10 +1,14 @@
 /**
- * A pílula do topo, na página de contactos.
+ * A frase do topo, na página de contactos.
  *
- * Nas outras páginas ela é um convite — "Start The Change" — e leva aos
+ * Nas outras páginas há ali um convite — "Start The Change" — que leva aos
  * contactos. Aqui já se chegou: um botão que aponta para a página onde se está
  * não serve para nada. Passa a dizer que a mudança está a começar, e a assinalar
  * presença em vez de pedir um clique.
+ *
+ * E por isso também não tem forma de botão. Tinha, e era o que sobrava do
+ * convite: um fundo escuro com cantos redondos a desenhar uma coisa em que não
+ * se carrega. Sem ele fica só a frase, e a luz que passa atrás dela.
  *
  * Por trás dela corre luz. Quatro manchas — as quatro cores da paleta Jelly
  * 2026 — atravessam a pílula em períodos diferentes e desencontrados, e é o
@@ -30,7 +34,13 @@ export function ChangePill({ label }: { label: string }) {
         <span className="fluxo-mancha fluxo-4" />
       </div>
 
-      <span className="pointer-events-auto relative inline-flex items-center rounded-full bg-ink/[0.62] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper backdrop-blur-md">
+      {/* Sem pílula: a frase assenta directamente na luz. Cai o fundo escuro,
+          cai o desfoque do que passa por trás e caem os cantos redondos — o que
+          resta é o texto e o que se move atrás dele.
+
+          A folga fica: sem ela a frase encostava ao sítio onde a luz ainda é
+          forte, e é nas pontas que ela se desvanece. */}
+      <span className="pointer-events-auto relative inline-flex items-center px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.08em] text-paper">
         {label}
       </span>
     </div>
