@@ -22,7 +22,15 @@ export type Project = {
   kpis: Kpi[];
   /** Os números só vão para o ecrã depois de validados com o cliente. */
   numbersValidated?: boolean;
-  quote?: { text: Localized; author: string; role: Localized };
+  quote?: Citacao;
+};
+
+/** O testemunho do cliente, com a fotografia de quem o deu, se houver. */
+export type Citacao = {
+  text: Localized;
+  author: string;
+  role: Localized;
+  photo?: { src: string; alt?: string } | null;
 };
 
 export type Phase = { name: Localized; body: Localized };
@@ -207,14 +215,6 @@ export type ArchivedProject = {
   oldSlugs?: string[];
   legacyPath: string | null;
   client: string;
-  /**
-   * Esconder a capa no corpo da página.
-   *
-   * Só no corpo: a capa continua a identificar o projeto na grelha, no índice e
-   * como primeiro fotograma dos vídeos do caso. Em negativo de propósito — os
-   * projetos que já existem têm o campo vazio, e um campo vazio tem de querer
-   * dizer «mostra», que é o que o site fazia antes de isto existir.
-   */
   /** A imagem do topo da página. Vazia, o topo usa a capa. */
   heroImage?: { src: string; alt?: string; title?: string } | null;
   date: string;
@@ -233,6 +233,11 @@ export type ArchivedProject = {
   storyEn?: Block[];
   cover?: { src: string; alt?: string; title?: string } | null;
   images: string[];
+  /**
+   * O testemunho do cliente. Vive no mesmo registo que o caso escrito, mas não
+   * depende dele: um projeto de arquivo também pode ter quem fale por ele.
+   */
+  quote?: Citacao;
 };
 
 export type LogoGallery = {

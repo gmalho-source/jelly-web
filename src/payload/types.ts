@@ -683,6 +683,9 @@ export interface Project {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Aparece na página do projeto, seja caso escrito ou não. Sem «Quem», não aparece.
+   */
   quote?: {
     text?: {
       pt?: string | null;
@@ -693,6 +696,10 @@ export interface Project {
       pt?: string | null;
       en?: string | null;
     };
+    /**
+     * Opcional. No site aparece num círculo e a preto e branco, seja qual for a fotografia. Um retrato de cara, enquadrado ao centro.
+     */
+    photo?: (number | null) | Media;
   };
   legacyPath?: string | null;
   updatedAt: string;
@@ -2124,6 +2131,7 @@ export interface ProjectsSelect<T extends boolean = true> {
               pt?: T;
               en?: T;
             };
+        photo?: T;
       };
   legacyPath?: T;
   updatedAt?: T;

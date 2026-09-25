@@ -369,6 +369,19 @@ export async function fetchPostBody(slug: string): Promise<{ blocks: Block[]; bl
   }
 }
 
+/** A citação de um projeto, se tiver alguém a assiná-la. */
+function citacao(raw: Doc) {
+  const quote = (raw.quote ?? {}) as Doc;
+  if (!text(quote.author)) return undefined;
+  const foto = image(quote.photo as MediaDoc);
+  return {
+    text: localized(quote.text),
+    author: text(quote.author),
+    role: localized(quote.role),
+    photo: foto ? { src: foto.src, alt: foto.alt } : null,
+  };
+}
+
 async function projectDocs(payload: Payload) {
   const { docs } = await payload.find({ collection: "projects", sort: "order", ...all });
   return docs as unknown as (Doc & { written?: boolean })[];
@@ -379,7 +392,6 @@ export function fetchProjects(fallback: Project[]) {
     const docs = (await projectDocs(payload)).filter((doc) => doc.written);
     return docs.map((raw): Project => {
       const headline = (raw.headline ?? {}) as Doc;
-      const quote = (raw.quote ?? {}) as Doc;
       const disciplines = ((raw.disciplines as string[] | null) ?? []).join(", ");
       return {
         slug: text(raw.slug),
@@ -395,9 +407,7 @@ export function fetchProjects(fallback: Project[]) {
         headline: { value: text(headline.value), label: localized(headline.label) },
         kpis: ((raw.kpis ?? []) as Doc[]).map((kpi) => ({ value: text(kpi.value), label: localized(kpi.label) })),
         numbersValidated: Boolean(raw.numbersValidated),
-        quote: text(quote.author)
-          ? { text: localized(quote.text), author: text(quote.author), role: localized(quote.role) }
-          : undefined,
+        quote: citacao(raw),
       };
     });
   }, fallback);
@@ -423,6 +433,7 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         cover: image(raw.cover as MediaDoc) ?? null,
         heroImage: image(raw.heroImage as MediaDoc) ?? null,
         images: [],
+        quote: citacao(raw),
       }),
     );
   }, fallback);

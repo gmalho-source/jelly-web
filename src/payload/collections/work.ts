@@ -227,7 +227,23 @@ export const Projects: CollectionConfig = {
       name: "quote",
       label: "Citação do cliente",
       type: "group",
-      fields: [locale("text", "Texto", { long: true }), { name: "author", label: "Quem", type: "text" }, locale("role", "Cargo")],
+      admin: {
+        description: "Aparece na página do projeto, seja caso escrito ou não. Sem «Quem», não aparece.",
+      },
+      fields: [
+        locale("text", "Texto", { long: true }),
+        { name: "author", label: "Quem", type: "text" },
+        locale("role", "Cargo"),
+        {
+          name: "photo",
+          label: "Fotografia",
+          type: "upload",
+          relationTo: "media",
+          admin: {
+            description: "Opcional. No site aparece num círculo e a preto e branco, seja qual for a fotografia. Um retrato de cara, enquadrado ao centro.",
+          },
+        },
+      ],
     },
     { name: "legacyPath", label: "URL antigo", type: "text", admin: { readOnly: true } },
   ],

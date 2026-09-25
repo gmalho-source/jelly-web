@@ -91,6 +91,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   // A história inglesa sai do mesmo sítio no painel: é a mesma estrutura com os
   // textos na outra língua, e cada bloco por traduzir serve o português.
   const story = (locale === "en" ? archived?.storyEn : archived?.story) ?? archived?.story ?? [];
+  const citacao = project?.quote ?? archived?.quote;
 
   const facts = [
     { term: t("client"), value: client },
@@ -219,13 +220,31 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         }}
       />
 
-      {project?.quote ? (
+      {/* O testemunho, tenha o projeto caso escrito ou não: vive no mesmo
+          registo, e só dependia do caso por ter nascido com ele. A fotografia
+          vai num círculo e sempre a preto e branco — retratos tirados por
+          pessoas diferentes, com luzes diferentes, só se leem como uma série
+          quando perdem a cor, e é assim que a equipa aparece na grelha dela. */}
+      {citacao ? (
         <blockquote className="mt-16 border-t border-line pt-8">
           <p className="max-w-[34ch] font-display text-2xl leading-snug tracking-[-0.02em] lg:text-[38px]">
-            “{project.quote.text[locale]}”
+            “{citacao.text[locale]}”
           </p>
-          <footer className="eyebrow mt-4 text-fg-soft">
-            {project.quote.author} · {project.quote.role[locale]}
+          <footer className="mt-6 flex items-center gap-4">
+            {citacao.photo ? (
+              <Image
+                src={citacao.photo.src}
+                alt={citacao.photo.alt ?? citacao.author}
+                width={112}
+                height={112}
+                sizes="56px"
+                className="h-14 w-14 shrink-0 rounded-full object-cover grayscale"
+              />
+            ) : null}
+            <span className="eyebrow text-fg-soft">
+              {citacao.author}
+              {citacao.role[locale] ? ` · ${citacao.role[locale]}` : ""}
+            </span>
           </footer>
         </blockquote>
       ) : null}
