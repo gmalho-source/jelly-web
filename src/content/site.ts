@@ -58,8 +58,8 @@ export const services: Service[] = [
     slugEn: "artificial-intelligence",
     name: { pt: "Inteligência artificial", en: "Artificial intelligence" },
     claim: {
-      pt: "Da consultoria à implementação de agentes e automação que ficam a correr sozinhos na sua operação.",
-      en: "From consulting to shipping agents and automation that keep running inside your operation.",
+      pt: "Implementamos sistemas de IA com foco na eficiência e aumento da cadeia de valor.",
+      en: "We implement AI systems focused on efficiency and on growing your value chain.",
     },
     link: { pt: "IA", en: "AI" },
     promise: {
