@@ -8,6 +8,7 @@ import { capaDe, slugFor } from "@/lib/slugs";
 import { getPosts } from "@/lib/cms";
 import { semShortcodes } from "@/lib/resumo";
 import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
+import { ListaDoBlog, type ArtigoDaLista } from "@/components/ListaDoBlog";
 
 export async function generateMetadata({
   params,
@@ -38,7 +39,6 @@ export default async function BlogIndexPage({
   const t = await getTranslations("blog");
   const posts = await getPosts();
   const [featured, ...rest] = posts;
-  const latest = rest.slice(0, 23);
   const formatter = new Intl.DateTimeFormat(
     locale === "pt" ? "pt-PT" : "en-GB",
     { day: "numeric", month: "short", year: "numeric" },
@@ -61,6 +61,19 @@ export default async function BlogIndexPage({
     autor: post.author.name,
     data: post.date,
     dataLegivel: formatter.format(new Date(post.date)),
+  }));
+
+  /* A lista inteira, e não só a primeira leva: quem decide o que se vê é o
+     componente do lado do cliente, que os desenha todos e esconde os que ainda
+     não são para mostrar. O porquê está lá dentro. */
+  const paraLista: ArtigoDaLista[] = rest.map((post) => ({
+    slug: slugFor(post, locale),
+    titulo: post.title[locale],
+    categoria: post.category[locale],
+    autor: post.author.name,
+    data: formatter.format(new Date(post.date)),
+    minutos: post.readingMinutes,
+    capa: capaDe(post, locale)?.src ? { src: capaDe(post, locale)!.src, alt: "" } : null,
   }));
 
   return (
@@ -131,44 +144,7 @@ export default async function BlogIndexPage({
           {posts.length} {locale === "pt" ? "artigos" : "articles"}
         </span>
       </div>
-      {latest.map((post) => (
-        <Link
-          key={post.slug}
-          href={{ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }}
-          className="group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 row-flip hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px]"
-        >
-          {/* A miniatura é a mesma imagem do artigo: o índice deixa de ser uma
-              lista de títulos e passa a mostrar do que fala cada texto. */}
-          {capaDe(post, locale)?.src ? (
-            <Image
-              src={capaDe(post, locale)!.src}
-              alt=""
-              width={208}
-              height={156}
-              sizes="104px"
-              className="aspect-[4/3] w-full object-cover"
-            />
-          ) : (
-            <span
-              aria-hidden="true"
-              className="block aspect-[4/3] w-full bg-slate/15"
-            />
-          )}
-          <div>
-            <h3 className="editorial text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">
-              {post.title[locale]}
-            </h3>
-            <p className="mt-1 text-sm text-fg-soft">
-              {post.category[locale]} · {t("by")} {post.author.name}
-            </p>
-          </div>
-          <span className="self-baseline text-right text-sm tabular-nums text-fg-soft">
-            {formatter.format(new Date(post.date))}
-            <br />
-            {post.readingMinutes} {t("minutes")}
-          </span>
-        </Link>
-      ))}
+      <ListaDoBlog artigos={paraLista} textos={{ por: t("by"), minutos: t("minutes"), todas: t("allCategories"), verMais: t("more"), filtrar: t("filter") }} />
     </section>
   );
 }

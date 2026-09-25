@@ -218,7 +218,10 @@
     "listenInvite": "Can't read right now? Listen to it all here.",
     "listen": "Listen to the article",
     "pause": "Pause",
-    "listenBar": "Position in the reading"
+    "listenBar": "Position in the reading",
+    "allCategories": "All",
+    "more": "Show more",
+    "filter": "Filter by category"
   },
   "newsroom": {
     "eyebrow": "Newsroom",

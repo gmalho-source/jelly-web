@@ -218,7 +218,10 @@
     "listenInvite": "Ler agora, não? Ouça tudo aqui.",
     "listen": "Ouvir o artigo",
     "pause": "Pausa",
-    "listenBar": "Posição na leitura"
+    "listenBar": "Posição na leitura",
+    "allCategories": "Todas",
+    "more": "Ver mais",
+    "filter": "Filtrar por categoria"
   },
   "newsroom": {
     "eyebrow": "Newsroom",
