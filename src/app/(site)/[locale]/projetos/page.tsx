@@ -59,34 +59,41 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
               {archive.length} {locale === "pt" ? "projetos" : "projects"} · 2016—2026
             </span>
           </div>
+          {/* O cartão é a imagem. Tinha uma faixa branca por baixo com o nome, e
+              numa grelha de cinquenta e tal projetos essa faixa repetia-se
+              cinquenta vezes: metade da grelha era papel. Agora o nome assenta
+              na fotografia, sobre um véu que sobe até aos dois terços dela — com
+              menos, metade das capas desta casa deixava o nome por ler.
+
+              O hover aproxima a imagem e não pinta o nome de vermelho: vermelho
+              sobre fotografia escura é a pior combinação das duas. */}
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {archive.map((project) => (
               <li key={project.slug}>
                 <Link
                   href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
-                  className="card group flex h-full flex-col overflow-hidden"
+                  className="group relative isolate block aspect-[4/3] overflow-hidden rounded-[20px] bg-slate"
                 >
                   {project.cover?.src ? (
-                    <div className="aspect-[4/3] overflow-hidden bg-line">
-                      <Image
-                        src={project.cover.src}
-                        alt={project.cover.alt || project.client}
-                        width={640}
-                        height={480}
-                        sizes="(max-width: 640px) 100vw, 380px"
-                        className="h-full w-full object-cover transition-transform duration-200 ease-out group-hover:scale-[1.02]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex aspect-[4/3] items-end bg-slate p-4">
-                      <span className="text-xs font-semibold uppercase tracking-[0.08em] text-paper/70">{project.client}</span>
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col gap-1 p-5">
-                    <h3 className="text-lg transition-colors duration-200 group-hover:text-red">{project.client}</h3>
-                    <span className="text-sm text-fg-soft">{project.disciplines.slice(0, 3).join(" · ")}</span>
-                    <span className="mt-auto pt-3 text-sm tabular-nums text-fg-soft">{project.year}</span>
-                  </div>
+                    <Image
+                      src={project.cover.src}
+                      alt={project.cover.alt || project.client}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                    />
+                  ) : null}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink/90 via-ink/55 to-transparent"
+                  />
+                  <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-6">
+                    <span className="flex min-w-0 flex-col gap-1">
+                      <h3 className="text-xl text-paper">{project.client}</h3>
+                      <span className="truncate text-sm text-paper/75">{project.disciplines.slice(0, 3).join(" · ")}</span>
+                    </span>
+                    <span className="shrink-0 text-sm tabular-nums text-paper/60">{project.year}</span>
+                  </span>
                 </Link>
               </li>
             ))}
