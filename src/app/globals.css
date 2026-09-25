@@ -1345,6 +1345,24 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   to { opacity: 1; transform: none; }
 }
 
+/* A chegada com tempo próprio (`useChegada`, em components/Chegada.tsx): o
+   mesmo gesto do `.entra`, disparado uma vez quando o elemento assoma. É para
+   as listas que mudam de altura — filtros, «Ver mais» —, onde o `.entra`, que
+   se mede pela posição no ecrã, fazia recuar o que já tinha assentado.
+
+   Só o que estava fora do ecrã ao abrir fica à espera, e só por javascript: sem
+   ele, o atributo fica vazio e não esconde nada. Animação de tempo, por isso
+   `ease-out`, como as outras de tempo desta casa. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-chega="espera"] {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+  [data-chega="chegou"] {
+    animation: entra-e-assenta 700ms var(--ease-out) both;
+  }
+}
+
 /* A deriva da fotografia.
    Move a moldura inteira dentro da secção e não a imagem dentro da moldura: a
    secção tem 112 pixéis de respiro em cima e em baixo da fotografia, e mexer 48

@@ -282,5 +282,21 @@ da galeria ficava do tamanho do bloco. A lente passou a abrir por um portal no
 fim do `body`. Qualquer camada em ecrã inteiro que viva dentro de um bloco com
 `entra*` tem de fazer o mesmo.
 
+**O índice do blog chega com tempo próprio, não com o scroll.** A lista filtra-se
+por categoria e cresce com «Ver mais», e é exactamente o caso que a regra acima
+proíbe para o `entra`: os artigos mudam de sítio à frente de quem clicou, e os
+que já tinham assentado voltavam a esmorecer. A saída não foi fazer a lista
+entrar como um bloco — foi o mesmo gesto com tempo próprio (`useChegada`, em
+`components/Chegada.tsx`, e `[data-chega]` no `globals.css`): cada artigo sobe
+32px e acende uma vez, em 700ms, quando assoma, e o que chegou fica. O que está
+à vista ao abrir não espera. Um artigo que um filtro esconde e depois mostra
+volta a entrar — é novo no ecrã, não recua. Medido a 1440 e a 390: zero
+transparentes à chegada, zero depois do meio ao descer, zero com menos
+movimento, zero sem javascript. O destaque do topo usa o mesmo, pelo `Chega`:
+no computador está à vista e fica quieto, no telemóvel chega.
+
+Quando usar qual: **`entra` para o que não muda de sítio, `data-chega` para
+listas que se filtram ou crescem.**
+
 O Sobre continua parado. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.

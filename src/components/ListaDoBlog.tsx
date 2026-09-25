@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import { useChegada } from "./Chegada";
 
 export type ArtigoDaLista = {
   slug: string;
@@ -42,6 +43,11 @@ const LEVA = 24;
 export function ListaDoBlog({ artigos, textos }: { artigos: ArtigoDaLista[]; textos: TextosDaLista }) {
   const [categoria, setCategoria] = useState<string | null>(null);
   const [quantos, setQuantos] = useState(LEVA);
+  // Os artigos chegam ao descer, uma vez cada um: com tempo próprio e não
+  // presos ao scroll, porque esta lista muda de altura a cada filtro e a cada
+  // «Ver mais», e o que já tinha chegado não pode voltar a esmorecer.
+  const lista = useRef<HTMLDivElement>(null);
+  useChegada(lista);
 
   // As categorias por tamanho: as que arrumam mais artigos aparecem primeiro,
   // que é a ordem por que alguém as procura.
@@ -79,9 +85,11 @@ export function ListaDoBlog({ artigos, textos }: { artigos: ArtigoDaLista[]; tex
         ))}
       </div>
 
+      <div ref={lista}>
       {artigos.map((artigo) => (
         <Link
           key={artigo.slug}
+          data-chega=""
           href={{ pathname: "/blog/[slug]", params: { slug: artigo.slug } }}
           className={`group grid grid-cols-[68px_minmax(0,1fr)_84px] items-center gap-4 border-b border-line py-5 row-flip hover:pl-3 sm:grid-cols-[104px_minmax(0,1fr)_84px] ${
             aMostrar.has(artigo.slug) ? "" : "hidden"
@@ -114,6 +122,7 @@ export function ListaDoBlog({ artigos, textos }: { artigos: ArtigoDaLista[]; tex
           </span>
         </Link>
       ))}
+      </div>
 
       {faltam > 0 ? (
         <div className="mt-10 flex justify-center">

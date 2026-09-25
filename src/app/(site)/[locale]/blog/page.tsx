@@ -9,6 +9,7 @@ import { getPosts } from "@/lib/cms";
 import { semShortcodes } from "@/lib/resumo";
 import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
 import { ListaDoBlog, type ArtigoDaLista } from "@/components/ListaDoBlog";
+import { Chega } from "@/components/Chegada";
 
 export async function generateMetadata({
   params,
@@ -102,9 +103,12 @@ export default async function BlogIndexPage({
         </div>
       </div>
 
+      {/* O destaque chega como os artigos da lista. No computador está à vista
+          ao abrir e fica quieto; no telemóvel está abaixo da dobra e chega. */}
+      <Chega className="mt-14">
       <Link
         href={{ pathname: "/blog/[slug]", params: { slug: slugFor(featured, locale) } }}
-        className="card mt-14 grid gap-6 p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,34%)]"
+        className="card grid gap-6 p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,34%)]"
       >
         <div>
           <span className="eyebrow">{featured.category[locale]}</span>
@@ -137,6 +141,7 @@ export default async function BlogIndexPage({
           </div>
         </div>
       </Link>
+      </Chega>
 
       <div className="mt-14 flex items-baseline justify-between gap-4 border-b border-line pb-3">
         <h2 className="eyebrow">{t("latest")}</h2>
