@@ -124,7 +124,7 @@
     "credo": "Be the change.",
     "credoLead": "We work for people who, like us, believe in personal initiative as the way to bring about the change we want to see in the world.",
     "stats": {
-      "years": "years of activity",
+      "activity": "years of activity",
       "people": "people",
       "projects": "projects",
       "clients": "brands"

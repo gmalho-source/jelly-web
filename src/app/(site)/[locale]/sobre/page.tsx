@@ -49,7 +49,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   const stats = [
     // Contado, não escrito: em janeiro passava a estar errado sem ninguém notar.
-    { value: String(new Date().getFullYear() - FUNDACAO), label: t("stats.years") },
+    // A chave era `stats.years`, e o painel guardava lá «anos de casa», que
+    // tapava a frase nova. Com outro nome, a cópia antiga deixa de contar.
+    { value: String(new Date().getFullYear() - FUNDACAO), label: t("stats.activity") },
     // Arredondado à dezena de baixo, com o «+»: o número exacto mudava a cada
     // entrada e saída, e a página dizia 23 num sítio e 21 noutro.
     { value: `${Math.floor(team.length / 10) * 10}+`, label: t("stats.people") },

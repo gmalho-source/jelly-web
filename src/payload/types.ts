@@ -231,7 +231,7 @@ export interface BillingAttempt {
   createdAt: string;
 }
 /**
- * Os textos das páginas. Não se criam nem se apagam: editam-se.
+ * Os textos das páginas, tal como estão no site. Mudar um texto aqui muda-o no site; um texto que fique igual ao original continua a acompanhar as alterações feitas no código.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
