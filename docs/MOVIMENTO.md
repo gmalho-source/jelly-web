@@ -21,6 +21,7 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `entra` | sobe 32px e acende | um bloco que chega |
 | `entra-tarde` | o mesmo, um compasso depois | a segunda de duas colunas lado a lado |
 | `entra-perto` | o mesmo, janela curta | um bloco a poucos ecrãs do fundo do documento |
+| `entra-alto` | o mesmo, janela de 380px fixos | um bloco que pode ser alto — imagem, galeria, vídeo |
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
 | `capa-paralaxe` + `capa-paralaxe-titulo` | a fotografia sobe 157px e o título desce 80 | a capa de um caso, no topo da página |
@@ -258,6 +259,28 @@ bloco que chega, não chegam para uma fotografia derivar. Dobrou-se para 157.
 Medido a 1280 e a 390: 157px e 106px de deriva ao longo de 900px de scroll, o
 título a subir 80 contra eles, e a folga nunca positiva de nenhum dos lados —
 11px de margem no computador, 8 no telemóvel.
+
+**Os blocos de um caso e a grelha do arquivo entram ao descer.** Cada cartão do
+arquivo leva `entra`, medido por ele próprio — os da mesma linha chegam juntos,
+os de baixo à vez. Na página de um caso, cada bloco da história leva
+`entra-alto`, e a citação `entra-perto`, porque está a pouco mais de um ecrã do
+fundo. Duas decisões medidas:
+
+- **O primeiro bloco da história e os números ficam quietos.** Estão colados à
+  ficha, e a ficha está à vista quando a página abre: medido na Stronddo a 1440,
+  o primeiro bloco chegava a 62% de opacidade com a página acabada de abrir.
+- **`entra-alto` nasceu aqui.** As outras janelas medem-se em percentagem do
+  percurso, e o percurso cresce com a altura do bloco: uma fotografia de 700px
+  passava o meio do ecrã ainda a 87% (Huracan, 1440). Em pixéis fixos — 380 a
+  partir de o bloco assomar — acaba antes do meio de qualquer ecrã. Medido nos
+  dois casos mais longos, a 1440 e a 390: zero blocos abaixo de 1 depois do
+  meio, zero no fundo, zero com menos movimento.
+
+E uma armadilha que o `transform` traz: **um `fixed` dentro de um bloco que
+entra deixa de ser o ecrã.** Enquanto o bloco sobe, é ele a referência — a lente
+da galeria ficava do tamanho do bloco. A lente passou a abrir por um portal no
+fim do `body`. Qualquer camada em ecrã inteiro que viva dentro de um bloco com
+`entra*` tem de fazer o mesmo.
 
 O Sobre continua parado. Quando lá se chegar, é para reutilizar estas classes e não
 inventar outras — uma casa com dois sistemas de movimento lê-se como duas casas.

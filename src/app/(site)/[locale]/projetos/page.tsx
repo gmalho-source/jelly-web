@@ -68,8 +68,11 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
               O hover aproxima a imagem e não pinta o nome de vermelho: vermelho
               sobre fotografia escura é a pior combinação das duas. */}
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Cada cartão chega quando assoma, com o `.entra` da casa: medido
+                pelo próprio cartão, e por isso os da mesma linha chegam juntos
+                e os de baixo à vez, à medida que se desce. */}
             {archive.map((project) => (
-              <li key={project.slug}>
+              <li key={project.slug} className="entra">
                 <Link
                   href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
                   className="group relative isolate block aspect-[4/3] overflow-hidden rounded-[20px] bg-slate"

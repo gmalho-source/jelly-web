@@ -226,7 +226,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           pessoas diferentes, com luzes diferentes, só se leem como uma série
           quando perdem a cor, e é assim que a equipa aparece na grelha dela. */}
       {citacao ? (
-        <blockquote className="mt-16 border-t border-line pt-8">
+        // `entra-perto`: a citação está a pouco mais de um ecrã do fim do
+        // documento, e numa janela larga ficava a meio caminho para sempre.
+        <blockquote className="entra-perto mt-16 border-t border-line pt-8">
           {/* Poppins Light e não Bree Serif: a Bree só tem um peso, e a 38px
               uma frase de cliente lia-se como mais um título da página — pesava
               mais do que o que o cliente disse. Mais pequena e mais leve, lê-se
@@ -254,7 +256,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       ) : null}
 
       {!story.length ? (
-        <div className="mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8">
+        <div className="entra-perto mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8">
           <p className="subtitle max-w-[48ch]">
             {locale === "pt"
               ? "Deste projeto guardámos o trabalho, não a história. Queres saber o que fizemos aqui?"

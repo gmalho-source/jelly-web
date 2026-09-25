@@ -160,8 +160,19 @@ export function CaseStory({
 
   return (
     <div className="mt-14 flex flex-col">
+      {/* Cada bloco chega quando assoma: sobe 32px e acende, com o vocabulário
+          da casa. O invólucro não mexe no desenho — a margem do bloco atravessa-o
+          — e é nele que fica o `transform`, para não tocar no que cada bloco
+          faz por dentro. A lente da galeria sai daqui por um portal: com um
+          `transform` à volta, um `fixed` deixava de ser o ecrã. */}
+      {/* O primeiro fica quieto: logo a seguir à ficha, está quase sempre à
+          vista quando a página abre — e o que está no ecrã à chegada não se
+          anima. `entra-alto` e não `entra`: um bloco de imagem pode ter 700px,
+          e a janela do `entra` cresce com a altura. */}
       {blocks.map((block, index) => (
-        <Bloco key={index} block={block} client={client} poster={poster} textos={textos} />
+        <div key={index} className={index === 0 ? undefined : "entra-alto"}>
+          <Bloco block={block} client={client} poster={poster} textos={textos} />
+        </div>
       ))}
     </div>
   );

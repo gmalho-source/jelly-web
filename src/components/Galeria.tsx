@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export type ImagemDaGaleria = {
   src: string;
@@ -176,7 +177,12 @@ export function Galeria({
         ))}
       </div>
 
-      {aberta !== null ? (
+      {/* A lente vai para o fim do `body`, fora da árvore da galeria. Um
+          antepassado com `transform` — o bloco a entrar com `.entra`, na página
+          de um caso — passa a ser a referência de tudo o que é `fixed` lá
+          dentro, e a lente ficava do tamanho do bloco em vez do ecrã. Só abre
+          depois de um clique, por isso o `document` já existe. */}
+      {aberta !== null ? createPortal(
         <div role="dialog" aria-modal="true" aria-label={textos.ver} className="fixed inset-0 z-50 bg-ink/98 backdrop-blur-xl">
           {/* O deslizador. `overscroll-contain` para o gesto não passar à
               página por trás quando se chega ao fim. */}
@@ -312,7 +318,8 @@ export function Galeria({
               ))}
             </div>
           ) : null}
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );

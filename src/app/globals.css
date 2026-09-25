@@ -1362,7 +1362,8 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   @media (prefers-reduced-motion: no-preference) {
     .entra,
     .entra-tarde,
-    .entra-perto {
+    .entra-perto,
+    .entra-alto {
       animation: entra-e-assenta linear both;
       animation-timeline: view();
     }
@@ -1383,6 +1384,15 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
        depois do fecho, e ainda assim rende trezentos pixéis de percurso. Medido:
        no fundo do documento, zero elementos transparentes. */
     .entra-perto { animation-range: entry 0% cover 30%; }
+
+    /* Para blocos que podem ser altos — as imagens, galerias e vídeos de um
+       caso. As outras janelas medem-se em percentagem do percurso, e o percurso
+       cresce com a altura do bloco: numa fotografia de 700px, `cover 32%` só
+       chegava depois de o topo dela passar o meio do ecrã, e ficava a 87% à
+       frente de quem já a estava a ver. Esta mede-se em pixéis a partir do
+       momento em que o bloco assoma — 380, seja qual for a altura — e acaba
+       sempre antes do meio de um ecrã de telemóvel (422px num de 844). */
+    .entra-alto { animation-range: cover 0% cover 380px; }
 
     /* O fio que se desenha da esquerda, como o da frase de impacto. */
     .varre {
