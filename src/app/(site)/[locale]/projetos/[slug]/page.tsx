@@ -41,7 +41,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!project && !archived) return {};
 
   const title = project ? `${project.client} — ${project.title[locale]}` : `${archived!.client} — ${archived!.subtitle || archived!.disciplines.join(", ")}`;
-  const description = project?.summary[locale] || archived?.summary || `${archived?.client}: ${archived?.disciplines.join(", ")}.`;
+  const resumoArquivo = (locale === "en" && archived?.summaryEn) || archived?.summary;
+  const description = project?.summary[locale] || resumoArquivo || `${archived?.client}: ${archived?.disciplines.join(", ")}.`;
 
   const peca = project ?? archived!;
   return {
@@ -75,7 +76,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const client = project?.client ?? archived!.client;
   const headline = project?.title[locale] ?? client;
   const eyebrow = archived?.subtitle || project?.disciplines[locale] || archived?.disciplines.join(" · ") || "";
-  const lead = project?.summary[locale] || archived?.summary || "";
+  const lead = project?.summary[locale] || (locale === "en" && archived?.summaryEn) || archived?.summary || "";
   const cover = archived?.cover?.src;
   // O topo da página: a imagem primeiro e o título por cima dela — um caso
   // vende-se pelo que se vê antes de se ler. A capa serve quase sempre; quando

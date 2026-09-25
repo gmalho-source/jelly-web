@@ -9,6 +9,7 @@ import {
 } from "../hooks/revalidate";
 import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
 import { translateStory } from "../endpoints/translate-story";
+import { writeProjectSummary } from "../endpoints/write-project-summary";
 import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, oldSlugsField, slugEnField, slugField } from "../fields";
 
@@ -171,6 +172,9 @@ export const Projects: CollectionConfig = {
     // A história em inglês, escrita pelo Claude. Vai e volta uma lista de
     // textos: a estrutura da história nunca sai daqui.
     { path: "/traduzir-historia", method: "post", handler: translateStory },
+    // O resumo nas duas línguas, a partir do contexto de quem escreve. Não
+    // leva id: funciona também num projeto ainda por gravar.
+    { path: "/resumo", method: "post", handler: writeProjectSummary },
   ],
   fields: [
     { name: "client", label: "Cliente", type: "text", required: true },
@@ -195,6 +199,11 @@ export const Projects: CollectionConfig = {
     { name: "disciplines", label: "Disciplinas", type: "text", hasMany: true },
     locale("title", "Título"),
     locale("summary", "Resumo", { long: true }),
+    {
+      name: "resumoIA",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/ResumoDoProjetoIA#ResumoDoProjetoIA" } },
+    },
     locale("team", "Equipa"),
     { name: "cover", label: "Capa", type: "upload", relationTo: "media" },
     {

@@ -223,6 +223,8 @@ export type ArchivedProject = {
   /** Linha curta que o site antigo punha debaixo do nome do cliente. */
   subtitle?: string;
   summary: string;
+  /** O resumo em inglês. Vazio, o site inglês usa o português. */
+  summaryEn?: string;
   body: string[];
   /** Narrativa do caso, como estava no construtor de páginas do site antigo. */
   story: Block[];

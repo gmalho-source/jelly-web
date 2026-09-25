@@ -433,6 +433,8 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         disciplines: (raw.disciplines as string[] | null) ?? [],
         subtitle: text(raw.subtitle) || undefined,
         summary: localized(raw.summary).pt,
+        // Só o inglês que foi escrito: vazio, a página cai no português.
+        summaryEn: text(((raw.summary ?? {}) as Doc).en) || undefined,
         body: [],
         story: fromStory(raw.story, "pt"),
         storyEn: fromStory(raw.story, "en"),

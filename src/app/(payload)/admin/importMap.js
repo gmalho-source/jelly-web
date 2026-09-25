@@ -28,6 +28,7 @@ import { MarkdownImport as MarkdownImport_244644c11481654cefffd374751bd598 } fro
 import { TraduzirArtigo as TraduzirArtigo_ebd22e68f11b41d703168be7740c60a8 } from '@/payload/components/TraduzirArtigo'
 import { ContagemArtigos as ContagemArtigos_058ebeba328e3db44c299c629c45dc13 } from '@/payload/components/ContagemArtigos'
 import { ContagemEtiqueta as ContagemEtiqueta_058ebeba328e3db44c299c629c45dc13 } from '@/payload/components/ContagemArtigos'
+import { ResumoDoProjetoIA as ResumoDoProjetoIA_92ea28b49c80ea2628f50946e4ec1db6 } from '@/payload/components/ResumoDoProjetoIA'
 import { TraduzirHistoria as TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b } from '@/payload/components/TraduzirHistoria'
 import { TraduzirIA as TraduzirIA_76986ef82f82fecba03ec6985bd66336 } from '@/payload/components/TraduzirIA'
 import { PreencherEquipa as PreencherEquipa_b002362b65cf40e49fbade707cb90351 } from '@/payload/components/PreencherEquipa'
@@ -80,6 +81,7 @@ export const importMap = {
   "@/payload/components/TraduzirArtigo#TraduzirArtigo": TraduzirArtigo_ebd22e68f11b41d703168be7740c60a8,
   "@/payload/components/ContagemArtigos#ContagemArtigos": ContagemArtigos_058ebeba328e3db44c299c629c45dc13,
   "@/payload/components/ContagemArtigos#ContagemEtiqueta": ContagemEtiqueta_058ebeba328e3db44c299c629c45dc13,
+  "@/payload/components/ResumoDoProjetoIA#ResumoDoProjetoIA": ResumoDoProjetoIA_92ea28b49c80ea2628f50946e4ec1db6,
   "@/payload/components/TraduzirHistoria#TraduzirHistoria": TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b,
   "@/payload/components/TraduzirIA#TraduzirIA": TraduzirIA_76986ef82f82fecba03ec6985bd66336,
   "@/payload/components/PreencherEquipa#PreencherEquipa": PreencherEquipa_b002362b65cf40e49fbade707cb90351,
