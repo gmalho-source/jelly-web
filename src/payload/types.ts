@@ -759,6 +759,13 @@ export interface Service {
     pt?: string | null;
     en?: string | null;
   };
+  /**
+   * O título grande no topo da página do serviço. Vazio, o topo mostra o nome do serviço.
+   */
+  heroTitle?: {
+    pt?: string | null;
+    en?: string | null;
+  };
   link?: {
     pt?: string | null;
     en?: string | null;
@@ -791,10 +798,6 @@ export interface Service {
     | null;
   cases?: (number | Project)[] | null;
   accent?: ('lavender' | 'chartreuse' | 'coral') | null;
-  heroTitle?: {
-    pt?: string | null;
-    en?: string | null;
-  };
   /**
    * Endereço do MP4 no armazenamento. Sem áudio, curto, e leve: um fundo de 7 segundos deve ficar abaixo de 1 MB (npm run video:prep encolhe-o).
    */
@@ -2155,6 +2158,12 @@ export interface ServicesSelect<T extends boolean = true> {
         pt?: T;
         en?: T;
       };
+  heroTitle?:
+    | T
+    | {
+        pt?: T;
+        en?: T;
+      };
   link?:
     | T
     | {
@@ -2197,12 +2206,6 @@ export interface ServicesSelect<T extends boolean = true> {
       };
   cases?: T;
   accent?: T;
-  heroTitle?:
-    | T
-    | {
-        pt?: T;
-        en?: T;
-      };
   heroVideo?: T;
   heroPoster?: T;
   heroHeight?: T;

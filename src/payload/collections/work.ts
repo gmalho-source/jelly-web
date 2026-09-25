@@ -277,6 +277,13 @@ export const Services: CollectionConfig = {
     oldSlugsField,
     { name: "order", label: "Ordem", type: "number", defaultValue: 100 },
     locale("claim", "Claim", { long: true }),
+    // O título grande do topo da página do serviço. Vivia dentro da «Página
+    // longa», que abre fechada, e quem procurava o título da página não o
+    // encontrava. A secção é só arrumação: mudá-lo de sítio não mexe em dados.
+    {
+      ...locale("heroTitle", "Título de topo", { long: true }),
+      admin: { description: "O título grande no topo da página do serviço. Vazio, o topo mostra o nome do serviço." },
+    } as ReturnType<typeof locale>,
     locale("link", "Nome curto"),
     locale("promise", "Promessa", { long: true }),
     { name: "includes", label: "O que inclui", type: "array", fields: [locale("item", "Linha")] },
@@ -295,7 +302,6 @@ export const Services: CollectionConfig = {
       label: "Página longa",
       admin: { initCollapsed: true, description: "Vídeo de topo, frase de impacto, áreas e texto. Tudo opcional." },
       fields: [
-        locale("heroTitle", "Título de topo", { long: true }),
         {
           name: "heroVideo",
           label: "Vídeo de topo",
