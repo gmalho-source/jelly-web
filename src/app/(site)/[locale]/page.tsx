@@ -258,7 +258,7 @@ export default async function HomePage({
               href="/clientes"
               className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft transition-colors hover:text-fg"
             >
-              {t("clientsAll", { total: logos.length })}
+              {t("clientsAll")}
               <span aria-hidden="true">→</span>
             </Link>
           ) : null}
