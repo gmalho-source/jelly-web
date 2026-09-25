@@ -227,7 +227,11 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           quando perdem a cor, e é assim que a equipa aparece na grelha dela. */}
       {citacao ? (
         <blockquote className="mt-16 border-t border-line pt-8">
-          <p className="max-w-[34ch] font-display text-2xl leading-snug tracking-[-0.02em] lg:text-[38px]">
+          {/* Poppins Light e não Bree Serif: a Bree só tem um peso, e a 38px
+              uma frase de cliente lia-se como mais um título da página — pesava
+              mais do que o que o cliente disse. Mais pequena e mais leve, lê-se
+              como uma voz de fora, que é o que é. */}
+          <p className="max-w-[46ch] font-sans text-[19px] font-light leading-[1.5] lg:text-[24px]">
             “{citacao.text[locale]}”
           </p>
           <footer className="mt-6 flex items-center gap-4">
