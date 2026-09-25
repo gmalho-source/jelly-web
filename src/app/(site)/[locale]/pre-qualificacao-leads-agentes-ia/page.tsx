@@ -172,9 +172,10 @@ export default async function PreQualificacaoPage({ params }: { params: Promise<
               param ao mesmo tempo e o efeito lê-se como um piscar. A unidade
               (x, %, h) fica de fora do odómetro: não é um algarismo e não roda.
 
-              Sem `animation-timeline` — o Firefox, hoje — ou a quem pediu menos
-              movimento, a fita fica parada no dígito certo. Perde-se a rotação,
-              não o número. */}
+              Roda com o tempo quando chega ao ecrã, e não com o scroll: quem
+              parasse de rolar a meio ficava com um número errado à vista. A
+              quem pediu menos movimento, a fita fica parada no dígito certo.
+              Perde-se a rotação, não o número. */}
           <div className="grid gap-10 border-t border-line pt-10 sm:grid-cols-3 sm:gap-8">
             {agentesLeads.numeros.map((numero, indice) => (
               <div

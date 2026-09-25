@@ -94,6 +94,25 @@ passo, o salto acontece no instante final do intervalo e o que fica para o
 ficavam invisíveis para sempre. `steps(1, jump-start)` resolve — a letra
 aparece quando a vez dela chega.
 
+## Um número que roda
+
+O contador mecânico (`Odometer`, `.odometro-fita` no globals.css) está na
+homepage e nos números da pré-qualificação. Estava ligado ao scroll, e caiu na
+mesma armadilha da frase: quem parasse de rolar a meio ficava com «04 anos de
+atividade» e «88 pessoas na equipa» — a fita parada a meio da volta, e um número
+errado à vista sem nada que o fizesse andar. Um número errado é pior do que meia
+frase: lê-se como um facto.
+
+**Passou a animação de tempo**, disparada como a da frase: quando metade do
+número está à vista, uma vez, e acaba sempre no dígito certo. 900ms por fita,
+em dez passos, com as fitas escalonadas — 140ms de número para número (`--vez`)
+e 180ms de algarismo para algarismo dentro dele (`--casa`), para as unidades
+assentarem depois das dezenas. O que está no ecrã ao abrir não roda.
+
+A regra que fica: **um gesto que tem de acabar num valor certo não se liga ao
+scroll.** O scroll serve para o que pode ficar a meio sem mentir — uma
+fotografia a derivar, um bloco a chegar. Um número ou uma frase não podem.
+
 ## Três coisas que não se animam
 
 **O que já está no ecrã quando a página abre.** Um título a 34% de opacidade à

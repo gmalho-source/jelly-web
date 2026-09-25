@@ -1007,15 +1007,9 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 /* Quarto tempo: o contador mecânico. Cada algarismo é uma fita com os dez
    dígitos duas vezes, parada no dígito certo — este é o estado final e é
    também o de quem não tem animação nenhuma: o número está lá, quieto. A
-   segunda volta é só o espaço de onde a rotação vem.
-
-   A janela tem `overflow: hidden`, e uma caixa com overflow é um contentor de
-   scroll: a fita lá dentro não consegue medir-se pela página. Por isso o nome
-   da linha de tempo está na casa de fora — a fita anima-se com o tempo de quem
-   se vê, não com o seu. */
+   segunda volta é só o espaço de onde a rotação vem. */
 .odometro {
   display: inline-flex;
-  view-timeline-name: --numero;
 }
 
 .odometro-casa {
@@ -1071,15 +1065,23 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
       animation-range: entry 0% cover 14%;
     }
 
-    /* Os números entram da esquerda para a direita (`--vez`), e dentro de cada
-       número as unidades assentam depois das dezenas (`--casa`): é o que faz o
-       contador parecer que para, em vez de aterrar de bloco. */
-    .odometro-fita {
-      animation: odometro-roda steps(10, jump-end) both;
-      animation-timeline: --numero;
-      animation-range: cover calc(4% + var(--vez, 0) * 3%)
-                       cover calc(34% + var(--vez, 0) * 3% + var(--casa, 0) * 4%);
-    }
+  }
+}
+
+/* O contador roda com o tempo, e não com o scroll: ligado ao scroll, quem
+   parasse de rolar a meio ficava com «04 anos» e «88 pessoas» à vista — a fita
+   parada a meio da volta. Começa quando o `Odometer` diz que chegou ao ecrã
+   (`data-roda`), e acaba sempre no dígito certo.
+
+   Os números entram da esquerda para a direita (`--vez`), e dentro de cada
+   número as unidades assentam depois das dezenas (`--casa`): é o que faz o
+   contador parecer que para, em vez de aterrar de bloco. Enquanto espera a
+   vez, a fita está no ponto de partida — que mostra o mesmo algarismo do fim,
+   uma volta atrás —, por isso não há salto quando arranca. */
+@media (prefers-reduced-motion: no-preference) {
+  .odometro[data-roda="sim"] .odometro-fita {
+    animation: odometro-roda 900ms steps(10, jump-end) both;
+    animation-delay: calc(var(--vez, 0) * 140ms + var(--casa, 0) * 180ms);
   }
 }
 
