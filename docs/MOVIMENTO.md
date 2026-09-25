@@ -23,7 +23,7 @@ Está no fim do `src/app/globals.css`. Quatro classes chegam para uma página:
 | `entra-perto` | o mesmo, janela curta | um bloco a poucos ecrãs do fundo do documento |
 | `varre` | um fio que se desenha da esquerda | por baixo de um rótulo, por cima de uma coluna |
 | `paralaxe` | a moldura deriva 96px contra o texto | uma fotografia grande, com respiro à volta |
-| `capa-paralaxe` + `capa-paralaxe-titulo` | a fotografia desce 157px e o título sobe 80 | a capa de um caso, no topo da página |
+| `capa-paralaxe` + `capa-paralaxe-titulo` | a fotografia sobe 157px e o título desce 80 | a capa de um caso, no topo da página |
 
 Em Branding, o filme da equipa vem logo a seguir ao manifesto, em 16:9 inteiro
 e com a `paralaxe` da moldura: fora do topo, que tem `overflow: hidden`, e por
@@ -219,8 +219,18 @@ enquanto se lê (`capa-paralaxe`, `capa-paralaxe-titulo`). Mede-se em
 `scroll(root)`, como o topo de Marketing, porque a moldura tem
 `overflow: hidden`. A conta que interessa é a da folga: a camada tem de ser
 mais alta do que a moldura pelo menos tanto quanto deriva, ou descobre uma
-tira vazia. Tem mais 32% de altura, começa 30% acima e deriva 28% — os 2% que
-sobram de cada lado são a margem do arredondamento.
+tira vazia. Tem mais 32% de altura e deriva 28%; os 4% que sobram são a margem
+do arredondamento.
+
+**E deriva para cima, não para baixo.** A primeira versão fazia o contrário,
+que é a paralaxe clássica — a imagem a ficar para trás da página. Mas há uma
+consequência geométrica que só se vê quando está feito: para a camada poder
+descer, tem de começar já subida, e o que se vê em repouso é o meio da
+fotografia e nunca o cimo dela. Numa capa enquadrada com o assunto em cima,
+isso corta exactamente o que interessa. Encostada ao topo e a subir, a imagem
+começa onde foi enquadrada e a moldura descobre o resto à medida que se lê. O
+título desce contra ela, e é esse sentido que o faz parecer ficar para trás
+enquanto a imagem foge.
 
 E a lição do tamanho: a primeira versão derivava 63px e **era subtil de mais**
 — o scroll passava e a fotografia parecia quieta. Uma paralaxe de fundo não é

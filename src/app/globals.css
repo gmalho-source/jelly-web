@@ -1441,29 +1441,35 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 
    A conta da folga, que é o que distingue isto do topo de Marketing. Lá a
    camada sangra para fora do ecrã e o que descobre em cima já ninguém vê;
-   aqui a moldura tem as quatro margens à vista, e uma camada do tamanho dela
-   descobria uma tira vazia em cima assim que começasse a descer. A regra é
-   uma: a camada tem de ser mais alta do que a moldura pelo menos tanto quanto
-   deriva. Aqui tem mais 32% de altura, começa 30% acima e deriva 28% — os 2%
-   que sobram de cada lado são a margem para o arredondamento, e a primeira
-   versão, que não os tinha, acabava o percurso a 0,08px de descobrir a tira.
+   aqui a moldura tem as quatro margens à vista. A regra é uma: a camada tem de
+   ser mais alta do que a moldura pelo menos tanto quanto deriva. Tem mais 32%
+   de altura e deriva 28% — os 4% que sobram são a margem do arredondamento.
+
+   E deriva **para cima**, com a camada encostada ao topo da moldura. A
+   primeira versão fazia o contrário — começava 30% acima e descia — que é a
+   paralaxe clássica, a imagem a ficar para trás da página. Mas isso obriga a
+   camada a começar já subida, e o que se vê em repouso é o meio da fotografia
+   e nunca o cimo dela. Numa capa escolhida com o assunto em cima, isso corta
+   exactamente o que interessa. Encostada ao topo, a fotografia começa onde foi
+   enquadrada e a moldura vai descobrindo o resto à medida que se lê.
 
    Numa capa de 560px são 157px de deriva. A primeira versão fazia 63 e era
    subtil de mais — o scroll passava e a fotografia parecia quieta.
 
-   O título sobe 80px no mesmo percurso. Contra os 157 da fotografia, dá 237
-   de afastamento entre os dois: é disso que a paralaxe se faz.
+   O título desce 80px no mesmo percurso, ao contrário dela. Dá 237 de
+   afastamento entre os dois: é disso que a paralaxe se faz, e é o sentido que
+   faz o título parecer ficar para trás enquanto a imagem foge.
 
    Linear, pela razão de sempre: o scroll já é o compasso. Em repouso — sem
    suporte, ou a quem pediu menos movimento — a camada cobre a moldura e o
    título está no lugar: não se perde nada. */
 @keyframes capa-paralaxe {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, 21.2%, 0); }
+  to { transform: translate3d(0, -21.2%, 0); }
 }
 @keyframes capa-paralaxe-titulo {
   from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(0, -80px, 0); }
+  to { transform: translate3d(0, 80px, 0); }
 }
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
