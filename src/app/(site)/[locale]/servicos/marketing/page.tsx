@@ -125,7 +125,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         {/* O vídeo é textura, não cena: escurecido até o título mandar. O
             primeiro fotograma serve de capa enquanto os 3 MB chegam, e a quem
             pediu menos movimento fica só ele. */}
-        <Image src={m.topo.poster.src} alt="" fill priority sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
+        <Image src={m.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
         <video
           className="video-fundo topo-paralaxe absolute inset-0 -z-20 h-full w-full object-cover"
           autoPlay

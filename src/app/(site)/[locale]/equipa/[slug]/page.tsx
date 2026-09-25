@@ -103,6 +103,7 @@ export default async function PessoaPage({ params }: { params: Promise<Params> }
                 alt={pessoa.retrato.alt ?? pessoa.nome}
                 fill
                 priority
+                fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 46vw"
                 className="object-cover object-top"
               />

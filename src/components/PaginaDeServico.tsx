@@ -88,7 +88,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
           isso não se anima. */}
       {servico.topo ? (
         <header className="surface-cover relative isolate -mt-6 flex min-h-[100lvh] flex-col justify-end overflow-hidden bg-ink pb-32 pt-[140px] sm:-mt-24 sm:pb-14 lg:pb-16">
-          <Image src={servico.topo.poster.src} alt="" fill priority sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
+          <Image src={servico.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
           <video
             className="video-fundo topo-paralaxe absolute inset-0 -z-20 h-full w-full object-cover"
             autoPlay

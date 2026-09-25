@@ -112,7 +112,7 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
           <div className="paralaxe relative aspect-video overflow-hidden rounded-[6px] bg-[#1d2126]">
             {/* O primeiro fotograma serve de capa enquanto o filme chega, e é o
                 que fica a quem pediu menos movimento. */}
-            <Image src={b.topo.poster.src} alt="" fill priority sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" />
+            <Image src={b.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" />
             <video
               className="video-fundo absolute inset-0 h-full w-full object-cover"
               autoPlay

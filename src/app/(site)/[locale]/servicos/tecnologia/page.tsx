@@ -128,7 +128,7 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
           A mesma da página de Marketing: vídeo como textura, título palavra a
           palavra, o mapa logo a seguir em papel. */}
       <header className="surface-cover relative isolate -mt-6 flex min-h-[100lvh] flex-col justify-end overflow-hidden bg-ink pb-32 pt-[140px] sm:-mt-24 sm:pb-14 lg:pb-16">
-        <Image src={m.topo.poster.src} alt="" fill priority sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
+        <Image src={m.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
         <video
           className="video-fundo topo-paralaxe absolute inset-0 -z-20 h-full w-full object-cover"
           autoPlay

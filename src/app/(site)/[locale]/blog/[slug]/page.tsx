@@ -180,6 +180,12 @@ export default async function ArticlePage({ params }: { params: Promise<Params> 
               width={capa.width ?? 1200}
               height={capa.height ?? 675}
               priority
+              /* O `priority` manda adiantar o pedido; o `fetchPriority` manda
+                 servi-lo à frente dos outros. Sem ele, o preload da imagem
+                 competia por largura de banda com o guião do consentimento, que
+                 o Next também adianta — e num telemóvel em rede móvel é aí que
+                 o LCP se perde. */
+              fetchPriority="high"
               sizes="(max-width: 1200px) 100vw, 1040px"
               className="mt-8 w-full rounded-[20px] object-cover"
             />

@@ -129,6 +129,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
               alt={topo.alt || client}
               fill
               priority
+            fetchPriority="high"
               sizes="(max-width: 1200px) 100vw, 1140px"
               className="object-cover"
             />
