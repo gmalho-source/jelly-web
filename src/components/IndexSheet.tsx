@@ -1,12 +1,20 @@
 "use client";
 
 import type React from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangePill } from "./ChangePill";
 import { JellyWordmark } from "./JellyLogo";
+
+/**
+ * A largura com que a janela do índice pede a imagem. Está aqui fora, e não
+ * escrita no `<Image>`, porque o aquecimento tem de pedir exactamente o mesmo
+ * ficheiro: com um `sizes` diferente, o browser escolhia outra largura da lista
+ * e aquecia uma imagem que a janela nunca vai usar.
+ */
+const TAMANHOS_DA_JANELA = "(max-width: 1024px) 100vw, 46vw";
 
 export type SheetTile = {
   label: string;
@@ -169,11 +177,53 @@ export function IndexSheet({
     return encontrado === -1 ? 0 : encontrado;
   }, [tiles]);
 
+  /*
+   * Preparar a abertura sem abrir.
+   *
+   * O índice cobre o ecrã e abre com uma fotografia grande. Sem isto, essa
+   * fotografia só começava a descer depois do clique, e o índice aparecia com
+   * um rectângulo escuro que se pintava à vista. Abrir o menu ao passar o rato
+   * resolvia a espera mas trazia pior — aberturas sem querer, o teclado roubado
+   * pelo campo de procura, e nada disso existe num telemóvel. Por isso o rato
+   * não abre: avisa. Quando se aproxima do botão, a primeira fotografia começa
+   * a descer, e o clique encontra-a já no browser.
+   *
+   * Pede-se o ficheiro que a janela vai pedir, com o `getImageProps` e a mesma
+   * largura, para o browser escolher da lista a mesma versão. Cada imagem é
+   * aquecida uma vez.
+   */
+  const aquecidas = useRef(new Set<string>());
+  const aquecer = useCallback((src?: string) => {
+    if (!src || aquecidas.current.has(src)) return;
+    aquecidas.current.add(src);
+    const { props } = getImageProps({ src, alt: "", fill: true, sizes: TAMANHOS_DA_JANELA });
+    const imagem = new window.Image();
+    imagem.decoding = "async";
+    if (props.sizes) imagem.sizes = props.sizes;
+    if (props.srcSet) imagem.srcset = props.srcSet;
+    imagem.src = props.src;
+  }, []);
+
+  const prepararAbertura = useCallback(() => {
+    aquecer(tiles.filter((tile) => !tile.hidden)[primeiraImagem]?.image);
+  }, [aquecer, tiles, primeiraImagem]);
+
   const openSheet = useCallback(() => {
     setOpenedOn(pathname);
     setCursor(primeiraImagem);
     requestAnimationFrame(() => input.current?.focus());
   }, [pathname, primeiraImagem]);
+
+  useEffect(() => {
+    if (!open) return;
+    // Aberto, a intenção é clara, e as outras janelas descem quando o browser
+    // estiver parado. Antes disso não: aquecer tudo ao passar o rato gastava
+    // dados a quem só ia a caminho da barra do browser.
+    const pedir = () => tiles.filter((tile) => !tile.hidden).forEach((tile) => aquecer(tile.image));
+    const ocioso = "requestIdleCallback" in window;
+    const id = ocioso ? window.requestIdleCallback(pedir, { timeout: 1500 }) : window.setTimeout(pedir, 300);
+    return () => (ocioso ? window.cancelIdleCallback(id) : window.clearTimeout(id));
+  }, [open, tiles, aquecer]);
 
   const results = useMemo(() => {
     const term = normalize(query.trim());
@@ -219,6 +269,26 @@ export function IndexSheet({
 
   /** O que a janela mostra: o item onde o cursor está. */
   const destaque = results.length ? results[active] : undefined;
+
+  /*
+   * Um clique em qualquer sítio da folha que não seja uma coisa em que se
+   * carrega fecha-a: o fundo, os títulos das bandas, o espaço à volta da lista,
+   * a janela quando não tem nada. É o gesto de quem quer sair — e a cruz no
+   * canto fica, para quem a procura.
+   *
+   * O que conta como «coisa em que se carrega» é o que o browser já trata como
+   * tal (ligações, botões, o campo), mais a faixa da procura inteira: tocar ao
+   * lado do texto do campo é querer escrever, não fechar. Aí o clique vai para
+   * o campo.
+   *
+   * E o clique tem de começar e acabar fora delas. Quem selecciona o que
+   * escreveu e larga o rato no fundo não pediu para fechar — o browser entrega
+   * esse clique ao antepassado comum, que é a folha, e sem esta guarda ela
+   * fechava-se com a procura a meio.
+   */
+  const comecouNoVazio = useRef(false);
+  const eVazio = (alvo: EventTarget | null) =>
+    alvo instanceof Element && !alvo.closest("a, button, input, [data-procura]");
 
   function close() {
     setOpenedOn(null);
@@ -396,6 +466,8 @@ export function IndexSheet({
         aria-expanded={open}
         aria-controls="folha"
         onClick={openSheet}
+        onPointerEnter={prepararAbertura}
+        onFocus={prepararAbertura}
         aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
            Sobre claro veste a cor sorteada à entrada, que traz consigo a cor do
@@ -437,6 +509,10 @@ export function IndexSheet({
           role="dialog"
           aria-modal="true"
           aria-label={copy.index}
+          onPointerDown={(event) => (comecouNoVazio.current = eVazio(event.target))}
+          onClick={(event) => {
+            if (comecouNoVazio.current && eVazio(event.target)) close();
+          }}
           className="fixed inset-0 z-50 flex flex-col bg-ink/98 backdrop-blur-xl"
         >
           <div className="flex items-center gap-4 border-b border-paper/15 px-5 py-4 sm:px-8">
@@ -456,7 +532,11 @@ export function IndexSheet({
               que são o que diz que isto procura projetos e artigos e não só
               páginas.
             */}
-            <span className="relative min-w-0 flex-1">
+            <span
+              data-procura
+              onClick={() => input.current?.focus()}
+              className="relative min-w-0 flex-1"
+            >
               <input
                 ref={input}
                 value={query}
@@ -560,7 +640,7 @@ export function IndexSheet({
                   src={destaque.image}
                   alt=""
                   fill
-                  sizes="(max-width: 1024px) 100vw, 46vw"
+                  sizes={TAMANHOS_DA_JANELA}
                   className="object-cover"
                 />
               ) : (
