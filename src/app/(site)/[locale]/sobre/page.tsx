@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
  * uma página congelada no dia em que foi construída mostrava as mesmas seis
  * caras até ao deploy seguinte — que é exactamente o que isto veio resolver.
  *
- * Um dia, e não uma hora: são vinte e uma pessoas, e a casa inteira passa pela
+ * Um dia, e não uma hora: são mais de vinte pessoas, e a casa inteira passa pela
  * chamada em poucos dias. Mudar este número muda o ritmo, nada mais.
  */
 export const revalidate = 86400;
@@ -50,15 +50,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const stats = [
     // Contado, não escrito: em janeiro passava a estar errado sem ninguém notar.
     { value: String(new Date().getFullYear() - FUNDACAO), label: t("stats.years") },
-    { value: String(team.length), label: t("stats.people") },
+    // Arredondado à dezena de baixo, com o «+»: o número exacto mudava a cada
+    // entrada e saída, e a página dizia 23 num sítio e 21 noutro.
+    { value: `${Math.floor(team.length / 10) * 10}+`, label: t("stats.people") },
     { value: "68", label: t("stats.projects") },
     { value: "40+", label: t("stats.clients") },
   ];
-
-  const qualidades = (["creativity", "resilience", "flexibility"] as const).map((chave) => ({
-    titulo: t(`qualities.${chave}`),
-    corpo: t(`qualities.${chave}Body`),
-  }));
 
   const video = fonteDeVideo(t("video"));
 
@@ -76,7 +73,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
         <dl className="mt-14 grid grid-cols-2 gap-px bg-paper-3 lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-paper py-6 pr-6">
+            // A folga à esquerda é para o número não assentar no fio que separa
+            // as colunas. A primeira de cada linha não tem fio à esquerda e
+            // fica encostada à margem, alinhada com o título.
+            <div key={stat.label} className="bg-paper py-6 pl-6 pr-6 max-lg:odd:pl-0 lg:first:pl-0">
               <dt className="font-display text-4xl leading-none tabular-nums text-red">{stat.value}</dt>
               <dd className="mt-2 text-sm text-fg-soft">{stat.label}</dd>
             </div>
@@ -84,32 +84,33 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </dl>
       </section>
 
-      {/* Ideias contra execução, e as três palavras que a casa usa para dizer o
-          que é preciso para atravessar o meio. Vêm da página antiga, e são a
-          coisa mais própria que lá estava escrita. */}
-      <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
-        <div className="border-t border-line pt-14">
-          <h2 className="max-w-[24ch] text-chapter">{t("ideasTitle")}</h2>
-          <p className="mt-5 max-w-[62ch] text-md text-fg-soft">{t("ideasBody")}</p>
-          <dl className="mt-12 grid gap-px bg-paper-3 sm:grid-cols-3">
-            {qualidades.map((qualidade) => (
-              <div key={qualidade.titulo} className="bg-paper p-6 pl-0 sm:pl-6 sm:first:pl-0">
-                <dt className="font-display text-xl text-red">{qualidade.titulo}</dt>
-                <dd className="mt-2 max-w-[34ch] text-sm text-fg-soft">{qualidade.corpo}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      {/* Quem somos, em vermelho Jelly: o bloco que abria a página antiga, e
+          que diz o que a casa é antes de a página mostrar quem lá trabalha.
+          Junta o que eram duas secções — as ideias contra a execução, e o
+          manifesto da ação — porque contam a mesma coisa por ordem: ter ideias
+          não chega, o digital são pessoas, e por isso a estratégia é agir.
 
-      {/* O manifesto: a frase que dá o nome ao bloco vermelho da homepage. */}
-      <section className="surface-ink py-16 lg:py-24">
-        <div className="mx-auto grid max-w-[1200px] items-end gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,58%)_minmax(0,36%)] lg:justify-between lg:gap-14">
+          A missão fica ao lado, num tom de vermelho mais fechado: é a frase que
+          alguém copia para descrever a Jelly, e tem de se encontrar sem ler o
+          resto. No telemóvel desce para o fim do bloco. */}
+      <section className="surface-red text-paper">
+        <div className="mx-auto grid max-w-[1200px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,34%)] lg:items-end lg:gap-16 lg:py-24">
           <div>
-            <span className="eyebrow text-chartreuse">{t("manifestoEyebrow")}</span>
-            <h2 className="mt-4 max-w-[22ch] text-chapter text-paper">{t("actionTitle")}</h2>
+            <span className="eyebrow text-paper/80">{t("whoEyebrow")}</span>
+            <h2 className="mt-5 max-w-[22ch] text-chapter text-paper">{t("whoTitle")}</h2>
+            <div className="mt-8 max-w-[62ch] space-y-5 text-md leading-relaxed text-paper/90">
+              <p>{t("whoBody")}</p>
+              <p>{t("whoDigital")}</p>
+            </div>
+            <h3 className="mt-12 font-display text-[clamp(26px,2.6vw,36px)] leading-[1.1] text-paper">
+              {t("actionTitle")}
+            </h3>
+            <p className="mt-4 max-w-[62ch] text-md leading-relaxed text-paper/90">{t("actionBody")}</p>
           </div>
-          <p className="text-md text-paper/75">{t("actionBody")}</p>
+          <aside className="rounded-[10px] bg-ink/12 p-7 sm:p-8">
+            <span className="eyebrow text-paper/75">{t("missionEyebrow")}</span>
+            <p className="mt-4 text-lg leading-[1.45] text-paper">{t("mission")}</p>
+          </aside>
         </div>
       </section>
 
@@ -169,12 +170,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <h3 className="text-xl">{t("method")}</h3>
             <p className="mt-3 text-sm text-fg-soft">{t("methodBody")}</p>
           </div>
-          <Link href="/recrutamento" className="card flex flex-col justify-between p-8">
+          {/* As vagas em vermelho: é o convite da página, e ao lado do cartão
+              chartreuse dos projetos são as duas portas que se vêem primeiro. */}
+          <Link href="/recrutamento" className="card flex flex-col justify-between bg-red p-8 text-paper shadow-none">
             <div>
-              <h3 className="text-xl">{t("careersTitle")}</h3>
-              <p className="mt-3 text-sm text-fg-soft">{t("careersLead")}</p>
+              <h3 className="text-xl text-paper">{t("careersTitle")}</h3>
+              <p className="mt-3 text-sm text-paper/85">{t("careersLead")}</p>
             </div>
-            <span className="mt-6 text-sm font-semibold text-red">{t("careersLink")} →</span>
+            <span className="mt-6 text-sm font-semibold text-paper">{t("careersLink")} →</span>
           </Link>
           <Link href="/projetos" className="card flex flex-col justify-between bg-chartreuse p-8 shadow-none">
             <div>
