@@ -250,10 +250,10 @@ export default async function HomePage({
           <p className="eyebrow text-fg-soft">{t("clientsWall")}</p>
           {/* Uma marca precisa de campo à volta para se ler: cada logo tem a
               sua célula, separada por um fio, e ocupa-a. A grelha fica quieta e
-              as marcas rodam — as sessenta passam em três voltas. */}
-          <LogoWall logos={logos as WallLogo[]} perPage={24} />
+              as marcas rodam, duas linhas de cada vez, até passarem todas. */}
+          <LogoWall logos={logos as WallLogo[]} linhas={2} />
 
-          {logos.length > 24 ? (
+          {logos.length > 4 ? (
             <Link
               href="/clientes"
               className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft transition-colors hover:text-fg"
