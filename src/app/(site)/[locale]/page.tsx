@@ -207,76 +207,13 @@ export default async function HomePage({
         </div>
       </header>
 
-      {/* ── 01 Posição ── */}
-      <section className="surface-paper">
-        <div className="mx-auto flex min-h-[80svh] max-w-[1600px] flex-col justify-center px-5 py-24 sm:px-8">
-          {/* Acende por partes, de cima para baixo: a numeração, a frase, e a
-              linha do fim. O atraso de cada uma é a sua janela de entrada. */}
-          <div
-            className="fade"
-            style={{ "--fade-from": "2%", "--fade-to": "24%" } as React.CSSProperties}
-          >
-            <Chapter label={t("chapters.position")} number="01" />
-          </div>
-          <p
-            className="fade mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]"
-            style={
-              { "--fade-from": "6%", "--fade-to": "30%" } as React.CSSProperties
-            }
-          >
-            {t("positionStatement")}{" "}
-            <span className="text-red">{t("positionEmphasis")}</span>
-          </p>
-          <div
-            className="fade mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6"
-            style={
-              {
-                "--fade-from": "12%",
-                "--fade-to": "36%",
-              } as React.CSSProperties
-            }
-          >
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft">
-              {t("positionFoot")}
-            </p>
-            <p className="text-xs font-semibold uppercase tracking-[0.1em]">
-              {t("positionChain")}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 02 Trabalho ── */}
-      <section id="trabalho" className="surface-ink py-24 lg:py-32">
-        <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
-          <Chapter label={t("chapters.work")} number="02" />
-          <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
-            <h2 className="font-display text-[clamp(32px,5.4vw,80px)] leading-[0.92] tracking-[-0.03em]">
-              {withCover.length} {t("workTitleA")}
-              <br />
-              <span className="type-outline">{t("workTitleOutline")}</span>{" "}
-              {t("workTitleB")}
-            </h2>
-            <Link
-              href="/projetos"
-              className="shrink-0 border-b border-red pb-1 text-sm font-semibold hover:text-red"
-            >
-              {t("workArchive")}
-            </Link>
-          </div>
-        </div>
-
-        <ProjectRail projects={rail} show={9} archiveLabel={t("workArchive")} />
-
-        <div className="mt-16">
-          <Marquee images={covers} />
-        </div>
-      </section>
-
-      {/* ── 03 Serviços e clientes ── */}
+      {/* ── 01 Serviços e clientes ──
+          Logo a seguir ao herói: quem chega quer saber primeiro o que a Jelly
+          faz, depois ver o que fez. A posição, que abria a página, passou para
+          depois do trabalho — é uma frase que se lê melhor com provas atrás. */}
       <section className="surface-paper">
         <div className="mx-auto max-w-[1600px] px-5 pt-24 sm:px-8">
-          <Chapter label={t("chapters.services")} number="03" />
+          <Chapter label={t("chapters.services")} number="01" />
         </div>
         <div className="mt-10 border-t border-line">
           {services.map((service, index) => (
@@ -325,6 +262,72 @@ export default async function HomePage({
               <span aria-hidden="true">→</span>
             </Link>
           ) : null}
+        </div>
+      </section>
+
+      {/* ── 02 Trabalho ── */}
+      <section id="trabalho" className="surface-ink py-24 lg:py-32">
+        <div className="mx-auto max-w-[1600px] px-5 sm:px-8">
+          <Chapter label={t("chapters.work")} number="02" />
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-6">
+            <h2 className="font-display text-[clamp(32px,5.4vw,80px)] leading-[0.92] tracking-[-0.03em]">
+              {withCover.length} {t("workTitleA")}
+              <br />
+              <span className="type-outline">{t("workTitleOutline")}</span>{" "}
+              {t("workTitleB")}
+            </h2>
+            <Link
+              href="/projetos"
+              className="shrink-0 border-b border-red pb-1 text-sm font-semibold hover:text-red"
+            >
+              {t("workArchive")}
+            </Link>
+          </div>
+        </div>
+
+        <ProjectRail projects={rail} show={9} archiveLabel={t("workArchive")} />
+
+        <div className="mt-16">
+          <Marquee images={covers} />
+        </div>
+      </section>
+
+      {/* ── 03 Posição ── */}
+      <section className="surface-paper">
+        <div className="mx-auto flex min-h-[80svh] max-w-[1600px] flex-col justify-center px-5 py-24 sm:px-8">
+          {/* Acende por partes, de cima para baixo: a numeração, a frase, e a
+              linha do fim. O atraso de cada uma é a sua janela de entrada. */}
+          <div
+            className="fade"
+            style={{ "--fade-from": "2%", "--fade-to": "24%" } as React.CSSProperties}
+          >
+            <Chapter label={t("chapters.position")} number="03" />
+          </div>
+          <p
+            className="fade mt-12 max-w-[26ch] font-display text-[clamp(36px,7vw,116px)] leading-[0.92] tracking-[-0.03em]"
+            style={
+              { "--fade-from": "6%", "--fade-to": "30%" } as React.CSSProperties
+            }
+          >
+            {t("positionStatement")}{" "}
+            <span className="text-red">{t("positionEmphasis")}</span>
+          </p>
+          <div
+            className="fade mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6"
+            style={
+              {
+                "--fade-from": "12%",
+                "--fade-to": "36%",
+              } as React.CSSProperties
+            }
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft">
+              {t("positionFoot")}
+            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.1em]">
+              {t("positionChain")}
+            </p>
+          </div>
         </div>
       </section>
 
