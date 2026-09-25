@@ -228,7 +228,7 @@ export const Projects: CollectionConfig = {
       label: "Citação do cliente",
       type: "group",
       admin: {
-        description: "Aparece na página do projeto, seja caso escrito ou não. Sem «Quem», não aparece.",
+        description: "Aparece na página do projeto, seja caso escrito ou não. Sem texto ou sem «Quem», não aparece.",
       },
       fields: [
         locale("text", "Texto", { long: true }),

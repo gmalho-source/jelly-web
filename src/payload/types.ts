@@ -684,7 +684,7 @@ export interface Project {
       }[]
     | null;
   /**
-   * Aparece na página do projeto, seja caso escrito ou não. Sem «Quem», não aparece.
+   * Aparece na página do projeto, seja caso escrito ou não. Sem texto ou sem «Quem», não aparece.
    */
   quote?: {
     text?: {

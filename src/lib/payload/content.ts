@@ -369,13 +369,19 @@ export async function fetchPostBody(slug: string): Promise<{ blocks: Block[]; bl
   }
 }
 
-/** A citação de um projeto, se tiver alguém a assiná-la. */
+/**
+ * A citação de um projeto, se tiver o que dizer e alguém a assiná-la. Sem
+ * texto não há citação: um nome e um cargo debaixo de umas aspas vazias era o
+ * que a página dos Heróis PME mostrava.
+ */
 function citacao(raw: Doc) {
   const quote = (raw.quote ?? {}) as Doc;
-  if (!text(quote.author)) return undefined;
+  const dito = localized(quote.text);
+  if (!text(quote.author) || (!dito.pt && !dito.en)) return undefined;
   const foto = image(quote.photo as MediaDoc);
   return {
-    text: localized(quote.text),
+    // Escrita só numa língua, serve nas duas: é a mesma pessoa a dizer a mesma coisa.
+    text: { pt: dito.pt || dito.en, en: dito.en || dito.pt },
     author: text(quote.author),
     role: localized(quote.role),
     photo: foto ? { src: foto.src, alt: foto.alt } : null,
