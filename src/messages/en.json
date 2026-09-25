@@ -459,5 +459,14 @@
     "ctaTitle": "Want to be part of it?",
     "ctaLead": "Join us and let's drive the change together.",
     "ctaButton": "See the roles"
+  },
+  "notFound": {
+    "eyebrow": "Error 404",
+    "title": "This page is no longer here.",
+    "lead": "The address may have changed with the new site, or it may have a typo. Change is what we do — but not this kind.",
+    "paths": "These paths are still where they were",
+    "home": "Back to the start",
+    "search": "Or open the index, top corner, and type what you are looking for.",
+    "metaTitle": "Page not found"
   }
 }

@@ -459,5 +459,14 @@
     "ctaTitle": "Queres fazer parte?",
     "ctaLead": "Junta-te a nós e vamos gerar a mudança juntos.",
     "ctaButton": "Ver as vagas"
+  },
+  "notFound": {
+    "eyebrow": "Erro 404",
+    "title": "Esta página já não está aqui.",
+    "lead": "O endereço pode ter mudado com o site novo, ou pode ter uma letra trocada. A mudança é connosco — mas esta não era para ser.",
+    "paths": "Estes caminhos continuam no sítio",
+    "home": "Voltar ao início",
+    "search": "Ou abra o índice, no canto de cima, e escreva o que procura.",
+    "metaTitle": "Página não encontrada"
   }
 }
