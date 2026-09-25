@@ -14,12 +14,14 @@ const INTERVALO = 5200;
  * dão lugar às seguintes, célula a célula, com um atraso por célula que faz o
  * bloco desfazer-se e refazer-se em onda em vez de piscar todo ao mesmo tempo.
  *
- * Duas linhas, em qualquer largura: eram quatro, e quatro linhas de logos são
- * um muro a atravessar entre os serviços e o trabalho. O que cabe numa volta
- * depende das colunas — doze no computador, oito no tablet, quatro no telemóvel
- * — e é por isso que a volta se mede no browser. Contada no servidor para o
- * computador, as células a mais escondem-se por CSS até lá: o telemóvel nunca
- * vê as quatro linhas, nem por um instante.
+ * As linhas dependem da largura: duas no computador, três no tablet, quatro
+ * no telemóvel. No computador eram quatro, e quatro linhas de seis são um muro
+ * a atravessar entre os serviços e o trabalho; no telemóvel, com duas colunas,
+ * duas linhas eram quatro marcas — pouco para dizer «confiaram-nos a marca».
+ * O que cabe numa volta é colunas × linhas, e por isso a volta mede-se no
+ * browser. O servidor desenha a maior das três, e as células a mais escondem-se
+ * por CSS até lá: nenhum ecrã vê linhas que não são as dele, nem por um
+ * instante.
  *
  * Porque não rolar como os créditos de um filme: um bloco em movimento
  * permanente no meio da página rouba a leitura ao texto ao lado, e a secção
@@ -27,18 +29,35 @@ const INTERVALO = 5200;
  * "menos movimento" ligado no sistema fica com a primeira volta, quieta, que é
  * exactamente o que o site mostrava antes.
  */
-/** As colunas da grelha, como no `className` dela. */
-const colunasAgora = () =>
-  window.matchMedia("(min-width: 1024px)").matches ? 6 : window.matchMedia("(min-width: 640px)").matches ? 4 : 2;
+/**
+ * Colunas e linhas de cada largura. As colunas são as do `className` da
+ * grelha; se mudarem lá, mudam aqui — e as classes que escondem as células a
+ * mais, mais abaixo, contam com estes números.
+ */
+const TELEMOVEL = { colunas: 2, linhas: 4 };
+const TABLET = { colunas: 4, linhas: 3 };
+const COMPUTADOR = { colunas: 6, linhas: 2 };
+const porLargura = (grelha: { colunas: number; linhas: number }) => grelha.colunas * grelha.linhas;
+const MAIOR = Math.max(porLargura(TELEMOVEL), porLargura(TABLET), porLargura(COMPUTADOR));
 
-export function LogoWall({ logos, linhas = 2 }: { logos: WallLogo[]; linhas?: number }) {
-  const [colunas, setColunas] = useState(6);
-  const perPage = colunas * linhas;
+const grelhaAgora = () =>
+  window.matchMedia("(min-width: 1024px)").matches
+    ? COMPUTADOR
+    : window.matchMedia("(min-width: 640px)").matches
+      ? TABLET
+      : TELEMOVEL;
+
+export function LogoWall({ logos }: { logos: WallLogo[] }) {
+  // Antes de medir, a maior volta: as classes das células escondem o que cada
+  // largura não usa.
+  const [grelha, setGrelha] = useState<{ colunas: number; linhas: number } | null>(null);
+  const colunas = grelha?.colunas ?? COMPUTADOR.colunas;
+  const perPage = grelha ? porLargura(grelha) : MAIOR;
   const paginas = Math.max(1, Math.ceil(logos.length / perPage));
   const [pagina, setPagina] = useState(0);
 
   useEffect(() => {
-    const medir = () => setColunas(colunasAgora());
+    const medir = () => setGrelha(grelhaAgora());
     medir();
     window.addEventListener("resize", medir);
     return () => window.removeEventListener("resize", medir);
@@ -71,8 +90,10 @@ export function LogoWall({ logos, linhas = 2 }: { logos: WallLogo[]; linhas?: nu
         <span
           key={index}
           className={`grid aspect-[5/2] place-items-center overflow-hidden bg-paper px-4 ${
-            index >= 2 * linhas ? "max-sm:hidden" : ""
-          } ${index >= 4 * linhas ? "max-lg:hidden" : ""}`}
+            index >= porLargura(TELEMOVEL) ? "max-sm:hidden" : ""
+          } ${index >= porLargura(TABLET) ? "sm:max-lg:hidden" : ""} ${
+            index >= porLargura(COMPUTADOR) ? "lg:hidden" : ""
+          }`}
         >
           <Image
             // A chave muda com a marca: é o que faz o React desenhar a nova em
