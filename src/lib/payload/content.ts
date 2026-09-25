@@ -634,7 +634,11 @@ export type PageCopy = {
 
 export function fetchPageCopy(): Promise<PageCopy[]> {
   return fromCms(async (payload) => {
-    const { docs } = await payload.find({ collection: "pages", limit: 0, depth: 1 });
+    // `soGuardado`: o site quer só o que o painel tem de seu. O caderno cheio —
+    // com o texto do repositório onde o painel não tem nada — é para quem
+    // edita; aqui, guardado na cache que sobrevive aos deploys, fazia-se passar
+    // por edição e tapava a próxima mudança feita no código.
+    const { docs } = await payload.find({ collection: "pages", limit: 0, depth: 1, context: { soGuardado: true } });
     return (docs as unknown as Doc[]).map((raw): PageCopy => ({
       slug: text(raw.key),
       images: ((raw.images ?? []) as MediaDoc[]).map(image).filter((found): found is NonNullable<typeof found> => Boolean(found)),

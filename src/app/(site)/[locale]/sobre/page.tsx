@@ -164,14 +164,19 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </Link>
       </section>
 
-      {/* Três saídas, e duas delas são portas: quem lê isto até ao fim quer ver
-          o trabalho, quer trabalhar aqui, ou tem um problema para resolver. */}
+      {/* Três portas: o que a casa anda a fazer, trabalhar aqui, e o trabalho.
+          A primeira era «Como trabalhamos», um cartão sem ligação; passou a ser
+          a Newsroom, e um destino sem porta não é destino. As chaves ficaram
+          `method*` para não perder o que já está escrito no painel. */}
       <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
         <div className="grid gap-4 lg:grid-cols-3">
-          <div className="card p-8">
-            <h3 className="text-xl">{t("method")}</h3>
-            <p className="mt-3 text-sm text-fg-soft">{t("methodBody")}</p>
-          </div>
+          <Link href="/newsroom" className="card flex flex-col justify-between p-8">
+            <div>
+              <h3 className="text-xl">{t("method")}</h3>
+              <p className="mt-3 text-sm text-fg-soft">{t("methodBody")}</p>
+            </div>
+            <span className="mt-6 text-sm font-semibold text-red">{t("methodLink")} →</span>
+          </Link>
           {/* As vagas em vermelho: é o convite da página, e ao lado do cartão
               chartreuse dos projetos são as duas portas que se vêem primeiro. */}
           <Link href="/recrutamento" className="card flex flex-col justify-between bg-red p-8 text-paper shadow-none">

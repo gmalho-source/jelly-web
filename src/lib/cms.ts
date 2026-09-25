@@ -107,7 +107,9 @@ export async function getProjectsBySlugs(slugs: string[] = []) {
  * elas o topo cai na capa de um projeto.
  */
 /** Copy e imagens das páginas. Usada pelo merge de mensagens e pelo herói. */
-export const getPages = fromStore("pages", async () => fetchPageCopy());
+// «pages-guardadas» e não «pages»: durante um deploy a leitura trouxe o caderno
+// cheio, e o nome novo larga essa cópia em vez de a servir.
+export const getPages = fromStore("pages-guardadas", async () => fetchPageCopy());
 
 export const getPageImages = cache(async (key: string) => {
   const pages = await getPages();

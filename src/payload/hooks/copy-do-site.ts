@@ -61,7 +61,11 @@ function doRepositorio(pagina: string) {
 
 const limpo = (valor?: string | null) => (valor ?? "").trim();
 
-export const mostrarCopyDoSite: CollectionAfterReadHook = ({ doc }) => {
+export const mostrarCopyDoSite: CollectionAfterReadHook = ({ doc, context }) => {
+  // O site lê com `soGuardado`: quer as edições, e junta-lhes ele o
+  // repositório. Se recebesse o caderno cheio e o guardasse em cache, o texto
+  // de hoje do repositório passava a valer como edição.
+  if (context?.soGuardado) return doc;
   const base = doRepositorio(String(doc.key ?? ""));
   if (!base.length) return doc;
 
