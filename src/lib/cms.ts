@@ -7,6 +7,7 @@ import { news, posts } from "@/content/editorial";
 import { projects } from "@/content/projects";
 import { planosDeCodigo } from "@/content/jellycare";
 import { clients, milestones, services } from "@/content/site";
+import { sectors } from "@/content/sectors";
 import { team } from "@/content/team";
 import type {
   ArchivedProject,
@@ -25,6 +26,7 @@ import {
   fetchArchivedProjects,
   fetchPageCopy,
   fetchClients,
+  fetchSectors,
   fetchLogoGalleries,
   fetchMilestones,
   fetchCarePlans,
@@ -91,6 +93,8 @@ export async function getNextProject(slug: string): Promise<Project> {
 export const getServices = fromStore("services", async () => fetchServices(services));
 
 export const getClients = fromStore("clients", async () => fetchClients(clients));
+
+export const getSectors = fromStore("sectors", async () => fetchSectors(sectors));
 
 export async function getService(slug: string) {
   return findBySlug(await getServices(), slug);

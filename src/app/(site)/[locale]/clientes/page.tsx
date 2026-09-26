@@ -3,9 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import type { Client } from "@/content/types";
 import Image from "next/image";
-import { getClientLogos, getClients, getProjects } from "@/lib/cms";
+import { getClientLogos, getClients, getProjects, getSectors } from "@/lib/cms";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -13,14 +12,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return { title: t("eyebrow"), description: t("lead"), alternates: alternates("/clientes", locale) };
 }
 
-const order: Client["sector"][] = ["financeiro", "saude", "bebidas", "alimentar", "consumo", "retalho", "industria", "construcao", "imobiliario", "transportes", "servicos", "ong", "arte", "eventos", "lazer", "tecnologia"];
-
 export default async function ClientsPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const t = await getTranslations("clients");
-  const [clients, projects, logos] = await Promise.all([getClients(), getProjects(), getClientLogos()]);
+  const [clients, projects, logos, sectors] = await Promise.all([
+    getClients(),
+    getProjects(),
+    getClientLogos(),
+    getSectors(),
+  ]);
+  // Pela ordem do painel. Um setor sem clientes não aparece.
+  const porOrdem = [...sectors].sort((a, b) => a.order - b.order || a.name.pt.localeCompare(b.name.pt, "pt"));
 
   return (
     <div className="surface-paper">
@@ -58,13 +62,13 @@ export default async function ClientsPage({ params }: { params: Promise<{ locale
       ) : null}
 
       <section className="mx-auto max-w-[1200px] px-5 pb-16 sm:px-8">
-        {order.map((sector) => {
-          const inSector = clients.filter((client) => client.sector === sector);
+        {porOrdem.map((sector) => {
+          const inSector = clients.filter((client) => client.sector === sector.slug);
           if (!inSector.length) return null;
           return (
-            <div key={sector} className="border-t border-line py-8 first:border-line">
+            <div key={sector.slug} className="border-t border-line py-8 first:border-line">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 className="eyebrow">{t(`sectors.${sector}`)}</h2>
+                <h2 className="eyebrow">{sector.name[locale]}</h2>
                 <span className="text-sm tabular-nums text-fg-soft">
                   {inSector.length} {t("count")}
                 </span>

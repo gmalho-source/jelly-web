@@ -67,7 +67,11 @@ export type Service = {
   closing?: { question: Localized; answer: Localized };
 };
 
-export type Client = { name: string; sector: "financeiro" | "saude" | "bebidas" | "alimentar" | "consumo" | "retalho" | "industria" | "construcao" | "imobiliario" | "transportes" | "servicos" | "ong" | "arte" | "eventos" | "lazer" | "tecnologia" };
+/** Um cliente e o identificador do setor dele (o `slug` de um `Sector`). */
+export type Client = { name: string; sector: string };
+
+/** Um setor da página de Clientes. Vive no painel, em Casa → Setores. */
+export type Sector = { slug: string; name: Localized; order: number };
 
 export type TeamMember = {
   name: string;

@@ -79,6 +79,7 @@ export interface Config {
     services: Service;
     news: News;
     clients: Client;
+    sectors: Sector;
     'logo-walls': LogoWall;
     logos: Logo;
     team: Team;
@@ -113,6 +114,7 @@ export interface Config {
     services: ServicesSelect<false> | ServicesSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
+    sectors: SectorsSelect<false> | SectorsSelect<true>;
     'logo-walls': LogoWallsSelect<false> | LogoWallsSelect<true>;
     logos: LogosSelect<false> | LogosSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
@@ -656,7 +658,7 @@ export interface Project {
           }
         | {
             /**
-             * Somado à margem que os blocos já têm. No telemóvel encolhe um pouco.
+             * É o espaço todo entre o bloco de cima e o de baixo. No telemóvel encolhe um pouco.
              */
             tamanho?: ('pequeno' | 'medio' | 'grande') | null;
             linha?: boolean | null;
@@ -913,29 +915,40 @@ export interface News {
 export interface Client {
   id: number;
   name: string;
-  sector:
-    | 'financeiro'
-    | 'saude'
-    | 'bebidas'
-    | 'alimentar'
-    | 'consumo'
-    | 'retalho'
-    | 'industria'
-    | 'construcao'
-    | 'imobiliario'
-    | 'transportes'
-    | 'servicos'
-    | 'ong'
-    | 'arte'
-    | 'eventos'
-    | 'lazer'
-    | 'tecnologia';
+  /**
+   * Para criar um setor novo: Casa → Setores.
+   */
+  sector: number | Sector;
   logo?: (number | null) | Media;
   /**
    * Nome da galeria a que pertence.
    */
   gallery?: string | null;
   link?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Os setores da página de Clientes, pela ordem do campo «Ordem». Um setor sem clientes não aparece.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sectors".
+ */
+export interface Sector {
+  id: number;
+  namePt: string;
+  /**
+   * Vazio, o site inglês usa o português.
+   */
+  nameEn?: string | null;
+  /**
+   * Uma palavra, sem espaços nem acentos (ex.: automovel). Não aparece no site.
+   */
+  slug: string;
+  /**
+   * Mais baixo aparece primeiro.
+   */
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -1701,6 +1714,10 @@ export interface PayloadLockedDocument {
         value: number | Client;
       } | null)
     | ({
+        relationTo: 'sectors';
+        value: number | Sector;
+      } | null)
+    | ({
         relationTo: 'logo-walls';
         value: number | LogoWall;
       } | null)
@@ -2329,6 +2346,18 @@ export interface ClientsSelect<T extends boolean = true> {
   logo?: T;
   gallery?: T;
   link?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sectors_select".
+ */
+export interface SectorsSelect<T extends boolean = true> {
+  namePt?: T;
+  nameEn?: T;
+  slug?: T;
   order?: T;
   updatedAt?: T;
   createdAt?: T;

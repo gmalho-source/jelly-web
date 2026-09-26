@@ -15,6 +15,7 @@ import type {
   Paragrafos,
   Post,
   Project,
+  Sector,
   Service,
   Span,
   TeamMember,
@@ -498,7 +499,25 @@ export function fetchServices(fallback: Service[]) {
 export function fetchClients(fallback: Client[]) {
   return fromCms(async (payload) => {
     const { docs } = await payload.find({ collection: "clients", sort: "order", ...all });
-    return (docs as unknown as Doc[]).map((raw): Client => ({ name: text(raw.name), sector: raw.sector as Client["sector"] }));
+    // O setor vem povoado (profundidade 2): o que o site usa é o identificador.
+    return (docs as unknown as Doc[]).map((raw): Client => {
+      const setor = raw.sector;
+      return { name: text(raw.name), sector: setor && typeof setor === "object" ? text((setor as Doc).slug) : "" };
+    });
+  }, fallback);
+}
+
+export function fetchSectors(fallback: Sector[]) {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({ collection: "sectors", sort: "order", limit: 0, depth: 0 });
+    return (docs as unknown as Doc[]).map((raw): Sector => {
+      const pt = text(raw.namePt);
+      return {
+        slug: text(raw.slug),
+        name: { pt, en: text(raw.nameEn) || pt },
+        order: typeof raw.order === "number" ? raw.order : 100,
+      };
+    });
   }, fallback);
 }
 

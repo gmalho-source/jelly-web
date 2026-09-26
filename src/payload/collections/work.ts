@@ -382,6 +382,54 @@ export const Services: CollectionConfig = {
   ],
 };
 
+/**
+ * Os setores da página de Clientes: o nome nas duas línguas e a ordem.
+ *
+ * O `slug` é o identificador que não muda. Não aparece no site; serve para os
+ * setores continuarem a ser os mesmos se alguém mudar o nome — «Retalho» que
+ * passou a «Retalho e consumo» é o mesmo setor, com os mesmos clientes.
+ */
+export const Sectors: CollectionConfig = {
+  slug: "sectors",
+  labels: { singular: "Setor", plural: "Setores" },
+  admin: {
+    useAsTitle: "namePt",
+    group: "Casa",
+    defaultColumns: ["namePt", "order"],
+    description: "Os setores da página de Clientes, pela ordem do campo «Ordem». Um setor sem clientes não aparece.",
+  },
+  defaultSort: "order",
+  access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateOnChange(() => ["/clientes"])],
+    afterDelete: [revalidateOnDelete(() => ["/clientes"])],
+  },
+  fields: [
+    {
+      type: "row",
+      fields: [
+        { name: "namePt", label: "Nome (PT)", type: "text", required: true },
+        { name: "nameEn", label: "Nome (EN)", type: "text", admin: { description: "Vazio, o site inglês usa o português." } },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        {
+          name: "slug",
+          label: "Identificador",
+          type: "text",
+          required: true,
+          unique: true,
+          index: true,
+          admin: { description: "Uma palavra, sem espaços nem acentos (ex.: automovel). Não aparece no site." },
+        },
+        { name: "order", label: "Ordem", type: "number", defaultValue: 100, admin: { description: "Mais baixo aparece primeiro." } },
+      ],
+    },
+  ],
+};
+
 export const Clients: CollectionConfig = {
   slug: "clients",
   labels: { singular: "Cliente", plural: "Clientes" },
@@ -393,33 +441,13 @@ export const Clients: CollectionConfig = {
     {
       name: "sector",
       label: "Setor",
-      type: "select",
+      type: "relationship",
+      relationTo: "sectors",
       required: true,
-      // Com etiqueta e valor: o valor é o que fica gravado e o que a página
-      // usa para ordenar e traduzir; a etiqueta é o que quem escolhe lê — e
-      // «Saúde» com acento vale mais do que «Saude».
-      //
-      // A lista é fechada de propósito. Acrescentar um setor é acrescentá-lo
-      // aqui, no tipo do conteúdo, na ordem da página e nas duas traduções — e
-      // correr um `alter type` na base, porque isto é um enum em Postgres.
-      options: [
-        { label: "Financeiro e seguros", value: "financeiro" },
-        { label: "Saúde e estética", value: "saude" },
-        { label: "Bebidas e espirituosas", value: "bebidas" },
-        { label: "Indústria alimentar", value: "alimentar" },
-        { label: "Produtos de consumo", value: "consumo" },
-        { label: "Retalho", value: "retalho" },
-        { label: "Indústria", value: "industria" },
-        { label: "Arquitetura e construção", value: "construcao" },
-        { label: "Mediação, consultoria, angariação e gestão imobiliária", value: "imobiliario" },
-        { label: "Transportes & Logística", value: "transportes" },
-        { label: "Serviços", value: "servicos" },
-        { label: "ONG", value: "ong" },
-        { label: "Arte e coleccionismo", value: "arte" },
-        { label: "Eventos e espaços", value: "eventos" },
-        { label: "Turismo e lazer", value: "lazer" },
-        { label: "Tecnologia", value: "tecnologia" },
-      ],
+      // Era uma lista fechada no código e um enum na base: cada setor novo
+      // pedia um deploy e uma linha de SQL. Passou a ser a coleção «Setores»,
+      // e cria-se um setor como se cria um cliente.
+      admin: { description: "Para criar um setor novo: Casa → Setores." },
     },
     { name: "logo", label: "Logo", type: "upload", relationTo: "media" },
     { name: "gallery", label: "Parede", type: "text", admin: { description: "Nome da galeria a que pertence." } },
