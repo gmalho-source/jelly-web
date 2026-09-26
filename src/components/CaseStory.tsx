@@ -23,7 +23,7 @@ function youtubeId(url: string): string | undefined {
 function Bloco({ block, client, poster, textos }: { block: Block; client: string; poster?: string; textos: TextosDaGaleria }) {
   if (block.type === "h2") {
     return (
-      <h2 className="mt-16 max-w-[24ch] text-chapter first:mt-0">
+      <h2 className="mt-16 max-w-[24ch] text-chapter">
         {block.text}
       </h2>
     );
@@ -159,7 +159,11 @@ export function CaseStory({
   if (!blocks.length) return null;
 
   return (
-    <div className="mt-14 flex flex-col">
+    // A margem de cima cai só no primeiro bloco da história, por aqui. Era o
+    // título que a tirava a si próprio (`first:mt-0`), mas desde que cada bloco
+    // vem dentro de um invólucro todos os títulos são o primeiro do seu — e
+    // colavam à imagem de cima.
+    <div className="mt-14 flex flex-col [&>:first-child>*]:mt-0">
       {/* Cada bloco chega quando assoma: sobe 32px e acende, com o vocabulário
           da casa. O invólucro não mexe no desenho — a margem do bloco atravessa-o
           — e é nele que fica o `transform`, para não tocar no que cada bloco
