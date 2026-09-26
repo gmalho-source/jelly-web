@@ -234,6 +234,17 @@ export async function getArchivedProjects(): Promise<ArchivedProject[]> {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+/**
+ * Todos os projetos para a grelha da página de projetos, do mais recente para
+ * o mais antigo — os casos escritos incluídos. O `getArchivedProjects` tira-os,
+ * porque noutros sítios (o índice, a homepage) os casos já aparecem à parte;
+ * na grelha faltavam, e quem percorria o arquivo não os encontrava.
+ */
+export async function getProjectGrid(): Promise<ArchivedProject[]> {
+  const archive = await getArchive();
+  return [...archive].sort((a, b) => b.date.localeCompare(a.date));
+}
+
 export async function getArchivedProject(slug: string): Promise<ArchivedProject | undefined> {
   const archive = await getArchive();
   return archive.find((project) => project.slug === slug);

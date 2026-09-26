@@ -5,7 +5,7 @@ import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 import Image from "next/image";
-import { getArchivedProjects, getProjects } from "@/lib/cms";
+import { getProjectGrid, getProjects } from "@/lib/cms";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -18,7 +18,9 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
   setRequestLocale(locale);
 
   const t = await getTranslations("work");
-  const [projects, archive] = await Promise.all([getProjects(), getArchivedProjects()]);
+  const [projects, archive] = await Promise.all([getProjects(), getProjectGrid()]);
+  // Os casos escritos entram na grelha com os outros, e levam a faixa «Case».
+  const casos = new Set(projects.map((project) => project.slug));
 
   return (
     <section className="surface-ink grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
@@ -26,7 +28,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
         {t("title")}
         <br />
         <span className="text-red">
-          {projects.length} / {projects.length + archive.length}
+          {projects.length} / {archive.length}
         </span>
       </p>
       <div>
@@ -90,6 +92,13 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
                     aria-hidden="true"
                     className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink/90 via-ink/55 to-transparent"
                   />
+                  {/* Os casos escritos: têm a história toda, e a faixa diz que
+                      vale a pena entrar. Em cima, longe do véu e do nome. */}
+                  {casos.has(project.slug) ? (
+                    <span className="absolute left-4 top-4 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-paper sm:left-5 sm:top-5">
+                      Case
+                    </span>
+                  ) : null}
                   <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-6">
                     <span className="flex min-w-0 flex-col gap-1">
                       <h3 className="text-xl text-paper">{project.client}</h3>
