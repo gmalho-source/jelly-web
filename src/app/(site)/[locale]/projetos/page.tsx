@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
-import Image from "next/image";
 import { getProjectGrid, getProjects } from "@/lib/cms";
+import { GrelhaDeProjetos, type ProjetoDaGrelha } from "@/components/GrelhaDeProjetos";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -19,8 +18,23 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
 
   const t = await getTranslations("work");
   const [projects, archive] = await Promise.all([getProjects(), getProjectGrid()]);
-  // Os casos escritos entram na grelha com os outros, e levam a faixa «Case».
-  const casos = new Set(projects.map((project) => project.slug));
+  const pt = locale === "pt";
+
+  // Os casos escritos entram na grelha com os outros, marcados, e com o número
+  // principal quando está validado — a mesma regra da página do caso.
+  const casos = new Map(projects.map((project) => [project.slug, project]));
+  const grelha: ProjetoDaGrelha[] = archive.map((project) => {
+    const caso = casos.get(project.slug);
+    return {
+      slug: slugFor(project, locale),
+      cliente: project.client,
+      disciplinas: project.disciplines.slice(0, 3).join(" · "),
+      ano: project.year,
+      capa: project.cover?.src ? { src: project.cover.src, alt: project.cover.alt ?? "" } : null,
+      caso: Boolean(caso),
+      destaque: caso?.numbersValidated ? caso.headline.value?.trim() || undefined : undefined,
+    };
+  });
 
   return (
     <section className="surface-ink grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
@@ -34,82 +48,21 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
       <div>
         <h1 className="text-chapter">{t("title")}</h1>
         <p className="subtitle mt-4 max-w-[52ch]">{t("lead")}</p>
-        <div className="mt-10 border-t border-line-strong">
-          {projects.map((project) => (
-            <Link
-              key={project.slug}
-              href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
-              className="group grid grid-cols-[minmax(0,1fr)_70px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_86px]"
-            >
-              <span className="font-display text-xl tracking-tight transition-colors group-hover:text-red lg:text-[28px]">
-                {project.client}
-              </span>
-              <span className="hidden text-[13px] text-fg-soft sm:block">{project.title[locale]}</span>
-              <span className="text-right font-display tabular-nums text-red lg:text-lg">
-                {project.headline.value}
-              </span>
-            </Link>
-          ))}
-        </div>
 
-        {/* Todos os projetos: o arquivo do portfolio antigo e os casos escritos,
-            pela data. Cliente, ano, disciplinas e capa. */}
-        <div className="mt-16">
+        {/* Uma grelha só. Havia uma lista dos casos em texto por cima dela, e
+            com os casos também na grelha eram seis projetos a aparecer duas
+            vezes seguidas; o filtro «Cases» faz o que a lista fazia. */}
+        <div className="mt-12">
           <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
-            <h2 className="eyebrow">{locale === "pt" ? "Todos os projetos" : "All projects"}</h2>
+            <h2 className="eyebrow">{pt ? "Todos os projetos" : "All projects"}</h2>
             <span className="text-sm tabular-nums text-fg-soft">
-              {archive.length} {locale === "pt" ? "projetos" : "projects"} · 2016—2026
+              {archive.length} {pt ? "projetos" : "projects"} · 2016—2026
             </span>
           </div>
-          {/* O cartão é a imagem. Tinha uma faixa branca por baixo com o nome, e
-              numa grelha de cinquenta e tal projetos essa faixa repetia-se
-              cinquenta vezes: metade da grelha era papel. Agora o nome assenta
-              na fotografia, sobre um véu que sobe até aos dois terços dela — com
-              menos, metade das capas desta casa deixava o nome por ler.
-
-              O hover aproxima a imagem e não pinta o nome de vermelho: vermelho
-              sobre fotografia escura é a pior combinação das duas. */}
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Cada cartão chega quando assoma, com o `.entra` da casa: medido
-                pelo próprio cartão, e por isso os da mesma linha chegam juntos
-                e os de baixo à vez, à medida que se desce. */}
-            {archive.map((project) => (
-              <li key={project.slug} className="entra">
-                <Link
-                  href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }}
-                  className="group relative isolate block aspect-[4/3] overflow-hidden rounded-[20px] bg-slate"
-                >
-                  {project.cover?.src ? (
-                    <Image
-                      src={project.cover.src}
-                      alt={project.cover.alt || project.client}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-                    />
-                  ) : null}
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-ink/90 via-ink/55 to-transparent"
-                  />
-                  {/* Os casos escritos: têm a história toda, e a faixa diz que
-                      vale a pena entrar. Em cima, longe do véu e do nome. */}
-                  {casos.has(project.slug) ? (
-                    <span className="absolute left-4 top-4 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-paper sm:left-5 sm:top-5">
-                      Case
-                    </span>
-                  ) : null}
-                  <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 sm:p-6">
-                    <span className="flex min-w-0 flex-col gap-1">
-                      <h3 className="text-xl text-paper">{project.client}</h3>
-                      <span className="truncate text-sm text-paper/75">{project.disciplines.slice(0, 3).join(" · ")}</span>
-                    </span>
-                    <span className="shrink-0 text-sm tabular-nums text-paper/60">{project.year}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <GrelhaDeProjetos
+            projetos={grelha}
+            textos={{ todos: pt ? "Todos" : "All", casos: "Cases", filtrar: pt ? "Filtrar projetos" : "Filter projects" }}
+          />
         </div>
       </div>
     </section>
