@@ -157,7 +157,7 @@ export default async function HomePage({
               </p>
               <Link
                 href="/projetos"
-                aria-label={t("workArchive")}
+                aria-label={t("workAll")}
                 className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
               >
                 ↗
@@ -181,7 +181,7 @@ export default async function HomePage({
               </p>
               <Link
                 href="/projetos"
-                aria-label={t("workArchive")}
+                aria-label={t("workAll")}
                 className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
               >
                 ↗
@@ -283,12 +283,12 @@ export default async function HomePage({
               href="/projetos"
               className="shrink-0 border-b border-red pb-1 text-sm font-semibold hover:text-red"
             >
-              {t("workArchive")}
+              {t("workAll")}
             </Link>
           </div>
         </div>
 
-        <ProjectRail projects={rail} show={9} archiveLabel={t("workArchive")} />
+        <ProjectRail projects={rail} show={9} archiveLabel={t("workAll")} />
 
         <div className="mt-16">
           <Marquee images={covers} />
