@@ -52,11 +52,11 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
           ))}
         </div>
 
-        {/* Arquivo: 64 projetos do portfolio antigo. Cliente, ano, disciplinas e
-            capa — sem narrativa, que o export não trazia. */}
+        {/* Todos os projetos: o arquivo do portfolio antigo e os casos escritos,
+            pela data. Cliente, ano, disciplinas e capa. */}
         <div className="mt-16">
           <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
-            <h2 className="eyebrow">{locale === "pt" ? "Arquivo" : "Archive"}</h2>
+            <h2 className="eyebrow">{locale === "pt" ? "Todos os projetos" : "All projects"}</h2>
             <span className="text-sm tabular-nums text-fg-soft">
               {archive.length} {locale === "pt" ? "projetos" : "projects"} · 2016—2026
             </span>
