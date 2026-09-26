@@ -103,7 +103,12 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   // Os números só aparecem depois de validados com o cliente. Até lá, a página
   // vive da história, que é verdadeira.
-  const kpis = project?.numbersValidated ? [project.headline, ...project.kpis] : [];
+  // Só os números que têm valor. O «Número principal» vazio desenhava-se na
+  // mesma, como uma célula em branco no primeiro lugar da grelha, e empurrava o
+  // último número para uma segunda linha sozinho.
+  const kpis = project?.numbersValidated
+    ? [project.headline, ...project.kpis].filter((kpi) => kpi?.value?.trim())
+    : [];
   const next = project ? await getNextProject(slug) : null;
 
   return (
