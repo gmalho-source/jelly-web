@@ -68,8 +68,8 @@
     "clientsAllLink": "Ver todas as marcas"
   },
   "work": {
-    "title": "Índice de trabalho",
-    "lead": "Casos com desafio, abordagem e resultado. Sem número é galeria; com número é prova.",
+    "pageTitle": "Projetos e Casos de Estudo",
+    "pageLead": "Galeria de desafios que alguns dos nossos queridos clientes nos colocaram.",
     "briefing": "Ficha técnica",
     "client": "Cliente",
     "year": "Ano",

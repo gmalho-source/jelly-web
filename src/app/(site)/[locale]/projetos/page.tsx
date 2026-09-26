@@ -9,7 +9,9 @@ import { GrelhaDeProjetos, type ProjetoDaGrelha } from "@/components/GrelhaDePro
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "work" });
-  return { title: t("title"), description: t("lead"), alternates: alternates("/projetos", locale) };
+  // `pageTitle` e `pageLead`, e não `title` e `lead`: o caderno «Projetos» do
+  // painel guardava cópias antigas nessas chaves, que tapariam o texto novo.
+  return { title: t("pageTitle"), description: t("pageLead"), alternates: alternates("/projetos", locale) };
 }
 
 export default async function WorkIndexPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -37,17 +39,12 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
   });
 
   return (
-    <section className="surface-ink grid gap-6 px-5 py-12 sm:px-8 lg:grid-cols-[150px_minmax(0,1fr)] lg:gap-11 lg:px-14 lg:py-16">
-      <p className="eyebrow text-fg-soft">
-        {t("title")}
-        <br />
-        <span className="text-red">
-          {projects.length} / {archive.length}
-        </span>
-      </p>
+    // Sem a coluna lateral: repetia o título e contava o que os filtros já
+    // contam («Todos 53», «Cases 6»).
+    <section className="surface-ink px-5 py-12 sm:px-8 lg:px-14 lg:py-16">
       <div>
-        <h1 className="text-chapter">{t("title")}</h1>
-        <p className="subtitle mt-4 max-w-[52ch]">{t("lead")}</p>
+        <h1 className="text-chapter">{t("pageTitle")}</h1>
+        <p className="subtitle mt-4 max-w-[52ch]">{t("pageLead")}</p>
 
         {/* Uma grelha só. Havia uma lista dos casos em texto por cima dela, e
             com os casos também na grelha eram seis projetos a aparecer duas

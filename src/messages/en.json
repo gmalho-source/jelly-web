@@ -68,8 +68,8 @@
     "clientsAllLink": "See all brands"
   },
   "work": {
-    "title": "Work index",
-    "lead": "Cases with a challenge, an approach and a result. Without a number it is a gallery; with one it is proof.",
+    "pageTitle": "Projects and Case Studies",
+    "pageLead": "A gallery of challenges some of our dear clients have set us.",
     "briefing": "Project facts",
     "client": "Client",
     "year": "Year",
