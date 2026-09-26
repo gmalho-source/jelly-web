@@ -216,6 +216,9 @@ function fromStory(story: unknown, lingua: "pt" | "en" = "pt"): Block[] {
         .map((coluna) => fromStory(coluna.blocos, lingua))
         .filter((coluna) => coluna.length);
       if (colunas.length > 1) blocks.push({ type: "columns", columns: colunas });
+    } else if (kind === "separador") {
+      const size = raw.tamanho === "pequeno" || raw.tamanho === "grande" ? raw.tamanho : "medio";
+      blocks.push({ type: "separator", size, line: Boolean(raw.linha) });
     } else if (kind === "link") {
       const href = text(raw.href);
       const label = naLingua("label");

@@ -654,6 +654,16 @@ export interface Project {
             blockName?: string | null;
             blockType: 'colunas';
           }
+        | {
+            /**
+             * Somado à margem que os blocos já têm. No telemóvel encolhe um pouco.
+             */
+            tamanho?: ('pequeno' | 'medio' | 'grande') | null;
+            linha?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'separador';
+          }
       )[]
     | null;
   /**
@@ -2090,6 +2100,14 @@ export interface ProjectsSelect<T extends boolean = true> {
                         };
                     id?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        separador?:
+          | T
+          | {
+              tamanho?: T;
+              linha?: T;
               id?: T;
               blockName?: T;
             };

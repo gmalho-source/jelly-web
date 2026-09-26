@@ -154,7 +154,38 @@ const colunasBlock: Block = {
   ],
 };
 
-const storyBlocks: Block[] = [...blocosSimples, colunasBlock];
+/**
+ * Um separador: espaço entre dois blocos, com ou sem uma linha a meio.
+ *
+ * Os blocos têm a sua margem, e na maior parte das histórias chega. Mas há
+ * mudanças de assunto — de uma galeria para o capítulo seguinte, do trabalho
+ * para os resultados — que pedem mais ar do que a margem dá, e isso é uma
+ * decisão de quem escreve, não uma regra do desenho.
+ *
+ * Só na história, não nas colunas: dentro de uma coluna o espaço é o da
+ * grelha, e um separador lá dentro desalinhava as colunas umas das outras.
+ */
+const separadorBlock: Block = {
+  slug: "separador",
+  labels: { singular: "Separador", plural: "Separadores" },
+  fields: [
+    {
+      name: "tamanho",
+      label: "Espaço",
+      type: "select",
+      defaultValue: "medio",
+      options: [
+        { label: "Pequeno", value: "pequeno" },
+        { label: "Médio", value: "medio" },
+        { label: "Grande", value: "grande" },
+      ],
+      admin: { description: "É o espaço todo entre o bloco de cima e o de baixo. No telemóvel encolhe um pouco." },
+    },
+    { name: "linha", label: "Com linha a meio", type: "checkbox", defaultValue: false },
+  ],
+};
+
+const storyBlocks: Block[] = [...blocosSimples, colunasBlock, separadorBlock];
 
 export const Projects: CollectionConfig = {
   slug: "projects",

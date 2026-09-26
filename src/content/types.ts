@@ -189,7 +189,9 @@ export type Block =
   | { type: "embed"; url: string; caption?: string }
   | { type: "link"; label: string; href: string }
   /** Dois a quatro conjuntos de blocos lado a lado. Não se aninha em si mesmo. */
-  | { type: "columns"; columns: Block[][] };
+  | { type: "columns"; columns: Block[][] }
+  /** Espaço entre blocos, com ou sem uma linha a meio. */
+  | { type: "separator"; size: "pequeno" | "medio" | "grande"; line: boolean };
 
 /** Artigo migrado do jelly.pt. Uma língua por registo (hoje só PT). */
 export type MigratedPost = {

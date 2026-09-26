@@ -115,6 +115,19 @@ function Bloco({ block, client, poster, textos }: { block: Block; client: string
       </p>
     );
   }
+  if (block.type === "separator") {
+    // O separador é o espaço inteiro entre os dois blocos: o bloco a seguir
+    // perde a margem de cima (no `CaseStory`), e por isso a linha fica mesmo a
+    // meio. Somado à margem, ficava mais perto do bloco de cima — 85px por
+    // cima e 150 por baixo, medido. O pequeno já dá mais ar do que a margem de
+    // um título (64px), senão pôr um separador podia apertar em vez de abrir.
+    const altura = { pequeno: "h-20 sm:h-24", medio: "h-28 sm:h-36", grande: "h-36 sm:h-52" }[block.size];
+    return (
+      <div aria-hidden="true" className={`flex items-center ${altura}`}>
+        {block.line ? <span className="block h-px w-full bg-line" /> : null}
+      </div>
+    );
+  }
   if (block.type === "columns") {
     // Uma coluna por peça, todas com a mesma largura, e no telemóvel empilhadas.
     // O `mt` do primeiro bloco de cada coluna cai, para as colunas alinharem
@@ -163,7 +176,7 @@ export function CaseStory({
     // título que a tirava a si próprio (`first:mt-0`), mas desde que cada bloco
     // vem dentro de um invólucro todos os títulos são o primeiro do seu — e
     // colavam à imagem de cima.
-    <div className="mt-14 flex flex-col [&>:first-child>*]:mt-0">
+    <div className="mt-14 flex flex-col [&>:first-child>*]:mt-0 [&>[data-separador]+*>*]:mt-0">
       {/* Cada bloco chega quando assoma: sobe 32px e acende, com o vocabulário
           da casa. O invólucro não mexe no desenho — a margem do bloco atravessa-o
           — e é nele que fica o `transform`, para não tocar no que cada bloco
@@ -174,7 +187,11 @@ export function CaseStory({
           anima. `entra-alto` e não `entra`: um bloco de imagem pode ter 700px,
           e a janela do `entra` cresce com a altura. */}
       {blocks.map((block, index) => (
-        <div key={index} className={index === 0 ? undefined : "entra-alto"}>
+        <div
+          key={index}
+          className={index === 0 ? undefined : "entra-alto"}
+          data-separador={block.type === "separator" ? "" : undefined}
+        >
           <Bloco block={block} client={client} poster={poster} textos={textos} />
         </div>
       ))}
