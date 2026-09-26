@@ -258,7 +258,10 @@ export default async function HomePage({
               href="/clientes"
               className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft transition-colors hover:text-fg"
             >
-              {t("clientsAll")}
+              {/* `clientsAllLink` e não `clientsAll`: o painel guardava ali a cópia
+                  antiga, «Ver as {total} marcas», que tapava a frase nova e,
+                  sem o número, mostrava o `{total}` tal e qual. */}
+              {t("clientsAllLink")}
               <span aria-hidden="true">→</span>
             </Link>
           ) : null}
