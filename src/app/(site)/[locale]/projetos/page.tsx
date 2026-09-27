@@ -41,7 +41,7 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
   return (
     // Sem a coluna lateral: repetia o título e contava o que os filtros já
     // contam («Todos 53», «Cases 6»).
-    <section className="surface-ink px-5 py-12 sm:px-8 lg:px-14 lg:py-16">
+    <section className="surface-ink px-5 pb-12 pt-16 sm:px-8 lg:px-14 lg:py-16">
       <div>
         <h1 className="text-chapter">{t("pageTitle")}</h1>
         <p className="subtitle mt-4 max-w-[52ch]">{t("pageLead")}</p>

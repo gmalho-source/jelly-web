@@ -75,7 +75,12 @@ export default async function SiteLayout({
       <body>
         <NextIntlClientProvider>
           <SiteHeader locale={locale} />
-          <main className="pb-24 pt-6 sm:pb-0 sm:pt-24">{children}</main>
+          {/* O logo está fixo no topo e tem 88px em qualquer ecrã. No telemóvel a
+              margem de cima era 24px, e o texto de quase todas as páginas
+              começava colado a ele — ou por baixo dele, onde a página tinha
+              menos respiro próprio. Com 48px, o primeiro texto fica sempre a
+              pelo menos ~24px do logo. */}
+          <main className="pb-24 pt-12 sm:pb-0 sm:pt-24">{children}</main>
           <SiteFooter />
         </NextIntlClientProvider>
         {/* As medições da Vercel: a velocidade que os visitantes sentem, e a
