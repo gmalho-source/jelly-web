@@ -1,5 +1,5 @@
 import type { Block, CollectionConfig } from "payload";
-import { BlocksFeature, UploadFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
+import { BlocksFeature, EXPERIMENTAL_TableFeature, UploadFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
 import {
   revalidateEverythingOnChange,
   revalidateEverythingOnDelete,
@@ -98,10 +98,22 @@ const imagemDoCorpo = UploadFeature({
   },
 });
 
+/*
+ * As tabelas. A Payload chama-lhes «experimentais», e o que isso quer dizer é o
+ * menu de editar linhas e colunas, que ainda pode mudar de cara: o que fica
+ * gravado são linhas e células do Lexical, que não mudam. Sem células fundidas
+ * nem cores por célula, e o site também não as desenha — uma tabela de artigo
+ * é para comparar números, não para paginar.
+ */
 const corpoDeArtigo = lexicalEditor({
   // A funcionalidade das imagens vem depois das de origem de propósito: é a
   // mesma, com os campos acrescentados, e a última é a que fica.
-  features: ({ defaultFeatures }) => [...defaultFeatures, imagemDoCorpo, BlocksFeature({ blocks: [videoBlock] })],
+  features: ({ defaultFeatures }) => [
+    ...defaultFeatures,
+    imagemDoCorpo,
+    BlocksFeature({ blocks: [videoBlock] }),
+    EXPERIMENTAL_TableFeature(),
+  ],
 });
 
 /*

@@ -113,6 +113,30 @@ export function fromLexical(root: unknown): Block[] {
     } else if (type === "list") {
       const items = ((node.children ?? []) as Doc[]).map(plain).filter(Boolean);
       if (items.length) blocks.push({ type: "list", ordered: node.listType === "number" || undefined, items });
+    } else if (type === "table") {
+      // Linhas e células do editor. Uma célula pode ter vários parágrafos: ficam
+      // na mesma linha, com um espaço a separá-los. O `headerState` é um mapa
+      // de bits — 1 é a linha de cabeçalho, 2 a coluna —, e qualquer um deles
+      // faz da célula um cabeçalho.
+      const rows = ((node.children ?? []) as Doc[])
+        .filter((row) => row.type === "tablerow")
+        .map((row) =>
+          ((row.children ?? []) as Doc[])
+            .filter((cell) => cell.type === "tablecell")
+            .map((cell) => {
+              const pedacos = ((cell.children ?? []) as Doc[])
+                .map((filho) => spans(filho))
+                .filter((partes) => partes.length)
+                .flatMap((partes, indice) => (indice ? [{ text: " " }, ...partes] : partes));
+              const cabecalho = typeof cell.headerState === "number" && cell.headerState > 0;
+              return { spans: pedacos, ...(cabecalho ? { th: true } : {}) };
+            }),
+        )
+        .filter((row) => row.length);
+      // Uma tabela vazia — acabada de pôr no editor e esquecida — não aparece.
+      if (rows.some((row) => row.some((cell) => cell.spans.some((pedaco) => pedaco.text.trim())))) {
+        blocks.push({ type: "table", rows });
+      }
     } else if (type === "upload") {
       const media = image((node.value ?? null) as MediaDoc);
       // A posição e a legenda são campos do próprio nó, escolhidos imagem a

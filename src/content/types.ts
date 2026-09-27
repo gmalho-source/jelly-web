@@ -187,6 +187,12 @@ export type Block =
   | { type: "quote"; text: string }
   | { type: "list"; ordered?: boolean; items: string[] }
   | { type: "image"; src: string; alt?: string; caption?: string; width?: number; height?: number; float?: "left" | "right" }
+  /**
+   * Uma tabela do corpo de um artigo. Cada célula é o seu texto com marcação;
+   * `th` marca as células de cabeçalho, que o editor põe na primeira linha ou
+   * na primeira coluna.
+   */
+  | { type: "table"; rows: { spans: Span[]; th?: boolean }[][] }
   /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
   | { type: "gallery"; images: { src: string; alt?: string; legenda?: string; width?: number; height?: number }[] }
   | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean; modo?: "ambiente" | "filme" }

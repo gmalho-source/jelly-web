@@ -7,7 +7,7 @@ import type { SubscribeCopy } from "./SubscribeForm";
  * os dois precisam da mesma lista de palavras. Sem isto, era copiar catorze
  * chaves duas vezes — e ao fim de um mês estavam diferentes.
  */
-export function copyDaSubscricao(t: (chave: string) => string): SubscribeCopy {
+export function copyDaSubscricao(t: (chave: string, valores?: Record<string, string>) => string): SubscribeCopy {
   return {
     email: t("email"),
     emailHint: t("emailHint"),
@@ -19,7 +19,10 @@ export function copyDaSubscricao(t: (chave: string) => string): SubscribeCopy {
     submit: t("submit"),
     sending: t("sending"),
     sent: t("sent"),
-    sentBody: t("sentBody"),
+    // O email só se sabe no browser, depois de escrito: o `{email}` passa
+    // intacto e é o formulário que o preenche. Pedido sem valor, o next-intl
+    // dava erro de formatação em cada página com o formulário.
+    sentBody: t("sentBody", { email: "{email}" }),
     erros: {
       email: t("erros.email"),
       emailInvalid: t("erros.emailInvalid"),

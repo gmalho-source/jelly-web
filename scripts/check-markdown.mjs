@@ -8,10 +8,17 @@
  *
  *   npm run md:check
  */
-import { editorConfigFactory, getEnabledNodes } from "@payloadcms/richtext-lexical";
+import { getEnabledNodes } from "@payloadcms/richtext-lexical";
 import { createHeadlessEditor } from "@lexical/headless";
-import { markdownParaLexical } from "../src/lib/markdown-lexical.ts";
-import config from "../payload.config.ts";
+import { editorDoArtigo, markdownParaLexical } from "../src/lib/markdown-lexical.ts";
+import configPorResolver from "../payload.config.ts";
+
+// O Node sai a meio, calado e com código 0, quando fica só à espera de uma
+// promessa sem nada no ciclo de eventos — e a conversão tem uma dessas. Isto
+// segura-o até ao fim; o guião sai sempre por `process.exit`.
+setInterval(() => {}, 60_000);
+
+const config = await configPorResolver;
 
 const EXEMPLO = `---
 title: Como a IA muda o trabalho de uma agência
@@ -36,6 +43,11 @@ O primeiro parágrafo, com **negrito**, _itálico_ e um [link](https://www.jelly
 
 > Uma citação de alguém que sabia do que falava.
 
+| Canal | Antes | Depois |
+| --- | --- | --- |
+| Loja online | 4% | **18%** |
+| Lojas próprias | 96% | 82% |
+
 ![Uma que não existe](./imagens/local.png)
 
 \`\`\`js
@@ -59,7 +71,7 @@ console.log("\nCabeçalho lido:", importado.meta);
 console.log("Imagens:", importado.imagens);
 
 // E agora o teste que conta: a árvore abre no motor do editor?
-const editorConfig = await editorConfigFactory.default({ config });
+const editorConfig = await editorDoArtigo(config);
 const editor = createHeadlessEditor({ nodes: getEnabledNodes({ editorConfig }) });
 
 let erro = null;

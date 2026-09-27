@@ -11,11 +11,18 @@
 import { readFile } from "node:fs/promises";
 import { Window } from "happy-dom";
 import mammoth from "mammoth";
-import { editorConfigFactory, getEnabledNodes } from "@payloadcms/richtext-lexical";
+import { getEnabledNodes } from "@payloadcms/richtext-lexical";
 import { createHeadlessEditor } from "@lexical/headless";
 import { htmlParaMarkdown, MAPA_DE_ESTILOS } from "../src/lib/docx-markdown.ts";
-import { markdownParaLexical } from "../src/lib/markdown-lexical.ts";
-import config from "../payload.config.ts";
+import { editorDoArtigo, markdownParaLexical } from "../src/lib/markdown-lexical.ts";
+import configPorResolver from "../payload.config.ts";
+
+// O Node sai a meio, calado e com código 0, quando fica só à espera de uma
+// promessa sem nada no ciclo de eventos — e a conversão tem uma dessas. Isto
+// segura-o até ao fim; o guião sai sempre por `process.exit`.
+setInterval(() => {}, 60_000);
+
+const config = await configPorResolver;
 
 const caminho = process.argv[2];
 if (!caminho) {
@@ -53,7 +60,7 @@ const importado = await markdownParaLexical(
 console.log("Cabeçalho lido:", importado.meta);
 console.log("Imagens:", importado.imagens);
 
-const editorConfig = await editorConfigFactory.default({ config });
+const editorConfig = await editorDoArtigo(config);
 const editor = createHeadlessEditor({ nodes: getEnabledNodes({ editorConfig }) });
 let erro = null;
 try {

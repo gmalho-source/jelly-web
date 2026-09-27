@@ -8,8 +8,7 @@
  *
  * O HTML do `mammoth` é pequeno e previsível — títulos, parágrafos, negrito,
  * itálico, ligações, listas, imagens e tabelas — e é só isso que aqui se
- * traduz. O que não tem lugar no editor dos artigos (tabelas) passa a
- * parágrafos, para o texto não se perder.
+ * traduz.
  *
  * Trabalha sobre nós do DOM e não sobre texto: corre no browser, onde o
  * documento é lido, e num guião com um DOM de ensaio.
@@ -109,6 +108,90 @@ function lista(el: Elemento, nivel: number): string {
     .join("\n");
 }
 
+const filhos = (el: No, nomes: string[]) =>
+  Array.from(el.childNodes).filter(
+    (filho): filho is Elemento => filho.nodeType === ELEMENTO && nomes.includes(filho.nodeName.toLowerCase()),
+  );
+
+/**
+ * Uma tabela do Word em Markdown de tabela (`| a | b |`), que o editor lê como
+ * tabela.
+ *
+ * O cabeçalho é a primeira linha quando o Word a marca como tal («Repetir como
+ * linha de cabeçalho», que o `mammoth` entrega em `<th>`) ou quando está toda a
+ * negrito, que é como quase toda a gente faz um cabeçalho à mão.
+ *
+ * O editor não funde células. Uma célula que ocupa duas colunas fica na
+ * primeira e deixa a outra vazia, e o mesmo para as linhas: assim as colunas
+ * não escorregam, e o texto fica onde estava. Uma imagem dentro de uma célula
+ * não cabe numa linha de Markdown — sai para depois da tabela. Um «|» no texto
+ * partia a célula, e troca-se pelo traço vertical de aspeto igual.
+ */
+function tabela(el: Elemento): string {
+  const linhas = filhos(el, ["tr", "thead", "tbody", "tfoot"]).flatMap((filho) =>
+    filho.nodeName.toLowerCase() === "tr" ? [filho] : filhos(filho, ["tr"]),
+  );
+  const imagens: string[] = [];
+  const grelha: { texto: string; th: boolean; negrito: boolean }[][] = [];
+  // As colunas ainda ocupadas por uma célula de uma linha de cima.
+  const ocupadas: number[] = [];
+
+  linhas.forEach((tr, r) => {
+    const linha: (typeof grelha)[number] = (grelha[r] ??= []);
+    let coluna = 0;
+    const salta = () => {
+      while ((ocupadas[coluna] ?? 0) > r) {
+        linha[coluna] = { texto: "", th: false, negrito: false };
+        coluna += 1;
+      }
+    };
+    for (const celula of filhos(tr, ["td", "th"])) {
+      salta();
+      const partes = Array.from(celula.childNodes).map(emLinha).join(" ");
+      const texto = partes
+        .replace(/!\[[^\]]*\]\([^)]*\)/g, (imagem) => {
+          imagens.push(imagem);
+          return " ";
+        })
+        .replace(/\|/g, "∣")
+        .replace(/\s+/g, " ")
+        .trim();
+      const negrito = /^\*\*[^*]+\*\*$/.test(texto);
+      const colunas = Math.max(1, Number(celula.getAttribute("colspan")) || 1);
+      const filas = Math.max(1, Number(celula.getAttribute("rowspan")) || 1);
+      for (let i = 0; i < colunas; i += 1) {
+        linha[coluna] = i ? { texto: "", th: false, negrito: false } : { texto, th: celula.nodeName.toLowerCase() === "th", negrito };
+        if (filas > 1) ocupadas[coluna] = r + filas;
+        coluna += 1;
+      }
+    }
+    salta();
+  });
+
+  const largura = Math.max(0, ...grelha.map((linha) => linha.length));
+  if (!largura || !grelha.some((linha) => linha.some((c) => c?.texto))) return imagens.join("\n\n");
+
+  const primeira = grelha[0]!;
+  const comTexto = primeira.filter((c) => c?.texto);
+  const temCabecalho =
+    grelha.length > 1 && comTexto.length > 0 && comTexto.every((c) => c.th || c.negrito);
+
+  const escreve = (linha: (typeof grelha)[number], cabecalho: boolean) =>
+    "| " +
+    Array.from({ length: largura }, (_, c) => {
+      const texto = linha[c]?.texto ?? "";
+      // O cabeçalho já é negrito no site: a marca do Word não se repete.
+      return cabecalho ? texto.replace(/^\*\*([^*]+)\*\*$/, "$1") : texto;
+    }).join(" | ") +
+    " |";
+
+  const markdown = grelha.map((linha, r) => {
+    const escrita = escreve(linha, temCabecalho && r === 0);
+    return temCabecalho && r === 0 ? `${escrita}\n| ${Array(largura).fill("---").join(" | ")} |` : escrita;
+  });
+  return [markdown.join("\n"), ...imagens].join("\n\n");
+}
+
 /** Um bloco: título, parágrafo, lista, tabela. */
 function bloco(no: No): string {
   if (no.nodeType === TEXTO) return (no.textContent ?? "").trim() ? emLinha(no).trim() : "";
@@ -136,19 +219,7 @@ function bloco(no: No): string {
     return `${"#".repeat(nivel)} ${texto}`;
   }
   if (nome === "ul" || nome === "ol") return lista(el, 0);
-  if (nome === "table") {
-    // Sem tabelas no editor: cada linha da tabela é um parágrafo, com as
-    // células separadas por « · ».
-    return Array.from(el.getElementsByTagName("tr"))
-      .map((tr) =>
-        Array.from(tr.getElementsByTagName("td"))
-          .map((td) => Array.from(td.childNodes).map(emLinha).join(" ").replace(/\s+/g, " ").trim())
-          .filter(Boolean)
-          .join(" · "),
-      )
-      .filter(Boolean)
-      .join("\n\n");
-  }
+  if (nome === "table") return tabela(el);
   if (nome === "p" || nome === "div") return linha();
   return Array.from(el.childNodes).map(bloco).filter(Boolean).join("\n\n");
 }

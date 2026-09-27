@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Block } from "@/content/types";
+import type { Block, Span } from "@/content/types";
 import { Inline } from "@/components/Marcado";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { fonteDeVideo, videoDeParagrafo } from "@/lib/video";
@@ -73,6 +73,7 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
             </List>
           );
         }
+        if (block.type === "table") return <Tabela key={index} rows={block.rows} />;
         if (block.type === "image" && block.src) {
           // A contornar: pouco menos de metade da coluna, e só a partir de 30rem
           // de coluna — abaixo disso volta a ocupar a largura toda.
@@ -143,6 +144,94 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
         }
         return null;
       })}
+    </div>
+  );
+}
+
+type Linha = Extract<Block, { type: "table" }>["rows"][number];
+
+/** Um número, uma percentagem, um preço: o que se alinha à direita. */
+const NUMERO = /^[\s+\-−–~≈<>]*[€$£]?\s*[\d.,\s]+\s*(%|€|\$|£|x|×|k|m|mil|pp|p\.p\.)?$/i;
+
+const textoDe = (spans: Span[]) => spans.map((span) => span.text).join("").trim();
+
+/**
+ * Uma tabela do corpo de um artigo.
+ *
+ * Em letra de sistema e não na do texto corrido: uma tabela lê-se na vertical,
+ * a comparar, e os algarismos da Poppins alinham em coluna. O cabeçalho é o
+ * rótulo pequeno em maiúsculas que a casa usa noutros sítios, com a linha
+ * grossa por baixo; as outras linhas separam-se com um fio.
+ *
+ * As linhas do princípio que são só cabeçalho vão para o `thead`; uma célula de
+ * cabeçalho no meio da tabela é o rótulo da sua linha. Uma coluna em que todas
+ * as células são números alinha à direita, para as casas decimais ficarem umas
+ * por baixo das outras.
+ *
+ * Numa coluna estreita a tabela não aperta: desliza para o lado dentro da sua
+ * caixa, e a página não ganha barra horizontal.
+ */
+function Tabela({ rows }: { rows: Linha[] }) {
+  let nCabecalho = 0;
+  while (nCabecalho < rows.length - 1 && rows[nCabecalho]!.every((cell) => cell.th)) nCabecalho += 1;
+  const cabecalho = rows.slice(0, nCabecalho);
+  const corpo = rows.slice(nCabecalho);
+  const colunas = Math.max(...rows.map((row) => row.length));
+
+  const numerica = Array.from({ length: colunas }, (_, coluna) => {
+    const valores = corpo.map((row) => row[coluna]).filter((cell) => cell && !cell.th && textoDe(cell.spans));
+    return valores.length > 0 && valores.every((cell) => NUMERO.test(textoDe(cell!.spans)));
+  });
+  const alinhamento = (coluna: number) => (numerica[coluna] ? "text-right" : "text-left");
+  const rotulo = cabecalho[0]?.map((cell) => textoDe(cell.spans)).filter(Boolean).join(" · ");
+
+  const celula = "px-3 py-3 first:pl-0 last:pr-0";
+  return (
+    <div
+      className="clear-both my-10 overflow-x-auto"
+      // Com teclado, uma caixa que desliza tem de se poder focar.
+      tabIndex={0}
+      role="region"
+      aria-label={rotulo || undefined}
+    >
+      <table
+        className={`w-full border-collapse font-sans text-[15px] leading-snug tabular-nums text-fg ${colunas >= 4 ? "min-w-[36rem]" : ""}`}
+      >
+        {cabecalho.length ? (
+          <thead>
+            {cabecalho.map((row, r) => (
+              <tr key={r} className={r === cabecalho.length - 1 ? "border-b-2 border-fg" : undefined}>
+                {row.map((cell, c) => (
+                  <th
+                    key={c}
+                    scope="col"
+                    className={`${celula} ${alinhamento(c)} align-bottom text-[12px] font-semibold uppercase tracking-[0.1em]`}
+                  >
+                    <Inline spans={cell.spans} />
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+        ) : null}
+        <tbody>
+          {corpo.map((row, r) => (
+            <tr key={r} className="border-b border-line">
+              {row.map((cell, c) =>
+                cell.th ? (
+                  <th key={c} scope="row" className={`${celula} ${alinhamento(c)} align-top font-semibold`}>
+                    <Inline spans={cell.spans} />
+                  </th>
+                ) : (
+                  <td key={c} className={`${celula} ${alinhamento(c)} align-top`}>
+                    <Inline spans={cell.spans} />
+                  </td>
+                ),
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -223,7 +223,8 @@ async function vozesDisponiveis(lingua) {
 /**
  * O corpo do artigo em parágrafos de texto limpo.
  *
- * Anda pelo lexical e tira o que se lê: parágrafos, títulos, listas e citações.
+ * Anda pelo lexical e tira o que se lê: parágrafos, títulos, listas, citações
+ * e tabelas.
  * Fica de fora o que não se diz em voz alta — imagens, vídeos, blocos de
  * código, legendas. Uma legenda lida no meio de uma frase é ruído; a imagem que
  * ela descreve não está lá para ninguém ouvir.
@@ -233,6 +234,17 @@ function paragrafosDe(no, fora = []) {
   const tipo = no.type;
 
   if (tipo === "upload" || tipo === "block" || tipo === "code" || tipo === "horizontalrule") return fora;
+
+  // Uma tabela lê-se linha a linha, com as células separadas por vírgulas: dita
+  // célula a célula, cada uma com a sua pausa, ninguém a seguia.
+  if (tipo === "tablerow") {
+    const texto = (no.children ?? [])
+      .map((celula) => textoDe(celula).replace(/\s+/g, " ").trim())
+      .filter(Boolean)
+      .join(", ");
+    if (texto) fora.push({ texto, titulo: false });
+    return fora;
+  }
 
   if (tipo === "paragraph" || tipo === "heading" || tipo === "quote" || tipo === "listitem") {
     const texto = textoDe(no).replace(/\s+/g, " ").trim();

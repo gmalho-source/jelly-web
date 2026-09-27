@@ -107,6 +107,28 @@ export function poeImagens(no: unknown, imagens: Imagem[]): unknown {
   return atual;
 }
 
+/**
+ * O conversor das tabelas guarda o texto de cada célula com os espaços que o
+ * rodeavam entre os «|» — « 18% » em vez de «18%». No site não se vê, mas fica
+ * no editor e em tudo o que lê o texto. Tiram-se aqui.
+ */
+function aparaCelulas(no: unknown, naCelula = false): void {
+  if (!no || typeof no !== "object") return;
+  const atual = no as { type?: string; children?: { text?: unknown }[] };
+  const dentro = naCelula || atual.type === "tablecell";
+  const filhos = atual.children;
+  if (!Array.isArray(filhos)) return;
+  if (dentro && atual.type === "paragraph") {
+    const textos = filhos.filter((filho) => typeof filho.text === "string") as { text: string }[];
+    if (textos.length) {
+      textos[0]!.text = textos[0]!.text.trimStart();
+      textos[textos.length - 1]!.text = textos[textos.length - 1]!.text.trimEnd();
+    }
+    return;
+  }
+  for (const filho of filhos) aparaCelulas(filho, dentro);
+}
+
 /** Busca uma imagem e entrega-a a quem a guarda. */
 async function trazImagem(imagem: Imagem, guarda: Guarda, nomeBase: string) {
   // Já está na biblioteca: um Word lido no browser sobe as imagens antes de
@@ -141,6 +163,35 @@ async function trazImagem(imagem: Imagem, guarda: Guarda, nomeBase: string) {
   return guarda({ nome, bytes, tipo, alt: imagem.alt || nome });
 }
 
+type Configuracao = Parameters<typeof editorConfigFactory.default>[0]["config"];
+type Campo = { type?: string; name?: string; fields?: Campo[]; tabs?: Campo[] };
+
+/**
+ * O editor do corpo dos artigos, e não o de base: é lá que estão as tabelas, as
+ * imagens com posição e o vídeo. Com o de base, uma tabela do Markdown ficava
+ * em linhas de texto com traços verticais.
+ *
+ * Tirado da configuração já resolvida — o campo `body` dos artigos — e não da
+ * coleção importada, pelo mesmo círculo que o endpoint evita (ver
+ * `markdown-import.ts`). Se o campo não aparecer, serve o de base.
+ */
+export async function editorDoArtigo(config: unknown) {
+  const configuracao = config as Configuracao;
+  const procura = (campos: Campo[] = []): Campo | undefined => {
+    for (const campo of campos) {
+      if (campo.type === "richText" && campo.name === "body") return campo;
+      const dentro = procura(campo.fields) ?? procura(campo.tabs);
+      if (dentro) return dentro;
+    }
+    return undefined;
+  };
+  const artigos = configuracao.collections?.find((colecao) => colecao.slug === "posts");
+  const corpo = procura(artigos?.fields as Campo[] | undefined);
+  return corpo
+    ? editorConfigFactory.fromField({ field: corpo as Parameters<typeof editorConfigFactory.fromField>[0]["field"] })
+    : editorConfigFactory.default({ config: configuracao });
+}
+
 export type Importado = {
   body: unknown;
   meta: { titulo?: string; resumo?: string; data?: string };
@@ -165,11 +216,10 @@ export async function markdownParaLexical(
     }
   }
 
-  const editorConfig = await editorConfigFactory.default({
-    config: opcoes.config as Parameters<typeof editorConfigFactory.default>[0]["config"],
-  });
+  const editorConfig = await editorDoArtigo(opcoes.config);
   const arvore = convertMarkdownToLexical({ editorConfig, markdown: comMarcas });
   poeImagens(arvore.root, imagens);
+  aparaCelulas(arvore.root);
 
   return {
     body: arvore,
