@@ -109,6 +109,11 @@ export function poeImagens(no: unknown, imagens: Imagem[]): unknown {
 
 /** Busca uma imagem e entrega-a a quem a guarda. */
 async function trazImagem(imagem: Imagem, guarda: Guarda, nomeBase: string) {
+  // Já está na biblioteca: um Word lido no browser sobe as imagens antes de
+  // mandar o texto (ver `payload/components/docx.ts`), e o que chega é o número.
+  const naBiblioteca = imagem.origem.match(/^media:(\d+)$/);
+  if (naBiblioteca) return Number(naBiblioteca[1]);
+
   if (imagem.origem.startsWith("data:")) {
     const partes = imagem.origem.match(/^data:([^;,]+)[^,]*,(.*)$/);
     if (!partes) throw new Error("data: ilegível");

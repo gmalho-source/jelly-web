@@ -24,14 +24,14 @@ import { useEffect, useRef, useState } from "react";
  * for grande demais, a linha por baixo do ficheiro diz-o antes de se carregar
  * no botão de gravar.
  */
-const TECTO = 4_000_000; // com folga para o resto do pedido
+export const TECTO = 4_000_000; // com folga para o resto do pedido
 const LADO = 2400;
 
 function comoSeLe(bytes: number) {
   return bytes >= 1024 * 1024 ? `${(bytes / 1048576).toFixed(1).replace(".", ",")} MB` : `${Math.round(bytes / 1024)} KB`;
 }
 
-async function encolhe(file: File): Promise<File | null> {
+export async function encolhe(file: File): Promise<File | null> {
   const bitmap = await createImageBitmap(file);
   const escala = Math.min(1, LADO / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
