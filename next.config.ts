@@ -69,6 +69,14 @@ const nextConfig: NextConfig = {
         destination: "https://vndty5nncbevu59o.public.blob.vercel-storage.com/video/portefolio/:ficheiro",
         permanent: false,
       },
+      /*
+       * A página de envio de faturas do site antigo, onde os prestadores
+       * mandavam as faturas. Hoje isso é a área de faturação. O destino é o
+       * `/billing` deste mesmo endereço: `jelly.pt/billing` já cai aqui, e
+       * apontar para lá era um salto a mais para o mesmo sítio.
+       */
+      { source: "/envio-de-faturas", destination: "/billing", permanent: true },
+      { source: "/en/envio-de-faturas", destination: "/billing", permanent: true },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
