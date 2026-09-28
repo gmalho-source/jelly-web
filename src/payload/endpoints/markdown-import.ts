@@ -1,5 +1,6 @@
 import type { PayloadHandler, PayloadRequest } from "payload";
 import { chave, fichaDoCabecalho, juntaFichas, lerData, type CampoDaFicha, type Ficha } from "@/lib/ficha-tecnica";
+import { comImpressao, impressao } from "@/lib/impressao";
 import { markdownParaLexical, trazImagem, type Guarda } from "@/lib/markdown-lexical";
 import { aSlug } from "../hooks/slug-etiqueta";
 
@@ -36,11 +37,33 @@ export const importMarkdown: PayloadHandler = async (req) => {
 
   if (!markdown.trim()) return Response.json({ error: "O ficheiro está vazio." }, { status: 400 });
 
+  // Antes de carregar, procura-se a mesma imagem na biblioteca pela impressão
+  // no nome do ficheiro (ver `lib/impressao.ts`): reimportar um documento não
+  // volta a encher a biblioteca de cópias.
+  let reaproveitadas = 0;
+  let novas = 0;
   const guarda: Guarda = async (ficheiro) => {
+    const marca = await impressao(ficheiro.bytes);
+    const { docs } = await req.payload.find({
+      collection: "media",
+      where: { filename: { contains: marca } },
+      limit: 1,
+      depth: 0,
+    });
+    if (docs[0]) {
+      reaproveitadas += 1;
+      return docs[0].id;
+    }
+    novas += 1;
     const guardada = await req.payload.create({
       collection: "media",
       data: { alt: ficheiro.alt },
-      file: { name: ficheiro.nome, data: ficheiro.bytes, mimetype: ficheiro.tipo, size: ficheiro.bytes.length },
+      file: {
+        name: comImpressao(ficheiro.nome, marca),
+        data: ficheiro.bytes,
+        mimetype: ficheiro.tipo,
+        size: ficheiro.bytes.length,
+      },
     });
     return guardada.id;
   };
@@ -63,7 +86,11 @@ export const importMarkdown: PayloadHandler = async (req) => {
   const ficha = juntaFichas(pedido.ficha ?? {}, fichaDoCabecalho(importado.cabecalho));
   const resolvida = await resolveFicha(req, ficha, pedido, guarda, nome);
 
-  return Response.json({ ...importado, ficha: resolvida });
+  return Response.json({
+    ...importado,
+    imagens: { ...importado.imagens, novas, reaproveitadas },
+    ficha: resolvida,
+  });
 };
 
 type Pedido = {

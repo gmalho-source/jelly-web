@@ -9,7 +9,7 @@ import { leResposta } from "./resposta";
 
 type Resultado = {
   body?: unknown;
-  imagens?: { entraram: number; falharam: Falha[] };
+  imagens?: { entraram: number; novas?: number; reaproveitadas?: number; falharam: Falha[] };
   ficha?: FichaResolvida;
   error?: string;
 };
@@ -79,9 +79,13 @@ export function MarkdownImport({ campo = "body" }: { campo?: string }) {
       let falharamAqui: Falha[] = [];
       let ficha: Ficha | null = null;
       let semAlt: (number | string)[] = [];
+      let novasAqui = 0;
+      let reaproveitadasAqui = 0;
       if (word) {
         const lido = await docxParaMarkdown(ficheiro);
         ({ markdown, ficha, semAlt } = lido);
+        novasAqui = lido.novas;
+        reaproveitadasAqui = lido.reaproveitadas;
         falharamAqui = lido.falharam;
       } else {
         markdown = await ficheiro.text();
@@ -160,9 +164,16 @@ export function MarkdownImport({ campo = "body" }: { campo?: string }) {
       const falharam = [...falharamAqui, ...(dados.imagens?.falharam ?? [])];
       setResumo({ preenchidos, mantidos, avisos, falharam });
 
-      const entraram = dados.imagens?.entraram ?? 0;
+      const novas = novasAqui + (dados.imagens?.novas ?? 0);
+      const reaproveitadas = reaproveitadasAqui + (dados.imagens?.reaproveitadas ?? 0);
+      const imagens = [
+        novas ? `${novas} ${novas > 1 ? "imagens novas" : "imagem nova"} na biblioteca` : "",
+        reaproveitadas ? `${reaproveitadas} ${reaproveitadas > 1 ? "reaproveitadas" : "reaproveitada"}` : "",
+      ]
+        .filter(Boolean)
+        .join(" e ");
       toast.success(
-        `Artigo importado${entraram ? `, ${entraram} ${entraram > 1 ? "imagens" : "imagem"} na biblioteca` : ""}${
+        `Artigo importado${imagens ? `, ${imagens}` : ""}${
           preenchidos.length ? `, ${preenchidos.length} ${preenchidos.length > 1 ? "campos preenchidos" : "campo preenchido"}` : ""
         }${falharam.length + avisos.length ? `, ${falharam.length + avisos.length} por resolver` : ""}. Falta gravar.`,
       );

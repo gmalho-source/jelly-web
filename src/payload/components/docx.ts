@@ -1,5 +1,6 @@
 import { htmlParaMarkdown, MAPA_DE_ESTILOS } from "@/lib/docx-markdown";
 import { tiraFicha, type Ficha } from "@/lib/ficha-tecnica";
+import { comImpressao, impressao } from "@/lib/impressao";
 import { encolhe, TECTO } from "./EncolheImagem";
 import { leResposta } from "./resposta";
 
@@ -28,6 +29,16 @@ export type Falha = { origem: string; erro?: string };
 // o servidor os converte: ficam na lista, para serem exportados à mão.
 const SEM_CONVERSAO = /x-emf|x-wmf|emf|wmf/i;
 
+/** A imagem com esta impressão, se já estiver na biblioteca (ver `lib/impressao.ts`). */
+async function jaNaBiblioteca(marca: string): Promise<number | string | undefined> {
+  const resposta = await fetch(`/api/media?where[filename][contains]=${marca}&limit=1&depth=0`, {
+    credentials: "include",
+  });
+  if (!resposta.ok) return undefined;
+  const corpo = (await resposta.json()) as { docs?: { id: number | string }[] };
+  return corpo.docs?.[0]?.id;
+}
+
 async function sobe(ficheiro: File, alt: string): Promise<number | string> {
   const forma = new FormData();
   forma.append("file", ficheiro);
@@ -46,6 +57,9 @@ export type LidoDoWord = {
   ficha: Ficha | null;
   /** As imagens que subiram sem texto alternativo do Word — ficaram com um genérico. */
   semAlt: (number | string)[];
+  /** Quantas subiram agora, e quantas já estavam na biblioteca e não voltaram a subir. */
+  novas: number;
+  reaproveitadas: number;
 };
 
 export async function docxParaMarkdown(documento: File): Promise<LidoDoWord> {
@@ -55,6 +69,8 @@ export async function docxParaMarkdown(documento: File): Promise<LidoDoWord> {
   let n = 0;
   let fila: Promise<unknown> = Promise.resolve();
   const semAlt: (number | string)[] = [];
+  let reaproveitadas = 0;
+  let novas = 0;
 
   const imagem = mammoth.images.imgElement((img) => {
     n += 1;
@@ -67,19 +83,32 @@ export async function docxParaMarkdown(documento: File): Promise<LidoDoWord> {
 
     const vez = fila.then(async () => {
       if (SEM_CONVERSAO.test(tipo)) throw new Error("formato do Word (EMF/WMF) — exporta-a como PNG ou JPEG");
-      let ficheiro = new File([await img.readAsArrayBuffer()], `${base}-${indice}.${extensao}`, { type: tipo });
+      const bytes = await img.readAsArrayBuffer();
+      // A impressão é dos bytes do Word, antes de encolher: é o que se repete
+      // de uma versão do documento para a outra.
+      const marca = await impressao(bytes);
+      const existente = await jaNaBiblioteca(marca).catch(() => undefined);
+      if (existente !== undefined) {
+        reaproveitadas += 1;
+        return { id: existente, nova: false };
+      }
+      let ficheiro = new File([bytes], comImpressao(`${base}.${extensao}`, marca), { type: tipo });
       if (ficheiro.size > TECTO) {
         const menor = await encolhe(ficheiro).catch(() => null);
         if (!menor || menor.size > TECTO) throw new Error("grande demais para o servidor, e não deu para encolher");
         ficheiro = menor;
       }
-      return sobe(ficheiro, alt);
+      const id = await sobe(ficheiro, alt);
+      novas += 1;
+      return { id, nova: true };
     });
     fila = vez.catch(() => undefined);
 
     return vez.then(
-      (id) => {
-        if (!doWord) semAlt.push(id);
+      ({ id, nova }) => {
+        // Só a que acabou de subir tem o texto alternativo genérico; a que já lá
+        // estava fica com o dela.
+        if (nova && !doWord) semAlt.push(id);
         return { src: `media:${id}` };
       },
       (erro: unknown) => {
@@ -96,5 +125,5 @@ export async function docxParaMarkdown(documento: File): Promise<LidoDoWord> {
   );
   const corpo = new DOMParser().parseFromString(html, "text/html").body;
   const ficha = tiraFicha(corpo);
-  return { markdown: htmlParaMarkdown(corpo), falharam, ficha, semAlt };
+  return { markdown: htmlParaMarkdown(corpo), falharam, ficha, semAlt, novas, reaproveitadas };
 }
