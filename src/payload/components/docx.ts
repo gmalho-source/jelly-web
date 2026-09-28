@@ -1,4 +1,5 @@
 import { htmlParaMarkdown, MAPA_DE_ESTILOS } from "@/lib/docx-markdown";
+import { tiraFicha, type Ficha } from "@/lib/ficha-tecnica";
 import { encolhe, TECTO } from "./EncolheImagem";
 import { leResposta } from "./resposta";
 
@@ -15,6 +16,10 @@ import { leResposta } from "./resposta";
  *
  * As imagens sobem uma de cada vez: um Word com trinta fotografias não abre
  * trinta pedidos de uma vez contra o servidor.
+ *
+ * A ficha técnica do fim (ver `lib/ficha-tecnica.ts`) é lida aqui e sai do
+ * corpo antes de o documento passar a Markdown. A imagem da célula «Capa» já
+ * subiu com as outras, e vai na ficha como `media:ID`.
  */
 
 export type Falha = { origem: string; erro?: string };
@@ -35,17 +40,27 @@ async function sobe(ficheiro: File, alt: string): Promise<number | string> {
   return corpo.doc.id;
 }
 
-export async function docxParaMarkdown(documento: File): Promise<{ markdown: string; falharam: Falha[] }> {
+export type LidoDoWord = {
+  markdown: string;
+  falharam: Falha[];
+  ficha: Ficha | null;
+  /** As imagens que subiram sem texto alternativo do Word — ficaram com um genérico. */
+  semAlt: (number | string)[];
+};
+
+export async function docxParaMarkdown(documento: File): Promise<LidoDoWord> {
   const mammoth = (await import("mammoth")).default;
   const base = documento.name.replace(/\.[^.]+$/, "") || "word";
   const falharam: Falha[] = [];
   let n = 0;
   let fila: Promise<unknown> = Promise.resolve();
+  const semAlt: (number | string)[] = [];
 
   const imagem = mammoth.images.imgElement((img) => {
     n += 1;
     const indice = n;
-    const alt = ((img as { altText?: string }).altText ?? "").trim() || `${base} — imagem ${indice}`;
+    const doWord = ((img as { altText?: string }).altText ?? "").trim();
+    const alt = doWord || `${base} — imagem ${indice}`;
     const tipo = img.contentType || "image/png";
     const extensao = tipo.split("/")[1]?.replace(/^x-/, "").replace("jpeg", "jpg") ?? "png";
     const origem = `imagem ${indice} do Word (${extensao})`;
@@ -63,7 +78,10 @@ export async function docxParaMarkdown(documento: File): Promise<{ markdown: str
     fila = vez.catch(() => undefined);
 
     return vez.then(
-      (id) => ({ src: `media:${id}` }),
+      (id) => {
+        if (!doWord) semAlt.push(id);
+        return { src: `media:${id}` };
+      },
       (erro: unknown) => {
         falharam.push({ origem, erro: erro instanceof Error ? erro.message : "não subiu" });
         // Sem endereço, a imagem sai do texto: não fica um buraco no artigo.
@@ -77,5 +95,6 @@ export async function docxParaMarkdown(documento: File): Promise<{ markdown: str
     { styleMap: MAPA_DE_ESTILOS, convertImage: imagem },
   );
   const corpo = new DOMParser().parseFromString(html, "text/html").body;
-  return { markdown: htmlParaMarkdown(corpo), falharam };
+  const ficha = tiraFicha(corpo);
+  return { markdown: htmlParaMarkdown(corpo), falharam, ficha, semAlt };
 }

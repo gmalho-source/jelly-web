@@ -14,6 +14,7 @@ import mammoth from "mammoth";
 import { getEnabledNodes } from "@payloadcms/richtext-lexical";
 import { createHeadlessEditor } from "@lexical/headless";
 import { htmlParaMarkdown, MAPA_DE_ESTILOS } from "../src/lib/docx-markdown.ts";
+import { tiraFicha } from "../src/lib/ficha-tecnica.ts";
 import { editorDoArtigo, markdownParaLexical } from "../src/lib/markdown-lexical.ts";
 import configPorResolver from "../payload.config.ts";
 
@@ -47,6 +48,8 @@ for (const m of messages) console.log(`  mammoth ${m.type}: ${m.message}`);
 
 const janela = new Window();
 janela.document.body.innerHTML = html;
+const ficha = tiraFicha(janela.document.body);
+console.log("\nFicha técnica:", ficha ?? "nenhuma");
 const markdown = htmlParaMarkdown(janela.document.body);
 console.log("\n--- Markdown ---\n" + markdown + "--- fim ---");
 
@@ -91,7 +94,8 @@ const junta = (no) => {
 };
 junta(importado.body.root);
 console.log("\nNo editor:\n" + textos.join("\n"));
-const falhou = erro || importado.imagens.falharam.length || importado.imagens.entraram !== n;
+// A capa vem na ficha e não no corpo: não conta como imagem perdida.
+const falhou = erro || importado.imagens.falharam.length || importado.imagens.entraram !== n - (ficha?.capa ? 1 : 0);
 console.log(erro ? `\nFALHOU: ${erro.message}` : falhou ? "\nFALHOU: imagens perdidas" : "\nA árvore abre no editor sem erro.");
 await janela.happyDOM.close();
 // Sair só depois de a saída ter sido escrita: por um pipe, o `process.exit`

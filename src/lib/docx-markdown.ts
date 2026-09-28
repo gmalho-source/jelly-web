@@ -225,20 +225,29 @@ function bloco(no: No): string {
 }
 
 /**
- * O documento inteiro. O primeiro parágrafo com o estilo «Título» do Word vem
- * como `<h1 class="titulo">` (ver `MAPA_DE_ESTILOS`, mais abaixo) e sai do
- * corpo: vai para o cabeçalho do Markdown, que o importador mostra sem o
- * escrever em campo nenhum — como faz com o `title:` de um .md.
+ * O documento inteiro. O título sai do corpo e vai para o cabeçalho do
+ * Markdown, que a importação usa para o campo do título e para o slug.
+ *
+ * O título é o parágrafo com o estilo «Título» do Word, que vem como
+ * `<h1 class="titulo">` (ver `MAPA_DE_ESTILOS`, mais abaixo). Sem ele, vale o
+ * Título 1 com que o documento abre — é assim que muita gente escreve o título
+ * de um texto. Um Título 1 a meio do documento é uma secção, e fica onde está.
  */
 export function htmlParaMarkdown(corpo: No & { querySelector?(s: string): Elemento | null }): string {
   let titulo = "";
-  const tituloEl = corpo.querySelector?.("h1.titulo");
+  const primeiro = Array.from(corpo.childNodes).find(
+    (no) => no.nodeType === ELEMENTO && (no.textContent ?? "").trim(),
+  ) as Elemento | undefined;
+  const tituloEl =
+    corpo.querySelector?.("h1.titulo") ?? (primeiro?.nodeName.toLowerCase() === "h1" ? primeiro : null);
   if (tituloEl) {
     titulo = (tituloEl.textContent ?? "").replace(/\s+/g, " ").trim();
     (tituloEl as unknown as { remove(): void }).remove();
   }
   const texto = Array.from(corpo.childNodes).map(bloco).filter(Boolean).join("\n\n");
-  const cabecalho = titulo ? `---\ntitle: ${JSON.stringify(titulo)}\n---\n\n` : "";
+  // Sem aspas à volta: o leitor do cabeçalho tira as das pontas, mas não
+  // desfaz as de dentro, e um título com aspas ficava com barras.
+  const cabecalho = titulo ? `---\ntitle: ${titulo}\n---\n\n` : "";
   return `${cabecalho}${texto.replace(/\n{3,}/g, "\n\n").trim()}\n`;
 }
 

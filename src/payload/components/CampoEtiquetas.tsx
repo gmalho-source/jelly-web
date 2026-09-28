@@ -37,13 +37,21 @@ export function CampoEtiquetas({ field, path }: { field?: { label?: unknown }; p
   const [erro, setErro] = useState<string | null>(null);
   const entrada = useRef<HTMLInputElement>(null);
 
+  // A lista volta a vir quando o campo passa a ter uma etiqueta que ela não
+  // conhece: é o que acontece quando a importação de um Word cria etiquetas
+  // novas, e sem isto apareciam como «#12».
+  const [versao, setVersao] = useState(0);
+  const [carregou, setCarregou] = useState(false);
   useEffect(() => {
     let vivo = true;
     void (async () => {
       try {
         const resposta = await fetch("/api/tags?limit=0&depth=0&sort=titlePt", { credentials: "include" });
         const corpo = (await resposta.json()) as { docs?: Etiqueta[] };
-        if (vivo && resposta.ok) setTodas(corpo.docs ?? []);
+        if (vivo && resposta.ok) {
+          setTodas(corpo.docs ?? []);
+          setCarregou(true);
+        }
       } catch {
         // Sem a lista ainda se escreve: o que falha são as sugestões.
       }
@@ -51,7 +59,7 @@ export function CampoEtiquetas({ field, path }: { field?: { label?: unknown }; p
     return () => {
       vivo = false;
     };
-  }, []);
+  }, [versao]);
 
   /** Para comparar nomes: sem maiúsculas, sem acentos, sem espaços a mais. */
   const chave = (nome: string) =>
@@ -62,6 +70,10 @@ export function CampoEtiquetas({ field, path }: { field?: { label?: unknown }; p
       .trim();
 
   const porId = useMemo(() => new Map(todas.map((etiqueta) => [String(etiqueta.id), etiqueta])), [todas]);
+  const desconhecida = carregou && escolhidas.some((id) => !porId.has(String(id)));
+  useEffect(() => {
+    if (desconhecida) Promise.resolve().then(() => setVersao((antes) => antes + 1));
+  }, [desconhecida]);
 
   const sugestoes = useMemo(() => {
     const procura = chave(escrito);

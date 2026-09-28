@@ -130,7 +130,7 @@ function aparaCelulas(no: unknown, naCelula = false): void {
 }
 
 /** Busca uma imagem e entrega-a a quem a guarda. */
-async function trazImagem(imagem: Imagem, guarda: Guarda, nomeBase: string) {
+export async function trazImagem(imagem: Imagem, guarda: Guarda, nomeBase: string) {
   // Já está na biblioteca: um Word lido no browser sobe as imagens antes de
   // mandar o texto (ver `payload/components/docx.ts`), e o que chega é o número.
   const naBiblioteca = imagem.origem.match(/^media:(\d+)$/);
@@ -195,6 +195,8 @@ export async function editorDoArtigo(config: unknown) {
 export type Importado = {
   body: unknown;
   meta: { titulo?: string; resumo?: string; data?: string };
+  /** O cabeçalho `---` tal como veio, com as chaves em minúsculas. */
+  cabecalho: Record<string, string>;
   imagens: { entraram: number; falharam: { origem: string; erro?: string }[] };
 };
 
@@ -223,6 +225,7 @@ export async function markdownParaLexical(
 
   return {
     body: arvore,
+    cabecalho: meta,
     meta: {
       ...(meta.title ? { titulo: meta.title } : {}),
       ...(meta.description || meta.excerpt ? { resumo: meta.description ?? meta.excerpt } : {}),
