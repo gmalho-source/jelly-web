@@ -72,7 +72,7 @@ export default async function CalendarioPage({ params }: { params: Promise<{ loc
           fotografia de página. */}
       <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
         <Image
-          src="/media/equipa/goncalo-malho-rodrigues-redondo.webp"
+          src="/media/equipa/goncalo-malho-rodrigues-calendario-pb.webp"
           alt={copy.retrato}
           width={640}
           height={640}
