@@ -10,20 +10,22 @@ const AGENDA =
 
 const COPY = {
   pt: {
-    eyebrow: "Marcar reunião",
+    eyebrow: "Marcar reunião com",
+    meta: "Marcar reunião com Gonçalo Malho Rodrigues",
     titulo: "Escolha uma hora para falarmos",
     lead: "Os horários em baixo são os que tenho livres. Escolha o que lhe der jeito e recebe o convite por email, já com a ligação para a videochamada.",
-    assinatura: "Gonçalo Malho Rodrigues",
+    nome: "Gonçalo Malho Rodrigues",
     iframe: "Marcação de reuniões com Gonçalo Malho Rodrigues",
     retrato: "Retrato de Gonçalo Malho Rodrigues",
     aCarregar: "A carregar o calendário…",
     fallback: "O calendário não abre? Abra-o numa janela nova",
   },
   en: {
-    eyebrow: "Book a meeting",
+    eyebrow: "Book a meeting with",
+    meta: "Book a meeting with Gonçalo Malho Rodrigues",
     titulo: "Pick a time to talk",
     lead: "The slots below are the ones I have free. Choose whichever suits you and the invitation arrives by email, with the video call link already in it.",
-    assinatura: "Gonçalo Malho Rodrigues",
+    nome: "Gonçalo Malho Rodrigues",
     iframe: "Meeting scheduling with Gonçalo Malho Rodrigues",
     retrato: "Portrait of Gonçalo Malho Rodrigues",
     aCarregar: "Loading the calendar…",
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   const { locale } = await params;
   const copy = COPY[locale];
   return {
-    title: copy.eyebrow,
+    title: copy.meta,
     description: copy.lead,
     alternates: alternates("/calendar-gmalho", locale),
     // Fora do índice e fora do mapa do site: é um endereço que se dá a quem se
@@ -79,13 +81,17 @@ export default async function CalendarioPage({ params }: { params: Promise<{ loc
           className="h-28 w-28 shrink-0 rounded-full object-cover sm:h-40 sm:w-40"
         />
         <div className="min-w-0">
+          {/* «Marcar reunião com» e o nome logo por baixo, a acabar a frase: é a
+              primeira coisa que se lê, e diz com quem se vai falar antes de dizer
+              o que fazer. O nome estava no fim, em letra pequena, como uma
+              assinatura — e quem chega por um link quer confirmar isso primeiro. */}
           <span className="eyebrow">{copy.eyebrow}</span>
+          <p className="mt-2 font-display text-xl leading-tight sm:text-[28px]">{copy.nome}</p>
           {/* `chapter` e não `display`: isto é uma página de serviço para um
               link, não um herói. Ao tamanho do herói, o título empurrava o
               retrato para um canto e o calendário para fora do ecrã. */}
-          <h1 className="mt-4 text-chapter">{copy.titulo}</h1>
+          <h1 className="mt-5 text-chapter sm:mt-6">{copy.titulo}</h1>
           <p className="subtitle mt-4 max-w-[52ch] text-fg-soft">{copy.lead}</p>
-          <p className="mt-2 text-sm text-fg-soft">{copy.assinatura}</p>
         </div>
       </div>
 
