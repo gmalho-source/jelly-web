@@ -112,12 +112,20 @@ function normalize(value: string) {
  */
 export function IndexSheet({
   tiles,
+  procura,
   copy,
   homeHref,
   contactHref,
   languageHref,
 }: {
   tiles: SheetTile[];
+  /**
+   * De onde vêm as entradas que só a procura mostra (`/indice/pt.json`). Não
+   * vêm na página: pedem-se quando o índice está para abrir — o rato perto do
+   * botão, o clique, a primeira letra — e juntam-se às da folha. Sem rede, a
+   * procura continua a encontrar o que está na folha.
+   */
+  procura?: string;
   copy: SheetCopy;
   homeHref: string;
   contactHref: string;
@@ -160,6 +168,21 @@ export function IndexSheet({
   const router = useRouter();
   const pathname = usePathname();
   const open = openedOn === pathname;
+
+  const [daProcura, setDaProcura] = useState<SheetTile[]>([]);
+  const pedida = useRef(false);
+  const carregarProcura = useCallback(() => {
+    if (!procura || pedida.current) return;
+    pedida.current = true;
+    fetch(procura)
+      .then((resposta) => (resposta.ok ? (resposta.json() as Promise<SheetTile[]>) : []))
+      .then((entradas) => setDaProcura(entradas.map((entrada) => ({ ...entrada, hidden: true }))))
+      // Falhou: pode voltar a tentar na próxima abertura.
+      .catch(() => {
+        pedida.current = false;
+      });
+  }, [procura]);
+  const todas = useMemo(() => (daProcura.length ? [...tiles, ...daProcura] : tiles), [tiles, daProcura]);
 
   /**
    * Onde a janela abre em repouso.
@@ -206,13 +229,15 @@ export function IndexSheet({
 
   const prepararAbertura = useCallback(() => {
     aquecer(tiles.filter((tile) => !tile.hidden)[primeiraImagem]?.image);
-  }, [aquecer, tiles, primeiraImagem]);
+    carregarProcura();
+  }, [aquecer, tiles, primeiraImagem, carregarProcura]);
 
   const openSheet = useCallback(() => {
+    carregarProcura();
     setOpenedOn(pathname);
     setCursor(primeiraImagem);
     requestAnimationFrame(() => input.current?.focus());
-  }, [pathname, primeiraImagem]);
+  }, [pathname, primeiraImagem, carregarProcura]);
 
   useEffect(() => {
     if (!open) return;
@@ -229,10 +254,10 @@ export function IndexSheet({
     const term = normalize(query.trim());
     // Em repouso, a folha mostra as bandas; a escrever, procura tudo o que há.
     if (!term) return tiles.filter((tile) => !tile.hidden);
-    return tiles.filter((tile) =>
+    return todas.filter((tile) =>
       normalize(`${tile.label} ${tile.kind}`).includes(term),
     );
-  }, [query, tiles]);
+  }, [query, tiles, todas]);
 
   /*
    * As bandas, com o índice de cada mosaico na lista de resultados: é esse
@@ -516,6 +541,7 @@ export function IndexSheet({
                   const valor = event.target.value;
                   setQuery(valor);
                   setCursor(valor.trim() ? 0 : primeiraImagem);
+                  carregarProcura();
                 }}
                 aria-label={copy.filterLabel}
                 className="w-full bg-transparent py-1 font-display text-xl text-paper outline-none sm:text-2xl"
@@ -531,7 +557,7 @@ export function IndexSheet({
               ) : null}
             </span>
             <span className="hidden text-xs text-paper/40 sm:block">
-              {results.length} {copy.of} {tiles.length}
+              {results.length} {copy.of} {todas.length}
             </span>
             {languageHref && copy.language ? (
               <Link

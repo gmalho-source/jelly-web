@@ -3,6 +3,7 @@ import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import type { NewsItem } from "@/content/types";
 import { getArchivedProjects, getNews, getPosts, getServices } from "@/lib/cms";
+import { PROJETOS_NA_FOLHA } from "@/lib/indice";
 import { slugFor } from "@/lib/slugs";
 import { IndexSheet, type SheetTile } from "./IndexSheet";
 
@@ -74,7 +75,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     // Três, e o quarto lugar é do link para todos. Três chegam para dizer que
     // há trabalho e dar uma imagem à janela; os outros noventa continuam a
     // aparecer à primeira letra escrita.
-    ...withCover.slice(0, 3).map((project) => ({
+    ...withCover.slice(0, PROJETOS_NA_FOLHA).map((project) => ({
       group: trabalho,
       label: project.client,
       kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
@@ -129,21 +130,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     { group: casa, label: nav("contact"), kind: pt ? "página" : "page", href: url("/contactos"), tone: "bg-red" },
 
     // ── Fora da folha, dentro da procura ───────────────────────────────────
-    ...withCover.slice(3, 40).map((project) => ({
-      hidden: true,
-      label: project.client,
-      kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
-      href: url({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }),
-      image: project.cover!.src,
-    })),
-    ...posts.slice(0, 40).map((post) => ({
-      hidden: true,
-      label: post.title[locale],
-      kind: pt ? "artigo" : "article",
-      href: url({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }),
-      image: post.cover?.src,
-      tone: "bg-slate",
-    })),
+    // Os outros projetos e os artigos não vêm aqui: vêm de `/indice/<língua>.json`
+    // quando o índice está para abrir (ver `lib/indice.ts`).
   ];
 
   const other = routing.locales.find((candidate) => candidate !== locale) ?? routing.defaultLocale;
@@ -151,6 +139,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   return (
     <IndexSheet
       tiles={tiles}
+      procura={`/indice/${locale}.json`}
       homeHref={url("/")}
       contactHref={url("/contactos")}
       languageHref={getPathname({ href: "/", locale: other })}
