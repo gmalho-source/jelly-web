@@ -481,8 +481,10 @@
    o browser acabe o JavaScript da página. No telemóvel a fotografia chegava e
    ficava segundos invisível, e é ela o LCP da homepage (o Lighthouse chamava-
    -lhe «render delay»: 2,4 s). No ecrã é igual: quando é a vez dela, as outras
-   estão todas transparentes. */
-.hero-fade:first-child {
+   estão todas transparentes. O `[data-hero-count] >` não é enfeite: sem ele a
+   regra perdia para as de baixo, que dão o nome da animação com o mesmo peso e
+   vêm depois. */
+[data-hero-count] > .hero-fade:first-child {
   opacity: 1;
   animation: none;
 }
