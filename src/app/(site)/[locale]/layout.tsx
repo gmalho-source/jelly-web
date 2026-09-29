@@ -73,7 +73,13 @@ export default async function SiteLayout({
         <CookieConsent locale={locale} />
       </head>
       <body>
-        <NextIntlClientProvider>
+        {/* Sem mensagens: nenhum componente do browser traduz nada — as páginas
+            são traduzidas no servidor e chegam já escritas. O provider fica pela
+            língua, que os links precisam. Com as mensagens, iam as traduções do
+            site inteiro dentro de cada página, 20 KB que o telemóvel lia antes
+            de a mostrar. Um componente do browser que um dia precise delas
+            passa-as ele, só as do seu nome, com `pick` no servidor. */}
+        <NextIntlClientProvider messages={null}>
           <SiteHeader locale={locale} />
           {/* O logo está fixo no topo e tem 88px em qualquer ecrã. No telemóvel a
               margem de cima era 24px, e o texto de quase todas as páginas

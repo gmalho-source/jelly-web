@@ -2,7 +2,7 @@
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { consenteMedicao, type EstadoIubenda } from "@/lib/consentimento";
+import { consenteMedicao, consenteMedicaoNoCookie, type EstadoIubenda } from "@/lib/consentimento";
 
 /**
  * As medições da Vercel, com a contagem de visitas presa ao consentimento.
@@ -29,7 +29,10 @@ import { consenteMedicao, type EstadoIubenda } from "@/lib/consentimento";
  * banner tem `reloadOnConsent`, e a página que recarrega já arranca com a
  * resposta na mão.
  */
-const podeContar = () => consenteMedicao((window as unknown as { _iub?: EstadoIubenda })._iub);
+// O `_iub` é a resposta viva; o cookie é a que já estava dada antes de o guião
+// do banner carregar (ver `consenteMedicaoNoCookie`).
+const podeContar = () =>
+  consenteMedicao((window as unknown as { _iub?: EstadoIubenda })._iub) || consenteMedicaoNoCookie(document.cookie);
 
 export function MedicoesDaVercel() {
   return (

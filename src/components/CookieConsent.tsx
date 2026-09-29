@@ -98,7 +98,15 @@ export function CookieConsent({ locale }: { locale: Locale }) {
           React encontra HTML que não é o que desenhou — descartava a árvore e
           voltava a desenhá-la no cliente. Assim a ordem é a certa e ninguém
           pisa os pés a ninguém. */}
-      <Script id="iubenda-cs" src="https://cdn.iubenda.com/cs/iubenda_cs.js" strategy="afterInteractive" />
+      {/* `lazyOnload` e não `afterInteractive`: o guião do banner traz 440 KB
+          de código, mais do que o React, e entrava logo a seguir à hidratação —
+          no telemóvel as duas coisas disputavam o processador, e era aí que a
+          página demorava a responder. Agora entra quando a página acabou de
+          carregar. O que protege os cookies não é este guião, é o bloqueio
+          automático de cima, que continua a correr antes de tudo; este só
+          desenha o aviso, e o aviso chegar um segundo depois não deixa passar
+          nada. */}
+      <Script id="iubenda-cs" src="https://cdn.iubenda.com/cs/iubenda_cs.js" strategy="lazyOnload" />
     </>
   );
 }
