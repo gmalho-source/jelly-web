@@ -132,7 +132,9 @@ export default async function HomePage({
                     // a prioridade alta — e é isso que o Lighthouse pede em
                     // «Deteção de pedidos de LCP». Esta é a imagem do LCP da
                     // homepage: sai daqui dito.
-                    {...(index === 0 ? { fetchPriority: "high" as const } : {})}
+                    // As outras só aparecem daqui a cinco segundos: pedem-se com
+                    // prioridade baixa, para não disputarem a rede com a primeira.
+                    fetchPriority={index === 0 ? "high" : "low"}
                     sizes="(max-width: 1024px) 100vw, 44vw"
                     className={
                       heroImages.length > 1

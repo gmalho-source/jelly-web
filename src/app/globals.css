@@ -475,6 +475,18 @@
   animation-timing-function: ease-in-out;
 }
 
+/* A primeira fica por baixo de todas, visível de raiz e sem animação; as outras
+   entram e saem por cima dela. Era animada como as outras, e com `opacity: 0`
+   à partida só aparecia quando a animação arrancava — e a animação espera que
+   o browser acabe o JavaScript da página. No telemóvel a fotografia chegava e
+   ficava segundos invisível, e é ela o LCP da homepage (o Lighthouse chamava-
+   -lhe «render delay»: 2,4 s). No ecrã é igual: quando é a vez dela, as outras
+   estão todas transparentes. */
+.hero-fade:first-child {
+  opacity: 1;
+  animation: none;
+}
+
 [data-hero-count="2"] .hero-fade { animation-name: hero-fade-2; }
 [data-hero-count="3"] .hero-fade { animation-name: hero-fade-3; }
 [data-hero-count="4"] .hero-fade { animation-name: hero-fade-4; }
