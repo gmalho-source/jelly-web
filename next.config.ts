@@ -77,6 +77,17 @@ const nextConfig: NextConfig = {
        */
       { source: "/envio-de-faturas", destination: "/billing", permanent: true },
       { source: "/en/envio-de-faturas", destination: "/billing", permanent: true },
+      /*
+       * O serviço com a Informa D&B do site antigo, em inglês. O português já
+       * estava no mapa dos endereços antigos (para lead generation B2B); o
+       * inglês não, e caía no 404 depois de o middleware traduzir «servicos»
+       * para «services». As duas formas vão para o mesmo sítio, num salto só.
+       */
+      {
+        source: "/en/:pasta(servicos|services)/digital-strategy-and-sales-growth-by-informa-db",
+        destination: "/en/services/marketing/b2b-lead-generation",
+        permanent: true,
+      },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
