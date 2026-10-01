@@ -4,6 +4,34 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+/**
+ * De onde a página pode carregar cada coisa. Ver o comentário em `headers()`.
+ * Cada domínio está aqui porque o site o usa: tirar um é partir alguma coisa, e
+ * acrescentar um é abrir uma porta — as duas coisas fazem-se de propósito.
+ */
+const BLOB = "https://vndty5nncbevu59o.public.blob.vercel-storage.com";
+const IUBENDA = "https://*.iubenda.com";
+const POLITICA_DE_CONTEUDO = [
+  "default-src 'self'",
+  // Os do Next e a configuração da Iubenda vêm embutidos na página.
+  `script-src 'self' 'unsafe-inline' ${IUBENDA}`,
+  `style-src 'self' 'unsafe-inline' ${IUBENDA}`,
+  // As imagens do painel vivem no Blob; as miniaturas dos vídeos no YouTube.
+  `img-src 'self' data: blob: ${BLOB} https://i.ytimg.com ${IUBENDA}`,
+  `media-src 'self' blob: ${BLOB}`,
+  `font-src 'self' data: ${IUBENDA}`,
+  `connect-src 'self' ${IUBENDA}`,
+  // Os vídeos (só depois do clique), o calendário de marcações e os formulários.
+  `frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://calendar.google.com https://forms.monday.com ${IUBENDA}`,
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  // O painel mostra o site dentro de si, na pré-visualização: é o mesmo domínio.
+  "frame-ancestors 'self'",
+  "report-uri /api/csp",
+].join("; ");
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
@@ -95,6 +123,48 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        /*
+         * Para todas as respostas. Vem primeiro de propósito: quando duas regras
+         * dão o mesmo cabeçalho, ganha a última, e a área de faturação, mais
+         * abaixo, tem o seu Referrer-Policy mais apertado.
+         *
+         * `nosniff`: o browser usa o tipo que o servidor diz, e não o que
+         * adivinha pelo conteúdo — um ficheiro servido como imagem não passa a
+         * correr como script.
+         *
+         * `strict-origin-when-cross-origin`: para fora do site segue só
+         * «https://www.jelly.pt», nunca o caminho completo da página de onde se
+         * saiu; dentro do site segue tudo, que é o que as métricas precisam.
+         */
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+      {
+        /*
+         * A Content-Security-Policy, ainda em modo de relatório: o browser diz o
+         * que bloquearia, e não bloqueia nada. Os relatórios chegam a
+         * `/api/csp` e ficam nos registos da Vercel. Passa a valer de verdade
+         * (o mesmo texto, no cabeçalho sem `-Report-Only`) quando ficar uns
+         * dias sem avisos.
+         *
+         * Lista de domínios, e não `nonce`: a forma com `nonce` obrigava cada
+         * página a ser gerada a cada visita, em vez de sair da cache, e era a
+         * velocidade da homepage que se perdia. Por isso os scripts embutidos
+         * na página continuam permitidos (`'unsafe-inline'`) — são os do Next e
+         * a configuração da Iubenda. O que a política fecha é o resto: scripts
+         * de domínios desconhecidos, plugins, o `<base>` trocado, formulários
+         * a enviar para fora, e o site embebido em páginas alheias.
+         *
+         * Fora o painel: o editor do Payload tem regras próprias e não é a
+         * casa que o público visita.
+         */
+        source: "/((?!admin).*)",
+        headers: [{ key: "Content-Security-Policy-Report-Only", value: POLITICA_DE_CONTEUDO }],
+      },
       {
         /*
          * As duas pastas que vieram do alojamento anterior nos mesmos
