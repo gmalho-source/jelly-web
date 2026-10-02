@@ -153,8 +153,13 @@ export default async function HomePage({
               </div>
               {/* A legenda fica fora da imagem: quem troca a fotografia no
                   painel não tem de pensar se o texto ainda se lê por cima. */}
+              {/* O convite vai para o mesmo sítio que o botão ao lado: lê-se como
+                  a legenda dele. Chave nova (`heroWork`) porque o painel guardava
+                  a frase antiga — «Independentes desde…» — e passava-lhe por cima. */}
               <p className="mt-3 text-right text-[11px] uppercase tracking-[0.1em] text-fg-soft sm:pr-32">
-                {t("heroSince")} {since} · {t("heroPlace")}
+                <Link href="/projetos" className="transition-colors duration-200 hover:text-fg">
+                  {t("heroWork")}
+                </Link>
               </p>
               <Link
                 href="/projetos"
@@ -175,11 +180,12 @@ export default async function HomePage({
                 sizes="(max-width: 1024px) 100vw, 44vw"
                 className="aspect-square w-full object-cover"
               />
-              <p className="absolute right-3 top-3 text-right text-[11px] uppercase tracking-[0.1em] text-paper/70">
-                {t("heroSince")} {since}
-                <br />
-                {t("heroPlace")}
-              </p>
+              <Link
+                href="/projetos"
+                className="absolute right-3 top-3 text-right text-[11px] uppercase tracking-[0.1em] text-paper/70 transition-colors duration-200 hover:text-paper"
+              >
+                {t("heroWork")}
+              </Link>
               <Link
                 href="/projetos"
                 aria-label={t("workAll")}
