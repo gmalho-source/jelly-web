@@ -60,7 +60,10 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
   const [bloqueado, setBloqueado] = useState(false);
   const [aAbrir, setAAbrir] = useState(false);
   const caixa = useRef<HTMLDivElement>(null);
-  const moldura = useRef<HTMLIFrameElement>(null);
+  // O sítio do `iframe`, e não o `iframe`: a Iubenda não lhe muda o endereço,
+  // troca-o por uma cópia em branco. Uma referência ao elemento ficava a olhar
+  // para o original, já fora da página.
+  const moldura = useRef<HTMLDivElement>(null);
   const chave = fonte.tipo === "ficheiro" ? fonte.src : fonte.id;
 
   // Voltou depois de escolher os cookies: o vídeo que se queria ver abre sozinho.
@@ -82,16 +85,20 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
   // O bloqueio pode ser imediato ou chegar uns instantes depois, quando o guião
   // da Iubenda acorda: vê-se agora e durante dois segundos.
   useEffect(() => {
-    const iframe = moldura.current;
-    if (!aTocar || !iframe) return;
-    if (bloqueadoPelaIubenda(iframe)) {
+    const sitio = moldura.current;
+    if (!aTocar || !sitio) return;
+    const ver = () => {
+      const iframe = sitio.querySelector("iframe");
+      return Boolean(iframe && bloqueadoPelaIubenda(iframe));
+    };
+    if (ver()) {
       Promise.resolve().then(() => setBloqueado(true));
       return;
     }
     const observador = new MutationObserver(() => {
-      if (bloqueadoPelaIubenda(iframe)) setBloqueado(true);
+      if (ver()) setBloqueado(true);
     });
-    observador.observe(iframe, { attributes: true, attributeFilter: ["src", "class"] });
+    observador.observe(sitio, { subtree: true, childList: true, attributes: true, attributeFilter: ["src", "class"] });
     const fim = window.setTimeout(() => observador.disconnect(), 2000);
     return () => {
       observador.disconnect();
@@ -179,14 +186,15 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
 
   if (aTocar) {
     return (
-      <iframe
-        ref={moldura}
-        src={src}
-        title={titulo}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-        allowFullScreen
-        className="aspect-video w-full rounded-[20px] bg-ink"
-      />
+      <div ref={moldura}>
+        <iframe
+          src={src}
+          title={titulo}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="aspect-video w-full rounded-[20px] bg-ink"
+        />
+      </div>
     );
   }
 
