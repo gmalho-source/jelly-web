@@ -57,7 +57,7 @@ export type SheetCopy = {
   contact: string;
   /** O que a pílula diz quando já se está na página de contactos. */
   arrived?: string;
-  /** Nome da outra língua. Ausente na proposta, presente no site. */
+  /** Nome da outra língua. */
   language?: string;
 };
 

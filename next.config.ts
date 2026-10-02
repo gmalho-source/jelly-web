@@ -138,6 +138,13 @@ const nextConfig: NextConfig = {
        * mesmo endereço — `jelly.pt/contactos` cai aqui de qualquer maneira.
        */
       { source: "/desafio", destination: "/contactos", permanent: false },
+      /*
+       * A proposta visual do redesign: um ecrã de demonstração, numa página só,
+       * que mostrou a direção do site antes de ela passar para as páginas a
+       * sério. Saiu quando o que tinha já vivia todo na homepage — e quem ainda
+       * guardar o endereço vai dar lá.
+       */
+      { source: "/proposta", destination: "/", permanent: true },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },

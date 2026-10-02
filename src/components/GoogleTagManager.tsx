@@ -4,8 +4,8 @@ import Script from "next/script";
 export const GTM_ID = "GTM-KP755M9";
 
 /**
- * O Google Tag Manager, só nas páginas do site — o painel, a faturação e a
- * proposta têm os seus layouts e ficam de fora.
+ * O Google Tag Manager, só nas páginas do site — o painel e a faturação têm
+ * os seus layouts e ficam de fora.
  *
  * O consentimento não se decide aqui: a Iubenda está configurada com o Google
  * Consent Mode v2 (`googleConsentModeV2` no painel deles), e o bloqueio

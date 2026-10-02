@@ -94,10 +94,9 @@ export default async function SiteLayout({
         </NextIntlClientProvider>
         {/* As medições da Vercel: a velocidade que os visitantes sentem, e a
             contagem de visitas e páginas — esta presa ao consentimento, como se
-            explica lá dentro. Ficam só no site: o painel, a área de faturação e
-            a proposta têm cada um o seu layout de raiz e ficam de fora, que é
-            onde não há visitantes para contar e há endereços que não têm de
-            sair daqui. */}
+            explica lá dentro. Ficam só no site: o painel e a área de faturação
+            têm cada um o seu layout de raiz e ficam de fora, que é onde não há
+            visitantes para contar e há endereços que não têm de sair daqui. */}
         <MedicoesDaVercel />
         {/* O Google Tag Manager, com o consentimento entregue à Iubenda (ver o
             componente). */}

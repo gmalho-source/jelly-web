@@ -29,10 +29,6 @@ export default function middleware(request: NextRequest) {
   // O painel do Payload não tem árvore de línguas: passa ao lado do next-intl.
   if (pathname.startsWith("/admin")) return NextResponse.next();
 
-  // A proposta visual vive fora das duas árvores de língua: é um ecrã para ver,
-  // não uma página do site.
-  if (pathname.startsWith("/proposta")) return NextResponse.next();
-
   // Os endereços do site antigo, antes da árvore de línguas: um artigo antigo
   // não é um caminho português, é um 301 à espera de acontecer.
   const legacy = legacyDestination(pathname);
