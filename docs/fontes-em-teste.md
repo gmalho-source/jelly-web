@@ -1,6 +1,6 @@
 # Fontes comerciais em teste
 
-Larga aqui os ficheiros **trial** (ou licenciados) das fontes comerciais que queiras avaliar
+Larga em `public/fonts/trials/` os ficheiros **trial** (ou licenciados) das fontes comerciais que queiras avaliar
 e volta a correr `npm run preview`. O comparador do instantâneo apanha-os sozinho.
 
 Nomes de ficheiro esperados (WOFF2, dois pesos):

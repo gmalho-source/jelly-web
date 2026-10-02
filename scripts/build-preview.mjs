@@ -109,7 +109,7 @@ const routes = {
  * - `google` e `fontshare`: licença aberta (OFL / Fontshare), self-hostáveis e
  *   embutíveis neste instantâneo.
  * - `local`: fontes comerciais que só entram se os ficheiros de teste estiverem
- *   em public/fonts/trials/ (ver LEIA-ME.md). Não vão para o repositório nem são
+ *   em public/fonts/trials/ (ver docs/fontes-em-teste.md). Não vão para o repositório nem são
  *   publicadas — a licença de teste não o permite.
  */
 const FONTS = [
