@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CookieConsent } from "@/components/CookieConsent";
 import { GoogleTagManager, GoogleTagManagerSemScript } from "@/components/GoogleTagManager";
+import { GTMRouteTracker } from "@/components/GTMRouteTracker";
 import { MedicoesDaVercel } from "@/components/MedicoesDaVercel";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -101,6 +102,8 @@ export default async function SiteLayout({
         {/* O Google Tag Manager, com o consentimento entregue à Iubenda (ver o
             componente). */}
         <GoogleTagManager />
+        {/* E as páginas seguintes, que o GTM sozinho não vê. */}
+        <GTMRouteTracker />
       </body>
     </html>
   );
