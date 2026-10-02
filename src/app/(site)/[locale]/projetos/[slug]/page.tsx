@@ -96,7 +96,6 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const facts = [
     { term: t("client"), value: client },
-    { term: t("year"), value: project?.year ?? archived?.year ?? "" },
     { term: t("disciplines"), value: project?.disciplines[locale] ?? archived?.disciplines.join(", ") ?? "" },
     ...(project ? [{ term: t("team"), value: project.team[locale] }] : []),
   ].filter((fact) => fact.value);

@@ -31,7 +31,6 @@ export default async function WorkIndexPage({ params }: { params: Promise<{ loca
       slug: slugFor(project, locale),
       cliente: project.client,
       disciplinas: project.disciplines.slice(0, 3).join(" · "),
-      ano: project.year,
       capa: project.cover?.src ? { src: project.cover.src, alt: project.cover.alt ?? "" } : null,
       caso: Boolean(caso),
       destaque: caso?.numbersValidated ? caso.headline.value?.trim() || undefined : undefined,

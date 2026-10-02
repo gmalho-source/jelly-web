@@ -9,7 +9,6 @@ export type ProjetoDaGrelha = {
   slug: string;
   cliente: string;
   disciplinas: string;
-  ano: string;
   capa: { src: string; alt: string } | null;
   caso: boolean;
   /** O número principal do caso, só quando está validado com o cliente. */
@@ -89,12 +88,11 @@ export function GrelhaDeProjetos({ projetos, textos }: { projetos: ProjetoDaGrel
                 </span>
                 {/* O número vai em baixo, onde o véu é mais escuro: é o único
                     sítio do cartão onde o vermelho se lê sobre uma fotografia. */}
-                <span className="flex shrink-0 flex-col items-end gap-1 text-right">
-                  {projeto.destaque ? (
-                    <span className="font-display text-2xl leading-none tabular-nums text-red">{projeto.destaque}</span>
-                  ) : null}
-                  <span className="text-sm tabular-nums text-paper/60">{projeto.ano}</span>
-                </span>
+                {projeto.destaque ? (
+                  <span className="shrink-0 text-right font-display text-2xl leading-none tabular-nums text-red">
+                    {projeto.destaque}
+                  </span>
+                ) : null}
               </span>
             </Link>
           </li>

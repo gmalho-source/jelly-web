@@ -7,7 +7,6 @@ import { Link } from "@/i18n/navigation";
 export type RailProject = {
   slug: string;
   client: string;
-  year: string;
   subtitle?: string;
   disciplines: string[];
   cover: string;
@@ -64,10 +63,7 @@ export function ProjectRail({ projects, show, archiveLabel }: { projects: RailPr
               className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
             />
           </span>
-          <span className="mt-4 flex items-baseline justify-between gap-4 border-t border-line pt-3">
-            <span className="font-display text-2xl">{project.client}</span>
-            <span className="text-xs tabular-nums text-fg-soft">{project.year}</span>
-          </span>
+          <span className="mt-4 block border-t border-line pt-3 font-display text-2xl">{project.client}</span>
           <span className="mt-1 block text-sm text-fg-soft">
             {project.subtitle || project.disciplines.join(" · ")}
           </span>

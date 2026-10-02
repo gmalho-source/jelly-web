@@ -62,7 +62,6 @@ export default async function HomePage({
     // O carrossel corre no browser e já recebe o endereço desta língua.
     slug: slugFor(project, locale),
     client: project.client,
-    year: project.year,
     subtitle: project.subtitle,
     disciplines: project.disciplines,
     cover: project.cover!.src,

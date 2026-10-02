@@ -219,12 +219,7 @@ export default async function Proposta() {
                   className="aspect-[4/3] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
                 />
               </span>
-              <span className="mt-4 flex items-baseline justify-between gap-4 border-t border-paper/15 pt-3">
-                <span className="font-display text-2xl">{project.client}</span>
-                <span className="text-xs tabular-nums text-paper/45">
-                  {project.year}
-                </span>
-              </span>
+              <span className="mt-4 block border-t border-paper/15 pt-3 font-display text-2xl">{project.client}</span>
               <span className="mt-1 block text-sm text-paper/55">
                 {project.subtitle || project.disciplines.join(" · ")}
               </span>

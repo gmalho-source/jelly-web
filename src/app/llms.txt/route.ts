@@ -73,8 +73,8 @@ export async function GET() {
       linha(
         p.title.pt,
         { pathname: "/projetos/[slug]", params: { slug: slugFor(p, "pt") } },
-        // Há peças antigas sem ano. Melhor o cliente sozinho do que uma vírgula a olhar para o nada.
-        [p.client, p.year].filter(Boolean).join(", "),
+        // Sem o ano: a Jelly não o mostra em lado nenhum do público.
+        p.client,
       ),
     ),
     "",
