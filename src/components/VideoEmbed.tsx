@@ -137,7 +137,8 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
         ? `https://player.vimeo.com/video/${fonte.id}?autoplay=1&dnt=1`
         : "";
 
-  if (aTocar && bloqueado) {
+  const aviso = (() => {
+    if (!bloqueado) return null;
     const t = TEXTOS[typeof document !== "undefined" && document.documentElement.lang.startsWith("en") ? "en" : "pt"];
     const plataforma = fonte.tipo === "vimeo" ? "Vimeo" : "YouTube";
     const fora =
@@ -182,19 +183,26 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
         </div>
       </div>
     );
-  }
+  })();
 
   if (aTocar) {
+    // O `iframe` nunca sai daqui depois de entrar, nem quando é bloqueado: a
+    // Iubenda troca-o por uma cópia, e se o React o tentasse tirar dava erro —
+    // procurava um elemento que já não é filho de ninguém. Esconde-se a caixa,
+    // e o aviso entra ao lado.
     return (
-      <div ref={moldura}>
-        <iframe
-          src={src}
-          title={titulo}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
-          className="aspect-video w-full rounded-[20px] bg-ink"
-        />
-      </div>
+      <>
+        <div ref={moldura} className={bloqueado ? "hidden" : undefined}>
+          <iframe
+            src={src}
+            title={titulo}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allowFullScreen
+            className="aspect-video w-full rounded-[20px] bg-ink"
+          />
+        </div>
+        {aviso}
+      </>
     );
   }
 
