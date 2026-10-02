@@ -112,7 +112,9 @@ export default async function HomePage({
           </h1>
 
           {heroImages.length ? (
-            <div className="relative">
+            // O espaço por baixo da fotografia é do botão, que fica meio dentro
+            // e meio fora dela; sem ele, a linha da secção seguinte colava-se.
+            <div className="relative pb-6 sm:pb-12">
               {/* Empilhadas no mesmo enquadramento: com mais do que uma, o CSS
                   troca-as em fundido, sem javascript e sem salto de layout. */}
               <div
@@ -151,20 +153,10 @@ export default async function HomePage({
                   />
                 ))}
               </div>
-              {/* A legenda fica fora da imagem: quem troca a fotografia no
-                  painel não tem de pensar se o texto ainda se lê por cima. */}
-              {/* O convite vai para o mesmo sítio que o botão ao lado: lê-se como
-                  a legenda dele. Chave nova (`heroWork`) porque o painel guardava
-                  a frase antiga — «Independentes desde…» — e passava-lhe por cima. */}
-              <p className="mt-3 text-right text-[11px] uppercase tracking-[0.1em] text-fg-soft sm:pr-32">
-                <Link href="/projetos" className="transition-colors duration-200 hover:text-fg">
-                  {t("heroWork")}
-                </Link>
-              </p>
               <Link
                 href="/projetos"
                 aria-label={t("workAll")}
-                className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
+                className="absolute bottom-3 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
               >
                 ↗
               </Link>
@@ -182,12 +174,6 @@ export default async function HomePage({
               />
               <Link
                 href="/projetos"
-                className="absolute right-3 top-3 text-right text-[11px] uppercase tracking-[0.1em] text-paper/70 transition-colors duration-200 hover:text-paper"
-              >
-                {t("heroWork")}
-              </Link>
-              <Link
-                href="/projetos"
                 aria-label={t("workAll")}
                 className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
               >
@@ -199,8 +185,11 @@ export default async function HomePage({
 
         <div className="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-6 border-t border-line px-5 py-6 sm:px-8">
           <p className="subtitle max-w-[52ch] text-fg-soft">{t("lead")}</p>
-          <a
-            href="#trabalho"
+          {/* Para a página dos projetos, e não para a secção do trabalho mais
+              abaixo: quem carrega aqui quer ver o trabalho todo. A seta passa a
+              apontar em frente, porque já não se desce — muda-se de página. */}
+          <Link
+            href="/projetos"
             className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.1em] text-fg-soft hover:text-fg"
           >
             {t("heroScroll")}
@@ -208,9 +197,9 @@ export default async function HomePage({
               aria-hidden="true"
               className="grid h-9 w-9 place-items-center rounded-full border border-line"
             >
-              ↓
+              →
             </span>
-          </a>
+          </Link>
         </div>
       </header>
 
