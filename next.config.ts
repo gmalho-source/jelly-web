@@ -116,6 +116,14 @@ const nextConfig: NextConfig = {
         destination: "/en/services/marketing/b2b-lead-generation",
         permanent: true,
       },
+      /*
+       * Um endereço curto para usar fora do site (campanhas, materiais
+       * impressos), a dar ao formulário de contacto. Temporário de propósito:
+       * um 308 ficava guardado no browser de quem passou, e um endereço destes
+       * pode vir a ter uma página própria. O destino é o `/contactos` deste
+       * mesmo endereço — `jelly.pt/contactos` cai aqui de qualquer maneira.
+       */
+      { source: "/desafio", destination: "/contactos", permanent: false },
       { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/wp-sitemap.xml", destination: "/sitemap.xml", permanent: true },
       { source: "/:sitemap(post|page|portfolio|category|post_tag|recrutamento)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
