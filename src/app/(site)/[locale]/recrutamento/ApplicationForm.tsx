@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pushEvent } from "@/lib/gtm";
 import { INDICATIVOS, PADRAO, rotulo } from "@/lib/indicativos";
 import type { FormCopy } from "./copy";
 
@@ -107,6 +108,18 @@ export function ApplicationForm({
 
     setErros({});
 
+    /*
+     * Para o GTM, como no formulário de contacto: o envio que chegou, com as
+     * áreas escolhidas (só nas espontâneas — numa vaga a área é a da vaga, e vai
+     * o slug dela), e o que não chegou, com um código. Nada do que a pessoa
+     * escreveu sai daqui. Os campos por preencher não contam: o pedido não saiu.
+     */
+    const paraOGtm = {
+      form_name: "recrutamento",
+      ...(jobSlug ? { vaga: jobSlug } : { areas: dados.getAll("departments").map(String).join(",") }),
+    };
+    const falhou = (form_error: string) => pushEvent("form_submit_error", { ...paraOGtm, form_error });
+
     setNome(valor("name").split(/\s+/)[0] ?? "");
     setEstado("a-enviar");
     try {
@@ -115,7 +128,9 @@ export function ApplicationForm({
       // campo do currículo: é lá que a pessoa tem de agir.
       if (resposta.ok) {
         setEstado("enviado");
+        pushEvent("form_submit_success", paraOGtm);
       } else if (resposta.status === 415) {
+        falhou("cv_recusado");
         setErros({ cv: copy.cvRejected });
         setEstado("parado");
         const alvo = forma.current?.querySelector<HTMLElement>('[name="cv"]');
@@ -123,9 +138,11 @@ export function ApplicationForm({
         alvo?.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         setEstado("erro");
+        falhou(`http_${resposta.status}`);
       }
     } catch {
       setEstado("erro");
+      falhou("rede");
     }
   }
 
