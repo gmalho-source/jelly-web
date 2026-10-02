@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CookieConsent } from "@/components/CookieConsent";
+import { GoogleTagManager, GoogleTagManagerSemScript } from "@/components/GoogleTagManager";
 import { MedicoesDaVercel } from "@/components/MedicoesDaVercel";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -73,6 +74,7 @@ export default async function SiteLayout({
         <CookieConsent locale={locale} />
       </head>
       <body>
+        <GoogleTagManagerSemScript />
         {/* Sem mensagens: nenhum componente do browser traduz nada — as páginas
             são traduzidas no servidor e chegam já escritas. O provider fica pela
             língua, que os links precisam. Com as mensagens, iam as traduções do
@@ -96,6 +98,9 @@ export default async function SiteLayout({
             onde não há visitantes para contar e há endereços que não têm de
             sair daqui. */}
         <MedicoesDaVercel />
+        {/* O Google Tag Manager, com o consentimento entregue à Iubenda (ver o
+            componente). */}
+        <GoogleTagManager />
       </body>
     </html>
   );

@@ -11,18 +11,23 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
  */
 const BLOB = "https://vndty5nncbevu59o.public.blob.vercel-storage.com";
 const IUBENDA = "https://*.iubenda.com";
+// O Tag Manager e o Google Analytics que ele carrega. As tags que se puserem
+// dentro do GTM (Meta, LinkedIn, Ads…) trazem domínios seus: aparecem nos
+// relatórios de `/api/csp` e acrescentam-se aqui.
+const GTM = "https://www.googletagmanager.com";
+const GOOGLE_ANALYTICS = "https://*.google-analytics.com https://*.analytics.google.com";
 const POLITICA_DE_CONTEUDO = [
   "default-src 'self'",
   // Os do Next e a configuração da Iubenda vêm embutidos na página.
-  `script-src 'self' 'unsafe-inline' ${IUBENDA}`,
+  `script-src 'self' 'unsafe-inline' ${IUBENDA} ${GTM}`,
   `style-src 'self' 'unsafe-inline' ${IUBENDA}`,
   // As imagens do painel vivem no Blob; as miniaturas dos vídeos no YouTube.
-  `img-src 'self' data: blob: ${BLOB} https://i.ytimg.com ${IUBENDA}`,
+  `img-src 'self' data: blob: ${BLOB} https://i.ytimg.com ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS}`,
   `media-src 'self' blob: ${BLOB}`,
   `font-src 'self' data: ${IUBENDA}`,
-  `connect-src 'self' ${IUBENDA}`,
+  `connect-src 'self' ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS}`,
   // Os vídeos (só depois do clique), o calendário de marcações e os formulários.
-  `frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://calendar.google.com https://forms.monday.com ${IUBENDA}`,
+  `frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://calendar.google.com https://forms.monday.com ${IUBENDA} ${GTM}`,
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
