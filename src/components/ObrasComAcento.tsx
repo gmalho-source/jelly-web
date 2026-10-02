@@ -6,9 +6,8 @@ import { useEffect, useRef } from "react";
  * A secção do trabalho toma a cor da marca que está no ecrã.
  *
  * Cada obra traz o seu acento em `data-acento`. Quando passa pelo meio do
- * ecrã, o rótulo e o numeral do cabeçalho tomam essa cor — o cinza da
- * Stronddo, o âmbar do gin, o sálvia da clínica. É a página a demonstrar que
- * um sistema se adapta, em vez de o afirmar num parágrafo.
+ * ecrã, o rótulo e o numeral do cabeçalho tomam essa cor. É a página a
+ * demonstrar que um sistema se adapta, em vez de o afirmar num parágrafo.
  *
  * Só JavaScript de observação, sem estado do React: a cor entra como variável
  * na própria secção, e é o CSS que faz a transição. Sem JavaScript fica o

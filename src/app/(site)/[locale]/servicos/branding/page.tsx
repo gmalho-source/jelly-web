@@ -3,10 +3,9 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { AnatomiaDaMarca } from "@/components/AnatomiaDaMarca";
 import { ObrasComAcento } from "@/components/ObrasComAcento";
 import { branding } from "@/content/branding";
-import { getService, getServices } from "@/lib/cms";
+import { getProjectGrid, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -16,12 +15,23 @@ import { slugFor } from "@/lib/slugs";
  * Uma rota fixa que ganha à dinâmica `[slug]`: a página de serviço genérica
  * descrevia branding com quatro bullets, e para a disciplina cujo argumento é
  * tornar reconhecível isso era uma contradição. Esta faz o que anuncia — o
- * manifesto no topo, o trabalho em matéria com a cor a mudar por marca, e a
- * anatomia onde se desligam as decisões para se ver o que sobra.
+ * manifesto no topo, uma frase sobre o que fazemos, e as marcas mais recentes
+ * com a cor da secção a mudar de uma para a outra.
  *
- * As fases continuam a vir do serviço no painel: é a parte que a casa edita.
+ * Do painel vêm as fases do serviço e as marcas: os projetos com a disciplina
+ * Branding, os mais recentes primeiro.
  */
 const SLUG = "branding";
+
+/** Quantas marcas mostra o bloco do trabalho. */
+const MARCAS = 3;
+
+/*
+ * As cores da casa que a secção do trabalho vai tomando, uma por marca. Eram
+ * cores de cada cliente quando as marcas estavam escritas à mão; vindas do
+ * painel não trazem cor, e as da casa rodam pela mesma ordem do menu.
+ */
+const ACENTOS = ["var(--color-lavender)", "var(--color-chartreuse)", "var(--color-coral)"];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -41,8 +51,13 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("services");
-  const [service, all] = await Promise.all([getService(SLUG), getServices()]);
+  const [service, all, projetos] = await Promise.all([getService(SLUG), getServices(), getProjectGrid()]);
   const outros = all.filter((item) => item.slug !== SLUG);
+  // A grelha já vem do mais recente para o mais antigo. «Brand Activation» não
+  // conta: é ativação de marca no terreno, não construção de marca.
+  const marcas = projetos
+    .filter((projeto) => projeto.cover?.src && projeto.disciplines.some((d) => d.trim().toLowerCase() === "branding"))
+    .slice(0, MARCAS);
   const b = branding;
 
   const jsonLd = {
@@ -130,74 +145,81 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
         </div>
       </section>
 
-      {/* ── A tese, em vermelho ──────────────────────────────────────────── */}
+      {/* ── O que fazemos, numa frase, em vermelho ──────────────────────────
+          Um parágrafo só: a afirmação em tinta, e a volta que ela dá no mesmo
+          fôlego, em tom mais baixo. */}
       <section className="surface-red py-20 lg:py-24">
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <p className="max-w-[22ch] font-display text-[clamp(30px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">{b.tese.a[locale]}</p>
-          <span aria-hidden="true" className="mt-9 block h-px w-full max-w-[420px] bg-ink/30" />
-          <p className="mt-9 max-w-[30ch] font-display text-[clamp(20px,2.6vw,34px)] leading-[1.14] text-fg-soft">{b.tese.b[locale]}</p>
+          <p className="max-w-[24ch] font-display text-[clamp(30px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">
+            {b.tese.a[locale]} <span className="text-fg-soft">{b.tese.b[locale]}</span>
+          </p>
         </div>
       </section>
 
-      {/* ── O trabalho, em matéria ───────────────────────────────────────────
-          A cor do cabeçalho segue a marca que está no ecrã: ver ObrasComAcento. */}
-      <ObrasComAcento className="obras surface-ink">
-        <div className="mx-auto max-w-[1200px] px-5 pb-6 pt-24 sm:px-8 lg:pt-28">
-          <div className="flex flex-wrap items-end justify-between gap-8 border-b border-line pb-6">
-            <div>
-              <span className="eyebrow acento-vivo">{b.materia.eyebrow[locale]}</span>
-              <h2 className="mt-4 max-w-[22ch] text-chapter">{b.materia.titulo[locale]}</h2>
-            </div>
-            <span aria-hidden="true" className="acento-vivo-contorno font-display text-[clamp(40px,6vw,88px)] leading-[0.85]">
-              {String(b.obras.length).padStart(2, "0")}
-            </span>
-          </div>
-
-          {b.obras.map((obra, i) => (
-            <article
-              key={obra.slug}
-              data-acento={obra.acento}
-              style={{ "--acento": obra.acento } as React.CSSProperties}
-              className="grid items-center gap-7 border-b border-line/60 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] md:gap-16 lg:py-20"
-            >
-              <div className={`entra ${i % 2 ? "md:order-2" : ""}`}>
-                <span aria-hidden="true" className="varre block h-0.5 w-[72px] bg-[var(--acento)]" />
-                <span className="eyebrow mt-6 block text-[var(--acento)]">{obra.rotulo[locale]}</span>
-                <h3 className="editorial mt-3 text-[clamp(28px,3.6vw,50px)] leading-[1.02] tracking-[-0.02em]">{obra.cliente}</h3>
-                <p className="mt-4 max-w-[44ch] text-md text-fg-soft">{obra.corpo[locale]}</p>
-                <ul className="mt-6 flex flex-wrap gap-2">
-                  {obra.etiquetas.map((e) => (
-                    <li key={e.pt} className="rounded-full border border-line px-3 py-1.5 text-[11.5px] uppercase tracking-[0.06em] text-fg-soft">
-                      {e[locale]}
-                    </li>
-                  ))}
-                </ul>
+      {/* ── As marcas mais recentes ─────────────────────────────────────────
+          A cor do cabeçalho segue a marca que está no ecrã: ver ObrasComAcento.
+          Cada marca é um link para a página do projeto. */}
+      {marcas.length ? (
+        <ObrasComAcento className="obras surface-ink">
+          <div className="mx-auto max-w-[1200px] px-5 pb-6 pt-24 sm:px-8 lg:pt-28">
+            <div className="flex flex-wrap items-end justify-between gap-8 border-b border-line pb-6">
+              <div>
+                <span className="eyebrow acento-vivo">{b.materia.eyebrow[locale]}</span>
+                <h2 className="mt-4 max-w-[22ch] text-chapter">{b.materia.titulo[locale]}</h2>
               </div>
-              <figure className={`entra-tarde group relative m-0 overflow-hidden rounded-[6px] ${i % 2 ? "md:order-1" : ""}`}>
-                <Image
-                  src={obra.imagem.src}
-                  alt={obra.imagem.alt[locale]}
-                  width={obra.imagem.width}
-                  height={obra.imagem.height}
-                  sizes="(max-width: 768px) 100vw, 660px"
-                  className="aspect-[4/3] w-full scale-[1.02] object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
-                />
-                <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-[var(--acento)]" />
-              </figure>
-            </article>
-          ))}
-        </div>
-      </ObrasComAcento>
+              <span aria-hidden="true" className="acento-vivo-contorno font-display text-[clamp(40px,6vw,88px)] leading-[0.85]">
+                {String(marcas.length).padStart(2, "0")}
+              </span>
+            </div>
 
-      {/* ── Anatomia ─────────────────────────────────────────────────────── */}
-      <section className="surface-paper py-24 lg:py-28">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <span className="eyebrow text-red">{b.anatomia.eyebrow[locale]}</span>
-          <h2 className="entra mt-4 max-w-[18ch] font-display text-[clamp(30px,4.4vw,60px)] leading-[1.0] tracking-[-0.025em]">{b.anatomia.titulo[locale]}</h2>
-          <p className="entra mt-5 max-w-[58ch] text-md text-fg-soft">{b.anatomia.texto[locale]}</p>
-          <AnatomiaDaMarca locale={locale} />
-        </div>
-      </section>
+            {marcas.map((projeto, i) => {
+              const acento = ACENTOS[i % ACENTOS.length];
+              return (
+                <article
+                  key={projeto.slug}
+                  data-acento={acento}
+                  style={{ "--acento": acento } as React.CSSProperties}
+                  className="border-b border-line/60"
+                >
+                  <Link
+                    href={{ pathname: "/projetos/[slug]", params: { slug: slugFor(projeto, locale) } }}
+                    className="group grid items-center gap-7 py-16 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] md:gap-16 lg:py-20"
+                  >
+                    <div className={`entra ${i % 2 ? "md:order-2" : ""}`}>
+                      <span aria-hidden="true" className="varre block h-0.5 w-[72px] bg-[var(--acento)]" />
+                      {projeto.subtitle ? (
+                        <span className="eyebrow mt-6 block text-[var(--acento)]">{projeto.subtitle}</span>
+                      ) : null}
+                      <h3 className="editorial mt-3 text-[clamp(28px,3.6vw,50px)] leading-[1.02] tracking-[-0.02em]">{projeto.client}</h3>
+                      <ul className="mt-6 flex flex-wrap gap-2">
+                        {projeto.disciplines.slice(0, 4).map((disciplina) => (
+                          <li key={disciplina} className="rounded-full border border-line px-3 py-1.5 text-[11.5px] uppercase tracking-[0.06em] text-fg-soft">
+                            {disciplina}
+                          </li>
+                        ))}
+                      </ul>
+                      <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--acento)]">
+                        {b.materia.ver[locale]}
+                        <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                      </span>
+                    </div>
+                    <figure className={`entra-tarde relative m-0 aspect-[4/3] overflow-hidden rounded-[6px] ${i % 2 ? "md:order-1" : ""}`}>
+                      <Image
+                        src={projeto.cover!.src}
+                        alt={projeto.cover!.alt || projeto.client}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 660px"
+                        className="scale-[1.02] object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
+                      />
+                      <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-[var(--acento)]" />
+                    </figure>
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+        </ObrasComAcento>
+      ) : null}
 
       {/* ── As fases, com o fio ──────────────────────────────────────────── */}
       {service?.phases?.length ? (

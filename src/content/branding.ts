@@ -6,26 +6,13 @@ import type { Localized } from "./types";
  * Era a mais curta das páginas de serviço — frase, quatro bullets, quatro
  * fases — e para a disciplina cujo argumento é tornar reconhecível, uma página
  * igual às outras é uma contradição. Esta não descreve branding: faz. O topo é
- * o manifesto, o trabalho aparece em matéria, e a anatomia deixa desligar as
- * decisões de uma marca para se ver o que sobra.
+ * o manifesto, a frase vermelha diz o que fazemos, e o trabalho são as marcas
+ * mais recentes do arquivo.
  *
- * As duas frases de tese são do site antigo e são melhores do que qualquer
- * título novo. As três marcas são as do arquivo com identidade em matéria —
- * cartão, relevo, papel — que é o que esta página quer mostrar.
+ * As marcas não vivem aqui: são os três projetos mais recentes com a disciplina
+ * Branding no painel, com link para a página de cada um. Quem publica um
+ * projeto novo de branding vê-o aparecer nesta página sem mexer em código.
  */
-
-export type Obra = {
-  slug: string;
-  cliente: string;
-  rotulo: Localized;
-  corpo: Localized;
-  etiquetas: Localized[];
-  imagem: { src: string; width: number; height: number; alt: Localized };
-  /** A cor que a marca empresta à página enquanto está no ecrã. */
-  acento: string;
-};
-
-export type Decisao = { chave: "tipo" | "cor" | "ritmo" | "voz"; nome: Localized; texto: Localized };
 
 export const branding = {
   eyebrow: { pt: "Serviços · Branding", en: "Services · Branding" },
@@ -62,92 +49,17 @@ export const branding = {
     en: "Positioning, identity and brand systems that are recognised before they are read. Branding by Jelly: strategy, design and execution, in that order.",
   },
 
+  /* Uma frase só, a dizer o que fazemos. A primeira oração afirma; a segunda,
+     no mesmo parágrafo e em tom mais baixo, fecha o argumento. */
   tese: {
-    a: { pt: "Uma marca bem construída não precisa de se explicar.", en: "A well-built brand does not need to explain itself." },
-    b: {
-      pt: "É unanimemente compreendida, seja em que contexto for.",
-      en: "It is understood by everyone, in whatever context it appears.",
-    },
+    a: { pt: "Fazemos marcas que se reconhecem à primeira.", en: "We make brands people recognise at first sight." },
+    b: { pt: "E que dizem o mesmo em todo o lado.", en: "And that say the same thing everywhere." },
   },
 
   materia: {
-    eyebrow: { pt: "O trabalho, em matéria", en: "The work, in matter" },
-    titulo: { pt: "Marcas que se pegam na mão antes de se lerem no ecrã.", en: "Brands you hold in your hand before you read them on a screen." },
-  },
-
-  obras: [
-    {
-      slug: "stronddo",
-      cliente: "Stronddo",
-      rotulo: { pt: "Galeria de arte online · 2024", en: "Online art gallery · 2024" },
-      corpo: {
-        pt: "Uma galeria que vive no ecrã precisava de um nome que se pudesse gravar em papel. Preto sobre branco, serifa de peso, e um sistema que aguenta desde o cartão até à moldura.",
-        en: "A gallery that lives on screen needed a name you could press into paper. Black on white, a serif with weight, and a system that holds from the card to the frame.",
-      },
-      etiquetas: [{ pt: "Naming", en: "Naming" }, { pt: "Identidade", en: "Identity" }, { pt: "Web", en: "Web" }, { pt: "Estratégia", en: "Strategy" }],
-      imagem: { src: "/media/branding-stronddo.webp", width: 1024, height: 1024, alt: { pt: "Cartões de visita da Stronddo Art Gallery, pretos e brancos, sobre uma mesa escura.", en: "Stronddo Art Gallery business cards, black and white, on a dark table." } },
-      acento: "#e6e6e6",
-    },
-    {
-      slug: "clinica-da-farmacia",
-      cliente: "Clínica da Farma&Cia",
-      rotulo: { pt: "Saúde · 2022", en: "Healthcare · 2022" },
-      corpo: {
-        pt: "Duas cores que não gritam e um padrão que se reconhece de longe. Um sistema para receção, receitas, fardas e o site — o mesmo em todos, sem parecer repetido.",
-        en: "Two colours that do not shout and a pattern you recognise from afar. One system for reception, prescriptions, uniforms and the site — the same everywhere, never repetitive.",
-      },
-      etiquetas: [{ pt: "Identidade", en: "Identity" }, { pt: "Website", en: "Website" }, { pt: "Comunicação", en: "Communication" }],
-      imagem: { src: "/media/branding-clinica.webp", width: 1321, height: 881, alt: { pt: "Cartões da Clínica da Farmácia em verde-sálvia e salmão, dispostos em leque.", en: "Clínica da Farmácia cards in sage green and salmon, fanned out." } },
-      acento: "#8fb8a5",
-    },
-    {
-      slug: "tom-barry-luxury-home-developer",
-      cliente: "TOM Barry",
-      rotulo: { pt: "Imobiliário de luxo · 2022", en: "Luxury real estate · 2022" },
-      corpo: {
-        pt: "Luxo raramente é acrescentar. Um monograma, relevo seco em papel preto, e uma história contada em renders 3D antes de o primeiro tijolo existir.",
-        en: "Luxury is rarely about adding. A monogram, blind embossing on black paper, and a story told in 3D renders before the first brick exists.",
-      },
-      etiquetas: [{ pt: "Identidade", en: "Identity" }, { pt: "Storytelling", en: "Storytelling" }, { pt: "3D", en: "3D" }],
-      imagem: { src: "/media/branding-tom-barry.webp", width: 1564, height: 1080, alt: { pt: "Cartão de visita preto da TOM Barry com o monograma em relevo seco.", en: "TOM Barry black business card with the monogram blind-embossed." } },
-      acento: "#d8c8a8",
-    },
-  ] satisfies Obra[],
-
-  anatomia: {
-    eyebrow: { pt: "Anatomia de uma marca", en: "Anatomy of a brand" },
-    titulo: { pt: "Uma marca é um sistema de quatro decisões. Desliga uma e vê o que fica.", en: "A brand is a system of four decisions. Switch one off and see what is left." },
-    texto: {
-      pt: "O espécime ao lado é a nossa própria marca, construída a partir dos mesmos tokens que fazem este site. Cada interruptor retira uma decisão. O que sobra quando se retiram todas é o que a maioria das empresas tem: um nome e uma cor que alguém escolheu.",
-      en: "The specimen alongside is our own brand, built from the same tokens that make this site. Each switch removes one decision. What is left when all are removed is what most companies have: a name and a colour someone picked.",
-    },
-    nota: {
-      pt: "Cada projeto de branding pode ter a sua anatomia, com os tokens verdadeiros da marca do cliente — o mesmo mecanismo, outro sistema.",
-      en: "Every branding project can have its own anatomy, with the client brand's real tokens — the same mechanism, another system.",
-    },
-    decisoes: [
-      { chave: "tipo", nome: { pt: "Tipo", en: "Type" }, texto: { pt: "Uma serifa com peso para o que se afirma; uma sans para o que se explica.", en: "A serif with weight for what is stated; a sans for what is explained." } },
-      { chave: "cor", nome: { pt: "Cor", en: "Colour" }, texto: { pt: "Um vermelho, um preto de tinta, um papel. Tudo o resto é exceção com razão.", en: "One red, one ink black, one paper. Everything else is an exception with a reason." } },
-      { chave: "ritmo", nome: { pt: "Ritmo", en: "Rhythm" }, texto: { pt: "Escala, respiro, alinhamento. É o que faz a mesma frase parecer cara ou barata.", en: "Scale, breathing room, alignment. What makes the same sentence look expensive or cheap." } },
-      { chave: "voz", nome: { pt: "Voz", en: "Voice" }, texto: { pt: "O que se diz e como. A decisão de design que mais gente esquece que é design.", en: "What is said and how. The design decision most people forget is design." } },
-    ] satisfies Decisao[],
-    especime: {
-      com: {
-        titulo: { pt: "Be the change.", en: "Be the change." },
-        corpo: { pt: "Marcas, marketing e inteligência artificial para empresas que querem ser reconhecidas antes de serem lembradas.", en: "Brands, marketing and artificial intelligence for companies that want to be recognised before they are remembered." },
-        botao: { pt: "Falar connosco", en: "Get in touch" },
-      },
-      sem: {
-        titulo: { pt: "Soluções integradas de comunicação", en: "Integrated communication solutions" },
-        corpo: { pt: "Somos uma agência full-service focada em resultados, com uma equipa multidisciplinar orientada para o cliente e para a excelência.", en: "We are a results-driven full-service agency with a multidisciplinary, client-oriented team committed to excellence." },
-        botao: { pt: "Saiba mais", en: "Learn more" },
-      },
-    },
-    vereditos: {
-      pt: ["Isto não é uma marca. É um nome.", "Isto é um documento com um logótipo.", "Já se reconhece alguma coisa.", "Falta uma decisão, e nota-se.", "Isto é uma marca."],
-      en: ["This is not a brand. It is a name.", "This is a document with a logo.", "Something is recognisable now.", "One decision missing, and it shows.", "This is a brand."],
-    },
-    ativas: { pt: "Decisões ativas", en: "Active decisions" },
+    eyebrow: { pt: "O trabalho", en: "The work" },
+    titulo: { pt: "Marcas que trabalhámos recentemente.", en: "Brands we have worked on recently." },
+    ver: { pt: "Ver o projeto", en: "See the project" },
   },
 
   fases: {
