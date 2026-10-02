@@ -36,8 +36,11 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
             email: t("email"),
             phone: t("phone"),
             phoneHint: t("phoneHint"),
-            message: t("message"),
-            messageHint: t("messageHint"),
+            // Chaves novas, e não `message`/`messageHint`: o painel tinha
+            // guardado os textos antigos com esses nomes, e uma cópia guardada
+            // ganha ao código — a mudança nunca chegava ao site.
+            message: t("helpLabel"),
+            messageHint: t("helpHint"),
             start: t("start"),
             startHint: t("startHint"),
             // As opções vêm da mesma árvore de textos: uma lista de janelas
