@@ -112,9 +112,10 @@ export default async function HomePage({
           </h1>
 
           {heroImages.length ? (
-            // O espaço por baixo da fotografia é do botão, que fica meio dentro
-            // e meio fora dela; sem ele, a linha da secção seguinte colava-se.
-            <div className="relative pb-6 sm:pb-12">
+            // O espaço por baixo da fotografia é o da legenda que lá esteve
+            // («Independentes desde…»): o botão está medido a partir dele, meio
+            // dentro e meio fora da foto, e sem ele a linha de baixo colava-se.
+            <div className="relative pb-7.5">
               {/* Empilhadas no mesmo enquadramento: com mais do que uma, o CSS
                   troca-as em fundido, sem javascript e sem salto de layout. */}
               <div
@@ -156,7 +157,7 @@ export default async function HomePage({
               <Link
                 href="/projetos"
                 aria-label={t("workAll")}
-                className="absolute bottom-3 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
+                className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
               >
                 ↗
               </Link>
