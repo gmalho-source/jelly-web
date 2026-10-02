@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pushEvent } from "@/lib/gtm";
 import { INDICATIVOS, PADRAO, rotulo } from "@/lib/indicativos";
 
 type Copy = {
@@ -102,9 +103,20 @@ export function ContactForm({ copy }: { copy: Copy }) {
 
     setErros({});
 
+    /*
+     * Para o GTM: um envio que chegou e um que não chegou. O erro vai como
+     * código — `http_429`, `rede`, `ficheiro_grande` — e nunca com o que a
+     * pessoa escreveu. Os campos por preencher, acima, não contam: o pedido
+     * nem chegou a sair, e o aviso está à vista de quem preenche.
+     */
+    const falhou = (form_error: string) => {
+      setState(form_error === "ficheiro_grande" ? "grande" : "error");
+      pushEvent("form_submit_error", { form_name: "contacto", form_error });
+    };
+
     const ficheiro = data.get("brief");
     if (ficheiro instanceof File && ficheiro.size > LIMITE) {
-      setState("grande");
+      falhou("ficheiro_grande");
       return;
     }
 
@@ -115,9 +127,11 @@ export function ContactForm({ copy }: { copy: Copy }) {
       // ficheiro dentro de JSON obrigava a codificá-lo em base64 — mais um
       // terço de peso por nada.
       const response = await fetch("/api/contacto", { method: "POST", body: data });
-      setState(response.ok ? "sent" : "error");
+      if (!response.ok) return falhou(`http_${response.status}`);
+      setState("sent");
+      pushEvent("form_submit_success", { form_name: "contacto" });
     } catch {
-      setState("error");
+      falhou("rede");
     }
   }
 
