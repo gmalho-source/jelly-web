@@ -16,16 +16,25 @@ const IUBENDA = "https://*.iubenda.com";
 // relatórios de `/api/csp` e acrescentam-se aqui.
 const GTM = "https://www.googletagmanager.com";
 const GOOGLE_ANALYTICS = "https://*.google-analytics.com https://*.analytics.google.com";
+// As tags que hoje estão no contentor GTM-KP755M9, vistas a disparar: Google
+// Ads (conversões e remarketing), LinkedIn Insight, Eskimi e o píxel da OpenAI.
+// Uma tag que saia do contentor sai também daqui.
+const TAGS_DO_GTM = [
+  "https://www.google.com https://*.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com",
+  "https://snap.licdn.com https://px.ads.linkedin.com",
+  "https://*.eskimi.com",
+  "https://bzrcdn.openai.com https://bzr.openai.com",
+].join(" ");
 const POLITICA_DE_CONTEUDO = [
   "default-src 'self'",
   // Os do Next e a configuração da Iubenda vêm embutidos na página.
-  `script-src 'self' 'unsafe-inline' ${IUBENDA} ${GTM}`,
+  `script-src 'self' 'unsafe-inline' ${IUBENDA} ${GTM} ${TAGS_DO_GTM}`,
   `style-src 'self' 'unsafe-inline' ${IUBENDA}`,
   // As imagens do painel vivem no Blob; as miniaturas dos vídeos no YouTube.
-  `img-src 'self' data: blob: ${BLOB} https://i.ytimg.com ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS}`,
+  `img-src 'self' data: blob: ${BLOB} https://i.ytimg.com ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS} ${TAGS_DO_GTM}`,
   `media-src 'self' blob: ${BLOB}`,
   `font-src 'self' data: ${IUBENDA}`,
-  `connect-src 'self' ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS}`,
+  `connect-src 'self' ${IUBENDA} ${GTM} ${GOOGLE_ANALYTICS} ${TAGS_DO_GTM}`,
   // Os vídeos (só depois do clique), o calendário de marcações e os formulários.
   `frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://calendar.google.com https://forms.monday.com ${IUBENDA} ${GTM}`,
   "worker-src 'self' blob:",
