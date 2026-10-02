@@ -16,13 +16,13 @@ const IUBENDA = "https://*.iubenda.com";
 // relatórios de `/api/csp` e acrescentam-se aqui.
 const GTM = "https://www.googletagmanager.com";
 const GOOGLE_ANALYTICS = "https://*.google-analytics.com https://*.analytics.google.com";
-// As tags que hoje estão no contentor GTM-KP755M9, vistas a disparar: Google
-// Ads (conversões e remarketing), LinkedIn Insight, Eskimi e o píxel da OpenAI.
-// Uma tag que saia do contentor sai também daqui.
+// As tags do contentor GTM-KP755M9, vistas a disparar: Google Ads (conversões
+// e remarketing), LinkedIn Insight e o píxel da OpenAI. Uma tag que saia do
+// contentor sai também daqui. O Eskimi saiu (a Jelly já não o usa, e disparava
+// antes do consentimento): se voltar a aparecer, é nos relatórios da CSP.
 const TAGS_DO_GTM = [
   "https://www.google.com https://*.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com",
   "https://snap.licdn.com https://px.ads.linkedin.com",
-  "https://*.eskimi.com",
   "https://bzrcdn.openai.com https://bzr.openai.com",
 ].join(" ");
 const POLITICA_DE_CONTEUDO = [
