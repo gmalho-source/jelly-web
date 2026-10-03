@@ -15,6 +15,11 @@
 -- com blocos de várias linhas — foi cortada a meio de uma (nada ficou
 -- aplicado: o editor desfez tudo).
 --
+-- O SQL Editor da Neon corre cerca de 40 instruções de cada vez: este ficheiro
+-- tem 66, e na produção ficaram as tabelas, os tipos e as chaves e só 6 dos 34
+-- índices. Os índices estão também em 2026-10-03-versoes-indices.sql, que
+-- cabe numa volta.
+--
 -- Correr na Neon, no SQL Editor, ANTES do deploy. Aditivo: não toca em nada do
 -- que já lá está, e correr duas vezes não faz mal.
 --
