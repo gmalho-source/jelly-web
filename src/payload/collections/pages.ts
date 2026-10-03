@@ -36,6 +36,10 @@ export const Pages: CollectionConfig = {
     livePreview: { url: ({ data }) => routes[String(data?.key ?? "")] ?? "/" },
   },
   access: { read: () => true, create: () => false, delete: () => false },
+  // Um histórico, sem rascunhos: cada gravação guarda uma versão, e o separador
+  // «Versões» deixa comparar e restaurar. Um texto apagado sem querer volta em
+  // dois cliques. Sem rascunhos porque aqui grava-se e publica-se de uma vez.
+  versions: { maxPerDoc: 50 },
   hooks: {
     afterRead: [mostrarCopyDoSite],
     beforeChange: [guardarSoOQueMuda],

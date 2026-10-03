@@ -307,6 +307,9 @@ export const Services: CollectionConfig = {
   labels: { singular: "Serviço", plural: "Serviços" },
   admin: { useAsTitle: "namePt", group: "Trabalho", defaultColumns: ["namePt", "order"] },
   access: { read: () => true },
+  // Um histórico, sem rascunhos, como nas páginas: cada gravação guarda uma
+  // versão, e o separador «Versões» deixa comparar e restaurar.
+  versions: { maxPerDoc: 50 },
   hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(servicePaths)], afterDelete: [revalidateOnDelete(servicePaths)] },
   fields: [
     {
