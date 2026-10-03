@@ -236,13 +236,13 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         // documento, e numa janela larga ficava a meio caminho para sempre.
         <blockquote className="entra-perto relative mt-16 border-t border-line pt-8">
           {/* A aspa grande diz «isto é uma citação» antes de se ler uma
-              palavra, e por isso o texto já não leva as pequenas. No ecrã
-              largo fica pendurada fora da margem, para o texto continuar
-              alinhado com o resto da página; no telemóvel não há margem, e
-              assenta por cima do texto. */}
+              palavra, e por isso o texto já não leva as pequenas. A partir de
+              1280 px fica pendurada fora da margem, para o texto continuar
+              alinhado com o resto da página — abaixo disso a margem não chega
+              para ela e saía do ecrã, e assenta por cima do texto. */}
           <span
             aria-hidden="true"
-            className="pointer-events-none block h-12 select-none font-display text-[104px] leading-[0.9] text-red lg:absolute lg:-left-[0.55em] lg:top-7 lg:h-auto lg:text-[132px]"
+            className="pointer-events-none mb-1 block h-11 select-none font-display text-[84px] leading-[0.95] text-red xl:absolute xl:-left-14 xl:top-7 xl:mb-0 xl:h-auto xl:text-[120px]"
           >
             “
           </span>
