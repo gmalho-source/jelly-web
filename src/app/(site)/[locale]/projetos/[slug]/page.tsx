@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import Image from "next/image";
+import { AvatarPadrao } from "@/components/AvatarPadrao";
 import { CaseStory } from "@/components/CaseStory";
 import { getArchivedProject, getArchivedProjects, getNextProject, getProject, getProjects } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
@@ -233,15 +234,26 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
       {citacao ? (
         // `entra-perto`: a citação está a pouco mais de um ecrã do fim do
         // documento, e numa janela larga ficava a meio caminho para sempre.
-        <blockquote className="entra-perto mt-16 border-t border-line pt-8">
-          {/* Poppins Light e não Bree Serif: a Bree só tem um peso, e a 38px
-              uma frase de cliente lia-se como mais um título da página — pesava
-              mais do que o que o cliente disse. Mais pequena e mais leve, lê-se
-              como uma voz de fora, que é o que é. */}
-          <p className="max-w-[46ch] font-sans text-[19px] font-light leading-[1.5] lg:text-[24px]">
-            “{citacao.text[locale]}”
-          </p>
+        <blockquote className="entra-perto relative mt-16 border-t border-line pt-8">
+          {/* A aspa grande diz «isto é uma citação» antes de se ler uma
+              palavra, e por isso o texto já não leva as pequenas. No ecrã
+              largo fica pendurada fora da margem, para o texto continuar
+              alinhado com o resto da página; no telemóvel não há margem, e
+              assenta por cima do texto. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none block h-12 select-none font-display text-[104px] leading-[0.9] text-red lg:absolute lg:-left-[0.55em] lg:top-7 lg:h-auto lg:text-[132px]"
+          >
+            “
+          </span>
+          {/* Lora, a letra do corpo dos artigos, e não a Bree Serif dos
+              títulos: a Bree só tem um peso, e uma frase de cliente lia-se como
+              mais um título da página. A Lora é letra de leitura — lê-se como
+              uma voz de fora, que é o que é. */}
+          <p className="max-w-[52ch] font-reading text-[19px] leading-[1.6] lg:text-[22px]">{citacao.text[locale]}</p>
           <footer className="mt-6 flex items-center gap-4">
+            {/* Sem fotografia, um busto genérico nas cores da casa: a
+                assinatura fica igual às que têm cara. */}
             {citacao.photo ? (
               <Image
                 src={citacao.photo.src}
@@ -251,7 +263,9 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
                 sizes="56px"
                 className="h-14 w-14 shrink-0 rounded-full object-cover grayscale"
               />
-            ) : null}
+            ) : (
+              <AvatarPadrao className="h-14 w-14" />
+            )}
             <span className="eyebrow text-fg-soft">
               {citacao.author}
               {citacao.role[locale] ? ` · ${citacao.role[locale]}` : ""}
