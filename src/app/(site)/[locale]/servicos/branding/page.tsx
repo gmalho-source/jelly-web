@@ -150,14 +150,13 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
       </section>
 
       {/* ── O que acreditamos ───────────────────────────────────────────────
-          O remate do título do topo: o parágrafo diz como trabalhamos, e a
-          última frase, maior e sozinha, diz porquê. */}
-      <section className="surface-ink py-20 lg:py-24">
+          O remate do título do topo, em lilás: a página é tinta de cima a
+          baixo, e este é o bloco que tem de se ver. O parágrafo diz como
+          trabalhamos; a última frase, no mesmo corpo e a negrito, diz porquê. */}
+      <section className="surface-accent-lavender py-20 lg:py-24">
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <p className="entra max-w-[60ch] text-lg leading-relaxed text-fg-soft">{b.remate.texto[locale]}</p>
-          <p className="entra-tarde mt-10 max-w-[30ch] font-display text-[clamp(24px,3vw,40px)] leading-[1.12] tracking-[-0.015em]">
-            {b.remate.fecho[locale]}
-          </p>
+          <p className="entra max-w-[60ch] text-lg leading-relaxed">{b.remate.texto[locale]}</p>
+          <p className="entra-tarde mt-6 max-w-[60ch] text-lg font-bold leading-relaxed">{b.remate.fecho[locale]}</p>
         </div>
       </section>
 
