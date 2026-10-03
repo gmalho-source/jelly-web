@@ -13,7 +13,20 @@ import { writeProjectSummary } from "../endpoints/write-project-summary";
 import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, oldSlugsField, slugEnField, slugField } from "../fields";
 
-const projectPaths = (doc: Record<string, unknown>) => ["/", "/projetos", `/projetos/${doc.slug ?? ""}`];
+/*
+ * Um projeto aparece também nas páginas de serviço: as marcas recentes no
+ * Branding, os casos em Marketing, Tecnologia e IA. Mudar-lhe a capa tem de
+ * as refazer também, e não só a homepage e a página do projeto.
+ */
+const projectPaths = (doc: Record<string, unknown>) => [
+  "/",
+  "/projetos",
+  `/projetos/${doc.slug ?? ""}`,
+  "/servicos/branding",
+  "/servicos/marketing",
+  "/servicos/tecnologia",
+  "/servicos/inteligencia-artificial",
+];
 const servicePaths = (doc: Record<string, unknown>) => ["/", "/servicos", `/servicos/${doc.slug ?? ""}`];
 
 /** Blocos da narrativa de um caso: é disto que uma página de projeto é feita. */
