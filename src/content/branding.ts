@@ -43,7 +43,7 @@ export const branding = {
   /* O vídeo do topo: a equipa de design a trabalhar, a preto e branco, por
      trás da citação. Entregue em HEVC de 10 bits a 1080p (5,0 MB, com som),
      que o Chrome e o Firefox não tocam; fica em H.264 a 1920 px, CRF 26, sem
-     som e com o índice à cabeça — a régua da casa para um fundo (ver
+     som, nível 4.0 e com o índice à cabeça — a régua da casa para um fundo (ver
      `scripts/video-prep.mjs`): 1,9 MB para 15 segundos. O cartaz é o
      fotograma do primeiro segundo, o mesmo que fica a quem pediu menos
      movimento. */
