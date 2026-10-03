@@ -27,6 +27,16 @@ const SLUG = "branding";
 const MARCAS = 3;
 
 /*
+ * A escolha à mão, por cima da regra. `FORA`: projetos com a disciplina
+ * Branding que não entram aqui (a Cetelem é comunicação digital de uma marca
+ * que já existia). `SEMPRE`: os que entram mesmo não estando entre os mais
+ * recentes. Os lugares que sobram são dos mais recentes, e os três aparecem
+ * do mais recente para o mais antigo. Pelo slug do projeto no painel.
+ */
+const FORA = ["cetelem"];
+const SEMPRE = ["tom-barry-luxury-home-developer"];
+
+/*
  * As cores da casa que a secção do trabalho vai tomando, uma por marca. Eram
  * cores de cada cliente quando as marcas estavam escritas à mão; vindas do
  * painel não trazem cor, e as da casa rodam pela mesma ordem do menu.
@@ -55,9 +65,13 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
   const outros = all.filter((item) => item.slug !== SLUG);
   // A grelha já vem do mais recente para o mais antigo. «Brand Activation» não
   // conta: é ativação de marca no terreno, não construção de marca.
-  const marcas = projetos
-    .filter((projeto) => projeto.cover?.src && projeto.disciplines.some((d) => d.trim().toLowerCase() === "branding"))
-    .slice(0, MARCAS);
+  const comCapa = projetos.filter((projeto) => projeto.cover?.src && !FORA.includes(projeto.slug));
+  const fixas = comCapa.filter((projeto) => SEMPRE.includes(projeto.slug)).slice(0, MARCAS);
+  const recentes = comCapa
+    .filter((projeto) => !SEMPRE.includes(projeto.slug))
+    .filter((projeto) => projeto.disciplines.some((d) => d.trim().toLowerCase() === "branding"))
+    .slice(0, MARCAS - fixas.length);
+  const marcas = [...recentes, ...fixas].sort((a, b) => b.date.localeCompare(a.date));
   const b = branding;
 
   const jsonLd = {
