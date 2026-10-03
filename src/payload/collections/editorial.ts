@@ -15,7 +15,18 @@ import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 import { translatePost } from "../endpoints/translate-post";
 import { writeExcerpt } from "../endpoints/write-excerpt";
 
-const postPaths = (doc: Record<string, unknown>) => ["/", "/blog", `/blog/${doc.slug ?? ""}`];
+/*
+ * Um artigo vive no blog ou no newsroom (o campo «Onde aparece»). Os dois
+ * endereços refazem-se sempre: quem muda um artigo de sítio tem de ver a
+ * página velha passar a redirecionar e a nova aparecer.
+ */
+const postPaths = (doc: Record<string, unknown>) => [
+  "/",
+  "/blog",
+  `/blog/${doc.slug ?? ""}`,
+  "/newsroom",
+  `/newsroom/${doc.slug ?? ""}`,
+];
 
 /**
  * Vídeo no corpo de um artigo.
@@ -269,7 +280,7 @@ export const Posts: CollectionConfig = {
     group: "Editorial",
     defaultColumns: ["titlePt", "date", "category", "_status"],
     // Escrever e ver ao lado: é a razão de estarmos no Payload.
-    livePreview: { url: ({ data }) => `/blog/${data?.slug ?? ""}` },
+    livePreview: { url: ({ data }) => `/${data?.seccao === "newsroom" ? "newsroom" : "blog"}/${data?.slug ?? ""}` },
   },
   versions: { drafts: true },
   access: { read: () => true },
@@ -317,6 +328,28 @@ export const Posts: CollectionConfig = {
         },
         { name: "readingMinutes", label: "Minutos de leitura", type: "number" },
       ],
+    },
+    /*
+     * Onde o artigo vive. O blog é a voz editorial da casa — opinião, método,
+     * o que vale durante anos; o newsroom é a casa a falar de si — anúncios,
+     * eventos, imprensa. O mesmo editor, a mesma importação de Word, a mesma
+     * tradução e o mesmo áudio; muda a lista onde aparece e o endereço:
+     * /blog/… ou /newsroom/…. Mudar de um para o outro redireciona o endereço
+     * antigo para o novo.
+     */
+    {
+      name: "seccao",
+      label: "Onde aparece",
+      type: "select",
+      defaultValue: "blog",
+      options: [
+        { label: "Blog", value: "blog" },
+        { label: "Newsroom", value: "newsroom" },
+      ],
+      admin: {
+        position: "sidebar",
+        description: "Blog: artigos de opinião e método. Newsroom: notícias da Jelly — anúncios, eventos, imprensa.",
+      },
     },
     { name: "category", label: "Categoria", type: "relationship", relationTo: "categories" },
     {

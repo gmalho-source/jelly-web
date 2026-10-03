@@ -4,7 +4,8 @@ import { CoverHeader } from "@/components/CoverHeader";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { getNews, getPosts } from "@/lib/cms";
+import { getNewsroom, getPosts } from "@/lib/cms";
+import { ROTA_DO_ARTIGO } from "@/lib/seccao";
 
 export async function generateMetadata({
   params,
@@ -30,7 +31,7 @@ export default async function NewsroomPage({
 
   const nav = await getTranslations("nav");
   const t = await getTranslations("newsroom");
-  const [items, posts] = await Promise.all([getNews(), getPosts()]);
+  const [items, posts] = await Promise.all([getNewsroom(), getPosts()]);
 
   // A capa do cabeçalho é a do artigo mais recente que a newsroom aponta — a
   // notícia mais nova da casa, e não uma imagem escolhida à parte.
@@ -106,7 +107,10 @@ export default async function NewsroomPage({
                   <Link
                     key={item.slug}
                     href={{
-                      pathname: "/blog/[slug]",
+                      // O artigo apontado diz onde vive: os do newsroom em
+                      // /newsroom/…, e um do blog que uma notícia aponte fica
+                      // no blog.
+                      pathname: ROTA_DO_ARTIGO[item.postSeccao ?? "blog"],
                       params: {
                         slug:
                           locale === "en" && item.postSlugEn

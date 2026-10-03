@@ -25,6 +25,7 @@ export const routing = defineRouting({
     "/blog": { pt: "/blog", en: "/blog" },
     "/blog/[slug]": { pt: "/blog/[slug]", en: "/blog/[slug]" },
     "/newsroom": { pt: "/newsroom", en: "/newsroom" },
+    "/newsroom/[slug]": { pt: "/newsroom/[slug]", en: "/newsroom/[slug]" },
     "/contactos": { pt: "/contactos", en: "/contact" },
     "/imunidade-algoritmica": { pt: "/imunidade-algoritmica", en: "/algorithmic-immunity" },
     // Página pilar: vive debaixo da Inteligência Artificial e chega-se lá por

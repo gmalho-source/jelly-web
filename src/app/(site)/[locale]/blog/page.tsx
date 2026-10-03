@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
 import { capaDe, slugFor } from "@/lib/slugs";
-import { getPosts } from "@/lib/cms";
+import { getPostsDa } from "@/lib/cms";
 import { semShortcodes } from "@/lib/resumo";
 import { PesquisaDoBlog } from "@/components/PesquisaDoBlog";
 import { ListaDoBlog, type ArtigoDaLista } from "@/components/ListaDoBlog";
@@ -38,7 +38,8 @@ export default async function BlogIndexPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("blog");
-  const posts = await getPosts();
+  // Só os do blog: as notícias da casa vivem no newsroom.
+  const posts = await getPostsDa("blog");
   const [featured, ...rest] = posts;
   const formatter = new Intl.DateTimeFormat(
     locale === "pt" ? "pt-PT" : "en-GB",

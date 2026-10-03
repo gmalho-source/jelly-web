@@ -22,6 +22,7 @@ import type {
   Project,
 } from "@/content/types";
 import { marcaShorts } from "@/lib/shorts";
+import { seccaoDe, type Seccao } from "@/lib/seccao";
 import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
@@ -161,6 +162,15 @@ export async function getPost(slug: string): Promise<Post | undefined> {
 }
 
 /**
+ * Os artigos de uma secção (ver `lib/seccao.ts`). O `getPosts` continua a dar
+ * todos — é o que encontra um artigo pelo endereço, seja de onde for; as
+ * listas pedem a sua.
+ */
+export async function getPostsDa(seccao: Seccao): Promise<Post[]> {
+  return (await getPosts()).filter((post) => seccaoDe(post) === seccao);
+}
+
+/**
  * Artigos parecidos com este.
  *
  * A parecença mede-se primeiro pelas etiquetas e só depois pela prateleira:
@@ -173,9 +183,12 @@ export async function getPost(slug: string): Promise<Post | undefined> {
  * lugares com o melhor que houver, não deixá-los vazios.
  */
 export async function getRelatedPosts(slug: string, limit = 3): Promise<Post[]> {
-  const all = await getPosts();
-  const current = findBySlug(all, slug);
-  if (!current) return all.slice(0, limit);
+  const todos = await getPosts();
+  const current = findBySlug(todos, slug);
+  if (!current) return todos.filter((post) => seccaoDe(post) === "blog").slice(0, limit);
+  // Da mesma secção: depois de uma notícia, outras notícias; depois de um
+  // artigo, outros artigos.
+  const all = todos.filter((post) => seccaoDe(post) === seccaoDe(current));
 
   const minhas = new Set((current.tags ?? []).map((etiqueta) => etiqueta.slug));
 
@@ -202,6 +215,38 @@ export const getNews = fromStore("news", async (): Promise<NewsItem[]> => {
   const all = await fetchNews(localNews);
   return [...all].sort((a, b) => b.date.localeCompare(a.date));
 });
+
+/**
+ * A lista do newsroom: as notícias do painel (com artigo, com link de fora, ou
+ * só com o resumo) e os artigos marcados «Newsroom» que nenhuma notícia aponta,
+ * do mais recente para o mais antigo.
+ *
+ * Um artigo que uma notícia aponta aparece uma vez, com o título e o resumo da
+ * notícia. Um artigo do newsroom sem notícia entra por si, como «Notícia», com
+ * o resumo dele — escrever o artigo chega, não é preciso criar a notícia também.
+ */
+export async function getNewsroom(): Promise<NewsItem[]> {
+  const [itens, posts] = await Promise.all([getNews(), getPosts()]);
+  const porSlug = new Map(posts.map((post) => [post.slug, post]));
+  const apontados = new Set(itens.map((item) => item.postSlug).filter(Boolean));
+  const comSeccao = itens.map((item) => {
+    const post = item.postSlug ? porSlug.get(item.postSlug) : undefined;
+    return post ? { ...item, postSeccao: seccaoDe(post) } : item;
+  });
+  const soArtigos: NewsItem[] = posts
+    .filter((post) => seccaoDe(post) === "newsroom" && !apontados.has(post.slug))
+    .map((post) => ({
+      slug: `artigo-${post.slug}`,
+      date: post.date,
+      kind: "noticia",
+      title: post.title,
+      summary: post.excerpt,
+      postSlug: post.slug,
+      postSlugEn: post.slugEn,
+      postSeccao: "newsroom",
+    }));
+  return [...comSeccao, ...soArtigos].sort((a, b) => b.date.localeCompare(a.date));
+}
 
 /**
  * Arquivo do portfolio antigo: 64 projetos com cliente, ano, disciplinas e capa.

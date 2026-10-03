@@ -199,6 +199,8 @@
     "filter": "Filtrar por categoria"
   },
   "newsroom": {
+    "back": "Todas as notícias",
+    "related": "Mais notícias",
     "eyebrow": "Newsroom",
     "title": "O que se passa na Jelly.",
     "lead": "Notícias, eventos e presença na imprensa. Para assessoria, fale com hello@jelly.pt.",

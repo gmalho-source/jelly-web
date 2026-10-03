@@ -199,6 +199,8 @@
     "filter": "Filter by category"
   },
   "newsroom": {
+    "back": "All news",
+    "related": "More news",
     "eyebrow": "Newsroom",
     "title": "What is happening at Jelly.",
     "lead": "News, events and press coverage. For press enquiries, write to hello@jelly.pt.",

@@ -338,6 +338,10 @@ export interface Post {
    */
   author?: string | null;
   readingMinutes?: number | null;
+  /**
+   * Blog: artigos de opinião e método. Newsroom: notícias da Jelly — anúncios, eventos, imprensa.
+   */
+  seccao?: ('blog' | 'newsroom') | null;
   category?: (number | null) | Category;
   /**
    * Aquilo de que o artigo fala. A categoria é uma só — a prateleira; as etiquetas são quantas forem precisas.
@@ -1901,6 +1905,7 @@ export interface PostsSelect<T extends boolean = true> {
   authorRef?: T;
   author?: T;
   readingMinutes?: T;
+  seccao?: T;
   category?: T;
   tags?: T;
   excerpt?:

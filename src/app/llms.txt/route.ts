@@ -3,6 +3,7 @@ import { PILARES } from "@/content/pilares";
 import { SERVICOS_DE_MARKETING } from "@/content/marketing-servicos";
 import { SERVICOS_DE_TECNOLOGIA } from "@/content/tecnologia-servicos";
 import { getPosts, getProjects, getServices } from "@/lib/cms";
+import { hrefDoArtigo } from "@/lib/seccao";
 import { SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -81,7 +82,7 @@ export async function GET() {
     `## Artigos recentes`,
     `São ${artigos.length} no total; ficam aqui os ${recentes.length} mais recentes, e o resto está no [blog](${url("/blog")}).`,
     ...recentes.map((a) =>
-      linha(a.title.pt, { pathname: "/blog/[slug]", params: { slug: slugFor(a, "pt") } }, `${a.date}, ${a.category.pt}`),
+      linha(a.title.pt, hrefDoArtigo(a, "pt"), `${a.date}, ${a.category.pt}`),
     ),
     "",
     "## Opcional",

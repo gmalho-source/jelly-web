@@ -2,7 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import type { NewsItem } from "@/content/types";
-import { getArchivedProjects, getNews, getPosts, getServices } from "@/lib/cms";
+import { getArchivedProjects, getNewsroom, getPosts, getServices } from "@/lib/cms";
+import { seccaoDe } from "@/lib/seccao";
 import { PROJETOS_NA_FOLHA } from "@/lib/indice";
 import { slugFor } from "@/lib/slugs";
 import { IndexSheet, type SheetTile } from "./IndexSheet";
@@ -21,7 +22,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     getServices(),
     getPosts(),
     getArchivedProjects(),
-    getNews(),
+    getNewsroom(),
   ]);
   const pt = locale === "pt";
 
@@ -58,7 +59,9 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
    * a fotografia de uma debaixo do nome de outra.
    */
   const capaDe = (item: NewsItem) => posts.find((post) => post.slug === item.postSlug)?.cover;
-  const ultimoArtigo = posts.find((post) => post.cover?.src) ?? posts[0];
+  // O «último artigo» é do blog: as notícias da casa têm o mosaico delas.
+  const doBlog = posts.filter((post) => seccaoDe(post) === "blog");
+  const ultimoArtigo = doBlog.find((post) => post.cover?.src) ?? doBlog[0];
   const ultimaNoticia = news.find((item) => capaDe(item)?.src) ?? news[0];
 
   const tiles: SheetTile[] = [

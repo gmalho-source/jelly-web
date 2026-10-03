@@ -15,7 +15,7 @@ import {
   getClientLogos,
   getMilestones,
   getPageImages,
-  getPosts,
+  getPostsDa,
   getServices,
   getTeam,
 } from "@/lib/cms";
@@ -47,7 +47,8 @@ export default async function HomePage({
     await Promise.all([
       getArchivedProjects(),
       getServices(),
-      getPosts(),
+      // As notas são do blog: as notícias da casa vivem no newsroom.
+      getPostsDa("blog"),
       getClientLogos(),
       getTeam(),
       getMilestones(),

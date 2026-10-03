@@ -322,6 +322,7 @@ export function fetchPosts(fallback: Post[]) {
         .filter((etiqueta) => etiqueta.name.pt);
       return {
         slug: text(raw.slug),
+        ...(raw.seccao === "newsroom" ? { seccao: "newsroom" as const } : {}),
         slugEn: text(raw.slugEn) || undefined,
       oldSlugs: Array.isArray(raw.oldSlugs) ? raw.oldSlugs.map(String) : undefined,
         date: text(raw.date).slice(0, 10),

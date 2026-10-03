@@ -1,4 +1,4 @@
-import { getPosts } from "@/lib/cms";
+import { getPostsDa } from "@/lib/cms";
 import type { Post } from "@/content/types";
 import { resumoPublicavel } from "@/lib/resumo";
 import { capaDe, slugFor } from "@/lib/slugs";
@@ -76,7 +76,8 @@ const DESCRICAO = {
 } as const;
 
 export async function feedDoBlog(locale: Locale): Promise<string> {
-  const posts = (await getPosts()).slice(0, QUANTOS);
+  // O feed é o do blog; as notícias da casa vivem no newsroom.
+  const posts = (await getPostsDa("blog")).slice(0, QUANTOS);
   const raiz = SITE_URL.replace(/\/$/, "");
   const base = locale === "en" ? `${raiz}/en` : raiz;
   const endereco = locale === "en" ? `${raiz}/en/rss.xml` : `${raiz}/rss.xml`;

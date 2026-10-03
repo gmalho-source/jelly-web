@@ -6,6 +6,7 @@ import { PILARES } from "@/content/pilares";
 import { SERVICOS_DE_MARKETING } from "@/content/marketing-servicos";
 import { SERVICOS_DE_TECNOLOGIA } from "@/content/tecnologia-servicos";
 import { getArchivedProjects, getJobs, getPosts, getProjects, getServices, getTeam } from "@/lib/cms";
+import { hrefDoArtigo } from "@/lib/seccao";
 import { SITE_URL } from "@/lib/seo";
 import { slugDaPessoa } from "@/lib/equipa";
 import { slugFor } from "@/lib/slugs";
@@ -105,7 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     add({ pathname: "/legal/[slug]", params: { slug: pagina.slug } }, 0.3);
   }
   for (const post of posts) {
-    add((locale) => ({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }), 0.5, post.date);
+    add((locale) => hrefDoArtigo(post, locale), 0.5, post.date);
   }
 
   return entries;

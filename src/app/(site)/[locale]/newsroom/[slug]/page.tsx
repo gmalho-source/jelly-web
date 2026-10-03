@@ -1,9 +1,9 @@
 import type { Locale } from "@/i18n/routing";
 import { metadataDoArtigo, PaginaDeArtigo, paramsDaSeccao, type ParamsDoArtigo } from "@/components/PaginaDeArtigo";
 
-/** Um artigo do blog. A página é a mesma do newsroom: ver `PaginaDeArtigo`. */
+/** Um artigo do newsroom. A página é a mesma do blog: ver `PaginaDeArtigo`. */
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
-  return paramsDaSeccao("blog", params.locale as Locale);
+  return paramsDaSeccao("newsroom", params.locale as Locale);
 }
 
 export function generateMetadata({ params }: { params: Promise<ParamsDoArtigo> }) {
@@ -11,5 +11,5 @@ export function generateMetadata({ params }: { params: Promise<ParamsDoArtigo> }
 }
 
 export default function Artigo({ params }: { params: Promise<ParamsDoArtigo> }) {
-  return <PaginaDeArtigo params={params} pedida="blog" />;
+  return <PaginaDeArtigo params={params} pedida="newsroom" />;
 }

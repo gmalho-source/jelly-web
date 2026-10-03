@@ -107,6 +107,8 @@ export type Autor = {
 
 export type Post = {
   slug: string;
+  /** Onde o artigo vive: no blog (vazio) ou no newsroom. Ver `PaginaDeArtigo`. */
+  seccao?: "newsroom";
   /** Endereço em inglês. Vazio, o inglês usa o português. */
   slugEn?: string;
   /** Endereços que esta peça já teve. Quem chega por um leva 308 para o atual. */
@@ -172,6 +174,8 @@ export type NewsItem = {
   postSlug?: string;
   /** O mesmo artigo, no endereço inglês. */
   postSlugEn?: string;
+  /** A secção do artigo apontado — é ela que decide o endereço (/blog/… ou /newsroom/…). */
+  postSeccao?: "blog" | "newsroom";
   /** Endereço de fora, quando não há artigo. */
   link?: string;
 };

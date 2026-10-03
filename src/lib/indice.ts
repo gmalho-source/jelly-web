@@ -2,6 +2,7 @@ import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import type { SheetTile } from "@/components/IndexSheet";
 import { getArchivedProjects, getPosts } from "@/lib/cms";
+import { hrefDoArtigo } from "@/lib/seccao";
 import { slugFor } from "@/lib/slugs";
 
 /** Os projetos com capa que o índice mostra na folha; os outros ficam para a procura. */
@@ -36,7 +37,7 @@ export async function entradasDaProcura(locale: Locale): Promise<SheetTile[]> {
       hidden: true,
       label: post.title[locale],
       kind: pt ? "artigo" : "article",
-      href: url({ pathname: "/blog/[slug]", params: { slug: slugFor(post, locale) } }),
+      href: url(hrefDoArtigo(post, locale)),
       image: post.cover?.src,
       tone: "bg-slate",
     })),
