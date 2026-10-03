@@ -112,7 +112,8 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
   const next = project ? await getNextProject(slug) : null;
 
   return (
-    <article className="surface-ink mx-auto max-w-[1200px] px-5 py-14 sm:px-8 lg:py-20">
+    <>
+    <article className="surface-ink mx-auto max-w-[1200px] px-5 pt-14 sm:px-8 lg:pt-20">
       {/* A seta de volta à galeria, no canto de cima. A página de um caso é
           quase sempre a primeira que alguém abre — chega-lhe por um link ou
           por uma pesquisa — e sem isto o caminho para o resto do trabalho é
@@ -226,54 +227,60 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         }}
       />
 
+    </article>
+
       {/* O testemunho, tenha o projeto caso escrito ou não: vive no mesmo
-          registo, e só dependia do caso por ter nascido com ele. A fotografia
-          vai num círculo e sempre a preto e branco — retratos tirados por
-          pessoas diferentes, com luzes diferentes, só se leem como uma série
-          quando perdem a cor, e é assim que a equipa aparece na grelha dela. */}
+          registo, e só dependia do caso por ter nascido com ele.
+
+          Numa faixa lilás a toda a largura, e centrado: corta a sequência da
+          página, que até aqui é toda nossa, e diz que agora fala outra pessoa.
+          É o lilás das vozes da casa — o mesmo do «Na Jelly, acreditamos» do
+          Branding. A fotografia vai num círculo e sempre a preto e branco:
+          retratos tirados por pessoas diferentes, com luzes diferentes, só se
+          leem como uma série quando perdem a cor. */}
       {citacao ? (
-        // `entra-perto`: a citação está a pouco mais de um ecrã do fim do
-        // documento, e numa janela larga ficava a meio caminho para sempre.
-        <blockquote className="entra-perto relative mt-16 border-t border-line pt-8">
-          {/* A aspa grande diz «isto é uma citação» antes de se ler uma
-              palavra, e por isso o texto já não leva as pequenas. A partir de
-              1280 px fica pendurada fora da margem, para o texto continuar
-              alinhado com o resto da página — abaixo disso a margem não chega
-              para ela e saía do ecrã, e assenta por cima do texto. */}
-          <span
-            aria-hidden="true"
-            className="pointer-events-none mb-1 block h-11 select-none font-display text-[84px] leading-[0.95] text-red xl:absolute xl:-left-14 xl:top-7 xl:mb-0 xl:h-auto xl:text-[120px]"
-          >
-            “
-          </span>
-          {/* Lora, a letra do corpo dos artigos, e não a Bree Serif dos
-              títulos: a Bree só tem um peso, e uma frase de cliente lia-se como
-              mais um título da página. A Lora é letra de leitura — lê-se como
-              uma voz de fora, que é o que é. */}
-          <p className="max-w-[52ch] font-reading text-[19px] leading-[1.6] lg:text-[22px]">{citacao.text[locale]}</p>
-          <footer className="mt-6 flex items-center gap-4">
-            {/* Sem fotografia, um busto genérico nas cores da casa: a
-                assinatura fica igual às que têm cara. */}
-            {citacao.photo ? (
-              <Image
-                src={citacao.photo.src}
-                alt={citacao.photo.alt ?? citacao.author}
-                width={112}
-                height={112}
-                sizes="56px"
-                className="h-14 w-14 shrink-0 rounded-full object-cover grayscale"
-              />
-            ) : (
-              <AvatarPadrao className="h-14 w-14" />
-            )}
-            <span className="eyebrow text-fg-soft">
-              {citacao.author}
-              {citacao.role[locale] ? ` · ${citacao.role[locale]}` : ""}
+        <section className="surface-accent-lavender mt-16 py-16 lg:mt-20 lg:py-24">
+          {/* `entra-perto`: a citação está a pouco mais de um ecrã do fim do
+              documento, e numa janela larga ficava a meio caminho para sempre. */}
+          <blockquote className="entra-perto mx-auto flex max-w-[1200px] flex-col items-center px-5 text-center sm:px-8">
+            {/* A aspa grande diz «isto é uma citação» antes de se ler uma
+                palavra, e por isso o texto já não leva as pequenas. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none block h-14 select-none font-display text-[96px] leading-[0.95] text-red lg:h-16 lg:text-[120px]"
+            >
+              “
             </span>
-          </footer>
-        </blockquote>
+            {/* Lora, a letra do corpo dos artigos, e não a Bree Serif dos
+                títulos: a Bree só tem um peso, e uma frase de cliente lia-se
+                como mais um título da página. A Lora é letra de leitura — lê-se
+                como uma voz de fora, que é o que é. */}
+            <p className="mt-4 max-w-[48ch] font-reading text-[19px] leading-[1.6] lg:text-[22px]">{citacao.text[locale]}</p>
+            <footer className="mt-8 flex flex-col items-center gap-3">
+              {/* Sem fotografia, um busto genérico nas cores da casa: a
+                  assinatura fica igual às que têm cara. */}
+              {citacao.photo ? (
+                <Image
+                  src={citacao.photo.src}
+                  alt={citacao.photo.alt ?? citacao.author}
+                  width={112}
+                  height={112}
+                  sizes="56px"
+                  className="h-14 w-14 shrink-0 rounded-full object-cover grayscale"
+                />
+              ) : (
+                <AvatarPadrao className="h-14 w-14" />
+              )}
+              <span className="eyebrow text-fg-soft">
+                {citacao.author}
+                {citacao.role[locale] ? ` · ${citacao.role[locale]}` : ""}
+              </span>
+            </footer>
+          </blockquote>
+        </section>
       ) : null}
 
+    <div className="surface-ink mx-auto max-w-[1200px] px-5 pb-14 sm:px-8 lg:pb-20">
       {!story.length ? (
         <div className="entra-perto mt-14 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8">
           <p className="subtitle max-w-[48ch]">
@@ -302,6 +309,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           </Link>
         ) : null}
       </div>
-    </article>
+    </div>
+    </>
   );
 }
