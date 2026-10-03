@@ -27,7 +27,7 @@ export const branding = {
   /* O remate da citação: um título, o que fazemos, e a razão numa linha. */
   remate: {
     titulo: {
-      pt: "Trabalhar uma marca começa por compreender as pessoas.",
+      pt: "Trabalhar uma marca, começa por compreender as pessoas.",
       en: "Building a brand starts with understanding people.",
     },
     texto: {
