@@ -80,6 +80,8 @@ export async function PaginaDeArtigo({ params, pedida }: { params: Promise<Param
 
   const t = await getTranslations("blog");
   const tNews = await getTranslations("newsroom");
+  // Os rótulos da galeria são os mesmos dos casos: a galeria é a mesma.
+  const tWork = await getTranslations("work");
   const tSub = await getTranslations("subscricao");
   const nav = await getTranslations("nav");
   const related = await getRelatedPosts(slug);
@@ -218,7 +220,19 @@ export async function PaginaDeArtigo({ params, pedida }: { params: Promise<Param
               mesma família para a coluna ler como um só bloco. */}
           <div className="mt-8">
             {body?.length ? (
-              <ArticleBody blocks={body} />
+              <ArticleBody
+                blocks={body}
+                galeria={{
+                  rotulo: post.title[locale],
+                  textos: {
+                    ver: tWork("galleryOpen"),
+                    fechar: tWork("galleryClose"),
+                    anterior: tWork("galleryPrev"),
+                    seguinte: tWork("galleryNext"),
+                    contador: tWork.raw("galleryCount") as string,
+                  },
+                }}
+              />
             ) : post.body?.length ? (
               <div className="coluna-de-leitura">
                 {post.body.map((paragraph, index) => (

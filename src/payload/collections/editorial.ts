@@ -116,13 +116,37 @@ const imagemDoCorpo = UploadFeature({
  * nem cores por célula, e o site também não as desenha — uma tabela de artigo
  * é para comparar números, não para paginar.
  */
+/**
+ * Galeria no corpo de um artigo: a mesma dos projetos — uma fita que se
+ * desliza, e cada imagem abre em cheio. Fica guardada dentro do texto do
+ * artigo, como o vídeo, e por isso não precisou de mexer na base.
+ */
+const galeriaBlock: Block = {
+  slug: "gallery",
+  labels: { singular: "Galeria", plural: "Galerias" },
+  fields: [
+    {
+      name: "images",
+      label: "Imagens",
+      type: "upload",
+      relationTo: "media",
+      hasMany: true,
+      required: true,
+      admin: {
+        description:
+          "Uma fita que se desliza, pela ordem em que as puser aqui. No artigo, cada imagem abre em cheio e passa-se com o dedo, com as setas ou com o teclado. A Legenda escrita no ficheiro aparece por baixo da imagem quando ela está aberta.",
+      },
+    },
+  ],
+};
+
 const corpoDeArtigo = lexicalEditor({
   // A funcionalidade das imagens vem depois das de origem de propósito: é a
   // mesma, com os campos acrescentados, e a última é a que fica.
   features: ({ defaultFeatures }) => [
     ...defaultFeatures,
     imagemDoCorpo,
-    BlocksFeature({ blocks: [videoBlock] }),
+    BlocksFeature({ blocks: [videoBlock, galeriaBlock] }),
     EXPERIMENTAL_TableFeature(),
   ],
 });

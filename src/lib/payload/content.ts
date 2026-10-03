@@ -167,6 +167,14 @@ export function fromLexical(root: unknown): Block[] {
         const url = text(campos.url);
         const caption = text(campos.caption);
         if (url) blocks.push({ type: "embed", url, ...(caption ? { caption } : {}) });
+      } else if (campos.blockType === "gallery") {
+        // A mesma galeria dos casos, com as medidas: a lente precisa delas
+        // para reservar o sítio antes de a imagem grande chegar.
+        const images = ((campos.images ?? []) as MediaDoc[])
+          .map(image)
+          .filter((item): item is NonNullable<ReturnType<typeof image>> => Boolean(item))
+          .map(({ src, alt, legenda, width, height }) => ({ src, alt, legenda, width, height }));
+        if (images.length) blocks.push({ type: "gallery", images });
       }
     } else {
       const bloco = paragrafo(node);

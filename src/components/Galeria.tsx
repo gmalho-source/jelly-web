@@ -66,11 +66,17 @@ export function Galeria({
   imagens,
   cliente,
   textos,
+  sangra = true,
 }: {
   imagens: ImagemDaGaleria[];
   /** O nome do cliente, para as imagens sem texto alternativo. */
   cliente: string;
   textos: TextosDaGaleria;
+  /**
+   * A fita passa para lá das margens da página, como nos casos. Num artigo
+   * não: fica na coluna de texto, alinhada com os parágrafos.
+   */
+  sangra?: boolean;
 }) {
   const [aberta, setAberta] = useState<number | null>(null);
   const lente = useRef<HTMLDivElement>(null);
@@ -146,7 +152,9 @@ export function Galeria({
     <>
       {/* A fita. Cada imagem é um botão: quem navega com o teclado chega-lhe
           por tabulação, e quem usa leitor de ecrã ouve o que ele faz. */}
-      <div className="mt-10 -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 sm:-mx-8 sm:px-8 [scrollbar-width:thin]">
+      <div
+        className={`mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:thin] ${sangra ? "-mx-5 px-5 sm:-mx-8 sm:px-8" : ""}`}
+      >
         {imagens.map((imagem, indice) => (
           <button
             key={indice}

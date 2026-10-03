@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Block, Span } from "@/content/types";
+import { Galeria, type TextosDaGaleria } from "@/components/Galeria";
 import { Inline } from "@/components/Marcado";
 import { VideoEmbed } from "@/components/VideoEmbed";
 import { fonteDeVideo, videoDeParagrafo } from "@/lib/video";
@@ -8,7 +9,14 @@ import { fonteDeVideo, videoDeParagrafo } from "@/lib/video";
  * Corpo de artigo migrado do WordPress. Lora, medida de 66 caracteres,
  * capitular vermelha no primeiro parágrafo.
  */
-export function ArticleBody({ blocks }: { blocks: Block[] }) {
+export function ArticleBody({
+  blocks,
+  galeria,
+}: {
+  blocks: Block[];
+  /** Os rótulos da galeria e o nome para as imagens sem texto alternativo. Sem eles, as galerias não se desenham. */
+  galeria?: { textos: TextosDaGaleria; rotulo: string };
+}) {
   // Um parágrafo que é só o endereço de um vídeo é um vídeo. Trata-se aqui, à
   // entrada, e não em cada conversor: assim vale para o que se escreve no
   // painel, para o Markdown importado e para os artigos que vieram do site
@@ -78,6 +86,16 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
           );
         }
         if (block.type === "table") return <Tabela key={index} rows={block.rows} />;
+        if (block.type === "gallery") {
+          // A fita dos casos, dentro da coluna de texto e alinhada com os
+          // parágrafos (`sangra={false}`); `clear-both` para não se encostar a
+          // uma imagem a contornar o texto.
+          return galeria ? (
+            <div key={index} className="clear-both">
+              <Galeria imagens={block.images} cliente={galeria.rotulo} textos={galeria.textos} sangra={false} />
+            </div>
+          ) : null;
+        }
         if (block.type === "image" && block.src) {
           // A contornar: pouco menos de metade da coluna, e só a partir de 30rem
           // de coluna — abaixo disso volta a ocupar a largura toda.
