@@ -6,8 +6,8 @@ import type { Localized } from "./types";
  * Era a mais curta das páginas de serviço — frase, quatro bullets, quatro
  * fases — e para a disciplina cujo argumento é tornar reconhecível, uma página
  * igual às outras é uma contradição. Esta não descreve branding: faz. O topo é
- * o manifesto, a frase vermelha diz o que fazemos, e o trabalho são as marcas
- * mais recentes do arquivo.
+ * a citação, o que acreditamos, e o trabalho são as marcas mais recentes do
+ * arquivo.
  *
  * As marcas não vivem aqui: são os três projetos mais recentes com a disciplina
  * Branding no painel, com link para a página de cada um. Quem publica um
@@ -59,13 +59,6 @@ export const branding = {
   descricao: {
     pt: "Posicionamento, identidade e sistemas de marca que se reconhecem antes de se lerem. Branding pela Jelly: estratégia, design e execução, nesta ordem.",
     en: "Positioning, identity and brand systems that are recognised before they are read. Branding by Jelly: strategy, design and execution, in that order.",
-  },
-
-  /* Uma frase só, a dizer o que fazemos. A primeira oração afirma; a segunda,
-     no mesmo parágrafo e em tom mais baixo, fecha o argumento. */
-  tese: {
-    a: { pt: "Fazemos marcas que se reconhecem à primeira.", en: "We make brands people recognise at first sight." },
-    b: { pt: "E que dizem o mesmo em todo o lado.", en: "And that say the same thing everywhere." },
   },
 
   materia: {

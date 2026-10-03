@@ -161,17 +161,6 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
         </div>
       </section>
 
-      {/* ── O que fazemos, numa frase, em vermelho ──────────────────────────
-          Um parágrafo só: a afirmação em tinta, e a volta que ela dá no mesmo
-          fôlego, em tom mais baixo. */}
-      <section className="surface-red py-20 lg:py-24">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <p className="max-w-[24ch] font-display text-[clamp(30px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">
-            {b.tese.a[locale]} <span className="text-fg-soft">{b.tese.b[locale]}</span>
-          </p>
-        </div>
-      </section>
-
       {/* ── As marcas mais recentes ─────────────────────────────────────────
           A cor do cabeçalho segue a marca que está no ecrã: ver ObrasComAcento.
           Cada marca é um link para a página do projeto. */}
@@ -285,10 +274,9 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
       </section>
 
       {/* ── O fecho, em vermelho a toda a largura ────────────────────────────
-          A mesma cor e a mesma medida da tese, para as duas faixas se lerem
-          como as duas margens da página: uma abre o argumento, a outra
-          fecha-o. Aqui não há parágrafo por baixo do título — a esta altura
-          quem lê não precisa de mais uma explicação, precisa de uma porta. */}
+          O único vermelho da página, no fim. Aqui não há parágrafo por baixo
+          do título — a esta altura quem lê não precisa de mais uma explicação,
+          precisa de uma porta. */}
       <section className="surface-red py-20 lg:py-24">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-8 px-5 sm:px-8">
           <h2 className="entra-perto max-w-[18ch] font-display text-[clamp(32px,5vw,72px)] leading-[1.0] tracking-[-0.025em]">
