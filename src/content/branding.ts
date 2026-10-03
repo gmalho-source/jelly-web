@@ -16,16 +16,28 @@ import type { Localized } from "./types";
 
 export const branding = {
   eyebrow: { pt: "Serviços · Branding", en: "Services · Branding" },
-  /* A frase é de Frank Chimero e a casa adotou-a. O verbo concorda com
-     «design»: ignores. */
+  /* A frase é de Frank Chimero, e vai entre aspas e assinada: é uma citação,
+     não um slogan da casa. O verbo concorda com «design»: ignores. */
   manifesto: {
-    forte: ["People", "ignore", "design"],
+    forte: ["“People", "ignore", "design"],
     fraco: ["that", "ignores"],
-    fecho: "people.",
+    fecho: "people.”",
+    autor: "Frank Chimero",
   },
-  claim: {
-    pt: "Uma marca não é um logo. É a decisão de o que dizer, a quem, e o que deixar de dizer — e é isso que se constrói aqui.",
-    en: "A brand is not a logo. It is the decision of what to say, to whom, and what to leave unsaid — and that is what gets built here.",
+  /* O remate da citação: um título, o que fazemos, e a razão numa linha. */
+  remate: {
+    titulo: {
+      pt: "Trabalhar uma marca começa por compreender as pessoas.",
+      en: "Building a brand starts with understanding people.",
+    },
+    texto: {
+      pt: "Na Jelly, acreditamos que o branding constrói a forma como uma marca é reconhecida, compreendida e escolhida. Começamos por perceber o negócio, o que o torna relevante e as pessoas a quem se dirige. Traduzimos essa compreensão num posicionamento claro, numa identidade própria e numa experiência coerente em cada contacto.",
+      en: "At Jelly, we believe branding shapes how a brand is recognised, understood and chosen. We start by understanding the business, what makes it relevant and the people it speaks to. We translate that understanding into a clear positioning, a distinctive identity and a coherent experience at every touchpoint.",
+    },
+    fecho: {
+      pt: "Porque uma marca ganha valor quando aquilo que promete corresponde àquilo que as pessoas vivem.",
+      en: "Because a brand gains value when what it promises matches what people experience.",
+    },
   },
   cta: { pt: "Vamos falar?", en: "Shall we talk?" },
   /* O filme: um livro de marca numa mesa escura, a preto e branco, com a página

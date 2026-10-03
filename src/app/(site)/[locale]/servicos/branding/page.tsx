@@ -109,8 +109,12 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
               </span>
             ))}
           </h1>
+          {/* A assinatura da citação: a frase é de Frank Chimero, não da casa. */}
+          <p className="mt-6 text-sm uppercase tracking-[0.12em] text-fg-soft">
+            — <cite className="not-italic">{b.manifesto.autor}</cite>
+          </p>
           <div className="mt-12 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
-            <p className="subtitle max-w-[48ch]">{b.claim[locale]}</p>
+            <p className="subtitle max-w-[48ch]">{b.remate.titulo[locale]}</p>
             {chamada}
           </div>
         </div>
@@ -142,6 +146,18 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
               <source src={b.topo.video} type="video/mp4" />
             </video>
           </div>
+        </div>
+      </section>
+
+      {/* ── O que acreditamos ───────────────────────────────────────────────
+          O remate do título do topo: o parágrafo diz como trabalhamos, e a
+          última frase, maior e sozinha, diz porquê. */}
+      <section className="surface-ink py-20 lg:py-24">
+        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+          <p className="entra max-w-[60ch] text-lg leading-relaxed text-fg-soft">{b.remate.texto[locale]}</p>
+          <p className="entra-tarde mt-10 max-w-[30ch] font-display text-[clamp(24px,3vw,40px)] leading-[1.12] tracking-[-0.015em]">
+            {b.remate.fecho[locale]}
+          </p>
         </div>
       </section>
 
