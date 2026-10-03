@@ -87,11 +87,29 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── O manifesto ─────────────────────────────────────────────────────
-          A frase é a imagem, e por isso continua em tinta, sem nada por trás.
+          A citação por cima do vídeo da equipa, que corre mudo e em ciclo. O
+          véu escurece mais em baixo, onde está o texto: o vídeo tem papel
+          branco em plano, e a frase branca tem de se ler por cima dele.
           Acima da dobra, e por isso a entrada é uma animação de tempo ao
-          carregar e não de scroll. O topo fica um pouco abaixo de um ecrã para
-          o filme que vem a seguir espreitar na dobra e convidar a descer. */}
-      <header className="surface-ink relative -mt-6 flex min-h-[86svh] flex-col justify-end overflow-hidden pb-8 pt-[140px] sm:-mt-24 lg:pb-10">
+          carregar e não de scroll. */}
+      <header className="surface-ink relative isolate -mt-6 flex min-h-[86svh] flex-col justify-end overflow-hidden pb-8 pt-[140px] sm:-mt-24 lg:pb-10">
+        {/* O primeiro fotograma serve de capa enquanto o vídeo chega, e é o que
+            fica a quem pediu menos movimento. */}
+        <Image src={b.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="-z-30 object-cover" />
+        <video
+          className="video-fundo absolute inset-0 -z-20 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={b.topo.poster.src}
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src={b.topo.video} type="video/mp4" />
+        </video>
+        <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/95 via-ink/75 to-ink/50" />
         <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
           <span className="eyebrow text-red">{b.eyebrow[locale]}</span>
           <h1
@@ -110,7 +128,9 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
             ))}
           </h1>
           {/* A assinatura da citação: a frase é de Frank Chimero, não da casa. */}
-          <p className="mt-6 text-sm uppercase tracking-[0.12em] text-fg-soft">
+          {/* Com respiro: a última linha da citação tem descendentes («people»),
+              e colada a ela a assinatura lia-se como mais uma linha da frase. */}
+          <p className="mt-9 text-sm uppercase tracking-[0.12em] text-fg-soft sm:mt-12">
             — <cite className="not-italic">{b.manifesto.autor}</cite>
           </p>
           <div className="mt-12 flex flex-wrap items-end justify-between gap-7 border-t border-line pt-6">
@@ -119,35 +139,6 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
           </div>
         </div>
       </header>
-
-      {/* ── O filme ────────────────────────────────────────────────────────
-          Um livro de marca numa mesa escura, a preto e branco, no fotograma
-          inteiro: sem gradiente e sem texto por cima — a frase já ficou dita, e
-          o que se vê é o objeto que sai daqui. A moldura deriva contra o texto
-          (`paralaxe`), com respiro por baixo para não entrar na faixa
-          vermelha. */}
-      <section className="surface-ink pb-14 lg:pb-16">
-        <div className="mx-auto w-full max-w-[1200px] px-5 sm:px-8">
-          <div className="paralaxe relative aspect-video overflow-hidden rounded-[6px] bg-[#1d2126]">
-            {/* O primeiro fotograma serve de capa enquanto o filme chega, e é o
-                que fica a quem pediu menos movimento. */}
-            <Image src={b.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="(max-width: 1200px) 100vw, 1200px" className="object-cover" />
-            <video
-              className="video-fundo absolute inset-0 h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster={b.topo.poster.src}
-              aria-hidden="true"
-              tabIndex={-1}
-            >
-              <source src={b.topo.video} type="video/mp4" />
-            </video>
-          </div>
-        </div>
-      </section>
 
       {/* ── O que acreditamos ───────────────────────────────────────────────
           O remate do título do topo, em lilás: a página é tinta de cima a
