@@ -21,6 +21,7 @@ import type {
   Post,
   Project,
 } from "@/content/types";
+import { marcaShorts } from "@/lib/shorts";
 import { findBySlug } from "@/lib/slugs";
 import {
   fetchArchivedProjects,
@@ -220,7 +221,9 @@ export const getCarePlans = fromStore("care-plans", async (): Promise<CarePlan[]
 
 const localArchive = archived as ArchivedProject[];
 
-const getArchive = fromStore("archive", async () => fetchArchivedProjects(localArchive));
+// Os Shorts colados como `youtu.be` passam à forma de Short aqui, uma vez por
+// publicação: ver `lib/shorts.ts`.
+const getArchive = fromStore("archive", async () => marcaShorts(await fetchArchivedProjects(localArchive)));
 
 /**
  * O arquivo, do mais recente para o mais antigo.
