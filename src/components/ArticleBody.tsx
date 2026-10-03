@@ -30,10 +30,14 @@ export function ArticleBody({ blocks }: { blocks: Block[] }) {
       {body.map((block, index) => {
         if (block.type === "p") {
           const isFirst = index === dropCapIndex;
+          // A margem cai só quando o parágrafo abre mesmo o texto. O primeiro
+          // parágrafo depois de um título — o da capitular — ficava colado a
+          // ele, enquanto os títulos seguintes tinham o respiro dos outros.
+          const margem = index > 0 ? "mt-6" : "";
           return (
             <p
               key={index}
-              className={`reading ${isFirst ? "first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red" : "mt-6"}`}
+              className={`reading ${isFirst ? `${margem} first-letter:float-left first-letter:pr-2 first-letter:font-reading first-letter:text-[3.2em] first-letter:font-semibold first-letter:leading-[0.86] first-letter:text-red` : "mt-6"}`}
             >
               {block.spans ? <Inline spans={block.spans} /> : block.text}
             </p>
