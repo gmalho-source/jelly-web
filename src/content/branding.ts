@@ -69,7 +69,7 @@ export const branding = {
 
   servicos: {
     eyebrow: { pt: "O que fazemos", en: "What we do" },
-    titulo: { pt: "Estratégia, design e execução. Nesta ordem, e sem saltar nenhuma.", en: "Strategy, design and execution. In that order, skipping none." },
+    titulo: { pt: "Estratégia, design e execução. Por esta ordem.", en: "Strategy, design and execution. In that order." },
     colunas: [
       { nome: { pt: "Estratégia", en: "Strategy" }, itens: [
         { pt: "Posicionamento e arquitetura de marca", en: "Positioning and brand architecture" },
