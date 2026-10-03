@@ -93,6 +93,7 @@ export interface Config {
     applications: Application;
     media: Media;
     videos: Video;
+    downloads: Download;
     documents: Document;
     users: User;
     'payload-kv': PayloadKv;
@@ -128,6 +129,7 @@ export interface Config {
     applications: ApplicationsSelect<false> | ApplicationsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
+    downloads: DownloadsSelect<false> | DownloadsSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -1654,6 +1656,31 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Ficheiros que o site oferece para descarregar, no Newsroom. Vão direito ao armazenamento, sem o limite de 4,5 MB. Para trocar um, carrega o novo com o mesmo «Onde aparece».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "downloads".
+ */
+export interface Download {
+  id: number;
+  /**
+   * Como o ficheiro se chama no painel, por exemplo «Press kit 2026».
+   */
+  title: string;
+  uso: 'press-kit' | 'logos';
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1772,6 +1799,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'videos';
         value: number | Video;
+      } | null)
+    | ({
+        relationTo: 'downloads';
+        value: number | Download;
       } | null)
     | ({
         relationTo: 'documents';
@@ -2784,6 +2815,25 @@ export interface MediaSelect<T extends boolean = true> {
 export interface VideosSelect<T extends boolean = true> {
   title?: T;
   note?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "downloads_select".
+ */
+export interface DownloadsSelect<T extends boolean = true> {
+  title?: T;
+  uso?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -4,7 +4,10 @@ import { CoverHeader } from "@/components/CoverHeader";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { alternates } from "@/lib/seo";
-import { getNewsroom, getPosts } from "@/lib/cms";
+import { getDownloads, getNewsroom, getPosts } from "@/lib/cms";
+import { BotaoDeDownload } from "@/components/BotaoDeDownload";
+import { SubscribeForm } from "@/app/(site)/[locale]/subscrever/SubscribeForm";
+import { copyDaSubscricao } from "@/app/(site)/[locale]/subscrever/copy";
 import { ROTA_DO_ARTIGO } from "@/lib/seccao";
 
 export async function generateMetadata({
@@ -31,7 +34,14 @@ export default async function NewsroomPage({
 
   const nav = await getTranslations("nav");
   const t = await getTranslations("newsroom");
-  const [items, posts] = await Promise.all([getNewsroom(), getPosts()]);
+  const [items, posts, downloads] = await Promise.all([getNewsroom(), getPosts(), getDownloads()]);
+  const tSub = await getTranslations("subscricao");
+  const pressKit = downloads.find((ficheiro) => ficheiro.uso === "press-kit");
+  const logos = downloads.find((ficheiro) => ficheiro.uso === "logos");
+  // «ZIP, 97 MB»: o formato e o peso, para ninguém descobrir os 97 MB depois
+  // de carregar num telemóvel.
+  const detalhe = (ficheiro: { tipo: string; bytes: number }) =>
+    `${ficheiro.tipo.includes("pdf") ? "PDF" : "ZIP"}, ${Math.max(1, Math.round(ficheiro.bytes / 1_000_000))} MB`;
 
   // A capa do cabeçalho é a do artigo mais recente que a newsroom aponta — a
   // notícia mais nova da casa, e não uma imagem escolhida à parte.
@@ -147,14 +157,36 @@ export default async function NewsroomPage({
             })}
           </div>
 
-          <div className="mt-12 flex flex-wrap items-end justify-between gap-6 border-t border-line pt-8">
+          {/* O press kit, aberto: quem o descarrega é quase sempre um
+              jornalista com prazo, e o que lá está já é público. Os
+              ficheiros vêm do painel (Downloads); o clique vai para o GTM;
+              e ao lado, sem obrigar ninguém, a subscrição dos comunicados. */}
+          <div className="mt-12 grid gap-10 border-t border-line pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-16">
             <div>
               <h2 className="text-chapter">{t("press")}</h2>
               <p className="mt-3 max-w-[46ch] text-md text-fg-soft">
                 {t("pressBody")}
               </p>
+              {pressKit || logos ? (
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  {pressKit ? (
+                    <BotaoDeDownload href={pressKit.url} rotulo={t("pressCta")} detalhe={detalhe(pressKit)} uso="press-kit" bytes={pressKit.bytes} principal />
+                  ) : null}
+                  {logos ? (
+                    <BotaoDeDownload href={logos.url} rotulo={t("pressLogos")} detalhe={detalhe(logos)} uso="logos" bytes={logos.bytes} />
+                  ) : null}
+                </div>
+              ) : (
+                <p className="mt-6 text-sm text-fg-soft">{t("pressContact")}</p>
+              )}
             </div>
-            <span className="btn btn-ghost">{t("pressCta")}</span>
+            <div>
+              <h3 className="editorial text-lg">{t("pressSubscribe")}</h3>
+              <p className="mt-2 text-sm text-fg-soft">{t("pressSubscribeBody")}</p>
+              <div className="mt-5">
+                <SubscribeForm copy={copyDaSubscricao(tSub)} lingua={locale} origem="newsroom-press-kit" compacto superficie="papel" />
+              </div>
+            </div>
           </div>
         </div>
       </section>

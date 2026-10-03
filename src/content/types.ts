@@ -163,6 +163,9 @@ export type CarePlan = {
 
 export type NewsKind = "noticia" | "evento" | "press";
 
+/** Um ficheiro para descarregar, no Newsroom. */
+export type Download = { uso: "press-kit" | "logos"; url: string; bytes: number; tipo: string };
+
 export type NewsItem = {
   slug: string;
   date: string;

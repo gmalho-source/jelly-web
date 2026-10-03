@@ -4,6 +4,7 @@ import type {
   Autor,
   Block,
   CarePlan,
+  Download,
   Client,
   Department,
   Job,
@@ -870,4 +871,22 @@ export async function fetchAuthorByName(name: string): Promise<Autor | undefined
     console.error("[payload] a ficha do autor não veio:", error);
     return undefined;
   }
+}
+
+/**
+ * Os ficheiros do Newsroom, o mais recente de cada sítio: trocar o press kit é
+ * carregar o novo com o mesmo «Onde aparece».
+ */
+export function fetchDownloads(fallback: Download[]) {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({ collection: "downloads", sort: "-updatedAt", limit: 0, depth: 0 });
+    const vistos = new Set<string>();
+    return (docs as unknown as Doc[]).flatMap((raw): Download[] => {
+      const uso = raw.uso as Download["uso"];
+      const url = text(raw.url);
+      if (!url || vistos.has(uso)) return [];
+      vistos.add(uso);
+      return [{ uso, url, bytes: typeof raw.filesize === "number" ? raw.filesize : 0, tipo: text(raw.mimeType) }];
+    });
+  }, fallback);
 }

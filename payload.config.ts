@@ -18,6 +18,7 @@ import { CarePlans } from "./src/payload/collections/care";
 import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
+import { Downloads } from "./src/payload/collections/downloads";
 import { BillingAttempts, BillingTokens, Prestadores } from "./src/payload/collections/prestadores";
 import { Clients, LogoWalls, Logos, Milestones, Projects, Sectors, Services, TeamMembers } from "./src/payload/collections/work";
 
@@ -113,6 +114,7 @@ export default buildConfig({
     Applications,
     Media,
     Videos,
+    Downloads,
     Documents,
     Users,
   ],
@@ -159,7 +161,9 @@ export default buildConfig({
         // painel. Sem esta guarda, o endpoint que assina ficava aberto a
         // qualquer pessoa que soubesse o endereço.
         vercelBlobStorage({
-          collections: { videos: { disablePayloadAccessControl: true } },
+          // Os downloads do Newsroom vão pelo mesmo caminho: um press kit
+          // passa dos 90 MB.
+          collections: { videos: { disablePayloadAccessControl: true }, downloads: { disablePayloadAccessControl: true } },
           clientUploads: { access: ({ req }) => Boolean(req.user) },
           token: blobToken,
         }),

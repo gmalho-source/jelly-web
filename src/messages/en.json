@@ -212,7 +212,11 @@
     "all": "All",
     "press": "Press kit",
     "pressBody": "Logos, team portraits, boilerplate in PT and EN, and a direct press contact.",
-    "pressCta": "Download press kit"
+    "pressCta": "Download press kit",
+    "pressLogos": "Logos only",
+    "pressContact": "Request the press kit at hello@jelly.pt.",
+    "pressSubscribe": "Are you a journalist?",
+    "pressSubscribeBody": "Get Jelly's press releases in your inbox, whenever there are any."
   },
   "contact": {
     "eyebrow": "Contact",

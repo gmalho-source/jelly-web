@@ -10,6 +10,7 @@ import { clients, milestones, services } from "@/content/site";
 import { sectors } from "@/content/sectors";
 import { team } from "@/content/team";
 import type {
+  Download,
   ArchivedProject,
   CarePlan,
   Department,
@@ -25,6 +26,7 @@ import { marcaShorts } from "@/lib/shorts";
 import { seccaoDe, type Seccao } from "@/lib/seccao";
 import { findBySlug } from "@/lib/slugs";
 import {
+  fetchDownloads,
   fetchArchivedProjects,
   fetchPageCopy,
   fetchClients,
@@ -225,6 +227,9 @@ export const getNews = fromStore("news", async (): Promise<NewsItem[]> => {
  * notícia. Um artigo do newsroom sem notícia entra por si, como «Notícia», com
  * o resumo dele — escrever o artigo chega, não é preciso criar a notícia também.
  */
+/** Os ficheiros do Newsroom: o press kit completo e os logos. */
+export const getDownloads = fromStore("downloads", async (): Promise<Download[]> => fetchDownloads([]));
+
 export async function getNewsroom(): Promise<NewsItem[]> {
   const [itens, posts] = await Promise.all([getNews(), getPosts()]);
   const porSlug = new Map(posts.map((post) => [post.slug, post]));
