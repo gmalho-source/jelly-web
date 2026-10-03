@@ -65,6 +65,11 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
   // para o original, já fora da página.
   const moldura = useRef<HTMLDivElement>(null);
   const chave = fonte.tipo === "ficheiro" ? fonte.src : fonte.id;
+  // A caixa tem a forma do vídeo: um Short é alto, o resto é deitado. O alto
+  // não passa dos 420 px de largura: a toda a largura de um artigo ficava com
+  // quase 1300 px de altura.
+  const forma =
+    fonte.tipo === "youtube" && fonte.vertical ? "mx-auto aspect-[9/16] max-w-[420px]" : "aspect-video";
 
   // Voltou depois de escolher os cookies: o vídeo que se queria ver abre sozinho.
   useEffect(() => {
@@ -151,7 +156,7 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
       <div
         ref={caixa}
         role="status"
-        className="relative grid aspect-video w-full place-items-center overflow-clip rounded-[20px] bg-ink p-6 text-center text-paper sm:p-10"
+        className={`relative grid ${forma} w-full place-items-center overflow-clip rounded-[20px] bg-ink p-6 text-center text-paper sm:p-10`}
       >
         {poster ? (
           // A miniatura fica por trás, escurecida: diz que o vídeo é este.
@@ -198,7 +203,7 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
             title={titulo}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowFullScreen
-            className="aspect-video w-full rounded-[20px] bg-ink"
+            className={`${forma} w-full rounded-[20px] bg-ink`}
           />
         </div>
         {aviso}
@@ -211,7 +216,7 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
       type="button"
       onClick={() => setATocar(true)}
       aria-label={`Ver o vídeo: ${titulo}`}
-      className="group relative block aspect-video w-full overflow-clip rounded-[20px] bg-ink"
+      className={`group relative block ${forma} w-full overflow-clip rounded-[20px] bg-ink`}
     >
       {poster ? (
         <Image

@@ -2,12 +2,8 @@ import Image from "next/image";
 import type { Block } from "@/content/types";
 import { CaseVideo } from "@/components/CaseVideo";
 import { Galeria, type TextosDaGaleria } from "@/components/Galeria";
-
-/** ID de um vídeo do YouTube, das duas formas em que o site antigo os guardava. */
-function youtubeId(url: string): string | undefined {
-  const match = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/.exec(url);
-  return match?.[1];
-}
+import { VideoEmbed } from "@/components/VideoEmbed";
+import { fonteDeVideo } from "@/lib/video";
 
 /**
  * Um bloco da história.
@@ -91,18 +87,15 @@ function Bloco({ block, client, poster, textos }: { block: Block; client: string
     );
   }
   if (block.type === "embed") {
-    const id = youtubeId(block.url);
-    if (!id) return null;
+    // O mesmo leitor do blog: aceita todas as formas do endereço (`shorts/`
+    // incluído — o leitor antigo só sabia três, e os Shorts não apareciam),
+    // desenha os Shorts na vertical, só carrega o vídeo ao clique, e diz o
+    // que fazer a quem não aceitou os cookies do YouTube.
+    const fonte = fonteDeVideo(block.url);
+    if (!fonte) return null;
     return (
-      <div className="mt-10 overflow-hidden rounded-[20px] bg-ink">
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${id}`}
-          title={`${client} — vídeo`}
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="aspect-video w-full"
-        />
+      <div className="mt-10">
+        <VideoEmbed fonte={fonte} titulo={`${client} — vídeo`} />
       </div>
     );
   }

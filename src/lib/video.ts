@@ -12,7 +12,8 @@
  * é uma expressão que se desencontra.
  */
 export type FonteDeVideo =
-  | { tipo: "youtube"; id: string; poster: string }
+  /** `vertical`: um Short, que se desenha em 9:16 e não em 16:9. */
+  | { tipo: "youtube"; id: string; poster: string; vertical?: boolean }
   | { tipo: "vimeo"; id: string }
   | { tipo: "ficheiro"; src: string };
 
@@ -29,7 +30,14 @@ export function fonteDeVideo(url: string | undefined): FonteDeVideo | undefined 
   if (youtube) {
     // A miniatura vem pelo nosso otimizador, não pelo browser de quem lê: até
     // ao clique, o YouTube não sabe que alguém abriu a página.
-    return { tipo: "youtube", id: youtube[1]!, poster: `https://i.ytimg.com/vi/${youtube[1]}/maxresdefault.jpg` };
+    // Um Short só se sabe pelo endereço: o `youtu.be` de um Short é igual ao
+    // de um vídeo deitado. Quem quiser o vídeo na vertical cola o link de Short.
+    return {
+      tipo: "youtube",
+      id: youtube[1]!,
+      poster: `https://i.ytimg.com/vi/${youtube[1]}/maxresdefault.jpg`,
+      ...(/\/shorts\//i.test(limpo) ? { vertical: true } : {}),
+    };
   }
 
   const vimeo = VIMEO.exec(limpo);
