@@ -265,6 +265,9 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
   {
     slug: { pt: "social-media", en: "social-media" },
     area: "conteudo",
+    /* Vídeo da Jelly (outubro de 2026, Higgsfield), 1080p HEVC com som, 4,5 MB,
+       recodificado a 1920 px em H.264 nível 4.0, CRF 26, sem áudio: 2,1 MB. */
+    topo: { video: "/media/marketing-social-topo.mp4", poster: { src: "/media/marketing-social-topo-poster.webp", width: 1440, height: 810 } },
     nome: { pt: "Social Media", en: "Social Media" },
     titulo: { pt: "A sua marca, onde estão as pessoas.", en: "Your brand, where the people are." },
     claim: {
