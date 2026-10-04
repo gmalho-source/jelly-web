@@ -68,7 +68,10 @@ export default async function ServicoDeMarketingPage({ params }: { params: Promi
       locale={locale}
       servico={servico}
       rota={ROTA}
-      area={AREAS[servico.area]}
+      // Só o nome da área. A unidade de medida («minutos», «€ / lead»…) ia ao
+      // lado do título, e quem a explicava era a secção das áreas da
+      // página-mãe, que saiu em outubro de 2026: sozinha, não dizia nada.
+      area={{ nome: AREAS[servico.area].nome }}
       tom={TONS[servico.area]}
       irmaos={irmaos(servico)}
       mae={{ nome: mae?.name[locale] ?? "Marketing", slug: mae ? slugFor(mae, locale) : MAE, lead: marketing.lead[locale] }}
