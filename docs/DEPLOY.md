@@ -126,7 +126,7 @@ faz nada, para não mandar um email vermelho por noite:
 | `ELEVENLABS_VOICE_PT` / `_EN` | as vozes escolhidas de ouvido (`--vozes`, `--amostra`) |
 | `DATABASE_URL`, `PAYLOAD_SECRET` | ler os artigos e escrever-lhes o endereço do áudio |
 | `BLOB_READ_WRITE_TOKEN` | onde os MP3 ficam |
-| `REVALIDATE_SECRET`, `PURGE_URL` | sem estes o áudio grava-se e o leitor não aparece na página |
+| `REVALIDATE_SECRET` | sem ele o áudio grava-se e o leitor não aparece na página (o endereço da purga está escrito no `audio.yml`) |
 
 **O `--desde=7` não é um pormenor.** Sem ele, uma corrida vai buscar o catálogo
 inteiro: mais de trezentas gravações e dois milhões e meio de caracteres, muito

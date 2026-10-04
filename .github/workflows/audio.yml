@@ -94,6 +94,9 @@ jobs:
           ELEVENLABS_VOICE_PT: ${{ secrets.ELEVENLABS_VOICE_PT }}
           ELEVENLABS_VOICE_EN: ${{ secrets.ELEVENLABS_VOICE_EN }}
           # A purga fecha o ciclo: o áudio fica gravado, mas o leitor só aparece
-          # na página quando o cache do Next souber que ele existe.
+          # na página quando o cache do Next souber que ele existe. O endereço é
+          # público e fica escrito aqui: guardado como segredo, ninguém via para
+          # onde apontava, e em outubro de 2026 a purga respondeu 405 sem se
+          # saber de onde.
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
-          PURGE_URL: ${{ secrets.PURGE_URL }}
+          PURGE_URL: https://www.jelly.pt

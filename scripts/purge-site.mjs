@@ -14,12 +14,30 @@ export async function purgeSite() {
     return;
   }
 
+  // Os redirecionamentos seguem-se à mão. Sozinho, o fetch larga o cabeçalho
+  // com o segredo ao mudar de endereço (jelly.pt → www dava 401), e num 301 ou
+  // 302 troca o POST por um GET, a que a rota responde 405 — o que a gravação
+  // do áudio recebeu em outubro de 2026, ficando o leitor por aparecer. Aqui
+  // o POST repete-se no endereço novo, e o log diz que servidor respondeu.
   try {
-    const response = await fetch(new URL("/api/revalidate", site), {
-      method: "POST",
-      headers: { authorization: `Bearer ${secret}` },
-    });
-    console.log(`purga do site: ${response.status} ${response.ok ? "ok" : await response.text()}`);
+    let url = new URL("/api/revalidate", site);
+    let response;
+    for (let saltos = 0; saltos < 4; saltos++) {
+      response = await fetch(url, {
+        method: "POST",
+        headers: { authorization: `Bearer ${secret}` },
+        redirect: "manual",
+      });
+      const destino = response.headers.get("location");
+      if (response.status < 300 || response.status >= 400 || !destino) break;
+      // O segredo vai no cabeçalho: só se segue para a mesma casa.
+      const seguinte = new URL(destino, url);
+      const daCasa = (host) => host.replace(/^www\./, "");
+      if (seguinte.protocol !== "https:" || daCasa(seguinte.host) !== daCasa(url.host)) break;
+      url = seguinte;
+    }
+    const resposta = response.ok ? "ok" : (await response.text()).slice(0, 200);
+    console.log(`purga do site (${url.host}): ${response.status} ${resposta}`);
   } catch (error) {
     console.log(`purga do site falhou: ${error.message}`);
   }
