@@ -266,10 +266,10 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
     slug: { pt: "social-media", en: "social-media" },
     area: "conteudo",
     nome: { pt: "Social Media", en: "Social Media" },
-    titulo: { pt: "As redes não são um mural. São um meio, e um meio gere-se.", en: "Social isn't a noticeboard. It's a medium, and a medium gets managed." },
+    titulo: { pt: "A sua marca, onde estão as pessoas.", en: "Your brand, where the people are." },
     claim: {
-      pt: "Gestão, conteúdos e comunidade nas redes que interessam ao negócio, com uma ideia editorial por trás e o tempo de atenção como medida.",
-      en: "Management, content and community on the networks that matter to the business, with an editorial idea behind them and attention time as the measure.",
+      pt: "Gerimos as suas redes sociais com estratégia, conteúdos e conversas que aproximam a marca das pessoas certas. Para aumentar a notoriedade, construir confiança e gerar oportunidades de negócio.",
+      en: "We manage your social media with strategy, content and conversations that bring the brand closer to the right people. To raise awareness, build trust and generate business opportunities.",
     },
     descricao: {
       pt: "Gestão de social media pela Jelly: estratégia, linha editorial, produção de conteúdos, comunidade e social ads, com relatório mensal lido pelo tempo de atenção e não pelo alcance.",
