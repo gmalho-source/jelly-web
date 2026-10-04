@@ -124,6 +124,13 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET ?? "",
   db: postgresAdapter({
     pool: { connectionString: databaseUrl },
+    // Fora de produção, o Payload acerta sozinho a base pelo código («push»).
+    // Numa base local é o que se quer; na Neon nunca: a base de produção muda
+    // só por SQL escrito à mão (scripts/sql/). E não é teórico — o áudio corre
+    // no GitHub sem NODE_ENV=production, o push encontrou colunas antigas na
+    // Neon, parou a perguntar se as podia apagar, e a corrida morreu ali à
+    // espera de uma resposta que ninguém ia dar (outubro de 2026).
+    push: !onNeon,
     ...(onNeon ? { pg: neonServerless as unknown as Parameters<typeof postgresAdapter>[0]["pg"] } : {}),
   }),
   typescript: { outputFile: path.resolve(dirname, "src/payload/types.ts") },
