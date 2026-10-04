@@ -3,10 +3,9 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { FaixaDeAreas } from "@/components/FaixaDeAreas";
 import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
-import { GraficoDeArea } from "@/components/GraficoDeArea";
 import { marketing } from "@/content/marketing";
-import { servicoDeMarketing } from "@/content/marketing-servicos";
 import { getLogoWall, getProjects, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -19,28 +18,16 @@ import { slugFor } from "@/lib/slugs";
  * qual mais nos procuram, e a página tem de ser o chapéu de tudo o que cabe
  * nele: dez serviços em quatro áreas, cada área com a sua unidade de medida.
  *
- * As fases e a frase de promessa continuam a vir do serviço no painel — é a
- * parte que a casa edita. O mapa e as áreas vivem em `content/marketing.ts`
- * até haver página para cada serviço.
+ * Logo a seguir ao topo, as quatro áreas numa faixa de quadrados que viram e
+ * mostram no verso as páginas dos serviços (outubro de 2026: saíram o mapa em
+ * colunas e a secção longa das áreas, que repetiam o mesmo caminho). As fases
+ * e a frase de promessa continuam a vir do serviço no painel — é a parte que a
+ * casa edita; as áreas vivem em `content/marketing.ts`.
  */
 const SLUG = "marketing";
 
 /** Quantos casos no fim da página, quando o painel não os escolhe. */
 const CASOS = 5;
-
-/*
- * A cor que varre cada área ao passar o rato: as quatro da homepage, pela
- * mesma ordem. Sobre as claras — lavanda, coral e chartreuse — o texto fica em
- * tinta, senão não se lê. O vermelho fundo ficou de fora: sobre papel lia-se
- * como um aviso, não como uma cor da casa. As classes vão
- * escritas por inteiro porque o Tailwind lê o código à procura delas.
- */
-const TONS = [
-  { fundo: "bg-red", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
-  { fundo: "bg-lavender", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-  { fundo: "bg-coral", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-  { fundo: "bg-chartreuse", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-];
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -103,27 +90,6 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
     ...m.titulo.vermelho[locale].split(" ").map((p) => ({ p, vermelha: true })),
   ];
 
-  // A página de um serviço, se já existir no registo: o mapa liga ao que há.
-  const paginaDe = (s: { sub?: string }) => {
-    const pagina = s.sub ? servicoDeMarketing(s.sub) : undefined;
-    return pagina ? ({ pathname: "/servicos/marketing/[sub]", params: { sub: pagina.slug[locale] } } as const) : undefined;
-  };
-
-  const entradaDeServico = (s: (typeof m.lista)[number]["servicos"][number], classe: string) => {
-    const corpo = <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{s.nome[locale]}</span>;
-    const href = paginaDe(s);
-    return href ? (
-      <Link key={s.nome.pt} href={href} className={`${classe} group`}>
-        {corpo}
-        <span aria-hidden="true" className="ms-auto text-red opacity-0 transition-opacity duration-200 group-hover:opacity-100">→</span>
-      </Link>
-    ) : (
-      <span key={s.nome.pt} className={classe}>
-        {corpo}
-      </span>
-    );
-  };
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -172,142 +138,10 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
         </div>
       </header>
 
-      {/* ── O mapa ──────────────────────────────────────────────────────────
-          Quatro colunas, dez serviços, a unidade de medida de cada área. Quem
-          chega vê a área de atuação inteira sem descer. Não se anima: pode
+      {/* ── As áreas, numa faixa ──────────────────────────────────────────
+          Quatro quadrados de ponta a ponta, um por área. Não se anima: pode
           estar no ecrã quando a página abre. */}
-      <section className="surface-paper py-14 lg:py-16" aria-labelledby="mapa">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <h2 id="mapa" className="eyebrow text-red">{m.mapa.eyebrow[locale]}</h2>
-          <div className="mt-5 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
-            {m.lista.map((area, i) => (
-              <div
-                key={area.chave}
-                className={`flex flex-col border-b border-line py-6 lg:border-b-0 lg:py-7 ${i ? "lg:border-l lg:pl-6" : ""} ${i < 3 ? "lg:pr-6" : ""} ${i % 2 ? "sm:border-l sm:pl-6 lg:border-l" : ""}`}
-              >
-                <a href={`#${area.chave}`} className="flex flex-col gap-1.5 border-b border-line pb-4">
-                  <span className="eyebrow text-red">{area.nome[locale]}</span>
-                  <span className="font-display text-[22px] text-fg-soft">{area.medida[locale]}</span>
-                </a>
-                <div className="mt-1 flex flex-col">
-                  {area.servicos.map((s) =>
-                    entradaDeServico(s, "flex items-baseline gap-3 border-b border-line py-3 last:border-b-0 transition-colors duration-200 hover:text-red"),
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── As áreas ───────────────────────────────────────────────────────── */}
-      <section className="surface-paper bg-white py-24 lg:py-28 [--color-line:var(--color-paper-2)]">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
-            <div>
-              <span className="eyebrow text-red">{m.areas.eyebrow[locale]}</span>
-              <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.areas.titulo[locale]}</h2>
-            </div>
-            <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.areas.nota[locale]}</p>
-          </div>
-
-          <div className="mt-10">
-            {m.lista.map((area, ordem) => (
-              <article key={area.chave} id={area.chave} className="border-t border-line py-16 lg:py-20">
-                <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-16">
-                  <div className="entra">
-                    <span className="varre block h-0.5 w-[72px] bg-red" />
-                    <div className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-                      <span className="eyebrow text-red">{area.nome[locale]}</span>
-                      <span className="font-display text-[clamp(26px,2.4vw,34px)] leading-none tracking-[-0.02em] tabular-nums text-fg">{area.medida[locale]}</span>
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-soft">{area.medidaNota[locale]}</span>
-                    </div>
-                    <h3 className="mt-5 max-w-[24ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.022em]">{area.titulo[locale]}</h3>
-                    <p className="mt-5 max-w-[52ch] text-md text-fg-soft">{area.posicao[locale]}</p>
-                  </div>
-                  <figure className="entra-tarde m-0 rounded-[6px] bg-[#1d2126] p-4 text-paper">
-                    <GraficoDeArea tipo={area.chave} />
-                    <figcaption className="mt-3 flex justify-between text-[11.5px] text-paper/55">
-                      <span>{area.legenda[locale]}</span>
-                      <span className="tabular-nums">{area.alcance[locale]}</span>
-                    </figcaption>
-                  </figure>
-                </div>
-
-                {/* As faixas dos serviços: a toda a largura, e a cor a varrer da
-                    esquerda ao passar o rato, como os serviços na homepage. Um
-                    serviço sem página varre na mesma — a faixa é o desenho da
-                    lista, não a promessa de uma ligação — mas não leva seta. */}
-                <div className="entra mt-12 border-t border-line">
-                  {area.servicos.map((s) => {
-                    const tom = TONS[ordem % TONS.length];
-                    const href = paginaDe(s);
-                    const faixa = "relative block overflow-hidden border-b border-line";
-                    const dentro = (
-                      <span className="relative grid gap-x-8 gap-y-2 px-4 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center sm:px-6 lg:py-7">
-                        <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{s.nome[locale]}</span>
-                        <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{s.linha[locale]}</span>
-                        <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${href ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
-                          {href ? "→" : "·"}
-                        </span>
-                      </span>
-                    );
-                    const varredura = (
-                      <span
-                        aria-hidden="true"
-                        className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 ${tom.fundo}`}
-                      />
-                    );
-                    const classe = `${faixa} group transition-colors duration-300 ${tom.texto}`;
-                    return href ? (
-                      <Link key={s.nome.pt} href={href} className={classe}>
-                        {varredura}
-                        {dentro}
-                      </Link>
-                    ) : (
-                      <div key={s.nome.pt} className={classe} title={m.areas.emBreve[locale]}>
-                        {varredura}
-                        {dentro}
-                      </div>
-                    );
-                  })}
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── O método, em vermelho ───────────────────────────────────────────
-          As fases vêm do painel. É a única secção vermelha antes do fecho: o
-          meio da página tem de ter uma cor a mais que papel e tinta. */}
-      {service?.phases?.length ? (
-        <section className="surface-red py-24 lg:py-28">
-          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
-              <div>
-                <span className="eyebrow text-ink/70">{m.metodo.eyebrow[locale]}</span>
-                <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
-              </div>
-              <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.metodo.nota[locale]}</p>
-            </div>
-            <ol className="relative mt-14 grid gap-12 pl-7 sm:pl-10">
-              <span aria-hidden="true" className="camada-fio camada-fio-curto absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-ink to-ink/30" />
-              {service.phases.map((fase, i) => (
-                <li key={fase.name.pt} className="camada relative grid gap-4 sm:grid-cols-[minmax(0,140px)_minmax(0,1fr)] sm:gap-10">
-                  <span aria-hidden="true" className="type-outline type-outline-ink font-display text-[clamp(48px,6vw,88px)] leading-[0.8]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <h3 className="editorial text-2xl lg:text-3xl">{fase.name[locale]}</h3>
-                    <p className="mt-3 max-w-[58ch] text-md text-fg-soft">{fase.body[locale]}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      ) : null}
+      <FaixaDeAreas areas={m.lista} locale={locale} titulo={m.areas.eyebrow[locale]} rotulos={{ ver: m.areas.verServicos[locale], voltar: m.areas.voltar[locale] }} />
 
       {/* ── Trabalho e parceiros ────────────────────────────────────────────── */}
       <section className="surface-paper py-24 lg:py-28">
@@ -341,6 +175,39 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           <FaixaDeParceiros eyebrow={m.trabalho.parceirosEyebrow[locale]} logos={parceiros} />
         </div>
       </section>
+
+      {/* ── O método, em vermelho ───────────────────────────────────────────
+          As fases vêm do painel. É a única secção vermelha antes do fecho: o
+          meio da página tem de ter uma cor a mais que papel e tinta. Vem
+          depois do trabalho e não logo a seguir à faixa das áreas, onde o
+          quadrado vermelho da Performance se colava a ela. */}
+      {service?.phases?.length ? (
+        <section className="surface-red py-24 lg:py-28">
+          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
+              <div>
+                <span className="eyebrow text-ink/70">{m.metodo.eyebrow[locale]}</span>
+                <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
+              </div>
+              <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.metodo.nota[locale]}</p>
+            </div>
+            <ol className="relative mt-14 grid gap-12 pl-7 sm:pl-10">
+              <span aria-hidden="true" className="camada-fio camada-fio-curto absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-ink to-ink/30" />
+              {service.phases.map((fase, i) => (
+                <li key={fase.name.pt} className="camada relative grid gap-4 sm:grid-cols-[minmax(0,140px)_minmax(0,1fr)] sm:gap-10">
+                  <span aria-hidden="true" className="type-outline type-outline-ink font-display text-[clamp(48px,6vw,88px)] leading-[0.8]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="editorial text-2xl lg:text-3xl">{fase.name[locale]}</h3>
+                    <p className="mt-3 max-w-[58ch] text-md text-fg-soft">{fase.body[locale]}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : null}
 
       {/* ── A IA, transversal ──────────────────────────────────────────────── */}
       <section className="surface-ink py-20 lg:py-24">

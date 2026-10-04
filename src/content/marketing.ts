@@ -9,9 +9,13 @@ import type { Localized } from "./types";
  * de atenção, menções, ciclos — porque é pela medida que se organiza o trabalho
  * e se prestam contas. As fases do método continuam a vir do serviço no painel.
  *
- * Os serviços sem `sub` ainda não têm página: aparecem no mapa, mas não são
- * ligação. Quando a página nascer em `marketing-servicos.ts`, põe-se aqui o slug. Nenhum leva a
- * etiqueta «novo»: são serviços que é suposto a casa ter, não lançamentos.
+ * Na página-mãe, as áreas são uma faixa de quadrados que viram; no verso de
+ * cada um estão as páginas dos serviços. Um serviço sem `sub` não tem página e
+ * não aparece no verso: quando a página nascer em `marketing-servicos.ts`,
+ * põe-se aqui o slug. As páginas dos serviços usam o nome e a medida da área;
+ * o título, a frase e a legenda do gráfico de cada área ficam aqui para as
+ * páginas das áreas, se vierem. Nenhum leva a etiqueta «novo»: são serviços que é
+ * suposto a casa ter, não lançamentos.
  */
 
 export type ServicoDeArea = {
@@ -24,6 +28,8 @@ export type ServicoDeArea = {
 export type Area = {
   chave: "performance" | "conteudo" | "influencia" | "dados";
   nome: Localized;
+  /** Uma linha com os serviços da área, para a faixa da página-mãe. */
+  resumo: Localized;
   medida: Localized;
   medidaNota: Localized;
   titulo: Localized;
@@ -57,19 +63,18 @@ export const marketing = {
     en: "Digital marketing by Jelly: paid media, SEO and GEO, B2B lead generation, social media, video, content, influencers, digital PR, marketing automation and analytics. Ten services, one account.",
   },
 
-  mapa: { eyebrow: { pt: "O mapa", en: "The map" } },
-
   areas: {
     eyebrow: { pt: "As áreas", en: "The areas" },
-    titulo: { pt: "Quatro áreas. Uma unidade de medida em cada.", en: "Four areas. One unit of measure in each." },
-    nota: { pt: "É pela medida que se organiza o trabalho e se prestam contas. Cada serviço tem a sua página.", en: "Work is organised, and accounts are given, by the measure. Each service has its own page." },
-    emBreve: { pt: "em breve", en: "soon" },
+    /* Os botões do cartão que vira, na faixa das áreas. */
+    verServicos: { pt: "Ver os serviços", en: "See the services" },
+    voltar: { pt: "Voltar", en: "Back" },
   },
 
   lista: [
     {
       chave: "performance",
       nome: { pt: "Performance", en: "Performance" },
+      resumo: { pt: "Paid media, SEO e GEO e lead generation B2B, geridos como um só orçamento.", en: "Paid media, SEO and GEO and B2B lead generation, run as one budget." },
       medida: { pt: "€ / lead", en: "€ / lead" },
       medidaNota: { pt: "a unidade que manda", en: "the unit in charge" },
       titulo: { pt: "Comprar atenção e devolvê-la em receita.", en: "Buy attention and return it as revenue." },
@@ -85,6 +90,7 @@ export const marketing = {
     {
       chave: "conteudo",
       nome: { pt: "Conteúdo", en: "Content" },
+      resumo: { pt: "Social media, vídeo e conteúdo editorial, publicados com cadência.", en: "Social media, video and editorial content, published with cadence." },
       medida: { pt: "minutos", en: "minutes" },
       medidaNota: { pt: "de atenção merecida", en: "of earned attention" },
       titulo: { pt: "Merecer atenção em vez de a comprar.", en: "Earn attention instead of buying it." },
@@ -100,6 +106,7 @@ export const marketing = {
     {
       chave: "influencia",
       nome: { pt: "Influência e Reputação", en: "Influence and Reputation" },
+      resumo: { pt: "Influencers, creators e assessoria de imprensa: outros a falar da marca.", en: "Influencers, creators and media relations: others talking about the brand." },
       medida: { pt: "menções", en: "mentions" },
       medidaNota: { pt: "que valem uma recomendação", en: "worth a recommendation" },
       titulo: { pt: "Pôr outros a dizer o que a marca não pode dizer de si.", en: "Get others to say what the brand cannot say about itself." },
@@ -114,6 +121,7 @@ export const marketing = {
     {
       chave: "dados",
       nome: { pt: "Dados e Automação", en: "Data and Automation" },
+      resumo: { pt: "Analytics, atribuição, CRO e marketing automation, do clique à venda.", en: "Analytics, attribution, CRO and marketing automation, from click to sale." },
       medida: { pt: "ciclos", en: "cycles" },
       medidaNota: { pt: "entre o clique e a venda", en: "between the click and the sale" },
       titulo: { pt: "O que acontece depois do clique.", en: "What happens after the click." },
