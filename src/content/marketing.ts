@@ -44,12 +44,13 @@ export const marketing = {
     en: "Data, creativity and cadence. Ten services in four areas, run as one account, with the number always next to the idea.",
   },
   cta: { pt: "Vamos falar", en: "Let's talk" },
-  /* O vídeo do topo é o que a Jelly entregou em setembro de 2026 (1080p HEVC,
-     23 MB), recodificado para 1440 px em H.264 sem áudio, cerca de 1 MB. O
-     gradiente por cima escurece-o até o título mandar: o plano é claro. */
+  /* O vídeo do topo é o da equipa de marketing que a Jelly entregou em outubro
+     de 2026 (1080p HEVC com som, 4,5 MB), recodificado para 1920 px em H.264
+     nível 4.0 sem áudio: 1,5 MB. A preto e branco, como o do Branding; o
+     gradiente por cima escurece-o até o título mandar. */
   topo: {
-    video: "/media/marketing-topo.mp4",
-    poster: { src: "/media/marketing-topo-poster.webp", width: 1440, height: 810 },
+    video: "/media/marketing-hero.mp4",
+    poster: { src: "/media/marketing-hero-poster.webp", width: 1440, height: 810 },
   },
   descricao: {
     pt: "Marketing digital pela Jelly: paid media, SEO e GEO, lead generation B2B, social media, vídeo, conteúdo, influencers, digital PR, marketing automation e analytics. Dez serviços, uma só conta.",

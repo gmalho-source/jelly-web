@@ -123,7 +123,7 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
           entrada é uma animação de tempo, como no manifesto do Branding. */}
       <header className="surface-cover relative isolate -mt-6 flex min-h-[100lvh] flex-col justify-end overflow-hidden bg-ink pb-32 pt-[140px] sm:-mt-24 sm:pb-14 lg:pb-16">
         {/* O vídeo é textura, não cena: escurecido até o título mandar. O
-            primeiro fotograma serve de capa enquanto os 3 MB chegam, e a quem
+            primeiro fotograma serve de capa enquanto o vídeo chega, e a quem
             pediu menos movimento fica só ele. */}
         <Image src={m.topo.poster.src} alt="" fill priority fetchPriority="high" sizes="100vw" className="topo-paralaxe -z-30 object-cover" />
         <video
