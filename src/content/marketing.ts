@@ -36,12 +36,12 @@ export type Area = {
 export const marketing = {
   eyebrow: { pt: "Serviços · Marketing digital", en: "Services · Digital marketing" },
   titulo: {
-    forte: { pt: "Tudo o que faz o número mexer.", en: "Everything that moves the number." },
-    vermelho: { pt: "Debaixo do mesmo chapéu.", en: "Under one roof." },
+    forte: { pt: "Mais clientes. Mais vendas.", en: "More customers. More sales." },
+    vermelho: { pt: "Mais retorno do seu marketing.", en: "More return on your marketing." },
   },
   lead: {
-    pt: "Dados, criatividade e cadência. Dez serviços em quatro áreas, geridos como uma só conta, com o número sempre ao lado da ideia.",
-    en: "Data, creativity and cadence. Ten services in four areas, run as one account, with the number always next to the idea.",
+    pt: "Ligamos estratégia, criatividade e dados para chegar às pessoas certas, gerar procura e transformar interesse, em vendas. Medimos o que funciona e melhoramos continuamente o retorno do seu investimento.",
+    en: "We connect strategy, creativity and data to reach the right people, build demand and turn interest into sales. We measure what works and keep improving the return on your investment.",
   },
   cta: { pt: "Vamos falar", en: "Let's talk" },
   /* O vídeo do topo é o da equipa de marketing que a Jelly entregou em outubro
