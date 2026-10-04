@@ -164,9 +164,13 @@ export function fromLexical(root: unknown): Block[] {
       // decide-se mais tarde, pelo que ele é.
       const campos = (node.fields ?? {}) as Doc;
       if (campos.blockType === "video") {
-        const url = text(campos.url);
+        // O ficheiro carregado ganha ao endereço, como nos casos.
+        const carregado = campos.ficheiro;
+        const doArmazenamento = carregado && typeof carregado === "object" ? text((carregado as Doc).url) : "";
+        const url = doArmazenamento || text(campos.url);
         const caption = text(campos.caption);
-        if (url) blocks.push({ type: "embed", url, ...(caption ? { caption } : {}) });
+        const poster = doArmazenamento ? image(campos.capa as MediaDoc)?.src : undefined;
+        if (url) blocks.push({ type: "embed", url, ...(caption ? { caption } : {}), ...(poster ? { poster } : {}) });
       } else if (campos.blockType === "gallery") {
         // A mesma galeria dos casos, com as medidas: a lente precisa delas
         // para reservar o sítio antes de a imagem grande chegar.

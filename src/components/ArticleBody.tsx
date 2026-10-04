@@ -149,13 +149,15 @@ export function ArticleBody({
               {fonte.tipo === "ficheiro" ? (
                 // Ficheiro nosso: não há plataforma a quem pedir licença, e os
                 // controlos do browser bastam. `preload="metadata"` traz a
-                // duração e não o vídeo.
+                // duração e não o vídeo. Sem forma imposta: um vídeo vertical
+                // fica vertical, até 80% da altura do ecrã.
                 <video
                   src={fonte.src}
+                  poster={block.poster}
                   controls
                   preload="metadata"
                   playsInline
-                  className="aspect-video w-full rounded-[20px] bg-ink"
+                  className="mx-auto block max-h-[80vh] w-auto max-w-full rounded-[20px] bg-ink"
                 />
               ) : (
                 <VideoEmbed fonte={fonte} titulo={block.caption ?? "Vídeo"} />

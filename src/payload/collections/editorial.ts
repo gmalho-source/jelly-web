@@ -31,9 +31,13 @@ const postPaths = (doc: Record<string, unknown>) => [
 /**
  * Vídeo no corpo de um artigo.
  *
- * Um campo só, o endereço, porque é o que quem escreve tem à mão: cola-se o
- * que está na barra do browser, ou o que o botão «partilhar» dá, e o site
- * reconhece o YouTube, o Vimeo e um ficheiro nosso. Não se pede o código de
+ * Duas maneiras, uma ou outra. O ficheiro: carrega-se um vídeo nosso (ou
+ * escolhe-se um que já esteja em «Vídeos»), que vai do browser direito ao
+ * armazenamento, sem o limite de 4,5 MB das imagens, e o site toca-o ali mesmo,
+ * sem plataforma nem cookies de terceiros. Ou o endereço, que é o que quem
+ * escreve tem à mão: cola-se o que está na barra do browser, ou o que o botão
+ * «partilhar» dá, e o site reconhece o YouTube, o Vimeo e um ficheiro nosso.
+ * Não se pede o código de
  * `<iframe>` a ninguém — colar HTML num campo de texto é a porta pela qual
  * entram os problemas que depois não se sabe de onde vieram.
  *
@@ -46,13 +50,34 @@ const videoBlock: Block = {
   labels: { singular: "Vídeo", plural: "Vídeos" },
   fields: [
     {
-      name: "url",
-      label: "Endereço do vídeo",
-      type: "text",
-      required: true,
+      name: "ficheiro",
+      label: "Vídeo carregado",
+      type: "upload",
+      relationTo: "videos",
       admin: {
         description:
-          "YouTube, Vimeo ou um ficheiro .mp4. Cola o endereço tal como está na barra do browser — por exemplo https://www.youtube.com/watch?v=XXXXXXXXXXX",
+          "Um vídeo nosso (.mp4 ou .webm), carregado aqui ou escolhido da coleção «Vídeos». Se houver, ganha ao endereço. Vale a pena comprimir antes: um minuto em 1080p cabe em 10 a 20 MB.",
+      },
+    },
+    {
+      name: "url",
+      label: "…ou o endereço do vídeo",
+      type: "text",
+      admin: {
+        description:
+          "YouTube, Vimeo ou um ficheiro .mp4 noutro sítio. Cola o endereço tal como está na barra do browser — por exemplo https://www.youtube.com/watch?v=XXXXXXXXXXX",
+      },
+      validate: (valor: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+        valor || siblingData?.ficheiro ? true : "Carrega um vídeo ou cola um endereço.",
+    },
+    {
+      name: "capa",
+      label: "Imagem de capa",
+      type: "upload",
+      relationTo: "media",
+      admin: {
+        description: "Só para o vídeo carregado: o que se vê antes de carregar no play. Sem ela, aparece o primeiro fotograma.",
+        condition: (_dados: unknown, irmaos: Record<string, unknown>) => Boolean(irmaos?.ficheiro),
       },
     },
     {

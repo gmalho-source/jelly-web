@@ -20,7 +20,9 @@ export type FonteDeVideo =
 const YOUTUBE =
   /(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([\w-]{6,})/i;
 const VIMEO = /vimeo\.com\/(?:video\/)?(\d{6,})/i;
-const FICHEIRO = /^https?:\/\/[^\s]+\.(?:mp4|webm|mov)(?:\?[^\s]*)?$/i;
+// Absoluto, ou um caminho deste site (um vídeo carregado sem armazenamento
+// externo fica em /api/videos/file/…, que é o caso em desenvolvimento).
+const FICHEIRO = /^(?:https?:\/\/|\/)[^\s]+\.(?:mp4|webm|mov)(?:\?[^\s]*)?$/i;
 
 export function fonteDeVideo(url: string | undefined): FonteDeVideo | undefined {
   const limpo = (url ?? "").trim();

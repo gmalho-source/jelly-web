@@ -203,7 +203,8 @@ export type Block =
   /* Blocos que só aparecem em casos: o corpo dos artigos não os usa. */
   | { type: "gallery"; images: { src: string; alt?: string; legenda?: string; width?: number; height?: number }[] }
   | { type: "video"; mp4?: string; webm?: string; poster?: string; portrait?: boolean; modo?: "ambiente" | "filme" }
-  | { type: "embed"; url: string; caption?: string }
+  /** `poster` só para um ficheiro nosso: o que se vê antes do play. */
+  | { type: "embed"; url: string; caption?: string; poster?: string }
   | { type: "link"; label: string; href: string }
   /** Dois a quatro conjuntos de blocos lado a lado. Não se aninha em si mesmo. */
   | { type: "columns"; columns: Block[][] }
