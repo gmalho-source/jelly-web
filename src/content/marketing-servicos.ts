@@ -272,8 +272,8 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       en: "We manage your social media with strategy, content and conversations that bring the brand closer to the right people. To raise awareness, build trust and generate business opportunities.",
     },
     descricao: {
-      pt: "Gestão de social media pela Jelly: estratégia, linha editorial, produção de conteúdos, comunidade e social ads, com relatório mensal lido pelo tempo de atenção e não pelo alcance.",
-      en: "Social media management by Jelly: strategy, editorial line, content production, community and social ads, with a monthly report read by attention time rather than reach.",
+      pt: "Gestão de redes sociais pela Jelly: estratégia, conteúdos e conversas que aproximam a marca das pessoas certas. Mais notoriedade, mais confiança, mais negócio.",
+      en: "Social media management by Jelly: strategy, content and conversations that bring the brand closer to the right people. More awareness, more trust, more business.",
     },
     abertura: {
       titulo: { pt: "Alcance é vaidade. Atenção é o que fica.", en: "Reach is vanity. Attention is what stays." },
