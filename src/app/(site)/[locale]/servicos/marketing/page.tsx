@@ -7,7 +7,7 @@ import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
 import { GraficoDeArea } from "@/components/GraficoDeArea";
 import { marketing } from "@/content/marketing";
 import { servicoDeMarketing } from "@/content/marketing-servicos";
-import { getLogoWall, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
+import { getLogoWall, getProjects, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -24,6 +24,9 @@ import { slugFor } from "@/lib/slugs";
  * até haver página para cada serviço.
  */
 const SLUG = "marketing";
+
+/** Quantos casos no fim da página, quando o painel não os escolhe. */
+const CASOS = 5;
 
 /*
  * A cor que varre cada área ao passar o rato: as quatro da homepage, pela
@@ -59,8 +62,16 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
   setRequestLocale(locale);
   const t = await getTranslations("services");
   const m = marketing;
-  const [service, all, parceiros] = await Promise.all([getService(SLUG), getServices(), getLogoWall("parceiros-marketing")]);
-  const casos = await getProjectsBySlugs(service?.caseSlugs?.length ? service.caseSlugs : [...m.trabalho.casos]);
+  const [service, all, parceiros, escritos] = await Promise.all([getService(SLUG), getServices(), getLogoWall("parceiros-marketing"), getProjects()]);
+  // Os casos: os que o painel escolher no serviço, se escolher; senão, os
+  // projetos com o caso escrito e marketing na disciplina, primeiro os que têm
+  // o número validado. Só os escritos, porque é a história que se mostra aqui.
+  const casos = service?.caseSlugs?.length
+    ? await getProjectsBySlugs(service.caseSlugs)
+    : escritos
+        .filter((projeto) => /marketing|paid media|performance/i.test(projeto.disciplines.pt))
+        .sort((a, b) => Number(Boolean(b.numbersValidated)) - Number(Boolean(a.numbersValidated)))
+        .slice(0, CASOS);
   const outros = all.filter((item) => item.slug !== SLUG);
   const ia = all.find((item) => item.slug === "inteligencia-artificial");
 
@@ -319,7 +330,8 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
                   className="entra group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
                 >
                   <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">{project.client}</span>
-                  <span className="hidden text-sm text-fg-soft sm:block">{project.title[locale]}</span>
+                  {/* Sem frase própria, o título é o nome do cliente: não se repete. */}
+                  <span className="hidden text-sm text-fg-soft sm:block">{project.title[locale] !== project.client ? project.title[locale] : ""}</span>
                   {/* O número só vai para o ecrã depois de validado com o cliente. */}
                   <span className="text-right font-display tabular-nums text-red lg:text-lg">{project.numbersValidated ? project.headline.value : ""}</span>
                 </Link>

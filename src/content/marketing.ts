@@ -137,10 +137,6 @@ export const marketing = {
     eyebrow: { pt: "Trabalho", en: "Work" },
     titulo: { pt: "Marcas que confiam o número à Jelly.", en: "Brands that trust Jelly with the number." },
     todos: { pt: "Ver todos os projetos", en: "See all projects" },
-    /* Quando o serviço no painel não escolher casos, são estes: os projetos
-       com narrativa escrita que têm marketing na disciplina. Só esses aparecem
-       no site — um projeto sem história não tem página para onde ir. */
-    casos: ["informa-db", "agriloja", "vorwerk", "nuk"],
     /* Os parceiros vêm da parede "parceiros-marketing" no painel: uma lista escrita no código
        obriga a um deploy para acrescentar um selo, e um selo de parceiro
        renova-se. O chapéu fica aqui porque é texto da página, não é conteúdo. */
