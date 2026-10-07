@@ -7,6 +7,7 @@ import { GoogleTagManager, GoogleTagManagerSemScript } from "@/components/Google
 import { GTMRouteTracker } from "@/components/GTMRouteTracker";
 import { MedicoesDaVercel } from "@/components/MedicoesDaVercel";
 import { SiteFooter } from "@/components/SiteFooter";
+import { BotaoWhatsApp } from "@/components/BotaoWhatsApp";
 import { SiteHeader } from "@/components/SiteHeader";
 import { routing, type Locale } from "@/i18n/routing";
 import { SITE_URL, isIndexable } from "@/lib/seo";
@@ -91,6 +92,8 @@ export default async function SiteLayout({
               pelo menos ~24px do logo. */}
           <main className="pb-24 pt-12 sm:pb-0 sm:pt-24">{children}</main>
           <SiteFooter />
+          {/* A conversa de WhatsApp, à mão em todas as páginas. */}
+          <BotaoWhatsApp locale={locale} />
         </NextIntlClientProvider>
         {/* As medições da Vercel: a velocidade que os visitantes sentem, e a
             contagem de visitas e páginas — esta presa ao consentimento, como se

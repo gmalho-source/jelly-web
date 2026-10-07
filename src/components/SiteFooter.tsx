@@ -4,7 +4,9 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getServices } from "@/lib/cms";
 import { slugFor } from "@/lib/slugs";
+import { WHATSAPP, ligacaoWhatsApp } from "@/content/whatsapp";
 import { JellyWordmark } from "./JellyLogo";
+import { LigacaoWhatsApp } from "./LigacaoWhatsApp";
 import { RedesSociais } from "./RedesSociais";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
@@ -86,6 +88,15 @@ export async function SiteFooter() {
               <a href="tel:+351915098769" className="text-paper/80 transition-colors duration-200 hover:text-red">
                 (+351) 915 098 769
               </a>
+            </li>
+            <li>
+              <LigacaoWhatsApp
+                href={ligacaoWhatsApp(lingua)}
+                origem="rodape"
+                className="text-paper/80 transition-colors duration-200 hover:text-red"
+              >
+                WhatsApp
+              </LigacaoWhatsApp>
             </li>
             <li>
               <Link href="/contactos" className="text-paper/80 transition-colors duration-200 hover:text-red">
