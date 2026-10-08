@@ -113,11 +113,18 @@ export function ApplicationForm({
      * áreas escolhidas (só nas espontâneas — numa vaga a área é a da vaga, e vai
      * o slug dela), e o que não chegou, com um código. Nada do que a pessoa
      * escreveu sai daqui. Os campos por preencher não contam: o pedido não saiu.
+     *
+     * A candidatura a uma vaga é `recrutamento_vaga`, e `recrutamento` fica só
+     * para a espontânea — a mesma separação de Contacto e Recrutamento no GA4.
+     * No envio que chegou, a vaga leva ainda a experiência e o vínculo
+     * escolhidos nas listas (os valores delas, nunca texto livre).
      */
-    const paraOGtm = {
-      form_name: "recrutamento",
-      ...(jobSlug ? { vaga: jobSlug } : { areas: dados.getAll("departments").map(String).join(",") }),
-    };
+    const paraOGtm = jobSlug
+      ? { form_name: "recrutamento_vaga", vaga: jobSlug }
+      : { form_name: "recrutamento", areas: dados.getAll("departments").map(String).join(",") };
+    const daVaga = jobSlug
+      ? { experience: valor("experienceYears") || "nao_indicado", contract: valor("contractWanted") || "nao_indicado" }
+      : {};
     const falhou = (form_error: string) => pushEvent("form_submit_error", { ...paraOGtm, form_error });
 
     setNome(valor("name").split(/\s+/)[0] ?? "");
@@ -128,7 +135,7 @@ export function ApplicationForm({
       // campo do currículo: é lá que a pessoa tem de agir.
       if (resposta.ok) {
         setEstado("enviado");
-        pushEvent("form_submit_success", paraOGtm);
+        pushEvent("form_submit_success", { ...paraOGtm, ...daVaga });
       } else if (resposta.status === 415) {
         falhou("cv_recusado");
         setErros({ cv: copy.cvRejected });
