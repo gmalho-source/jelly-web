@@ -145,6 +145,32 @@ export const Prestadores: CollectionConfig = {
       ],
     },
     { name: "notas", label: "Notas", type: "textarea" },
+    // ── Documentos para assinar ─────────────────────────────────────────────
+    // O NDA marca-se sozinho quando o prestador o assina (ver
+    // src/lib/assinaturas): a data é a da assinatura, e o documento fica
+    // ligado. À mão não se mexe — um «sim» escrito por alguém não é prova.
+    {
+      type: "row",
+      admin: { position: "sidebar" },
+      fields: [
+        { name: "ndaAssinado", label: "NDA assinado", type: "checkbox", defaultValue: false, admin: { readOnly: true } },
+        { name: "ndaData", label: "Data do NDA", type: "date", admin: { readOnly: true, date: { pickerAppearance: "dayOnly" } } },
+      ],
+    },
+    {
+      name: "novoDocumento",
+      type: "ui",
+      admin: { position: "sidebar", components: { Field: "@/payload/components/NovoDocumentoPrestador#NovoDocumentoPrestador" } },
+    },
+    {
+      name: "assinaturas",
+      label: "Documentos para assinar",
+      type: "join",
+      collection: "assinaturas",
+      on: "prestador",
+      defaultSort: "-createdAt",
+      admin: { defaultColumns: ["titulo", "tipo", "estado", "concluidoEm"] },
+    },
   ],
 };
 

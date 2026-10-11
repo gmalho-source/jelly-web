@@ -19,6 +19,7 @@ import { Messages } from "./src/payload/collections/messages";
 import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
 import { Downloads } from "./src/payload/collections/downloads";
+import { Assinaturas, AssinaturasFicheiros } from "./src/payload/collections/assinaturas";
 import { BillingAttempts, BillingTokens, Prestadores } from "./src/payload/collections/prestadores";
 import { Clients, LogoWalls, Logos, Milestones, Projects, Sectors, Services, TeamMembers } from "./src/payload/collections/work";
 
@@ -115,6 +116,8 @@ export default buildConfig({
     Media,
     Videos,
     Downloads,
+    Assinaturas,
+    AssinaturasFicheiros,
     Documents,
     Users,
   ],
@@ -149,7 +152,7 @@ export default buildConfig({
           // a cada pedido. São capas de projetos, públicas de qualquer maneira.
           // As imagens são públicas; os documentos não. Sem esta distinção, um
           // CV ficava com endereço no CDN, sem sessão pelo meio.
-          collections: { media: { disablePayloadAccessControl: true }, documents: {}, attachments: {} },
+          collections: { media: { disablePayloadAccessControl: true }, documents: {}, attachments: {}, "assinaturas-ficheiros": {} },
           token: blobToken,
         }),
         // ── Os vídeos, pelo caminho contrário ──────────────────────────────

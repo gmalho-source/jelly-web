@@ -23,9 +23,9 @@ import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
  */
 
 /** Perfis de quem entra no painel. Sem perfis definidos, é dos antigos: vê tudo. */
-type ComPerfis = { roles?: string[] | null } | null | undefined;
+export type ComPerfis = { roles?: string[] | null } | null | undefined;
 
-const temPerfil = (user: ComPerfis, ...perfis: string[]) => {
+export const temPerfil = (user: ComPerfis, ...perfis: string[]) => {
   const meus = user?.roles ?? [];
   if (!user) return false;
   if (!meus.length) return true;

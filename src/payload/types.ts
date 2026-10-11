@@ -94,6 +94,8 @@ export interface Config {
     media: Media;
     videos: Video;
     downloads: Download;
+    assinaturas: Assinatura;
+    'assinaturas-ficheiros': AssinaturasFicheiro;
     documents: Document;
     users: User;
     'payload-kv': PayloadKv;
@@ -101,7 +103,11 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    prestadores: {
+      assinaturas: 'assinaturas';
+    };
+  };
   collectionsSelect: {
     prestadores: PrestadoresSelect<false> | PrestadoresSelect<true>;
     'billing-tokens': BillingTokensSelect<false> | BillingTokensSelect<true>;
@@ -130,6 +136,8 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     downloads: DownloadsSelect<false> | DownloadsSelect<true>;
+    assinaturas: AssinaturasSelect<false> | AssinaturasSelect<true>;
+    'assinaturas-ficheiros': AssinaturasFicheirosSelect<false> | AssinaturasFicheirosSelect<true>;
     documents: DocumentsSelect<false> | DocumentsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -208,8 +216,125 @@ export interface Prestadore {
   estadoCivil?: ('solteiro' | 'casado' | 'uniao' | 'divorciado' | 'viuvo') | null;
   dependentes?: number | null;
   notas?: string | null;
+  ndaAssinado?: boolean | null;
+  ndaData?: string | null;
+  assinaturas?: {
+    docs?: (number | Assinatura)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Documentos para assinar. O NDA dos prestadores sai preenchido com a ficha; qualquer outro documento é um PDF que se carrega. Quem assina recebe uma ligação por email e confirma com um código.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assinaturas".
+ */
+export interface Assinatura {
+  id: number;
+  /**
+   * Como o documento aparece no email e no certificado. Por exemplo «NDA — Ana Silva».
+   */
+  titulo: string;
+  tipo: 'nda' | 'contrato' | 'proposta' | 'outro';
+  /**
+   * Muda sozinho: «Enviado» ao enviar, «Assinado» quando o último assina. «Cancelado» fecha as ligações.
+   */
+  estado?: ('rascunho' | 'enviado' | 'concluido' | 'cancelado') | null;
+  origem: 'modelo-nda' | 'pdf';
+  /**
+   * O documento tal como vai ser assinado. Depois de enviado, já não se troca.
+   */
+  pdf?: (number | null) | AssinaturasFicheiro;
+  /**
+   * Se for um prestador. O NDA assinado fica marcado na ficha dele.
+   */
+  prestador?: (number | null) | Prestadore;
+  /**
+   * Cliente, parceiro ou fornecedor, quando não é um prestador.
+   */
+  outraParte?: {
+    nome?: string | null;
+    nif?: string | null;
+  };
+  /**
+   * Num NDA de prestador só o prestador assina.
+   */
+  jellyAssina?: boolean | null;
+  /**
+   * Um ou mais representantes da outra parte. Se a Jelly assinar, entra sozinha ao enviar.
+   */
+  signatarios?:
+    | {
+        nome: string;
+        email: string;
+        cargo?: string | null;
+        papel?: ('contraparte' | 'jelly') | null;
+        estado?: ('pendente' | 'assinado') | null;
+        assinadoEm?: string | null;
+        enviadoEm?: string | null;
+        vistoEm?: string | null;
+        codigoVerificadoEm?: string | null;
+        nomeEscrito?: string | null;
+        ip?: string | null;
+        navegador?: string | null;
+        codigoHash?: string | null;
+        codigoExpira?: string | null;
+        codigoTentativas?: number | null;
+        codigoEnviadoEm?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Opcional. Aparece no email do convite, antes do botão.
+   */
+  mensagem?: string | null;
+  /**
+   * Depois desta data a ligação deixa de abrir. Por omissão, 30 dias depois do envio.
+   */
+  validade?: string | null;
+  enviadoEm?: string | null;
+  concluidoEm?: string | null;
+  /**
+   * O PDF exato que foi enviado para assinar.
+   */
+  original?: (number | null) | AssinaturasFicheiro;
+  hashOriginal?: string | null;
+  /**
+   * O documento com a página de certificado no fim.
+   */
+  assinado?: (number | null) | AssinaturasFicheiro;
+  hashFinal?: string | null;
+  registo?:
+    | {
+        quando?: string | null;
+        evento?: string | null;
+        detalhe?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assinaturas-ficheiros".
+ */
+export interface AssinaturasFicheiro {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1805,6 +1930,14 @@ export interface PayloadLockedDocument {
         value: number | Download;
       } | null)
     | ({
+        relationTo: 'assinaturas';
+        value: number | Assinatura;
+      } | null)
+    | ({
+        relationTo: 'assinaturas-ficheiros';
+        value: number | AssinaturasFicheiro;
+      } | null)
+    | ({
         relationTo: 'documents';
         value: number | Document;
       } | null)
@@ -1879,6 +2012,9 @@ export interface PrestadoresSelect<T extends boolean = true> {
   estadoCivil?: T;
   dependentes?: T;
   notas?: T;
+  ndaAssinado?: T;
+  ndaData?: T;
+  assinaturas?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2834,6 +2970,81 @@ export interface VideosSelect<T extends boolean = true> {
 export interface DownloadsSelect<T extends boolean = true> {
   title?: T;
   uso?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assinaturas_select".
+ */
+export interface AssinaturasSelect<T extends boolean = true> {
+  titulo?: T;
+  tipo?: T;
+  estado?: T;
+  origem?: T;
+  pdf?: T;
+  prestador?: T;
+  outraParte?:
+    | T
+    | {
+        nome?: T;
+        nif?: T;
+      };
+  jellyAssina?: T;
+  signatarios?:
+    | T
+    | {
+        nome?: T;
+        email?: T;
+        cargo?: T;
+        papel?: T;
+        estado?: T;
+        assinadoEm?: T;
+        enviadoEm?: T;
+        vistoEm?: T;
+        codigoVerificadoEm?: T;
+        nomeEscrito?: T;
+        ip?: T;
+        navegador?: T;
+        codigoHash?: T;
+        codigoExpira?: T;
+        codigoTentativas?: T;
+        codigoEnviadoEm?: T;
+        id?: T;
+      };
+  mensagem?: T;
+  validade?: T;
+  enviadoEm?: T;
+  concluidoEm?: T;
+  original?: T;
+  hashOriginal?: T;
+  assinado?: T;
+  hashFinal?: T;
+  registo?:
+    | T
+    | {
+        quando?: T;
+        evento?: T;
+        detalhe?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assinaturas-ficheiros_select".
+ */
+export interface AssinaturasFicheirosSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   url?: T;

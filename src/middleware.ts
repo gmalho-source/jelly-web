@@ -26,6 +26,10 @@ export default function middleware(request: NextRequest) {
 
   if (pathname.startsWith("/api")) return NextResponse.next();
 
+  // A página de assinatura dos documentos: fora da árvore de línguas, como o
+  // painel. A ligação vem num email e não tem versão inglesa.
+  if (pathname.startsWith("/assinar")) return NextResponse.next();
+
   // O painel do Payload não tem árvore de línguas: passa ao lado do next-intl.
   if (pathname.startsWith("/admin")) return NextResponse.next();
 

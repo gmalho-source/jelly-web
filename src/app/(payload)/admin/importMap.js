@@ -1,3 +1,4 @@
+import { NovoDocumentoPrestador as NovoDocumentoPrestador_cee5970bbd9ee6f440469e34fd225ff0 } from '@/payload/components/NovoDocumentoPrestador'
 import { CampoEtiquetas as CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1 } from '@/payload/components/CampoEtiquetas'
 import { ResumoIA as ResumoIA_615993207b8485cba1987d35775acf71 } from '@/payload/components/ResumoIA'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -41,6 +42,7 @@ import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } fro
 import { EncolheImagem as EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec } from '@/payload/components/EncolheImagem'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
 import { PesoDoVideo as PesoDoVideo_a9741b34d3164464267faa6032c6f6b7 } from '@/payload/components/PesoDoVideo'
+import { EnviarAssinatura as EnviarAssinatura_4949bbd94d26059dcc557e2e09ba5f31 } from '@/payload/components/EnviarAssinatura'
 import { GerarPalavraPasse as GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4 } from '@/payload/components/GerarPalavraPasse'
 import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
@@ -52,6 +54,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/payload/components/NovoDocumentoPrestador#NovoDocumentoPrestador": NovoDocumentoPrestador_cee5970bbd9ee6f440469e34fd225ff0,
   "@/payload/components/CampoEtiquetas#CampoEtiquetas": CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1,
   "@/payload/components/ResumoIA#ResumoIA": ResumoIA_615993207b8485cba1987d35775acf71,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -95,6 +98,7 @@ export const importMap = {
   "@/payload/components/EncolheImagem#EncolheImagem": EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,
   "@/payload/components/PesoDoVideo#PesoDoVideo": PesoDoVideo_a9741b34d3164464267faa6032c6f6b7,
+  "@/payload/components/EnviarAssinatura#EnviarAssinatura": EnviarAssinatura_4949bbd94d26059dcc557e2e09ba5f31,
   "@/payload/components/GerarPalavraPasse#GerarPalavraPasse": GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4,
   "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelMarca#PainelLogo": PainelLogo_965c530af436ec2f048556b8c88302b0,

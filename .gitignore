@@ -32,3 +32,6 @@ content-import/*.xml
 # Registo de ids do Payload: um por base de dados, nunca partilhado
 content-import/payload-media.*.json
 content-import/payload-media.json
+
+# Os PDFs das assinaturas, quando se testa sem Blob: são documentos, não código.
+/assinaturas-ficheiros

@@ -213,6 +213,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // A página de assinatura: ligações pessoais, que não se indexam, não
+        // vão no Referer para lado nenhum, e não ficam em cache.
+        source: "/assinar/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
         // A área de faturação nunca é indexada nem embebida.
         source: "/billing/:path*",
         headers: [
