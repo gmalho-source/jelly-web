@@ -28,6 +28,7 @@ export const ESTADOS_DEBITO = [
 
 /** O que o cliente escreve e o que o código regista: o painel não reescreve. */
 const DO_CLIENTE = [
+  "via",
   "referencia",
   "nif",
   "morada",
@@ -115,7 +116,7 @@ export const DebitosDiretos: CollectionConfig = {
     useAsTitle: "empresa",
     group: "Faturação",
     hidden: escondeDe("debitos"),
-    defaultColumns: ["empresa", "referencia", "estado", "contactoEmail", "assinadaEm"],
+    defaultColumns: ["empresa", "referencia", "estado", "via", "assinadaEm"],
     listSearchableFields: ["empresa", "nif", "referencia", "contactoEmail"],
     description:
       "Autorizações de débito direto SEPA dos clientes. Cria-se com o contacto do cliente e envia-se: o cliente preenche a empresa, o NIF e o IBAN, e assina. Depois de assinada, carrega-se no banco e marca-se «Registada no banco».",
@@ -138,6 +139,17 @@ export const DebitosDiretos: CollectionConfig = {
         description: "Muda sozinho até «Assinada». À mão: «Registada no banco» depois de a carregar no banco, «Revogada» se o cliente a cancelar, «Cancelada» se já não for precisa.",
       },
     },
+    {
+      name: "via",
+      label: "Pedida",
+      type: "select",
+      defaultValue: "painel",
+      options: [
+        { label: "Pelo painel (convite ao contacto)", value: "painel" },
+        { label: "Pelo link único", value: "link" },
+      ],
+      admin: { readOnly: true, position: "sidebar", condition: (dados) => dados?.via === "link" },
+    },
     { name: "referencia", label: "Referência da autorização", type: "text", unique: true, index: true, admin: { ...lerSo, position: "sidebar", description: "NIF do cliente + ADD + número. Sai quando o cliente preenche." } },
     {
       name: "tipo",
@@ -156,7 +168,7 @@ export const DebitosDiretos: CollectionConfig = {
       fields: [
         { name: "empresa", label: "Empresa", type: "text", required: true, admin: { description: "O cliente pode corrigir ao preencher." } },
         { name: "contactoNome", label: "Nome do contacto", type: "text", required: true },
-        { name: "contactoEmail", label: "Email do contacto", type: "email", required: true, admin: { description: "Recebe a ligação para preencher." } },
+        { name: "contactoEmail", label: "Email do contacto", type: "email", required: true, admin: { description: "Recebe a ligação para preencher. Pelo link único, é quem preencheu." } },
       ],
     },
     { name: "mensagem", label: "Mensagem no email", type: "textarea", admin: { description: "Opcional. Aparece no email, antes do botão." } },

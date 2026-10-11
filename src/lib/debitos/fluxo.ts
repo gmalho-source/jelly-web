@@ -54,6 +54,7 @@ export type Autorizacao = {
   enviadaEm?: string | null;
   abertaEm?: string | null;
   validade?: string | null;
+  via?: "painel" | "link" | null;
   pedido?: number | string | { id: number | string; estado?: string } | null;
 };
 
@@ -182,7 +183,85 @@ export async function preencher(
   const a = await abrirConvite(payload, token);
   if (FECHADAS.includes(a.estado)) throw new ErroDeDebito("Esta autorização já foi assinada.", 409);
   if (!(await withinRateLimit(`debito:${a.id}`, 8, 3600))) throw new ErroDeDebito("Demasiadas tentativas na última hora. Tente mais tarde.", 429);
+  return preparaDocumento(payload, a, dados, { ip, origem });
+}
 
+/**
+ * Pelo link único: não há convite antes — a autorização nasce aqui, com quem
+ * preencheu como contacto, já «Aberta» e válida 48 horas. Se o NIF já tiver
+ * uma autorização em vigor, esta é uma alteração (e substitui-a ao ser
+ * assinada).
+ */
+export async function preencherPeloLink(
+  payload: Payload,
+  chave: string,
+  dados: DadosDoCliente,
+  quemPreenche: { nome: string; email: string },
+  { ip, origem }: { ip: string; origem: string },
+): Promise<{ ligacao?: string; enviadoPara?: string }> {
+  const { chaveDoLinkValida } = await import("@/payload/globals/link-com-chave");
+  if (!(await chaveDoLinkValida(payload, "debito-link", chave))) throw new ErroDeDebito("Este link já não está disponível. Peça o link atual à Jelly.", 404);
+  const porIp = await withinRateLimit(`debito-link:ip:${ip}`, 6, 3600);
+  const porEmail = await withinRateLimit(`debito-link:email:${quemPreenche.email}`, 3, 3600);
+  if (!porIp || !porEmail) throw new ErroDeDebito("Já começou vários pedidos na última hora. Use o mais recente, ou tente outra vez mais tarde.", 429);
+
+  // A mesma pessoa a corrigir o que preencheu (outro IBAN, um erro no nome):
+  // reaproveita a autorização aberta que já tinha, em vez de criar outra.
+  const aberta = (
+    await payload.find({
+      collection: COLECAO,
+      where: {
+        and: [
+          { via: { equals: "link" } },
+          { nif: { equals: dados.nif } },
+          { contactoEmail: { equals: quemPreenche.email } },
+          { estado: { equals: "aberta" } },
+          { validade: { greater_than: new Date().toISOString() } },
+        ],
+      },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
+  ).docs[0] as unknown as Autorizacao | undefined;
+  if (aberta) return preparaDocumento(payload, aberta, dados, { ip, origem });
+
+  const emVigor = await payload.find({
+    collection: COLECAO,
+    where: { and: [{ nif: { equals: dados.nif } }, { estado: { in: ["assinada", "registada"] } }] },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  });
+  const agora = new Date();
+  const criada = (await payload.create({
+    collection: COLECAO,
+    overrideAccess: true,
+    ...interno,
+    data: {
+      via: "link",
+      estado: "aberta",
+      tipo: emVigor.docs.length ? "alteracao" : "nova",
+      empresa: dados.empresa,
+      contactoNome: quemPreenche.nome,
+      contactoEmail: quemPreenche.email,
+      abertaEm: agora.toISOString(),
+      validade: new Date(agora.getTime() + LINK_HORAS * 3_600_000).toISOString(),
+    } as never,
+  })) as unknown as Autorizacao;
+  return preparaDocumento(payload, criada, dados, { ip, origem });
+}
+
+/** Quanto tempo uma autorização pedida pelo link espera pela assinatura. */
+const LINK_HORAS = 48;
+
+/** O documento, o pedido de assinatura, e para onde segue — nos dois caminhos. */
+async function preparaDocumento(
+  payload: Payload,
+  a: Autorizacao,
+  dados: DadosDoCliente,
+  { ip, origem }: { ip: string; origem: string },
+): Promise<{ ligacao?: string; enviadoPara?: string }> {
   const referencia = a.referencia && a.nif === dados.nif ? a.referencia : await novaReferencia(payload, dados.nif);
 
   const anterior = idDe(a.pedido);
@@ -218,7 +297,7 @@ export async function preencher(
       validade: a.validade ?? new Date(Date.now() + VALIDADE_DIAS * 86_400_000).toISOString(),
     } as never,
   });
-  await regista(payload, pedido.id, "Pedido feito pela autorização de débito direto", `${referencia} · ${ip}`);
+  await regista(payload, pedido.id, a.via === "link" ? "Pedido feito pelo link dos débitos diretos" : "Pedido feito pela autorização de débito direto", `${referencia} · ${ip}`);
 
   await payload.update({
     collection: COLECAO,

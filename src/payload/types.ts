@@ -153,9 +153,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'nda-link': NdaLink;
+    'debito-link': DebitoLink;
   };
   globalsSelect: {
     'nda-link': NdaLinkSelect<false> | NdaLinkSelect<true>;
+    'debito-link': DebitoLinkSelect<false> | DebitoLinkSelect<true>;
   };
   locale: null;
   widgets: {
@@ -899,6 +901,7 @@ export interface DebitosDireto {
     | 'revogada'
     | 'substituida'
     | 'cancelada';
+  via?: ('painel' | 'link') | null;
   /**
    * NIF do cliente + ADD + número. Sai quando o cliente preenche.
    */
@@ -913,7 +916,7 @@ export interface DebitosDireto {
   empresa: string;
   contactoNome: string;
   /**
-   * Recebe a ligação para preencher.
+   * Recebe a ligação para preencher. Pelo link único, é quem preencheu.
    */
   contactoEmail: string;
   /**
@@ -2123,6 +2126,7 @@ export interface PrestadoresSelect<T extends boolean = true> {
  */
 export interface DebitosDiretosSelect<T extends boolean = true> {
   estado?: T;
+  via?: T;
   referencia?: T;
   tipo?: T;
   empresa?: T;
@@ -3298,10 +3302,37 @@ export interface NdaLink {
   createdAt?: string | null;
 }
 /**
+ * O link que se partilha com os clientes. Abrem, preenchem a autorização de débito direto (empresa, NIF, IBAN, quem assina) e assinam com um código por email. A autorização aparece em «Débitos diretos», marcada «Pelo link».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "debito-link".
+ */
+export interface DebitoLink {
+  id: number;
+  /**
+   * Desligado, o link mostra que não está disponível. A chave fica a mesma.
+   */
+  ativo?: boolean | null;
+  chave?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "nda-link_select".
  */
 export interface NdaLinkSelect<T extends boolean = true> {
+  ativo?: T;
+  chave?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "debito-link_select".
+ */
+export interface DebitoLinkSelect<T extends boolean = true> {
   ativo?: T;
   chave?: T;
   updatedAt?: T;

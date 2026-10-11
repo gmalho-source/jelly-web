@@ -51,7 +51,7 @@ export default async function Pagina({ params }: { params: Promise<{ token: stri
         Credor: {CREDOR.nome} · NIF {CREDOR.nif} · Identificador de credor {CREDOR.ics}
       </p>
       <FormularioDebito
-        token={token}
+        acao={`/assinar/debito/${encodeURIComponent(token)}/preencher`}
         empresa={autorizacao.empresa}
         email={autorizacao.contactoEmail}
         anterior={

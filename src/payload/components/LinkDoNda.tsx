@@ -7,10 +7,11 @@ const semAssinatura = () => () => {};
 import { leResposta } from "./resposta";
 
 /**
- * No global «Link do NDA»: o link para copiar, e o botão que troca a chave.
- * Trocar a chave fecha o link antigo — quem o tinha deixa de conseguir abrir.
+ * Nos links fixos com chave (o do NDA, o dos débitos diretos): o link para
+ * copiar, e o botão que troca a chave. Trocar a chave fecha o link antigo —
+ * quem o tinha deixa de conseguir abrir.
  */
-export function LinkDoNda() {
+export function LinkComChave({ global, caminho }: { global: string; caminho: string }) {
   const guardada = useFormFields(([campos]) => campos?.chave?.value as string | undefined);
   // A chave nova fica aqui depois de trocada: o formulário só a relê ao abrir.
   const [trocada, setTrocada] = useState<string | null>(null);
@@ -18,14 +19,14 @@ export function LinkDoNda() {
   const origem = useSyncExternalStore(semAssinatura, () => window.location.origin, () => "");
   const [ocupado, setOcupado] = useState(false);
   const chave = trocada ?? guardada;
-  const link = chave && origem ? `${origem}/assinar/nda/${chave}` : "";
+  const link = chave && origem ? `${origem}${caminho}${chave}` : "";
   if (chave && !origem) return null;
 
   const trocar = async () => {
     if (chave && !window.confirm("Trocar a chave? O link atual deixa de abrir — quem o tem vai precisar do novo.")) return;
     setOcupado(true);
     try {
-      const resposta = await fetch("/api/globals/nda-link/trocar-chave", { method: "post", credentials: "include" });
+      const resposta = await fetch(`/api/globals/${global}/trocar-chave`, { method: "post", credentials: "include" });
       const corpo = await leResposta<{ chave?: string; error?: string }>(resposta);
       if (!resposta.ok || !corpo.chave) throw new Error(corpo?.error ?? `erro ${resposta.status}`);
       toast.success(chave ? "Chave trocada. O link antigo já não abre." : "Link criado.");
@@ -86,6 +87,16 @@ export function LinkDoNda() {
       )}
     </div>
   );
+}
+
+/** O link do NDA dos prestadores. */
+export function LinkDoNda() {
+  return <LinkComChave global="nda-link" caminho="/assinar/nda/" />;
+}
+
+/** O link único dos débitos diretos. */
+export function LinkDoDebito() {
+  return <LinkComChave global="debito-link" caminho="/assinar/sepa/" />;
 }
 
 export default LinkDoNda;

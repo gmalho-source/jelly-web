@@ -9,6 +9,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Media } from "./src/payload/collections/media";
 import { NdaLink } from "./src/payload/globals/nda-link";
+import { DebitoLink } from "./src/payload/globals/debito-link";
 import { DebitosDiretos } from "./src/payload/collections/debitos";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
@@ -91,7 +92,7 @@ export default buildConfig({
       beforeNavLinks: ["@/payload/components/PainelBarra#PainelBarra"],
     },
   },
-  globals: [NdaLink],
+  globals: [NdaLink, DebitoLink],
   collections: [
     Prestadores,
     DebitosDiretos,

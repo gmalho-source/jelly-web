@@ -47,6 +47,7 @@ import { PesoDoVideo as PesoDoVideo_a9741b34d3164464267faa6032c6f6b7 } from '@/p
 import { EnviarAssinatura as EnviarAssinatura_4949bbd94d26059dcc557e2e09ba5f31 } from '@/payload/components/EnviarAssinatura'
 import { GerarPalavraPasse as GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4 } from '@/payload/components/GerarPalavraPasse'
 import { LinkDoNda as LinkDoNda_c4457af95ecaf6ea43c81ea841017c3a } from '@/payload/components/LinkDoNda'
+import { LinkDoDebito as LinkDoDebito_4c880c1e60879c72b83f3df9abb543a2 } from '@/payload/components/LinkDoDebito'
 import { PainelIcone as PainelIcone_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/payload/components/PainelMarca'
 import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
@@ -106,6 +107,7 @@ export const importMap = {
   "@/payload/components/EnviarAssinatura#EnviarAssinatura": EnviarAssinatura_4949bbd94d26059dcc557e2e09ba5f31,
   "@/payload/components/GerarPalavraPasse#GerarPalavraPasse": GerarPalavraPasse_7c44894c1a8e32234a0b7032383ee3e4,
   "@/payload/components/LinkDoNda#LinkDoNda": LinkDoNda_c4457af95ecaf6ea43c81ea841017c3a,
+  "@/payload/components/LinkDoDebito#LinkDoDebito": LinkDoDebito_4c880c1e60879c72b83f3df9abb543a2,
   "@/payload/components/PainelMarca#PainelIcone": PainelIcone_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelMarca#PainelLogo": PainelLogo_965c530af436ec2f048556b8c88302b0,
   "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,

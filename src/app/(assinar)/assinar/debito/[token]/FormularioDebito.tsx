@@ -7,8 +7,24 @@ type Anterior = { nif: string; morada: string; recorrente: boolean; signatarioNo
 
 const classe = "rounded-[8px] border border-line bg-white px-3 py-2.5 text-base font-normal text-ink";
 
-/** O formulário da autorização. Ao submeter, segue para a assinatura (ou avisa para onde foi). */
-export function FormularioDebito({ token, empresa, email, anterior }: { token: string; empresa: string; email: string; anterior: Anterior | null }) {
+/**
+ * O formulário da autorização. Ao submeter, segue para a assinatura (ou avisa
+ * para onde foi). Serve o convite (`acao` com o token) e o link único
+ * (`link`: pergunta também quem está a preencher).
+ */
+export function FormularioDebito({
+  acao,
+  empresa,
+  email,
+  anterior,
+  link = false,
+}: {
+  acao: string;
+  empresa: string;
+  email: string;
+  anterior: Anterior | null;
+  link?: boolean;
+}) {
   const [v, setV] = useState<Record<Campo, string>>({
     empresa,
     nif: anterior?.nif ?? "",
@@ -20,6 +36,10 @@ export function FormularioDebito({ token, empresa, email, anterior }: { token: s
     signatarioEmail: anterior?.signatarioEmail || email,
   });
   const [recorrente, setRecorrente] = useState(anterior?.recorrente ?? true);
+  // No link único: quem preenche, e se é essa pessoa que assina.
+  const [eu, setEu] = useState({ nome: "", email: "" });
+  const [souEu, setSouEu] = useState(true);
+  const [errosEu, setErrosEu] = useState<{ nome?: string; email?: string }>({});
   const [consentimento, setConsentimento] = useState(false);
   const [erros, setErros] = useState<Partial<Record<Campo, string>>>({});
   const [erro, setErro] = useState("");
@@ -31,15 +51,24 @@ export function FormularioDebito({ token, empresa, email, anterior }: { token: s
     setOcupado(true);
     setErro("");
     setErros({});
+    setErrosEu({});
     try {
-      const resposta = await fetch(`/assinar/debito/${encodeURIComponent(token)}/preencher`, {
+      const assina = link && souEu ? { signatarioNome: eu.nome, signatarioEmail: eu.email } : {};
+      const resposta = await fetch(acao, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ ...v, recorrente, consentimento }),
+        body: JSON.stringify({ ...v, ...assina, recorrente, consentimento, ...(link ? { quemNome: eu.nome, quemEmail: eu.email } : {}) }),
       });
-      const corpo = (await resposta.json().catch(() => ({}))) as { ligacao?: string; enviadoPara?: string; error?: string; erros?: Partial<Record<Campo, string>> };
+      const corpo = (await resposta.json().catch(() => ({}))) as {
+        ligacao?: string;
+        enviadoPara?: string;
+        error?: string;
+        erros?: Partial<Record<Campo, string>>;
+        errosQuem?: { nome?: string; email?: string };
+      };
       if (!resposta.ok) {
         if (corpo.erros) setErros(corpo.erros);
+        if (corpo.errosQuem) setErrosEu(corpo.errosQuem);
         throw new Error(corpo.error ?? "Não foi possível continuar.");
       }
       if (corpo.ligacao) return window.location.assign(corpo.ligacao);
@@ -82,8 +111,23 @@ export function FormularioDebito({ token, empresa, email, anterior }: { token: s
     </label>
   );
 
+  const campoEu = (nome: "nome" | "email", rotulo: string, tipo = "text", autoComplete?: string) => (
+    <label className="grid gap-1.5 text-sm font-semibold">
+      {rotulo}
+      <input type={tipo} required autoComplete={autoComplete} value={eu[nome]} onChange={(e) => setEu({ ...eu, [nome]: e.target.value })} aria-invalid={Boolean(errosEu[nome])} className={classe} />
+      {errosEu[nome] ? <span className="text-sm font-semibold text-red">{errosEu[nome]}</span> : null}
+    </label>
+  );
+
   return (
     <form className="mt-8 grid max-w-[640px] gap-5" onSubmit={(e) => void submeter(e)} noValidate>
+      {link ? (
+        <>
+          <h2 className="font-display text-xl">Quem está a preencher</h2>
+          {campoEu("nome", "O seu nome", "text", "name")}
+          {campoEu("email", "O seu email", "email", "email")}
+        </>
+      ) : null}
       <h2 className="font-display text-xl">A empresa</h2>
       {campo("empresa", "Nome da empresa", { ajuda: "Como está na certidão permanente.", autoComplete: "organization" })}
       {campo("nif", "NIF")}
@@ -106,9 +150,17 @@ export function FormularioDebito({ token, empresa, email, anterior }: { token: s
         A pessoa com poderes para obrigar a empresa — um gerente ou administrador. Se não for quem está a preencher, indique o email
         dela: enviamos-lhe a autorização preenchida para assinar.
       </p>
-      {campo("signatarioNome", "Nome completo", { autoComplete: "name" })}
+      {link ? (
+        <label className="flex items-start gap-3 text-sm">
+          <input type="checkbox" checked={souEu} onChange={(e) => setSouEu(e.target.checked)} className="mt-1 h-4 w-4" />
+          <span>Sou eu que assino — tenho poderes para obrigar a empresa.</span>
+        </label>
+      ) : null}
+      {!(link && souEu) ? campo("signatarioNome", "Nome completo de quem assina", { autoComplete: "name" }) : null}
       {campo("signatarioCargo", "Cargo", { ajuda: "Por exemplo: gerente, administrador." })}
-      {campo("signatarioEmail", "Email de quem assina", { tipo: "email", ajuda: "É para aqui que vai o código para assinar e a cópia assinada.", autoComplete: "email" })}
+      {!(link && souEu)
+        ? campo("signatarioEmail", "Email de quem assina", { tipo: "email", ajuda: "É para aqui que vai o código para assinar e a cópia assinada.", autoComplete: "email" })
+        : null}
 
       <label className="flex items-start gap-3 text-sm">
         <input type="checkbox" required checked={consentimento} onChange={(e) => setConsentimento(e.target.checked)} className="mt-1 h-4 w-4" />
