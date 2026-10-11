@@ -27,8 +27,17 @@ export const SIGNATARIO_JELLY = {
   email: "gmalho@jelly.pt",
 } as const;
 
-/** Quem recebe a confirmação e a cópia de cada NDA assinado. */
-export const AVISOS_NDA = ["gmalho@jelly.pt", "mcosta@jelly.pt"] as const;
+/**
+ * Quem recebe, na casa, o aviso e a cópia de cada documento assinado. As
+ * propostas só ao Gonçalo; os NDA, os contratos e o resto, a ele e à Marta
+ * Costa. Quem já recebeu a cópia por ter assinado não recebe o aviso.
+ */
+export const AVISOS: Record<"nda" | "contrato" | "proposta" | "outro", readonly string[]> = {
+  nda: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
+  contrato: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
+  proposta: ["gmalho@jelly.pt"],
+  outro: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
+};
 
 const so = soAdministracao;
 

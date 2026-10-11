@@ -1,7 +1,7 @@
 import type { Payload } from "payload";
 import { enviaEmail } from "@/lib/email";
 import { CASA, botao, escapa, p, papel, recibo } from "@/lib/email-papel";
-import { AVISOS_NDA, SIGNATARIO_JELLY } from "@/payload/collections/assinaturas";
+import { AVISOS, SIGNATARIO_JELLY } from "@/payload/collections/assinaturas";
 import { contaTentativa, ficaComOFecho, gravaLinha, largaOFecho, marcaVisto, porAssinar, regista } from "./base";
 import { guardarPdf, lerPdf } from "./ficheiros";
 import { blocosDoNda, faltaNaFicha } from "./nda";
@@ -365,7 +365,7 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     jaTem.add(l.email.toLowerCase());
   }
   // A casa recebe o aviso — menos quem já recebeu a cópia por ter assinado.
-  for (const destino of AVISOS_NDA) {
+  for (const destino of AVISOS[pedido.tipo] ?? AVISOS.outro) {
     if (!jaTem.has(destino)) await enviaEmail(avisoInterno(pedido, destino, anexo, hashFinal, outraParte));
   }
 }
