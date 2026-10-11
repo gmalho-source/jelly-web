@@ -76,3 +76,28 @@ export function sha256(bytes: Uint8Array): string {
 export function nomeDaImagemJelly(): string {
   return `assinaturas-privado/jelly-${Buffer.from(chave("imagem-jelly")).toString("hex").slice(0, 40)}.png`;
 }
+
+/**
+ * Convites que não são para assinar logo — por exemplo, a autorização de
+ * débito direto, que o cliente primeiro preenche. Cada tipo tem a sua chave:
+ * um convite de um tipo não abre a porta de outro, nem a de uma assinatura.
+ */
+export async function assinaConvite(tipo: string, id: string, validade: Date): Promise<string> {
+  return new SignJWT({})
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(id)
+    .setIssuer(EMISSOR)
+    .setAudience(`convite-${tipo}`)
+    .setIssuedAt()
+    .setExpirationTime(Math.floor(validade.getTime() / 1000))
+    .sign(chave(`convite:${tipo}`));
+}
+
+export async function lerConvite(token: string, tipo: string): Promise<string | null> {
+  try {
+    const { payload } = await jwtVerify(token, chave(`convite:${tipo}`), { issuer: EMISSOR, audience: `convite-${tipo}` });
+    return payload.sub ?? null;
+  } catch {
+    return null;
+  }
+}

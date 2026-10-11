@@ -54,7 +54,7 @@ type Prestador = { id: number | string; nome?: string | null; email?: string | n
 export type Pedido = {
   id: number | string;
   titulo: string;
-  tipo: "nda" | "contrato" | "proposta" | "outro";
+  tipo: "nda" | "contrato" | "proposta" | "outro" | "debito-direto";
   estado: "rascunho" | "enviado" | "concluido" | "cancelado";
   origem: "modelo-nda" | "pdf";
   pdf?: number | string | { id: number | string } | null;
@@ -404,6 +404,14 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     }
   }
 
+  // Uma autorização de débito direto fica «Assinada» na lista dela.
+  let debito: import("@/lib/debitos/fluxo").DebitoAssinado | null = null;
+  if (pedido.tipo === "debito-direto") {
+    const { aoAssinar } = await import("@/lib/debitos/fluxo");
+    debito = await aoAssinar(payload, pedido.id, momento);
+    if (debito) await regista(payload, pedido.id, "Autorização de débito direto marcada «Assinada»", debito.substituidas.length ? `Substitui ${debito.substituidas.join(", ")}` : null);
+  }
+
   // O NDA fica marcado na ficha do prestador, com a data da assinatura.
   const prestadorId = ficha ? null : idDe(pedido.prestador);
   if (pedido.tipo === "nda" && prestadorId) {
@@ -432,7 +440,7 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
   // A casa recebe o aviso — menos quem já recebeu a cópia por ter assinado.
   const noPainel = cabe ? null : `${SITE_URL}/admin/collections/${COLECAO}/${pedido.id}`;
   for (const destino of AVISOS[pedido.tipo] ?? AVISOS.outro) {
-    if (!jaTem.has(destino)) await manda(avisoInterno(pedido, destino, { anexo, ligacao: noPainel }, hashFinal, outraParte, ficha));
+    if (!jaTem.has(destino)) await manda(avisoInterno(pedido, destino, { anexo, ligacao: noPainel }, hashFinal, outraParte, ficha, debito));
   }
 }
 
@@ -524,7 +532,11 @@ function avisoInterno(
   hash: string,
   outraParte: string,
   ficha: import("./link").FichaDoLink | null = null,
+  debito: import("@/lib/debitos/fluxo").DebitoAssinado | null = null,
 ) {
+  const sobreODebito = debito
+    ? `Autorização de débito direto ${debito.referencia} assinada. Falta carregá-la no banco e marcá-la «Registada no banco» em Faturação → Débitos diretos.${debito.substituidas.length ? ` Substitui ${debito.substituidas.join(", ")}, que passou a «Substituída».` : ""}`
+    : null;
   const sobreAFicha = ficha
     ? ficha.criado
       ? `Assinado pelo link do NDA. A ficha de ${ficha.nome} foi criada em «Parado», com os dados que escreveu: revê-a e passa-a a «Qualificado» quando puder faturar.`
@@ -532,7 +544,12 @@ function avisoInterno(
         ? `Assinado pelo link do NDA. O NDA ficou na ficha que já existia; os dados escritos têm diferenças (${ficha.diferencas.join(", ")}), que estão nas notas — a ficha ficou marcada «Dados a rever».`
         : "Assinado pelo link do NDA. O NDA ficou na ficha que já existia, marcado com a data de hoje."
     : null;
-  const assunto = pedido.tipo === "nda" ? `NDA assinado: ${outraParte || pedido.titulo}` : `Assinado: ${pedido.titulo}`;
+  const assunto =
+    pedido.tipo === "nda"
+      ? `NDA assinado: ${outraParte || pedido.titulo}`
+      : pedido.tipo === "debito-direto"
+        ? `Débito direto assinado: ${outraParte || pedido.titulo}`
+        : `Assinado: ${pedido.titulo}`;
   const corpo = [
     recibo(
       "Documento assinado",
@@ -543,7 +560,7 @@ function avisoInterno(
         { rotulo: "SHA-256", valor: hash },
       ],
       [
-        sobreAFicha ?? (pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada está guardada no pedido, no painel."),
+        sobreODebito ?? sobreAFicha ?? (pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada está guardada no pedido, no painel."),
         anexo ? "" : "O PDF assinado é grande demais para seguir em anexo: está no pedido, no painel.",
       ]
         .filter(Boolean)

@@ -9,6 +9,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Media } from "./src/payload/collections/media";
 import { NdaLink } from "./src/payload/globals/nda-link";
+import { DebitosDiretos } from "./src/payload/collections/debitos";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
 import { i18n } from "./src/payload/i18n";
@@ -92,6 +93,7 @@ export default buildConfig({
   globals: [NdaLink],
   collections: [
     Prestadores,
+    DebitosDiretos,
     BillingTokens,
     BillingAttempts,
     Pages,

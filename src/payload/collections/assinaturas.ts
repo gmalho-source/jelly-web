@@ -32,8 +32,9 @@ export const SIGNATARIO_JELLY = {
  * propostas só ao Gonçalo; os NDA, os contratos e o resto, a ele e à Marta
  * Costa. Quem já recebeu a cópia por ter assinado não recebe o aviso.
  */
-export const AVISOS: Record<"nda" | "contrato" | "proposta" | "outro", readonly string[]> = {
+export const AVISOS: Record<"nda" | "contrato" | "proposta" | "outro" | "debito-direto", readonly string[]> = {
   nda: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
+  "debito-direto": ["gmalho@jelly.pt", "mcosta@jelly.pt"],
   contrato: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
   proposta: ["gmalho@jelly.pt"],
   outro: ["gmalho@jelly.pt", "mcosta@jelly.pt"],
@@ -248,7 +249,12 @@ export const Assinaturas: CollectionConfig = {
             { label: "Contrato", value: "contrato" },
             { label: "Proposta", value: "proposta" },
             { label: "Outro", value: "outro" },
+            { label: "Débito direto", value: "debito-direto" },
           ],
+          // O débito direto nasce em «Débitos diretos», com o documento gerado
+          // a partir do que o cliente preencheu: não se escolhe aqui.
+          filterOptions: ({ options, data }) =>
+            data?.tipo === "debito-direto" ? options : options.filter((o) => (typeof o === "string" ? o : o.value) !== "debito-direto"),
           // No NDA de prestador é sempre «NDA»: não se pergunta.
           admin: { condition: (dados) => dados?.origem === "pdf", description: "Decide quem recebe o aviso: as propostas só o Gonçalo; o resto, também a Marta." },
         },

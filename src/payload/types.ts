@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     prestadores: Prestadore;
+    'debitos-diretos': DebitosDireto;
     'billing-tokens': BillingToken;
     'billing-attempts': BillingAttempt;
     pages: Page;
@@ -110,6 +111,7 @@ export interface Config {
   };
   collectionsSelect: {
     prestadores: PrestadoresSelect<false> | PrestadoresSelect<true>;
+    'debitos-diretos': DebitosDiretosSelect<false> | DebitosDiretosSelect<true>;
     'billing-tokens': BillingTokensSelect<false> | BillingTokensSelect<true>;
     'billing-attempts': BillingAttemptsSelect<false> | BillingAttemptsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -768,7 +770,7 @@ export interface Assinatura {
   /**
    * Decide quem recebe o aviso: as propostas só o Gonçalo; o resto, também a Marta.
    */
-  tipo?: ('nda' | 'contrato' | 'proposta' | 'outro') | null;
+  tipo?: ('nda' | 'contrato' | 'proposta' | 'outro' | 'debito-direto') | null;
   /**
    * Muda sozinho: «Enviado» ao enviar, «Assinado» quando o último assina. «Cancelado» fecha as ligações.
    */
@@ -873,6 +875,71 @@ export interface AssinaturasFicheiro {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * Autorizações de débito direto SEPA dos clientes. Cria-se com o contacto do cliente e envia-se: o cliente preenche a empresa, o NIF e o IBAN, e assina. Depois de assinada, carrega-se no banco e marca-se «Registada no banco».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "debitos-diretos".
+ */
+export interface DebitosDireto {
+  id: number;
+  /**
+   * Muda sozinho até «Assinada». À mão: «Registada no banco» depois de a carregar no banco, «Revogada» se o cliente a cancelar, «Cancelada» se já não for precisa.
+   */
+  estado:
+    | 'rascunho'
+    | 'enviada'
+    | 'aberta'
+    | 'assinada'
+    | 'registada'
+    | 'expirada'
+    | 'revogada'
+    | 'substituida'
+    | 'cancelada';
+  /**
+   * NIF do cliente + ADD + número. Sai quando o cliente preenche.
+   */
+  referencia?: string | null;
+  /**
+   * Quando o cliente assina, uma autorização anterior do mesmo NIF passa a «Substituída».
+   */
+  tipo: 'nova' | 'alteracao';
+  /**
+   * O cliente pode corrigir ao preencher.
+   */
+  empresa: string;
+  contactoNome: string;
+  /**
+   * Recebe a ligação para preencher.
+   */
+  contactoEmail: string;
+  /**
+   * Opcional. Aparece no email, antes do botão.
+   */
+  mensagem?: string | null;
+  nif?: string | null;
+  iban?: string | null;
+  recorrente?: boolean | null;
+  morada?: string | null;
+  signatarioNome?: string | null;
+  signatarioCargo?: string | null;
+  signatarioEmail?: string | null;
+  enviadaEm?: string | null;
+  abertaEm?: string | null;
+  assinadaEm?: string | null;
+  registadaEm?: string | null;
+  revogadaEm?: string | null;
+  validade?: string | null;
+  /**
+   * Pelas regras SEPA, uma autorização caduca 36 meses depois do último débito. Atualizar quando houver débitos.
+   */
+  ultimoDebito?: string | null;
+  pedido?: (number | null) | Assinatura;
+  substituidaPor?: (number | null) | DebitosDireto;
+  notas?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1858,6 +1925,10 @@ export interface PayloadLockedDocument {
         value: number | Prestadore;
       } | null)
     | ({
+        relationTo: 'debitos-diretos';
+        value: number | DebitosDireto;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -2041,6 +2112,38 @@ export interface PrestadoresSelect<T extends boolean = true> {
   ndaData?: T;
   dadosARever?: T;
   assinaturas?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "debitos-diretos_select".
+ */
+export interface DebitosDiretosSelect<T extends boolean = true> {
+  estado?: T;
+  referencia?: T;
+  tipo?: T;
+  empresa?: T;
+  contactoNome?: T;
+  contactoEmail?: T;
+  mensagem?: T;
+  nif?: T;
+  iban?: T;
+  recorrente?: T;
+  morada?: T;
+  signatarioNome?: T;
+  signatarioCargo?: T;
+  signatarioEmail?: T;
+  enviadaEm?: T;
+  abertaEm?: T;
+  assinadaEm?: T;
+  registadaEm?: T;
+  revogadaEm?: T;
+  validade?: T;
+  ultimoDebito?: T;
+  pedido?: T;
+  substituidaPor?: T;
+  notas?: T;
   updatedAt?: T;
   createdAt?: T;
 }
