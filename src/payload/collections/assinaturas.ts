@@ -1,4 +1,4 @@
-import type { Access, CollectionBeforeChangeHook, CollectionConfig } from "payload";
+import type { Access, CollectionBeforeChangeHook, CollectionBeforeValidateHook, CollectionConfig } from "payload";
 import { temPerfil, type ComPerfis } from "./recruitment";
 import { enviarAssinatura, imagemJelly, novoParaPrestador } from "../endpoints/assinaturas";
 
@@ -115,6 +115,36 @@ const protegeAProva: CollectionBeforeChangeHook = ({ data, originalDoc, operatio
   return data;
 };
 
+/**
+ * Um pedido é uma de duas coisas, e não as duas: o NDA de um prestador, gerado
+ * a partir da ficha dele, ou outro documento — um PDF carregado, para uma
+ * entidade que não é um prestador. Enquanto é rascunho, o que pertence à outra
+ * escolha limpa-se ao guardar, para não ficar um «NDA» com um PDF carregado ou
+ * um contrato preso a um prestador. Depois de enviado, quem manda é o
+ * `protegeAProva`.
+ */
+const arrumaOPedido: CollectionBeforeValidateHook = async ({ data, originalDoc, operation, req, context }) => {
+  if (!data || context?.assinaturasInterno) return data;
+  const antes = (originalDoc ?? {}) as Record<string, unknown>;
+  if (operation === "update" && antes.estado && antes.estado !== "rascunho") return data;
+  const origem = data.origem ?? antes.origem;
+
+  if (origem === "modelo-nda") {
+    data.tipo = "nda";
+    data.jellyAssina = false;
+    data.pdf = null;
+    data.outraParte = { nome: null, nif: null };
+    const prestador = data.prestador ?? antes.prestador;
+    const id = typeof prestador === "object" && prestador ? (prestador as { id: number }).id : prestador;
+    if (!String(data.titulo ?? antes.titulo ?? "").trim() && id) {
+      const ficha = (await req.payload.findByID({ collection: "prestadores", id: id as number, depth: 0, overrideAccess: true, req }).catch(() => null)) as { nome?: string } | null;
+      if (ficha?.nome) data.titulo = `NDA — ${ficha.nome}`;
+    }
+  }
+  if (origem === "pdf") data.prestador = null;
+  return data;
+};
+
 /** Os PDFs: os que se carregam para assinar, os gerados, e os assinados. */
 export const AssinaturasFicheiros: CollectionConfig = {
   slug: "assinaturas-ficheiros",
@@ -126,6 +156,8 @@ export const AssinaturasFicheiros: CollectionConfig = {
 };
 
 const lerSo = { readOnly: true } as const;
+/** O resto da ficha só aparece depois de escolhido o que se envia. */
+const escolhido = (dados: Record<string, unknown> | undefined) => Boolean(dados?.origem);
 
 export const Assinaturas: CollectionConfig = {
   slug: "assinaturas",
@@ -136,10 +168,10 @@ export const Assinaturas: CollectionConfig = {
     defaultColumns: ["titulo", "tipo", "estado", "prestador", "enviadoEm", "concluidoEm"],
     listSearchableFields: ["titulo"],
     description:
-      "Documentos para assinar. O NDA dos prestadores sai preenchido com a ficha; qualquer outro documento é um PDF que se carrega. Quem assina recebe uma ligação por email e confirma com um código.",
+      "Documentos para assinar. Ao criar, escolhe-se primeiro: o NDA de um prestador (sai preenchido com a ficha dele) ou outro documento (um PDF que se carrega, para uma entidade que não é prestador). Quem assina recebe uma ligação por email e confirma com um código.",
   },
   access: { read: so, create: so, update: so, delete: so },
-  hooks: { beforeChange: [protegeAProva] },
+  hooks: { beforeValidate: [arrumaOPedido], beforeChange: [protegeAProva] },
   endpoints: [
     { path: "/:id/enviar", method: "post", handler: enviarAssinatura },
     { path: "/para-prestador/:prestador", method: "post", handler: novoParaPrestador },
@@ -151,22 +183,47 @@ export const Assinaturas: CollectionConfig = {
       type: "ui",
       admin: { components: { Field: "@/payload/components/EnviarAssinatura#EnviarAssinatura" } },
     },
-    { name: "titulo", label: "Título", type: "text", required: true, admin: { description: "Como o documento aparece no email e no certificado. Por exemplo «NDA — Ana Silva»." } },
+    {
+      // A primeira pergunta. Sem resposta, o resto da ficha não aparece.
+      name: "origem",
+      label: "O que vai enviar?",
+      type: "radio",
+      required: true,
+      options: [
+        { label: "O NDA a um prestador — preenchido com a ficha dele", value: "modelo-nda" },
+        { label: "Outro documento — um PDF que carrega, para um cliente, parceiro ou fornecedor", value: "pdf" },
+      ],
+      admin: { description: "Enquanto o pedido é rascunho, pode trocar-se; depois de enviado, fica." },
+    },
+    {
+      name: "titulo",
+      label: "Título",
+      type: "text",
+      required: true,
+      // No NDA pode ficar vazio: ao guardar, passa a «NDA — nome do prestador».
+      validate: (valor: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+        Boolean(String(valor ?? "").trim()) || siblingData?.origem === "modelo-nda" || "Dê um título ao documento.",
+      admin: {
+        condition: escolhido,
+        description: "Como o documento aparece no email e no certificado. No NDA, se ficar vazio, fica «NDA — nome do prestador».",
+      },
+    },
     {
       type: "row",
       fields: [
         {
           name: "tipo",
-          label: "Tipo",
+          label: "Tipo de documento",
           type: "select",
           required: true,
-          defaultValue: "nda",
           options: [
             { label: "NDA", value: "nda" },
             { label: "Contrato", value: "contrato" },
             { label: "Proposta", value: "proposta" },
             { label: "Outro", value: "outro" },
           ],
+          // No NDA de prestador é sempre «NDA»: não se pergunta.
+          admin: { condition: (dados) => dados?.origem === "pdf", description: "Decide quem recebe o aviso: as propostas só o Gonçalo; o resto, também a Marta." },
         },
         {
           name: "estado",
@@ -180,19 +237,9 @@ export const Assinaturas: CollectionConfig = {
             { label: "Assinado", value: "concluido" },
             { label: "Cancelado", value: "cancelado" },
           ],
-          admin: { description: "Muda sozinho: «Enviado» ao enviar, «Assinado» quando o último assina. «Cancelado» fecha as ligações." },
+          // Num pedido por gravar é sempre «Rascunho»: não vale a pena mostrar.
+          admin: { condition: (dados) => Boolean(dados?.id), description: "Muda sozinho: «Enviado» ao enviar, «Assinado» quando o último assina. «Cancelado» fecha as ligações." },
         },
-      ],
-    },
-    {
-      name: "origem",
-      label: "Documento",
-      type: "radio",
-      required: true,
-      defaultValue: "modelo-nda",
-      options: [
-        { label: "NDA da Jelly, preenchido com a ficha do prestador", value: "modelo-nda" },
-        { label: "Um PDF carregado", value: "pdf" },
       ],
     },
     {
@@ -200,6 +247,8 @@ export const Assinaturas: CollectionConfig = {
       label: "PDF para assinar",
       type: "upload",
       relationTo: "assinaturas-ficheiros",
+      validate: (valor: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+        siblingData?.origem !== "pdf" || Boolean(valor) || "Carregue o PDF a assinar.",
       admin: { condition: (dados) => dados?.origem === "pdf", description: "O documento tal como vai ser assinado. Depois de enviado, já não se troca." },
     },
     {
@@ -208,15 +257,20 @@ export const Assinaturas: CollectionConfig = {
       type: "relationship",
       relationTo: "prestadores",
       index: true,
-      admin: { description: "Se for um prestador. O NDA assinado fica marcado na ficha dele." },
+      validate: (valor: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+        siblingData?.origem !== "modelo-nda" || Boolean(valor) || "Escolha o prestador.",
+      admin: {
+        condition: (dados) => dados?.origem === "modelo-nda",
+        description: "O NDA sai preenchido com a ficha dele (nome, morada, documento, NIF) e, assinado, fica marcado nela.",
+      },
     },
     {
       name: "outraParte",
       label: "Outra entidade",
       type: "group",
       admin: {
-        condition: (dados) => !dados?.prestador,
-        description: "Cliente, parceiro ou fornecedor, quando não é um prestador.",
+        condition: (dados) => dados?.origem === "pdf",
+        description: "Cliente, parceiro ou fornecedor: a entidade que assina o documento.",
       },
       fields: [
         {
@@ -233,7 +287,7 @@ export const Assinaturas: CollectionConfig = {
       label: `A Jelly também assina (${SIGNATARIO_JELLY.nome}, ${SIGNATARIO_JELLY.cargo.toLowerCase()})`,
       type: "checkbox",
       defaultValue: false,
-      admin: { condition: (dados) => dados?.tipo !== "nda", description: "Num NDA de prestador só o prestador assina." },
+      admin: { condition: (dados) => dados?.origem === "pdf", description: "Se marcado, recebe também a ligação para assinar." },
     },
     {
       name: "signatarios",
@@ -241,7 +295,10 @@ export const Assinaturas: CollectionConfig = {
       type: "array",
       labels: { singular: "Signatário", plural: "Signatários" },
       admin: {
-        description: "Um ou mais representantes da outra parte. Se a Jelly assinar, entra sozinha ao enviar.",
+        // No NDA, o prestador entra sozinho ao enviar: só se mostra a lista
+        // depois, com o registo de prova de quem assinou.
+        condition: (dados) => dados?.origem === "pdf" || (Boolean(dados?.estado) && dados?.estado !== "rascunho"),
+        description: "Um ou mais representantes da entidade. Se a Jelly assinar, entra sozinha ao enviar.",
         initCollapsed: false,
       },
       fields: [
@@ -315,18 +372,18 @@ export const Assinaturas: CollectionConfig = {
       name: "mensagem",
       label: "Mensagem no email",
       type: "textarea",
-      admin: { description: "Opcional. Aparece no email do convite, antes do botão." },
+      admin: { condition: escolhido, description: "Opcional. Aparece no email do convite, antes do botão." },
     },
     {
       name: "validade",
       label: "Válido até",
       type: "date",
-      admin: { date: { pickerAppearance: "dayOnly" }, description: "Depois desta data a ligação deixa de abrir. Por omissão, 30 dias depois do envio." },
+      admin: { condition: escolhido, date: { pickerAppearance: "dayOnly" }, description: "Depois desta data a ligação deixa de abrir. Por omissão, 30 dias depois do envio." },
     },
     {
       type: "collapsible",
       label: "Documento e prova",
-      admin: { initCollapsed: false },
+      admin: { initCollapsed: false, condition: (dados) => Boolean(dados?.enviadoEm) },
       fields: [
         {
           type: "row",

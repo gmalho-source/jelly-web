@@ -742,7 +742,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Documentos para assinar. O NDA dos prestadores sai preenchido com a ficha; qualquer outro documento é um PDF que se carrega. Quem assina recebe uma ligação por email e confirma com um código.
+ * Documentos para assinar. Ao criar, escolhe-se primeiro: o NDA de um prestador (sai preenchido com a ficha dele) ou outro documento (um PDF que se carrega, para uma entidade que não é prestador). Quem assina recebe uma ligação por email e confirma com um código.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "assinaturas".
@@ -750,36 +750,42 @@ export interface User {
 export interface Assinatura {
   id: number;
   /**
-   * Como o documento aparece no email e no certificado. Por exemplo «NDA — Ana Silva».
+   * Enquanto o pedido é rascunho, pode trocar-se; depois de enviado, fica.
    */
-  titulo: string;
-  tipo: 'nda' | 'contrato' | 'proposta' | 'outro';
+  origem: 'modelo-nda' | 'pdf';
+  /**
+   * Como o documento aparece no email e no certificado. No NDA, se ficar vazio, fica «NDA — nome do prestador».
+   */
+  titulo?: string | null;
+  /**
+   * Decide quem recebe o aviso: as propostas só o Gonçalo; o resto, também a Marta.
+   */
+  tipo?: ('nda' | 'contrato' | 'proposta' | 'outro') | null;
   /**
    * Muda sozinho: «Enviado» ao enviar, «Assinado» quando o último assina. «Cancelado» fecha as ligações.
    */
   estado?: ('rascunho' | 'enviado' | 'concluido' | 'cancelado') | null;
-  origem: 'modelo-nda' | 'pdf';
   /**
    * O documento tal como vai ser assinado. Depois de enviado, já não se troca.
    */
   pdf?: (number | null) | AssinaturasFicheiro;
   /**
-   * Se for um prestador. O NDA assinado fica marcado na ficha dele.
+   * O NDA sai preenchido com a ficha dele (nome, morada, documento, NIF) e, assinado, fica marcado nela.
    */
   prestador?: (number | null) | Prestadore;
   /**
-   * Cliente, parceiro ou fornecedor, quando não é um prestador.
+   * Cliente, parceiro ou fornecedor: a entidade que assina o documento.
    */
   outraParte?: {
     nome?: string | null;
     nif?: string | null;
   };
   /**
-   * Num NDA de prestador só o prestador assina.
+   * Se marcado, recebe também a ligação para assinar.
    */
   jellyAssina?: boolean | null;
   /**
-   * Um ou mais representantes da outra parte. Se a Jelly assinar, entra sozinha ao enviar.
+   * Um ou mais representantes da entidade. Se a Jelly assinar, entra sozinha ao enviar.
    */
   signatarios?:
     | {
@@ -2989,10 +2995,10 @@ export interface DownloadsSelect<T extends boolean = true> {
  * via the `definition` "assinaturas_select".
  */
 export interface AssinaturasSelect<T extends boolean = true> {
+  origem?: T;
   titulo?: T;
   tipo?: T;
   estado?: T;
-  origem?: T;
   pdf?: T;
   prestador?: T;
   outraParte?:
