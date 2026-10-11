@@ -17,7 +17,7 @@ import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
 import { CarePlans } from "./src/payload/collections/care";
 import { Messages } from "./src/payload/collections/messages";
-import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
+import { Applications, Departments, JobFunctions, Jobs, temPerfil, type ComPerfis } from "./src/payload/collections/recruitment";
 import { Videos } from "./src/payload/collections/videos";
 import { Downloads } from "./src/payload/collections/downloads";
 import { Assinaturas, AssinaturasFicheiros } from "./src/payload/collections/assinaturas";
@@ -166,7 +166,7 @@ export default buildConfig({
         // ele que lê e apaga. Os que já lá estavam foram renomeados por
         // scripts/blob-renomear.mjs.
         vercelBlobStorage({
-          collections: { documents: {}, attachments: {}, "assinaturas-ficheiros": {} },
+          collections: { documents: {}, attachments: {} },
           addRandomSuffix: true,
           token: blobToken,
         }),
@@ -187,9 +187,26 @@ export default buildConfig({
         // qualquer pessoa que soubesse o endereço.
         vercelBlobStorage({
           // Os downloads do Newsroom vão pelo mesmo caminho: um press kit
-          // passa dos 90 MB.
-          collections: { videos: { disablePayloadAccessControl: true }, downloads: { disablePayloadAccessControl: true } },
-          clientUploads: { access: ({ req }) => Boolean(req.user) },
+          // passa dos 90 MB. E os PDFs para assinar, que podem passar dos
+          // 4,5 MB (o teto é 10 MB, ver a coleção).
+          //
+          // Só pode haver uma instância com `clientUploads`: a rota que assina
+          // a senha é uma só (`/vercel-blob-client-upload-route`), e com duas a
+          // primeira respondia pelas duas. Por isso os PDFs para assinar vivem
+          // aqui, e esta instância também põe o sufixo aleatório no nome — num
+          // vídeo ou num press kit não faz mal, o endereço sai do nome guardado.
+          collections: {
+            videos: { disablePayloadAccessControl: true },
+            downloads: { disablePayloadAccessControl: true },
+            "assinaturas-ficheiros": {},
+          },
+          addRandomSuffix: true,
+          clientUploads: {
+            // Os documentos para assinar são só da administração; o resto, de
+            // quem tem sessão no painel.
+            access: ({ req, collectionSlug }) =>
+              collectionSlug === "assinaturas-ficheiros" ? temPerfil(req.user as ComPerfis) : Boolean(req.user),
+          },
           token: blobToken,
         }),
       ]

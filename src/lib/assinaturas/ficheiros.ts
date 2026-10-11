@@ -30,6 +30,26 @@ export async function lerPdf(payload: Payload, id: string | number): Promise<Uin
   return new Uint8Array(await readFile(path.resolve(process.cwd(), pasta, doc.filename)));
 }
 
+/**
+ * O mesmo, mas aos poucos: para entregar a quem assina. Uma resposta de uma
+ * função da Vercel com o corpo inteiro não passa dos 4,5 MB; em fluxo, passa.
+ * Os PDFs para assinar vão até 10 MB.
+ */
+export async function fluxoDoPdf(payload: Payload, id: string | number): Promise<{ corpo: ReadableStream<Uint8Array> | Buffer; tamanho?: number }> {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+  if (!token) {
+    const bytes = await lerPdf(payload, id);
+    return { corpo: Buffer.from(bytes), tamanho: bytes.length };
+  }
+  const doc = (await payload.findByID({ collection: COLECAO, id, depth: 0, overrideAccess: true })) as { filename?: string | null };
+  if (!doc?.filename) throw new Error("O ficheiro não existe.");
+  const { head } = await import("@vercel/blob");
+  const info = await head(doc.filename, { token });
+  const resposta = await fetch(info.url, { cache: "no-store" });
+  if (!resposta.ok || !resposta.body) throw new Error(`o armazenamento respondeu ${resposta.status}`);
+  return { corpo: resposta.body, tamanho: info.size };
+}
+
 export async function guardarPdf(payload: Payload, bytes: Uint8Array, nome: string): Promise<string | number> {
   const limpo = nome
     .normalize("NFKD")

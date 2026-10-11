@@ -1,6 +1,7 @@
 import type { Payload } from "payload";
 import { enviaEmail } from "@/lib/email";
 import { CASA, botao, escapa, p, papel, recibo } from "@/lib/email-papel";
+import { SITE_URL } from "@/lib/seo";
 import { AVISOS, SIGNATARIO_JELLY } from "@/payload/collections/assinaturas";
 import { contaTentativa, ficaComOFecho, gravaLinha, largaOFecho, marcaVisto, porAssinar, regista } from "./base";
 import { guardarPdf, lerPdf } from "./ficheiros";
@@ -410,18 +411,36 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     await regista(payload, pedido.id, "NDA marcado na ficha do prestador", null);
   }
 
-  // As cópias: a cada signatário, e à casa.
-  const anexo = { nome: `${pedido.titulo.replace(/[^\p{L}\p{N} ._-]+/gu, " ").replace(/\s+/g, " ").trim() || "documento"} - assinado.pdf`, base64: Buffer.from(final).toString("base64") };
+  // As cópias: a cada signatário, e à casa. Em anexo enquanto cabe (a Brevo
+  // aceita 4 MB por anexo); acima disso, por ligação — o signatário volta à
+  // página de assinatura, que lhe dá o PDF assinado, e a casa vai ao painel.
+  const cabe = final.length <= ANEXO_MAXIMO;
+  const anexo = cabe
+    ? { nome: `${pedido.titulo.replace(/[^\p{L}\p{N} ._-]+/gu, " ").replace(/\s+/g, " ").trim() || "documento"} - assinado.pdf`, base64: Buffer.from(final).toString("base64") }
+    : null;
+  if (!cabe) await regista(payload, pedido.id, "Cópia por ligação, não em anexo", `${(final.length / 1024 / 1024).toFixed(1)} MB`);
+  const manda = async (carta: Parameters<typeof enviaEmail>[0]) => {
+    const resultado = await enviaEmail(carta);
+    if (!resultado.ok) await regista(payload, pedido.id, "Email não saiu", `${carta.to}: ${resultado.erro ?? "sem razão"}`.slice(0, 300));
+  };
   const jaTem = new Set<string>();
   for (const l of pedido.signatarios ?? []) {
-    await enviaEmail(copiaAssinada(pedido, l, anexo, hashFinal));
+    const ligacao = cabe || !l.id ? null : `${SITE_URL}/assinar/${await assinaLigacao({ pedido: String(pedido.id), signatario: l.id }, new Date(Date.now() + COPIA_DIAS * 86_400_000))}`;
+    await manda(copiaAssinada(pedido, l, { anexo, ligacao }, hashFinal));
     jaTem.add(l.email.toLowerCase());
   }
   // A casa recebe o aviso — menos quem já recebeu a cópia por ter assinado.
+  const noPainel = cabe ? null : `${SITE_URL}/admin/collections/${COLECAO}/${pedido.id}`;
   for (const destino of AVISOS[pedido.tipo] ?? AVISOS.outro) {
-    if (!jaTem.has(destino)) await enviaEmail(avisoInterno(pedido, destino, anexo, hashFinal, outraParte, ficha));
+    if (!jaTem.has(destino)) await manda(avisoInterno(pedido, destino, { anexo, ligacao: noPainel }, hashFinal, outraParte, ficha));
   }
 }
+
+/** Até aqui o PDF assinado segue em anexo; acima, por ligação. */
+const ANEXO_MAXIMO = Math.floor(3.8 * 1024 * 1024);
+/** Quanto tempo vale a ligação da cópia, quando não segue em anexo. */
+const COPIA_DIAS = 365;
+type Entrega = { anexo: { nome: string; base64: string } | null; ligacao: string | null };
 
 /* ─────────────────────────────── os emails ─────────────────────────────── */
 
@@ -472,10 +491,17 @@ function emailDoCodigo(pedido: Pedido, linha: Linha, codigo: string) {
   };
 }
 
-function copiaAssinada(pedido: Pedido, linha: Linha, anexo: { nome: string; base64: string }, hash: string) {
+function copiaAssinada(pedido: Pedido, linha: Linha, { anexo, ligacao }: Entrega, hash: string) {
+  const ate = dia(new Date(Date.now() + COPIA_DIAS * 86_400_000).toISOString());
   const corpo = [
     p(`Olá ${escapa(linha.nome.split(/\s+/)[0])},`),
-    p(`O documento <strong>${escapa(pedido.titulo)}</strong> foi assinado por todas as partes. Segue em anexo a cópia assinada, com o certificado de assinatura na última página.`),
+    anexo
+      ? p(`O documento <strong>${escapa(pedido.titulo)}</strong> foi assinado por todas as partes. Segue em anexo a cópia assinada, com o certificado de assinatura na última página.`)
+      : [
+          p(`O documento <strong>${escapa(pedido.titulo)}</strong> foi assinado por todas as partes. O PDF assinado, com o certificado de assinatura na última página, é grande demais para seguir em anexo: descarregue-o aqui.`),
+          ligacao ? botao(ligacao, "Descarregar o documento assinado") : "",
+          p(`A ligação é pessoal e é válida até ${escapa(ate)}. Guarde o PDF depois de o descarregar.`, "18px 0 0"),
+        ].join("\n"),
     p(`Impressão digital (SHA-256) do documento assinado:<br><span style="font-family:monospace;font-size:12px;word-break:break-all">${hash}</span>`, "0 0 18px"),
     p("Guarde este email: é a sua cópia."),
   ].join("\n");
@@ -484,15 +510,17 @@ function copiaAssinada(pedido: Pedido, linha: Linha, anexo: { nome: string; base
     replyTo: CASA.email,
     subject: `Assinado: ${pedido.titulo}`,
     html: papel({ locale: "pt", titulo: `Assinado: ${pedido.titulo}`, antevisao: "A sua cópia do documento assinado.", sobretitulo: "Assinatura digital", cabeca: "Documento assinado", corpo }),
-    text: `O documento «${pedido.titulo}» foi assinado por todas as partes. Segue em anexo a cópia assinada.\nSHA-256: ${hash}`,
-    anexos: [anexo],
+    text: anexo
+      ? `O documento «${pedido.titulo}» foi assinado por todas as partes. Segue em anexo a cópia assinada.\nSHA-256: ${hash}`
+      : `O documento «${pedido.titulo}» foi assinado por todas as partes. Descarregue a cópia assinada aqui (válido até ${ate}): ${ligacao ?? ""}\nSHA-256: ${hash}`,
+    ...(anexo ? { anexos: [anexo] } : {}),
   };
 }
 
 function avisoInterno(
   pedido: Pedido,
   destino: string,
-  anexo: { nome: string; base64: string },
+  { anexo, ligacao }: Entrega,
   hash: string,
   outraParte: string,
   ficha: import("./link").FichaDoLink | null = null,
@@ -514,14 +542,20 @@ function avisoInterno(
         ...(pedido.signatarios ?? []).map((l) => ({ rotulo: l.papel === "jelly" ? "Pela Jelly" : "Assinou", valor: `${l.nomeEscrito || l.nome} <${l.email}> · ${quando(l.assinadoEm)}` })),
         { rotulo: "SHA-256", valor: hash },
       ],
-      sobreAFicha ?? (pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada segue em anexo e está guardada no pedido, no painel."),
+      [
+        sobreAFicha ?? (pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada está guardada no pedido, no painel."),
+        anexo ? "" : "O PDF assinado é grande demais para seguir em anexo: está no pedido, no painel.",
+      ]
+        .filter(Boolean)
+        .join(" "),
     ),
+    ligacao ? botao(ligacao, "Abrir o pedido no painel") : "",
   ].join("\n");
   return {
     to: destino,
     subject: assunto,
-    html: papel({ locale: "pt", titulo: assunto, antevisao: "Cópia assinada em anexo.", sobretitulo: "Assinaturas", cabeca: assunto, corpo, rodape: "interno" }),
-    text: `${assunto}\nSHA-256: ${hash}`,
-    anexos: [anexo],
+    html: papel({ locale: "pt", titulo: assunto, antevisao: anexo ? "Cópia assinada em anexo." : "O documento assinado está no painel.", sobretitulo: "Assinaturas", cabeca: assunto, corpo, rodape: "interno" }),
+    text: `${assunto}${ligacao ? `\nNo painel: ${ligacao}` : ""}\nSHA-256: ${hash}`,
+    ...(anexo ? { anexos: [anexo] } : {}),
   };
 }

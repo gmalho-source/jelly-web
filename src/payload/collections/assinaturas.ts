@@ -1,4 +1,4 @@
-import type { Access, CollectionBeforeChangeHook, CollectionBeforeValidateHook, CollectionConfig } from "payload";
+import { APIError, type Access, type CollectionBeforeChangeHook, type CollectionBeforeValidateHook, type CollectionConfig } from "payload";
 import { temPerfil, type ComPerfis } from "./recruitment";
 import { enviarAssinatura, imagemJelly, novoParaPrestador } from "../endpoints/assinaturas";
 
@@ -150,6 +150,27 @@ const arrumaOPedido: CollectionBeforeValidateHook = async ({ data, originalDoc, 
   return data;
 };
 
+/**
+ * O teto dos PDFs para assinar: 10 MB. O ficheiro vai do browser direito ao
+ * Blob (ver payload.config.ts), por isso o limite da Vercel não se aplica — este
+ * é o nosso, para um PDF de 80 MB não entrar por engano. Acima dos ~3,8 MB a
+ * cópia assinada já não segue em anexo (a Brevo aceita 4 MB por anexo) e vai
+ * por ligação.
+ */
+export const PDF_MAXIMO = 10 * 1024 * 1024;
+const ateDezMega: CollectionBeforeValidateHook = async ({ data }) => {
+  const tamanho = Number((data as { filesize?: number } | undefined)?.filesize ?? 0);
+  if (tamanho > PDF_MAXIMO) {
+    // Carregado direto do browser, o ficheiro já está no Blob quando chega
+    // aqui: recusado, não fica lá a ocupar espaço.
+    const nome = (data as { filename?: string } | undefined)?.filename;
+    const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
+    if (nome && token) await import("@vercel/blob").then(({ del }) => del(nome, { token })).catch(() => {});
+    throw new APIError(`O PDF tem ${(tamanho / 1024 / 1024).toFixed(1).replace(".", ",")} MB; o máximo é 10 MB. Reduza-o (exportar com imagens comprimidas costuma bastar).`, 400, null, true);
+  }
+  return data;
+};
+
 /** Os PDFs: os que se carregam para assinar, os gerados, e os assinados. */
 export const AssinaturasFicheiros: CollectionConfig = {
   slug: "assinaturas-ficheiros",
@@ -157,6 +178,7 @@ export const AssinaturasFicheiros: CollectionConfig = {
   admin: { useAsTitle: "filename", group: "Assinaturas", hidden: true },
   access: { read: so, create: so, update: so, delete: so },
   upload: { mimeTypes: ["application/pdf"], filesRequiredOnCreate: true },
+  hooks: { beforeValidate: [ateDezMega] },
   fields: [],
 };
 
