@@ -1,4 +1,5 @@
-// Corre antes de cada compilação (npm `prebuild`). O importMap do painel é
+// Corre antes de cada compilação (npm `prebuild`). Está aqui e não em scripts/
+// porque scripts/ fica fora do deploy (.vercelignore). O importMap do painel é
 // gerado à mão (`npm run payload:importmap`) e é diferente conforme haja ou não
 // BLOB_READ_WRITE_TOKEN: sem ele, o componente do envio direto para o Blob
 // desaparece — e um painel sem ele não arranca, fica em branco. Aconteceu em
