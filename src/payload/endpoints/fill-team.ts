@@ -1,6 +1,7 @@
 import type { PayloadHandler } from "payload";
 import { camposEmFalta, equipaDoFicheiro, nomesDoQueFalta, pessoasDoFicheiro } from "@/lib/equipa-fichas";
 import { SITE_URL } from "@/lib/seo";
+import { podeNoPedido } from "../acesso";
 
 /**
  * Enche as fichas da equipa no painel a partir do ficheiro do repositório.
@@ -24,6 +25,7 @@ import { SITE_URL } from "@/lib/seo";
 
 function porta(req: Parameters<PayloadHandler>[0]) {
   if (!req.user) return Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 });
+  if (!podeNoPedido(req, "paginas")) return Response.json({ error: "Sem acesso a este módulo do painel." }, { status: 403 });
   return null;
 }
 

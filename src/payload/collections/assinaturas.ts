@@ -1,6 +1,6 @@
 import { APIError, type Access, type CollectionBeforeChangeHook, type CollectionBeforeValidateHook, type CollectionConfig } from "payload";
-import { temPerfil, type ComPerfis } from "./recruitment";
 import { enviarAssinatura, imagemJelly, novoParaPrestador } from "../endpoints/assinaturas";
+import { escondeDe, so as soQuem } from "../acesso";
 
 /**
  * Assinatura digital de documentos: NDA, propostas, contratos.
@@ -14,7 +14,7 @@ import { enviarAssinatura, imagemJelly, novoParaPrestador } from "../endpoints/a
  * Os documentos são dados de clientes e de prestadores: só a administração os
  * vê, e os ficheiros ficam atrás do controlo de acesso do Payload, como os CV.
  */
-export const soAdministracao: Access = ({ req }) => temPerfil(req.user as ComPerfis);
+export const soAdministracao: Access = soQuem("assinaturas");
 
 /**
  * Quem assina pela Jelly quando a Jelly assina. Um NDA de prestador não leva a
@@ -194,6 +194,7 @@ export const Assinaturas: CollectionConfig = {
     useAsTitle: "titulo",
     group: "Assinaturas",
     defaultColumns: ["titulo", "tipo", "estado", "prestador", "enviadoEm", "concluidoEm"],
+    hidden: escondeDe("assinaturas"),
     listSearchableFields: ["titulo"],
     description:
       "Documentos para assinar. Ao criar, escolhe-se primeiro: o NDA de um prestador (sai preenchido com a ficha dele) ou outro documento (um PDF que se carrega, para uma entidade que não é prestador). Quem assina recebe uma ligação por email e confirma com um código.",

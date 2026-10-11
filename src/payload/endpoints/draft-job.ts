@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { PayloadHandler } from "payload";
+import { podeNoPedido } from "../acesso";
 
 const MODEL = "claude-opus-5";
 
@@ -65,8 +66,7 @@ Respondes só com JSON, sem texto à volta e sem blocos de código, nesta forma 
 /** O que impede o pedido de sair: sessão de recrutamento e chave no ambiente. */
 function porta(req: Parameters<PayloadHandler>[0]) {
   if (!req.user) return { erro: Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 }) };
-  const perfis = (req.user as { roles?: string[] | null }).roles ?? [];
-  const podeRecrutar = !perfis.length || perfis.includes("admin") || perfis.includes("recrutamento");
+  const podeRecrutar = podeNoPedido(req, "recrutamento");
   if (!podeRecrutar) return { erro: Response.json({ error: "Esta proposta é para quem trata de recrutamento." }, { status: 403 }) };
   const key = process.env.ANTHROPIC_API_KEY?.trim();
   if (!key) return { erro: Response.json({ error: "Falta a ANTHROPIC_API_KEY neste ambiente." }, { status: 501 }) };

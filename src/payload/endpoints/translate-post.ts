@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { PayloadHandler } from "payload";
+import { podeNoPedido } from "../acesso";
 
 const MODEL = "claude-opus-5";
 
@@ -43,6 +44,7 @@ Respondes só com um array JSON de cadeias, do mesmo comprimento e na mesma orde
 
 function porta(req: Parameters<PayloadHandler>[0]) {
   if (!req.user) return { erro: Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 }) };
+  if (!podeNoPedido(req, "editorial")) return { erro: Response.json({ error: "Sem acesso a este módulo do painel." }, { status: 403 }) };
   const key = process.env.ANTHROPIC_API_KEY?.trim();
   if (!key) return { erro: Response.json({ error: "Falta a ANTHROPIC_API_KEY neste ambiente." }, { status: 501 }) };
   return { key };

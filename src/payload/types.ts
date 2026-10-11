@@ -729,9 +729,11 @@ export interface User {
   id: number;
   name?: string | null;
   /**
-   * Administração vê tudo. Recrutamento é o único perfil que vê as candidaturas.
+   * O que esta pessoa vê no painel. Administração vê tudo, incluindo os utilizadores. A Biblioteca (imagens, vídeos) vem com Blog ou com Páginas.
    */
-  roles?: ('admin' | 'editorial' | 'recrutamento')[] | null;
+  roles?:
+    | ('admin' | 'editorial' | 'paginas' | 'mensagens' | 'recrutamento' | 'prestadores' | 'assinaturas' | 'debitos')[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;

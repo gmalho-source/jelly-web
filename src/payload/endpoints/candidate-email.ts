@@ -1,6 +1,7 @@
 import type { PayloadHandler } from "payload";
 import { enviaEmail } from "@/lib/email";
 import { papel, corpoDeTexto } from "@/lib/email-papel";
+import { podeNoPedido } from "../acesso";
 
 type Candidatura = {
   id: number | string;
@@ -81,8 +82,7 @@ const primeiroNome = (nome?: string | null) => (nome ?? "").trim().split(/\s+/)[
 function porta(req: Parameters<PayloadHandler>[0]) {
   const user = req.user as { roles?: string[] | null } | null | undefined;
   if (!user) return Response.json({ error: "Sem sessão." }, { status: 401 });
-  const perfis = user.roles ?? [];
-  if (perfis.length && !perfis.includes("admin") && !perfis.includes("recrutamento")) {
+  if (!podeNoPedido(req, "recrutamento")) {
     return Response.json({ error: "Sem perfil de recrutamento." }, { status: 403 });
   }
   return null;

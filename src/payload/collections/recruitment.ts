@@ -8,6 +8,8 @@ import { requestConfirmation } from "../endpoints/request-confirmation";
 import { scoreApplication, setRetention } from "../hooks/rating";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
 import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
+import { tem, type Modulo } from "../acesso";
+import { escondeDe } from "../acesso";
 
 /**
  * Recrutamento: departamentos, funções, vagas e candidaturas.
@@ -26,12 +28,7 @@ import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 /** Perfis de quem entra no painel. Sem perfis definidos, é dos antigos: vê tudo. */
 export type ComPerfis = { roles?: string[] | null } | null | undefined;
 
-export const temPerfil = (user: ComPerfis, ...perfis: string[]) => {
-  const meus = user?.roles ?? [];
-  if (!user) return false;
-  if (!meus.length) return true;
-  return meus.includes("admin") || perfis.some((perfil) => meus.includes(perfil));
-};
+export const temPerfil = (user: ComPerfis, ...perfis: string[]) => tem(user, ...(perfis as Modulo[]));
 
 /** Só quem trata de recrutamento — e os administradores. */
 export const recruiterOnly: Access = ({ req }) => temPerfil(req.user as ComPerfis, "recrutamento");
@@ -43,7 +40,7 @@ export const Departments: CollectionConfig = {
   labels: { singular: "Departamento", plural: "Departamentos" },
   admin: {
     useAsTitle: "namePt",
-    group: "Recrutamento",
+    group: "Recrutamento", hidden: escondeDe("recrutamento"),
     defaultColumns: ["namePt", "order"],
     description: "As áreas de atuação da agência. É por aqui que as candidaturas se contam.",
   },
@@ -94,7 +91,7 @@ export const JobFunctions: CollectionConfig = {
   labels: { singular: "Função", plural: "Funções" },
   admin: {
     useAsTitle: "namePt",
-    group: "Recrutamento",
+    group: "Recrutamento", hidden: escondeDe("recrutamento"),
     defaultColumns: ["namePt", "department"],
     description: "A tabela de funções. A vaga escolhe uma daqui, e o título dela pode ser escrito à medida.",
   },
@@ -117,7 +114,7 @@ export const Jobs: CollectionConfig = {
   labels: { singular: "Vaga", plural: "Vagas" },
   admin: {
     useAsTitle: "titlePt",
-    group: "Recrutamento",
+    group: "Recrutamento", hidden: escondeDe("recrutamento"),
     defaultColumns: ["titlePt", "function", "status", "deadline"],
     livePreview: { url: ({ data }) => `/recrutamento/${data?.slug ?? ""}` },
   },

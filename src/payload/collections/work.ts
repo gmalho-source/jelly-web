@@ -12,6 +12,7 @@ import { translateStory } from "../endpoints/translate-story";
 import { writeProjectSummary } from "../endpoints/write-project-summary";
 import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, oldSlugsField, slugEnField, slugField } from "../fields";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /*
  * Um projeto aparece também nas páginas de serviço: as marcas recentes no
@@ -205,12 +206,12 @@ export const Projects: CollectionConfig = {
   labels: { singular: "Projeto", plural: "Projetos" },
   admin: {
     useAsTitle: "client",
-    group: "Trabalho",
+    group: "Trabalho", hidden: escondeDe("paginas"),
     defaultColumns: ["client", "year", "written", "_status"],
     livePreview: { url: ({ data }) => `/projetos/${data?.slug ?? ""}` },
   },
   versions: { drafts: true },
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: { beforeChange: [guardaSlugsAntigos], afterChange: [revalidateOnChange(projectPaths)], afterDelete: [revalidateOnDelete(projectPaths)] },
   endpoints: [
     // A história em inglês, escrita pelo Claude. Vai e volta uma lista de
@@ -305,8 +306,8 @@ export const Projects: CollectionConfig = {
 export const Services: CollectionConfig = {
   slug: "services",
   labels: { singular: "Serviço", plural: "Serviços" },
-  admin: { useAsTitle: "namePt", group: "Trabalho", defaultColumns: ["namePt", "order"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "namePt", group: "Trabalho", hidden: escondeDe("paginas"), defaultColumns: ["namePt", "order"] },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   // Um histórico, sem rascunhos, como nas páginas: cada gravação guarda uma
   // versão, e o separador «Versões» deixa comparar e restaurar.
   versions: { maxPerDoc: 50 },
@@ -410,12 +411,12 @@ export const Sectors: CollectionConfig = {
   labels: { singular: "Setor", plural: "Setores" },
   admin: {
     useAsTitle: "namePt",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe("paginas"),
     defaultColumns: ["namePt", "order"],
     description: "Os setores da página de Clientes, pela ordem do campo «Ordem». Um setor sem clientes não aparece.",
   },
   defaultSort: "order",
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: {
     afterChange: [revalidateOnChange(() => ["/clientes"])],
     afterDelete: [revalidateOnDelete(() => ["/clientes"])],
@@ -449,8 +450,8 @@ export const Sectors: CollectionConfig = {
 export const Clients: CollectionConfig = {
   slug: "clients",
   labels: { singular: "Cliente", plural: "Clientes" },
-  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "sector", "order"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "name", group: "Casa", hidden: escondeDe("paginas"), defaultColumns: ["name", "sector", "order"] },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateOnChange(() => ["/", "/clientes"])], afterDelete: [revalidateOnDelete(() => ["/", "/clientes"])] },
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },
@@ -496,12 +497,12 @@ export const LogoWalls: CollectionConfig = {
   labels: { singular: "Parede", plural: "Paredes de logos" },
   admin: {
     useAsTitle: "name",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe("paginas"),
     defaultColumns: ["name", "slug"],
     description: "Os temas por onde os logos se arrumam. Cada página mostra a parede que lhe corresponde.",
   },
   defaultSort: "name",
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },
@@ -522,9 +523,9 @@ export const LogoWalls: CollectionConfig = {
 export const Logos: CollectionConfig = {
   slug: "logos",
   labels: { singular: "Logo", plural: "Logos" },
-  admin: { useAsTitle: "name", group: "Casa", defaultColumns: ["name", "wall", "order"] },
+  admin: { useAsTitle: "name", group: "Casa", hidden: escondeDe("paginas"), defaultColumns: ["name", "wall", "order"] },
   defaultSort: "order",
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   // Uma parede aparece em mais do que uma página, e as paredes de parceiros
   // aparecem em páginas que isto não sabe nomear. Revalida-se tudo.
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
@@ -567,14 +568,14 @@ export const TeamMembers: CollectionConfig = {
   // ordem de criação, encontrar alguém obriga a percorrer três páginas.
   admin: {
     useAsTitle: "name",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe("paginas"),
     defaultColumns: ["name", "photo"],
     // O aviso por cima da lista, enquanto houver fichas sem conteúdo. Desaparece
     // sozinho quando não houver nada a fazer.
     components: { beforeListTable: ["@/payload/components/PreencherEquipa#PreencherEquipa"] },
   },
   defaultSort: "name",
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: {
     // Mexer numa pessoa refaz a grelha, a página dela e o cartaz do Sobre. O
     // endereço inglês da grelha e da pessoa é outro (/team), e por isso vai
@@ -631,8 +632,8 @@ export const TeamMembers: CollectionConfig = {
 export const Milestones: CollectionConfig = {
   slug: "milestones",
   labels: { singular: "Marco", plural: "Marcos" },
-  admin: { useAsTitle: "year", group: "Casa", defaultColumns: ["year"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "year", group: "Casa", hidden: escondeDe("paginas"), defaultColumns: ["year"] },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateOnChange(() => ["/", "/sobre"])], afterDelete: [revalidateOnDelete(() => ["/", "/sobre"])] },
   fields: [
     { name: "year", label: "Ano", type: "text", required: true },

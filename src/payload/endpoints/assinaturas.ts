@@ -1,5 +1,5 @@
 import type { PayloadHandler } from "payload";
-import { temPerfil, type ComPerfis } from "../collections/recruitment";
+import { podeNoPedido } from "../acesso";
 
 /**
  * As duas portas do painel para as assinaturas. Só a administração passa.
@@ -15,8 +15,8 @@ import { temPerfil, type ComPerfis } from "../collections/recruitment";
  *   signatário — e devolve o id, para o painel abrir a ficha do pedido.
  */
 function porta(req: Parameters<PayloadHandler>[0]) {
-  if (!req.user || !temPerfil(req.user as ComPerfis)) {
-    return Response.json({ error: "Só para a administração." }, { status: 403 });
+  if (!podeNoPedido(req, "assinaturas")) {
+    return Response.json({ error: "Sem acesso às assinaturas." }, { status: 403 });
   }
   return null;
 }
@@ -49,6 +49,8 @@ export const enviarAssinatura: PayloadHandler = async (req) => {
 export const novoParaPrestador: PayloadHandler = async (req) => {
   const fechada = porta(req);
   if (fechada) return fechada;
+  // Lê a ficha do prestador: precisa também do módulo Prestadores.
+  if (!podeNoPedido(req, "prestadores")) return Response.json({ error: "Sem acesso aos prestadores." }, { status: 403 });
   const id = req.routeParams?.prestador;
   if (!id) return Response.json({ error: "Falta o prestador." }, { status: 400 });
 

@@ -14,6 +14,7 @@ import { slugDaEtiqueta } from "../hooks/slug-etiqueta";
 import { guardaSlugsAntigos } from "../hooks/slugs-antigos";
 import { translatePost } from "../endpoints/translate-post";
 import { writeExcerpt } from "../endpoints/write-excerpt";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /*
  * Um artigo vive no blog ou no newsroom (o campo «Onde aparece»). Os dois
@@ -190,8 +191,8 @@ export const Categories: CollectionConfig = {
   labels: { singular: "Categoria", plural: "Categorias" },
   // O título tem de ser texto simples: o painel desenha-o em colunas e num
   // grupo { pt, en } o React recebia um objeto onde esperava uma string.
-  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug", "artigos"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "titlePt", group: "Editorial", hidden: escondeDe("editorial"), defaultColumns: ["titlePt", "slug", "artigos"] },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   endpoints: [{ path: "/contagens", method: "get", handler: categoryCounts }],
   fields: [
@@ -235,8 +236,8 @@ export const Categories: CollectionConfig = {
 export const Tags: CollectionConfig = {
   slug: "tags",
   labels: { singular: "Etiqueta", plural: "Etiquetas" },
-  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "slug", "artigos"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "titlePt", group: "Editorial", hidden: escondeDe("editorial"), defaultColumns: ["titlePt", "slug", "artigos"] },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   endpoints: [{ path: "/contagens", method: "get", handler: tagCounts }],
   fields: [
@@ -289,8 +290,8 @@ export const Tags: CollectionConfig = {
 export const Authors: CollectionConfig = {
   slug: "authors",
   labels: { singular: "Autor", plural: "Autores" },
-  admin: { useAsTitle: "name", group: "Editorial", defaultColumns: ["name", "role"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "name", group: "Editorial", hidden: escondeDe("editorial"), defaultColumns: ["name", "role"] },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   fields: [
     {
@@ -326,13 +327,13 @@ export const Posts: CollectionConfig = {
   labels: { singular: "Artigo", plural: "Artigos" },
   admin: {
     useAsTitle: "titlePt",
-    group: "Editorial",
+    group: "Editorial", hidden: escondeDe("editorial"),
     defaultColumns: ["titlePt", "date", "category", "_status"],
     // Escrever e ver ao lado: é a razão de estarmos no Payload.
     livePreview: { url: ({ data }) => `/${data?.seccao === "newsroom" ? "newsroom" : "blog"}/${data?.slug ?? ""}` },
   },
   versions: { drafts: true },
-  access: { read: () => true },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: {
     beforeChange: [guardaSlugsAntigos],
     afterChange: [revalidateOnChange(postPaths), gravaOArtigoFalado],
@@ -552,8 +553,8 @@ export const Posts: CollectionConfig = {
 export const NewsItems: CollectionConfig = {
   slug: "news",
   labels: { singular: "Notícia", plural: "Newsroom" },
-  admin: { useAsTitle: "titlePt", group: "Editorial", defaultColumns: ["titlePt", "kind", "date"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "titlePt", group: "Editorial", hidden: escondeDe("editorial"), defaultColumns: ["titlePt", "kind", "date"] },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: {
     afterChange: [revalidateOnChange(() => ["/newsroom"])],
     afterDelete: [revalidateOnDelete(() => ["/newsroom"])],

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { doModulo, escondeDe } from "../acesso";
 
 /**
  * Prestadores: quem fatura à Jelly e entra em billing.jelly.pt.
@@ -30,15 +31,11 @@ export const Prestadores: CollectionConfig = {
     // ficha não existe. Conclui mal: ela existe, e só aparece quando se tenta
     // criar outra com o mesmo email e o painel recusa por ser repetido.
     listSearchableFields: ["nome", "email"],
+    hidden: escondeDe("prestadores"),
     description:
       "Quem fatura à Jelly. Só um prestador «qualificado» consegue entrar em billing.jelly.pt — o link de acesso verifica isto no momento em que é usado.",
   },
-  access: {
-    read: ({ req }) => Boolean(req.user),
-    create: ({ req }) => Boolean(req.user),
-    update: ({ req }) => Boolean(req.user),
-    delete: ({ req }) => Boolean(req.user),
-  },
+  access: doModulo(["prestadores"]),
   fields: [
     { name: "nome", label: "Nome", type: "text", required: true },
     {

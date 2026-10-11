@@ -1,9 +1,10 @@
 "use client";
 
-import { toast, useDocumentInfo } from "@payloadcms/ui";
+import { toast, useAuth, useDocumentInfo } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { leResposta } from "./resposta";
+import { tem, type ComModulos } from "../acesso";
 
 type Ficha = { id: number | string; nome?: string | null };
 
@@ -18,6 +19,9 @@ const nota = { margin: "0.5rem 0 0", fontSize: "0.75rem", color: "var(--theme-el
  */
 export function PassarAPrestador() {
   const { id } = useDocumentInfo();
+  // Mexe noutro módulo: só aparece a quem também o tem.
+  const { user } = useAuth();
+  const pode = tem(user as ComModulos, "prestadores");
   const router = useRouter();
   const [ficha, setFicha] = useState<Ficha | null | undefined>(undefined);
   const [ocupado, setOcupado] = useState(false);
@@ -34,7 +38,7 @@ export function PassarAPrestador() {
     };
   }, [id]);
 
-  if (!id || ficha === undefined) return null;
+  if (!id || !pode || ficha === undefined) return null;
 
   if (ficha) {
     return (

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { doModulo } from "../acesso";
 
 /**
  * Ficheiros que chegam de fora e não são imagens do site: para já, os briefings
@@ -13,12 +14,7 @@ export const Attachments: CollectionConfig = {
   slug: "attachments",
   labels: { singular: "Anexo", plural: "Anexos" },
   admin: { useAsTitle: "filename", group: "Casa", hidden: true },
-  access: {
-    read: ({ req }) => Boolean(req.user),
-    create: () => false,
-    update: ({ req }) => Boolean(req.user),
-    delete: ({ req }) => Boolean(req.user),
-  },
+  access: { ...doModulo(["mensagens"]), create: () => false },
   upload: {
     mimeTypes: [
       "application/pdf",

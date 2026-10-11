@@ -1,5 +1,6 @@
 import type { PayloadHandler } from "payload";
 import { pedeConfirmacao } from "@/lib/pede-confirmacao";
+import { podeNoPedido } from "../acesso";
 
 /**
  * POST /api/applications/:id/confirmacao
@@ -11,8 +12,7 @@ import { pedeConfirmacao } from "@/lib/pede-confirmacao";
 export const requestConfirmation: PayloadHandler = async (req) => {
   const user = req.user as { roles?: string[] | null } | undefined;
   if (!user) return Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 });
-  const perfis = user.roles ?? [];
-  if (perfis.length && !perfis.includes("admin") && !perfis.includes("recrutamento")) {
+  if (!podeNoPedido(req, "recrutamento")) {
     return Response.json({ error: "Isto é para quem trata de recrutamento." }, { status: 403 });
   }
 

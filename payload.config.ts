@@ -18,7 +18,8 @@ import { Documents } from "./src/payload/collections/documents";
 import { Attachments } from "./src/payload/collections/attachments";
 import { CarePlans } from "./src/payload/collections/care";
 import { Messages } from "./src/payload/collections/messages";
-import { Applications, Departments, JobFunctions, Jobs, temPerfil, type ComPerfis } from "./src/payload/collections/recruitment";
+import { Applications, Departments, JobFunctions, Jobs } from "./src/payload/collections/recruitment";
+import { BIBLIOTECA, tem, type ComModulos } from "./src/payload/acesso";
 import { Videos } from "./src/payload/collections/videos";
 import { Downloads } from "./src/payload/collections/downloads";
 import { Assinaturas, AssinaturasFicheiros } from "./src/payload/collections/assinaturas";
@@ -204,10 +205,14 @@ export default buildConfig({
           },
           addRandomSuffix: true,
           clientUploads: {
-            // Os documentos para assinar são só da administração; o resto, de
-            // quem tem sessão no painel.
+            // Cada coleção, com o módulo dela: só quem pode criar lá pede a
+            // senha para carregar.
             access: ({ req, collectionSlug }) =>
-              collectionSlug === "assinaturas-ficheiros" ? temPerfil(req.user as ComPerfis) : Boolean(req.user),
+              collectionSlug === "assinaturas-ficheiros"
+                ? tem(req.user as ComModulos, "assinaturas")
+                : collectionSlug === "downloads"
+                  ? tem(req.user as ComModulos, "editorial")
+                  : tem(req.user as ComModulos, ...BIBLIOTECA),
           },
           token: blobToken,
         }),

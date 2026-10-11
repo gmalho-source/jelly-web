@@ -1,4 +1,5 @@
 import type { PayloadHandler } from "payload";
+import { podeNoPedido } from "../acesso";
 
 /**
  * POST /api/applications/:id/prestador
@@ -51,13 +52,11 @@ function sugerePool(c: Candidatura): string | undefined {
 }
 
 export const passarAPrestador: PayloadHandler = async (req) => {
-  // A mesma porta das outras ações da candidatura. Não se importa o
-  // `temPerfil` da coleção: a coleção importa este ficheiro.
-  const user = req.user as { roles?: string[] | null } | null | undefined;
-  if (!user) return Response.json({ error: "Sem sessão." }, { status: 401 });
-  const perfis = user.roles ?? [];
-  if (perfis.length && !perfis.includes("admin") && !perfis.includes("recrutamento")) {
-    return Response.json({ error: "Sem perfil de recrutamento." }, { status: 403 });
+  // Mexe em dois módulos: a candidatura (recrutamento) e a ficha nova
+  // (prestadores). Precisa dos dois.
+  if (!req.user) return Response.json({ error: "Sem sessão." }, { status: 401 });
+  if (!podeNoPedido(req, "recrutamento") || !podeNoPedido(req, "prestadores")) {
+    return Response.json({ error: "É preciso ter os módulos Recrutamento e Prestadores." }, { status: 403 });
   }
   const id = req.routeParams?.id;
   if (!id) return Response.json({ error: "Falta a candidatura." }, { status: 400 });

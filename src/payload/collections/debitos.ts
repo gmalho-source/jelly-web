@@ -1,6 +1,5 @@
 import type { CollectionAfterReadHook, CollectionBeforeChangeHook, CollectionConfig, PayloadHandler } from "payload";
-import { soAdministracao } from "./assinaturas";
-import { temPerfil, type ComPerfis } from "./recruitment";
+import { doModulo, escondeDe, podeNoPedido } from "../acesso";
 
 /**
  * Autorizações de débito direto SEPA (CORE) dos clientes.
@@ -13,7 +12,7 @@ import { temPerfil, type ComPerfis } from "./recruitment";
  * O IBAN é um dado bancário: só a administração vê esta lista, e o IBAN não
  * aparece nas colunas nem nos emails.
  */
-const so = soAdministracao;
+const so = doModulo(["debitos"]).read;
 
 export const ESTADOS_DEBITO = [
   { label: "Rascunho", value: "rascunho" },
@@ -90,7 +89,7 @@ const mostraExpiradas: CollectionAfterReadHook = ({ doc }) => {
 };
 
 const enviarDebito: PayloadHandler = async (req) => {
-  if (!req.user || !temPerfil(req.user as ComPerfis)) return Response.json({ error: "Só para a administração." }, { status: 403 });
+  if (!podeNoPedido(req, "debitos")) return Response.json({ error: "Sem acesso aos débitos diretos." }, { status: 403 });
   const id = req.routeParams?.id;
   if (!id) return Response.json({ error: "Falta a autorização." }, { status: 400 });
   const { enviarConvite, ErroDeDebito } = await import("@/lib/debitos/fluxo");
@@ -115,6 +114,7 @@ export const DebitosDiretos: CollectionConfig = {
   admin: {
     useAsTitle: "empresa",
     group: "Faturação",
+    hidden: escondeDe("debitos"),
     defaultColumns: ["empresa", "referencia", "estado", "contactoEmail", "assinadaEm"],
     listSearchableFields: ["empresa", "nif", "referencia", "contactoEmail"],
     description:

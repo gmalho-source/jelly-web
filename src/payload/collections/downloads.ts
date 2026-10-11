@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { revalidateOnChange, revalidateOnDelete } from "../hooks/revalidate";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /**
  * Ficheiros para o público descarregar: o press kit completo e os logos.
@@ -20,12 +21,12 @@ export const Downloads: CollectionConfig = {
   labels: { singular: "Download", plural: "Downloads" },
   admin: {
     useAsTitle: "title",
-    group: "Editorial",
+    group: "Editorial", hidden: escondeDe("editorial"),
     defaultColumns: ["title", "uso", "filesize", "updatedAt"],
     description:
       "Ficheiros que o site oferece para descarregar, no Newsroom. Vão direito ao armazenamento, sem o limite de 4,5 MB. Para trocar um, carrega o novo com o mesmo «Onde aparece».",
   },
-  access: { read: () => true },
+  access: doModulo(["editorial"], { leituraPublica: true }),
   hooks: {
     afterChange: [revalidateOnChange(() => ["/newsroom"])],
     afterDelete: [revalidateOnDelete(() => ["/newsroom"])],

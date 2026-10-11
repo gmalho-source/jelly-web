@@ -3,6 +3,7 @@ import { chave, fichaDoCabecalho, juntaFichas, lerData, type CampoDaFicha, type 
 import { comImpressao, impressao } from "@/lib/impressao";
 import { markdownParaLexical, trazImagem, type Guarda } from "@/lib/markdown-lexical";
 import { aSlug } from "../hooks/slug-etiqueta";
+import { podeNoPedido } from "../acesso";
 
 /**
  * Um ficheiro Markdown a povoar um artigo: texto, formatação e imagens.
@@ -22,6 +23,7 @@ import { aSlug } from "../hooks/slug-etiqueta";
  */
 export const importMarkdown: PayloadHandler = async (req) => {
   if (!req.user) return Response.json({ error: "Sem sessão." }, { status: 401 });
+  if (!podeNoPedido(req, "editorial")) return Response.json({ error: "Sem acesso a este módulo do painel." }, { status: 403 });
 
   let markdown = "";
   let nome = "";

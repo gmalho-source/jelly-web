@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { revalidateEverythingOnChange, revalidateEverythingOnDelete } from "../hooks/revalidate";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /**
  * Vídeos: os dos casos de portfólio, e os fundos de topo das páginas.
@@ -25,12 +26,12 @@ export const Videos: CollectionConfig = {
   labels: { singular: "Vídeo", plural: "Vídeos" },
   admin: {
     useAsTitle: "title",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe(...BIBLIOTECA),
     defaultColumns: ["title", "filename", "filesize"],
     description:
       "Vídeos dos casos e fundos de topo. Vão do browser direito ao armazenamento, sem passar pelo servidor — por isso não há o limite de 4,5 MB que trava as imagens.",
   },
-  access: { read: () => true },
+  access: doModulo(BIBLIOTECA, { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   upload: {
     mimeTypes: ["video/mp4", "video/webm", "video/quicktime"],

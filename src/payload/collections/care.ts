@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { locale } from "../fields";
 import { revalidateEverythingOnChange, revalidateEverythingOnDelete } from "../hooks/revalidate";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /**
  * Os planos JellyCARE.
@@ -19,11 +20,11 @@ export const CarePlans: CollectionConfig = {
   labels: { singular: "Plano JellyCARE", plural: "Planos JellyCARE" },
   admin: {
     useAsTitle: "name",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe("paginas"),
     defaultColumns: ["name", "price", "order", "active"],
     description: "Os planos que a página /jellycare mostra e o formulário oferece.",
   },
-  access: { read: () => true },
+  access: doModulo(["paginas"], { leituraPublica: true }),
   hooks: { afterChange: [revalidateEverythingOnChange], afterDelete: [revalidateEverythingOnDelete] },
   defaultSort: "order",
   fields: [

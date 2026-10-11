@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import type { GlobalBeforeChangeHook, GlobalConfig, PayloadHandler } from "payload";
 import { soAdministracao } from "../collections/assinaturas";
-import { temPerfil, type ComPerfis } from "../collections/recruitment";
+import { escondeDe, podeNoPedido } from "../acesso";
 
 /**
  * O link fixo do NDA: uma página onde o próprio prestador escreve os seus dados
@@ -15,7 +15,7 @@ import { temPerfil, type ComPerfis } from "../collections/recruitment";
 export const novaChave = () => randomBytes(18).toString("base64url");
 
 const trocarChave: PayloadHandler = async (req) => {
-  if (!req.user || !temPerfil(req.user as ComPerfis)) return Response.json({ error: "Só para a administração." }, { status: 403 });
+  if (!podeNoPedido(req, "assinaturas")) return Response.json({ error: "Sem acesso às assinaturas." }, { status: 403 });
   const chave = novaChave();
   await req.payload.updateGlobal({ slug: "nda-link", data: { chave, ativo: true }, overrideAccess: true, context: { trocarChave: true } });
   return Response.json({ chave });
@@ -36,6 +36,7 @@ export const NdaLink: GlobalConfig = {
   label: "Link do NDA",
   admin: {
     group: "Assinaturas",
+    hidden: escondeDe("assinaturas"),
     description:
       "O link que se manda aos prestadores novos. Abrem, escrevem os dados, confirmam o email com um código e assinam o NDA. No fim, a ficha deles é criada (em «Parado») ou, se o email já existir, o NDA fica nessa ficha.",
   },

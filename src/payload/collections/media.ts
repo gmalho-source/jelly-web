@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { describeImage, describeUpload } from "../endpoints/describe-image";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /** Imagens. O texto alternativo é obrigatório — não é decoração. */
 export const Media: CollectionConfig = {
@@ -7,8 +8,8 @@ export const Media: CollectionConfig = {
   labels: { singular: "Imagem", plural: "Imagens" },
   // Sem isto o painel mostra o nome do ficheiro, e um nome vindo do WordPress
   // (256513_441780705844923_o-150x150.webp) não diz nada a ninguém.
-  admin: { useAsTitle: "title", group: "Biblioteca", defaultColumns: ["title", "alt", "filename"] },
-  access: { read: () => true },
+  admin: { useAsTitle: "title", group: "Biblioteca", hidden: escondeDe(...BIBLIOTECA), defaultColumns: ["title", "alt", "filename"] },
+  access: doModulo(BIBLIOTECA, { leituraPublica: true }),
   upload: {
     mimeTypes: ["image/*"],
     // Tudo o que entra sai em WebP e com o lado maior travado: uma fotografia

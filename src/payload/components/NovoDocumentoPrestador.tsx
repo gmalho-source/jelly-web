@@ -1,9 +1,10 @@
 "use client";
 
-import { toast, useDocumentInfo } from "@payloadcms/ui";
+import { toast, useAuth, useDocumentInfo } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { leResposta } from "./resposta";
+import { tem, type ComModulos } from "../acesso";
 
 /**
  * Na ficha do prestador: «Novo documento para assinar».
@@ -13,9 +14,12 @@ import { leResposta } from "./resposta";
  */
 export function NovoDocumentoPrestador() {
   const { id } = useDocumentInfo();
+  // Mexe noutro módulo: só aparece a quem também o tem.
+  const { user } = useAuth();
+  const pode = tem(user as ComModulos, "assinaturas");
   const router = useRouter();
   const [ocupado, setOcupado] = useState(false);
-  if (!id) return null;
+  if (!id || !pode) return null;
 
   const criar = async () => {
     setOcupado(true);

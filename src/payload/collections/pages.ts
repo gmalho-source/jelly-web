@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 import { guardarSoOQueMuda, mostrarCopyDoSite } from "../hooks/copy-do-site";
 import { revalidateOnChange } from "../hooks/revalidate";
+import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
 /** Onde cada caderno aparece no site. */
 const routes: Record<string, string> = {
@@ -28,14 +29,14 @@ export const Pages: CollectionConfig = {
   labels: { singular: "Página", plural: "Páginas" },
   admin: {
     useAsTitle: "title",
-    group: "Páginas",
+    group: "Páginas", hidden: escondeDe("paginas"),
     defaultColumns: ["title", "key"],
     description:
       "Os textos das páginas, tal como estão no site. Mudar um texto aqui muda-o no site; um texto que fique igual ao original continua a acompanhar as alterações feitas no código.",
     // Era `/${key}` — `/about`, `/work` — e só a homepage abria a página certa.
     livePreview: { url: ({ data }) => routes[String(data?.key ?? "")] ?? "/" },
   },
-  access: { read: () => true, create: () => false, delete: () => false },
+  access: { ...doModulo(["paginas"], { leituraPublica: true }), create: () => false, delete: () => false },
   // Um histórico, sem rascunhos: cada gravação guarda uma versão, e o separador
   // «Versões» deixa comparar e restaurar. Um texto apagado sem querer volta em
   // dois cliques. Sem rascunhos porque aqui grava-se e publica-se de uma vez.

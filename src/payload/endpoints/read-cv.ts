@@ -1,5 +1,6 @@
 import type { PayloadHandler } from "payload";
 import { lerCurriculo } from "@/lib/cv-leitura";
+import { podeNoPedido } from "../acesso";
 
 /**
  * Um CV → os campos de uma candidatura, pela mão de quem recruta.
@@ -20,8 +21,7 @@ import { lerCurriculo } from "@/lib/cv-leitura";
 function porta(req: Parameters<PayloadHandler>[0]) {
   if (!req.user) return { erro: Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 }) };
   // O mesmo perfil que vê as candidaturas: um CV não é para quem edita o blog.
-  const perfis = (req.user as { roles?: string[] | null }).roles ?? [];
-  const podeRecrutar = !perfis.length || perfis.includes("admin") || perfis.includes("recrutamento");
+  const podeRecrutar = podeNoPedido(req, "recrutamento");
   if (!podeRecrutar) return { erro: Response.json({ error: "Esta leitura é para quem trata de recrutamento." }, { status: 403 }) };
   const key = process.env.ANTHROPIC_API_KEY?.trim();
   if (!key) return { erro: Response.json({ error: "Falta a ANTHROPIC_API_KEY neste ambiente." }, { status: 501 }) };

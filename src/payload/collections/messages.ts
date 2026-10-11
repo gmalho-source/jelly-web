@@ -1,4 +1,6 @@
 import type { CollectionConfig } from "payload";
+import { doModulo } from "../acesso";
+import { escondeDe } from "../acesso";
 
 /**
  * O que chega pelo formulário de contactos.
@@ -15,14 +17,14 @@ export const Messages: CollectionConfig = {
   labels: { singular: "Mensagem", plural: "Mensagens" },
   admin: {
     useAsTitle: "name",
-    group: "Casa",
+    group: "Casa", hidden: escondeDe("mensagens"),
     defaultColumns: ["name", "company", "origin", "status", "createdAt"],
     // Procurar por email: a caixa da lista só olha para o campo do título, e
     // quem vem procurar uma mensagem sabe muitas vezes o endereço e não o nome.
     listSearchableFields: ["name", "email"],
     description: "Os briefings da página de contactos e as subscrições do JellyCARE.",
   },
-  access: { read: ({ req }) => Boolean(req.user), create: () => false, update: ({ req }) => Boolean(req.user), delete: ({ req }) => Boolean(req.user) },
+  access: { ...doModulo(["mensagens"]), create: () => false },
   fields: [
     {
       type: "row",
