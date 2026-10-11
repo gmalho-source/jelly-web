@@ -77,7 +77,7 @@ export function Assinar({ token, nome, email }: { token: string; nome: string; e
           <p className="mt-2 text-fg-soft">
             Leia o documento acima. Para assinar, enviamos um código de confirmação para {email}.
           </p>
-          <button type="button" className="btn-pill btn-pill-ink mt-5" disabled={ocupado} onClick={() => void pedirCodigo()}>
+          <button type="button" className="btn-pill btn-pill-ink mt-5 disabled:opacity-40" disabled={ocupado} onClick={() => void pedirCodigo()}>
             {ocupado ? "A enviar…" : "Enviar o código"}
           </button>
         </>
@@ -112,7 +112,7 @@ export function Assinar({ token, nome, email }: { token: string; nome: string; e
             <span>Li o documento e aceito-o, assinando-o eletronicamente com o nome acima.</span>
           </label>
           <div className="flex flex-wrap items-center gap-4">
-            <button type="submit" className="btn-pill" disabled={ocupado || codigo.length !== 6 || !aceito}>
+            <button type="submit" className="btn-pill btn-pill-ink disabled:opacity-40" disabled={ocupado || codigo.length !== 6 || !aceito}>
               {ocupado ? "A assinar…" : "Assinar o documento"}
             </button>
             <button type="button" className="text-sm text-fg-soft underline" disabled={ocupado} onClick={() => void pedirCodigo()}>

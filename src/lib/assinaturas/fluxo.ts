@@ -70,6 +70,8 @@ export type Pedido = {
   assinado?: number | string | { id: number | string } | null;
   hashFinal?: string | null;
   registo?: Registo[] | null;
+  via?: "painel" | "link" | null;
+  dadosDoPrestador?: { nome?: string | null; email?: string | null; telefone?: string | null; nif?: string | null; morada?: string | null; documento?: string | null } | null;
 };
 
 export class ErroDeAssinatura extends Error {
@@ -113,7 +115,7 @@ async function lerPedido(payload: Payload, id: string | number): Promise<Pedido>
 
 function quemEaOutraParte(pedido: Pedido): string {
   const prestador = pedido.prestador && typeof pedido.prestador === "object" ? pedido.prestador : null;
-  return prestador?.nome || pedido.outraParte?.nome || "";
+  return prestador?.nome || pedido.dadosDoPrestador?.nome || pedido.outraParte?.nome || "";
 }
 
 /** A referência curta que aparece no rodapé dos PDFs e nos emails. */
@@ -121,7 +123,16 @@ const referencia = (pedido: Pedido, hash?: string | null) => `JLY-${pedido.id}${
 
 /* ─────────────────────────────── enviar ─────────────────────────────── */
 
-export async function enviar(payload: Payload, id: string | number, origem: string): Promise<{ enviados: number; falhados: string[] }> {
+/**
+ * `soLigacao`: o pedido nasceu no link do NDA e quem assina está do outro lado
+ * do ecrã — em vez de lhe mandar a ligação por email, devolve-se a ligação.
+ */
+export async function enviar(
+  payload: Payload,
+  id: string | number,
+  origem: string,
+  { soLigacao = false }: { soLigacao?: boolean } = {},
+): Promise<{ enviados: number; falhados: string[]; ligacao?: string }> {
   let pedido = await lerPedido(payload, id);
   if (pedido.estado === "concluido") throw new ErroDeAssinatura("Este documento já foi assinado por todos.");
   if (pedido.estado === "cancelado") throw new ErroDeAssinatura("Este pedido foi cancelado. Cria um novo.");
@@ -151,8 +162,10 @@ export async function enviar(payload: Payload, id: string | number, origem: stri
     let bytes: Uint8Array;
     if (pedido.origem === "modelo-nda") {
       if (pedido.tipo !== "nda") throw new ErroDeAssinatura("O modelo da Jelly é o NDA: escolhe o tipo «NDA», ou carrega um PDF.");
-      if (!prestador) throw new ErroDeAssinatura("O NDA da Jelly preenche-se com a ficha de um prestador: escolhe o prestador.");
-      const dados = { nome: prestador.nome ?? "", morada: prestador.morada ?? "", documento: prestador.documento ?? "", nif: prestador.nif ?? "" };
+      // Pelo link, os dados são os que o prestador escreveu; pelo painel, os da ficha.
+      const fonte = pedido.via === "link" ? pedido.dadosDoPrestador : prestador;
+      if (!fonte) throw new ErroDeAssinatura("O NDA da Jelly preenche-se com a ficha de um prestador: escolhe o prestador.");
+      const dados = { nome: fonte.nome ?? "", morada: fonte.morada ?? "", documento: fonte.documento ?? "", nif: fonte.nif ?? "" };
       const falta = faltaNaFicha(dados);
       if (falta.length) throw new ErroDeAssinatura(`Falta na ficha do prestador: ${falta.join(", ")}. Preenche e volta a enviar.`);
       bytes = await geraDocumento(blocosDoNda(dados), {
@@ -187,6 +200,12 @@ export async function enviar(payload: Payload, id: string | number, origem: stri
 
   // As ligações, só a quem ainda não assinou. Reenviar é isto outra vez.
   const validade = new Date(pedido.validade ?? Date.now() + VALIDADE_DIAS * 86_400_000);
+  if (soLigacao) {
+    const linha = (pedido.signatarios ?? []).find((l) => l.estado !== "assinado" && l.id);
+    if (!linha?.id) return { enviados: 0, falhados: [] };
+    const token = await assinaLigacao({ pedido: String(pedido.id), signatario: linha.id }, validade);
+    return { enviados: 0, falhados: [], ligacao: `/assinar/${token}` };
+  }
   const falhados: string[] = [];
   let enviados = 0;
   for (const linha of pedido.signatarios ?? []) {
@@ -367,8 +386,25 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     );
   }
 
+  // Pelo link do NDA, a ficha é criada ou encontrada agora, pelo email que o
+  // código confirmou, e o pedido fica ligado a ela.
+  let ficha: import("./link").FichaDoLink | null = null;
+  if (pedido.via === "link") {
+    const { ligaAoPrestador } = await import("./link");
+    ficha = await ligaAoPrestador(payload, pedido, momento);
+    if (ficha) {
+      await payload.update({ collection: COLECAO, id: pedido.id, data: { prestador: ficha.prestadorId } as never, overrideAccess: true, context: { assinaturasInterno: true } });
+      await regista(
+        payload,
+        pedido.id,
+        ficha.criado ? "Prestador criado em «Parado»" : "NDA ligado à ficha do prestador que já existia",
+        ficha.diferencas.length ? `Dados diferentes da ficha: ${ficha.diferencas.join(", ")} — ficha marcada «Dados a rever»` : null,
+      );
+    }
+  }
+
   // O NDA fica marcado na ficha do prestador, com a data da assinatura.
-  const prestadorId = idDe(pedido.prestador);
+  const prestadorId = ficha ? null : idDe(pedido.prestador);
   if (pedido.tipo === "nda" && prestadorId) {
     await payload.update({ collection: "prestadores", id: prestadorId, data: { ndaAssinado: true, ndaData: momento } as never, overrideAccess: true });
     await regista(payload, pedido.id, "NDA marcado na ficha do prestador", null);
@@ -383,7 +419,7 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
   }
   // A casa recebe o aviso — menos quem já recebeu a cópia por ter assinado.
   for (const destino of AVISOS[pedido.tipo] ?? AVISOS.outro) {
-    if (!jaTem.has(destino)) await enviaEmail(avisoInterno(pedido, destino, anexo, hashFinal, outraParte));
+    if (!jaTem.has(destino)) await enviaEmail(avisoInterno(pedido, destino, anexo, hashFinal, outraParte, ficha));
   }
 }
 
@@ -453,7 +489,21 @@ function copiaAssinada(pedido: Pedido, linha: Linha, anexo: { nome: string; base
   };
 }
 
-function avisoInterno(pedido: Pedido, destino: string, anexo: { nome: string; base64: string }, hash: string, outraParte: string) {
+function avisoInterno(
+  pedido: Pedido,
+  destino: string,
+  anexo: { nome: string; base64: string },
+  hash: string,
+  outraParte: string,
+  ficha: import("./link").FichaDoLink | null = null,
+) {
+  const sobreAFicha = ficha
+    ? ficha.criado
+      ? `Assinado pelo link do NDA. A ficha de ${ficha.nome} foi criada em «Parado», com os dados que escreveu: revê-a e passa-a a «Qualificado» quando puder faturar.`
+      : ficha.diferencas.length
+        ? `Assinado pelo link do NDA. O NDA ficou na ficha que já existia; os dados escritos têm diferenças (${ficha.diferencas.join(", ")}), que estão nas notas — a ficha ficou marcada «Dados a rever».`
+        : "Assinado pelo link do NDA. O NDA ficou na ficha que já existia, marcado com a data de hoje."
+    : null;
   const assunto = pedido.tipo === "nda" ? `NDA assinado: ${outraParte || pedido.titulo}` : `Assinado: ${pedido.titulo}`;
   const corpo = [
     recibo(
@@ -464,7 +514,7 @@ function avisoInterno(pedido: Pedido, destino: string, anexo: { nome: string; ba
         ...(pedido.signatarios ?? []).map((l) => ({ rotulo: l.papel === "jelly" ? "Pela Jelly" : "Assinou", valor: `${l.nomeEscrito || l.nome} <${l.email}> · ${quando(l.assinadoEm)}` })),
         { rotulo: "SHA-256", valor: hash },
       ],
-      pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada segue em anexo e está guardada no pedido, no painel.",
+      sobreAFicha ?? (pedido.tipo === "nda" ? "O NDA ficou marcado na ficha do prestador, com a data de hoje." : "A cópia assinada segue em anexo e está guardada no pedido, no painel."),
     ),
   ].join("\n");
   return {

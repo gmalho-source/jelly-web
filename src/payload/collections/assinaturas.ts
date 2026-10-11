@@ -75,6 +75,9 @@ const protegeAProva: CollectionBeforeChangeHook = ({ data, originalDoc, operatio
 
   if (operation === "create") {
     for (const campo of PROVA_DO_PEDIDO) delete data[campo];
+    // Pelo painel é sempre «painel»: só o link do NDA cria pedidos «link».
+    data.via = "painel";
+    delete data.dadosDoPrestador;
     data.estado = "rascunho";
     data.signatarios = ((data.signatarios ?? []) as Linha[]).map((linha) => {
       const limpa: Linha = { ...linha };
@@ -86,6 +89,8 @@ const protegeAProva: CollectionBeforeChangeHook = ({ data, originalDoc, operatio
 
   const antes = (originalDoc ?? {}) as Record<string, unknown>;
   for (const campo of PROVA_DO_PEDIDO) data[campo] = antes[campo];
+  data.via = antes.via;
+  data.dadosDoPrestador = antes.dadosDoPrestador;
 
   // O estado só muda à mão para «Cancelado», e só antes de estar assinado.
   const podeCancelar = antes.estado === "rascunho" || antes.estado === "enviado";
@@ -257,12 +262,51 @@ export const Assinaturas: CollectionConfig = {
       type: "relationship",
       relationTo: "prestadores",
       index: true,
+      // Pelo link do NDA o prestador ainda não existe quando o pedido nasce:
+      // liga-se no fim, quando assina.
       validate: (valor: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-        siblingData?.origem !== "modelo-nda" || Boolean(valor) || "Escolha o prestador.",
+        siblingData?.origem !== "modelo-nda" || siblingData?.via === "link" || Boolean(valor) || "Escolha o prestador.",
       admin: {
-        condition: (dados) => dados?.origem === "modelo-nda",
+        condition: (dados) => dados?.origem === "modelo-nda" && (dados?.via !== "link" || Boolean(dados?.prestador)),
         description: "O NDA sai preenchido com a ficha dele (nome, morada, documento, NIF) e, assinado, fica marcado nela.",
       },
+    },
+    {
+      name: "via",
+      label: "Pedido feito",
+      type: "select",
+      defaultValue: "painel",
+      options: [
+        { label: "No painel", value: "painel" },
+        { label: "Pelo link do NDA (preenchido pelo prestador)", value: "link" },
+      ],
+      admin: { readOnly: true, position: "sidebar", condition: (dados) => dados?.via === "link" },
+    },
+    {
+      // O que o prestador escreveu no formulário do link do NDA. É com isto que
+      // o NDA sai preenchido e que a ficha dele é criada ou completada.
+      name: "dadosDoPrestador",
+      label: "Dados que o prestador preencheu",
+      type: "group",
+      admin: { readOnly: true, condition: (dados) => dados?.via === "link" },
+      fields: [
+        {
+          type: "row",
+          fields: [
+            { name: "nome", label: "Nome", type: "text" },
+            { name: "email", label: "Email", type: "email" },
+            { name: "telefone", label: "Telefone", type: "text" },
+          ],
+        },
+        {
+          type: "row",
+          fields: [
+            { name: "nif", label: "NIF", type: "text" },
+            { name: "documento", label: "Cartão de cidadão / passaporte", type: "text" },
+          ],
+        },
+        { name: "morada", label: "Morada", type: "textarea" },
+      ],
     },
     {
       name: "outraParte",

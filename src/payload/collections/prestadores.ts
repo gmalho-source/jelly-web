@@ -168,6 +168,19 @@ export const Prestadores: CollectionConfig = {
       ],
     },
     {
+      // Posto pelo link do NDA quando o prestador escreveu dados diferentes dos
+      // que a ficha tinha. A ficha não muda sozinha: as diferenças ficam nas
+      // notas, e quem rever tira o visto.
+      name: "dadosARever",
+      label: "Dados a rever",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "Marcado quando o prestador assina o NDA pelo link com dados diferentes destes: as diferenças estão nas notas. Tira o visto depois de rever.",
+      },
+    },
+    {
       name: "novoDocumento",
       type: "ui",
       admin: { position: "sidebar", components: { Field: "@/payload/components/NovoDocumentoPrestador#NovoDocumentoPrestador" } },

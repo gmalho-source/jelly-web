@@ -8,6 +8,7 @@ import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 import { Media } from "./src/payload/collections/media";
+import { NdaLink } from "./src/payload/globals/nda-link";
 import { Pages } from "./src/payload/collections/pages";
 import { Users } from "./src/payload/collections/users";
 import { i18n } from "./src/payload/i18n";
@@ -88,6 +89,7 @@ export default buildConfig({
       beforeNavLinks: ["@/payload/components/PainelBarra#PainelBarra"],
     },
   },
+  globals: [NdaLink],
   collections: [
     Prestadores,
     BillingTokens,

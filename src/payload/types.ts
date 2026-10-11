@@ -149,8 +149,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'nda-link': NdaLink;
+  };
+  globalsSelect: {
+    'nda-link': NdaLinkSelect<false> | NdaLinkSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -219,6 +223,10 @@ export interface Prestadore {
   notas?: string | null;
   ndaAssinado?: boolean | null;
   ndaData?: string | null;
+  /**
+   * Marcado quando o prestador assina o NDA pelo link com dados diferentes destes: as diferenças estão nas notas. Tira o visto depois de rever.
+   */
+  dadosARever?: boolean | null;
   assinaturas?: {
     docs?: (number | Assinatura)[];
     hasNextPage?: boolean;
@@ -773,6 +781,15 @@ export interface Assinatura {
    * O NDA sai preenchido com a ficha dele (nome, morada, documento, NIF) e, assinado, fica marcado nela.
    */
   prestador?: (number | null) | Prestadore;
+  via?: ('painel' | 'link') | null;
+  dadosDoPrestador?: {
+    nome?: string | null;
+    email?: string | null;
+    telefone?: string | null;
+    nif?: string | null;
+    documento?: string | null;
+    morada?: string | null;
+  };
   /**
    * Cliente, parceiro ou fornecedor: a entidade que assina o documento.
    */
@@ -2022,6 +2039,7 @@ export interface PrestadoresSelect<T extends boolean = true> {
   notas?: T;
   ndaAssinado?: T;
   ndaData?: T;
+  dadosARever?: T;
   assinaturas?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -3001,6 +3019,17 @@ export interface AssinaturasSelect<T extends boolean = true> {
   estado?: T;
   pdf?: T;
   prestador?: T;
+  via?: T;
+  dadosDoPrestador?:
+    | T
+    | {
+        nome?: T;
+        email?: T;
+        telefone?: T;
+        nif?: T;
+        documento?: T;
+        morada?: T;
+      };
   outraParte?:
     | T
     | {
@@ -3146,6 +3175,33 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * O link que se manda aos prestadores novos. Abrem, escrevem os dados, confirmam o email com um código e assinam o NDA. No fim, a ficha deles é criada (em «Parado») ou, se o email já existir, o NDA fica nessa ficha.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nda-link".
+ */
+export interface NdaLink {
+  id: number;
+  /**
+   * Desligado, o link mostra que não está disponível. A chave fica a mesma.
+   */
+  ativo?: boolean | null;
+  chave?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "nda-link_select".
+ */
+export interface NdaLinkSelect<T extends boolean = true> {
+  ativo?: T;
+  chave?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
