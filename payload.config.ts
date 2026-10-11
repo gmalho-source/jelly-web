@@ -150,9 +150,22 @@ export default buildConfig({
           // Sem o controlo de acesso do Payload à frente, os endereços apontam
           // direitos ao CDN do Blob: as imagens deixam de passar por uma função
           // a cada pedido. São capas de projetos, públicas de qualquer maneira.
-          // As imagens são públicas; os documentos não. Sem esta distinção, um
-          // CV ficava com endereço no CDN, sem sessão pelo meio.
-          collections: { media: { disablePayloadAccessControl: true }, documents: {}, attachments: {}, "assinaturas-ficheiros": {} },
+          collections: { media: { disablePayloadAccessControl: true } },
+          token: blobToken,
+        }),
+        // ── Os ficheiros pessoais: CV, briefings, documentos para assinar ───
+        // Passam pelo controlo de acesso do Payload (`/api/…/file/…` pede
+        // sessão). Mas o armazenamento do Blob é público — o plugin não sabe
+        // outro — e o mesmo ficheiro existe também no CDN, sem sessão nenhuma,
+        // em `<store>.public.blob.vercel-storage.com/<nome>`. Com o nome
+        // original, `CV_Nome_Apelido.pdf` abria-se por quem o adivinhasse. O
+        // sufixo aleatório da Vercel (trinta caracteres) torna o nome
+        // impossível de adivinhar; o Payload guarda o nome com o sufixo e é por
+        // ele que lê e apaga. Os que já lá estavam foram renomeados por
+        // scripts/blob-renomear.mjs.
+        vercelBlobStorage({
+          collections: { documents: {}, attachments: {}, "assinaturas-ficheiros": {} },
+          addRandomSuffix: true,
           token: blobToken,
         }),
         // ── Os vídeos, pelo caminho contrário ──────────────────────────────

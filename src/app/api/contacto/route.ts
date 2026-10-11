@@ -121,7 +121,9 @@ export async function POST(request: NextRequest) {
         const segue = brief.size <= 3_500_000;
         briefing = {
           nome: brief.name,
-          url: String(guardado.url ?? `/api/attachments/file/${guardado.filename ?? brief.name}`),
+          // Do nome, não do `url` devolvido: o sufixo aleatório do Blob entra no
+          // nome depois do create, e o `url` devolvido ainda é o antigo.
+          url: `/api/attachments/file/${encodeURIComponent(String(guardado.filename ?? brief.name))}`,
           bytes: brief.size,
           segue,
           ...(segue ? { base64: conteudo.toString("base64") } : {}),

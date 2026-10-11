@@ -126,7 +126,10 @@ export async function POST(request: NextRequest) {
     // ficar com uma candidatura gravada sem ele e a acreditar que está tratada.
     if (!cvDoc?.id) return NextResponse.json({ ok: false, erro: "cv" }, { status: 415 });
     const letterDoc = letter instanceof File && letter.size > 0 ? await guarda(letter, `Carta de ${name}`) : undefined;
-    if (cvDoc?.url) cvUrl = absoluto(String(cvDoc.url));
+    // O endereço sai do nome, não do `url` que o create devolve: o Blob junta um
+    // sufixo aleatório ao nome depois de o documento ser criado, e o `url`
+    // devolvido ainda é o do nome sem sufixo — um link que daria 404.
+    if (cvDoc?.filename) cvUrl = absoluto(`/api/documents/file/${encodeURIComponent(String(cvDoc.filename))}`);
 
     // A vaga traz consigo a função e o departamento: a candidatura tem de nascer
     // arrumada, ou a matriz de fit não a encontra depois.
