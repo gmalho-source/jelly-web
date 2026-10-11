@@ -93,6 +93,16 @@ export const Prestadores: CollectionConfig = {
     },
     { name: "mondayId", label: "Id no Monday", type: "text", index: true, admin: { position: "sidebar", readOnly: true } },
     {
+      // Posto pelo botão «Passar a prestador» da candidatura. Só a ligação: o
+      // CV e a avaliação ficam lá, onde foram dados e com o prazo que lá têm.
+      name: "candidatura",
+      label: "Veio da candidatura",
+      type: "relationship",
+      relationTo: "applications",
+      index: true,
+      admin: { position: "sidebar", readOnly: true, condition: (dados) => Boolean(dados?.candidatura) },
+    },
+    {
       name: "emailNotificacao",
       label: "Quem avisar na Jelly",
       type: "email",

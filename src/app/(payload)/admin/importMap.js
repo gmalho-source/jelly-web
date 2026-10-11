@@ -38,6 +38,7 @@ import { PropostaDeVaga as PropostaDeVaga_3f7989588e14a2ad1d606d7939988797 } fro
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/components/LerCV'
 import { PedirConfirmacao as PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c } from '@/payload/components/PedirConfirmacao'
+import { PassarAPrestador as PassarAPrestador_ecd2f0bdca54617d17b0cef11d224b4c } from '@/payload/components/PassarAPrestador'
 import { CandidateEmail as CandidateEmail_b7b79fdd297606f642a581967f294241 } from '@/payload/components/CandidateEmail'
 import { EncolheImagem as EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec } from '@/payload/components/EncolheImagem'
 import { DescribeImage as DescribeImage_78bdbf6d668ef16c37b0cd541748f10c } from '@/payload/components/DescribeImage'
@@ -94,6 +95,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/payload/components/LerCV#LerCV": LerCV_37586454364dce41f3253d2b9fc6c8bf,
   "@/payload/components/PedirConfirmacao#PedirConfirmacao": PedirConfirmacao_79febf4e97aa03db1a20e9d24fb92e5c,
+  "@/payload/components/PassarAPrestador#PassarAPrestador": PassarAPrestador_ecd2f0bdca54617d17b0cef11d224b4c,
   "@/payload/components/CandidateEmail#CandidateEmail": CandidateEmail_b7b79fdd297606f642a581967f294241,
   "@/payload/components/EncolheImagem#EncolheImagem": EncolheImagem_d98fa09e6d7dc6b03aad6bb5dce092ec,
   "@/payload/components/DescribeImage#DescribeImage": DescribeImage_78bdbf6d668ef16c37b0cd541748f10c,

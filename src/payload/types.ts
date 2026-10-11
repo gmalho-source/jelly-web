@@ -199,6 +199,7 @@ export interface Prestadore {
   pool?: ('design' | 'development' | 'marketing' | 'multimedia' | 'video') | null;
   tipo?: ('singular' | 'empresa') | null;
   mondayId?: string | null;
+  candidatura?: (number | null) | Application;
   /**
    * A pessoa da casa que acompanha este prestador.
    */
@@ -225,6 +226,520 @@ export interface Prestadore {
   };
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "applications".
+ */
+export interface Application {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  country?: string | null;
+  portfolio?: string | null;
+  linkedin?: string | null;
+  /**
+   * Vazio quer dizer candidatura espontânea.
+   */
+  job?: (number | null) | Job;
+  function?: (number | null) | JobFunction;
+  /**
+   * Quem se candidata espontaneamente pode marcar mais do que uma área.
+   */
+  department?: (number | Department)[] | null;
+  /**
+   * Uso interno, para saudações («Caro», «Cara»). Não se pergunta no formulário de candidatura — vem de quem escreve, ou do histórico.
+   */
+  gender?: ('feminino' | 'masculino' | 'outro' | 'nao-diz') | null;
+  experienceYears?: ('nenhuma' | 'menos-de-um' | 'um-dois' | 'tres-cinco' | 'mais-de-cinco') | null;
+  contractWanted?: ('contrato' | 'estagio' | 'freelancer') | null;
+  cv?: (number | null) | Document;
+  letter?: (number | null) | Document;
+  /**
+   * Escrita por um modelo a partir do currículo, não pela pessoa: fica aqui, ao lado do ficheiro de onde saiu, e não se confunde com as notas de quem entrevista. Serve para ler a ficha de relance — o que conta é o CV.
+   */
+  cvReading?: string | null;
+  /**
+   * Consentimento separado do da candidatura, como tem de ser.
+   */
+  newsletterOptIn?: boolean | null;
+  /**
+   * As perguntas do formulário, como foram feitas, e o que a pessoa escreveu.
+   */
+  answers?:
+    | {
+        question?: string | null;
+        answer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Mudar o estado prepara o email para o candidato. Nada sai sem alguém carregar em enviar.
+   */
+  status?: ('por_confirmar' | 'nova' | 'em_avaliacao' | 'entrevista' | 'aprovado' | 'contratado' | 'rejeitado') | null;
+  evaluations?:
+    | {
+        interviewer?: (number | null) | User;
+        date?: string | null;
+        /**
+         * Percebeu o outro lado — do cliente, do colega. 3 reconhece que existe; 5 descreve o que o outro sentia e o que fez com isso.
+         */
+        empathy?: ('1' | '2' | '3' | '4' | '5') | null;
+        empathyNote?: string | null;
+        /**
+         * 3 fez o que lhe pediram; 5 viu o problema, avançou sem ninguém pedir, e assume o que correu mal.
+         */
+        attitude?: ('1' | '2' | '3' | '4' | '5') | null;
+        attitudeNote?: string | null;
+        /**
+         * 3 responde ao que foi perguntado; 5 devolve o que ouviu por outras palavras e pergunta o que falta.
+         */
+        listening?: ('1' | '2' | '3' | '4' | '5') | null;
+        listeningNote?: string | null;
+        /**
+         * Conta o que fez, não onde esteve. 3 dá um exemplo próprio; 5 dá exemplos com números e diz o que faria diferente.
+         */
+        experience?: ('1' | '2' | '3' | '4' | '5') | null;
+        experienceNote?: string | null;
+        /**
+         * 3 explica-se; 5 adapta ao interlocutor e torna simples o que é complexo.
+         */
+        communication?: ('1' | '2' | '3' | '4' | '5') | null;
+        communicationNote?: string | null;
+        /**
+         * A competência específica da função. 3 faz o essencial; 5 está à frente do que a vaga pede.
+         */
+        fit?: ('1' | '2' | '3' | '4' | '5') | null;
+        fitNote?: string | null;
+        /**
+         * Separada da nota de propósito: uma média de 4 pode ainda assim ser um não, e ao contrário também.
+         */
+        recommendation?: ('avancar' | 'reservas' | 'nao') | null;
+        notes?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Média ponderada, de 1 a 5.
+   */
+  rating?: number | null;
+  /**
+   * Diferença entre a ficha mais alta e a mais baixa. Acima de 1,5 vale mais conversar do que somar.
+   */
+  spread?: number | null;
+  /**
+   * Porque é que se decidiu assim. Fica no processo.
+   */
+  decisionNote?: string | null;
+  /**
+   * O registo do Gravity Forms de onde esta candidatura veio. É o que impede importar duas vezes.
+   */
+  legacyId?: string | null;
+  consentAt?: string | null;
+  source?: string | null;
+  /**
+   * Doze meses a contar da candidatura, e um trabalho diário apaga o que passou desta data. Editável de propósito: se houver razão para guardar mais tempo, quem decide é uma pessoa — e a razão escreve-se na nota da decisão.
+   */
+  retentionUntil?: string | null;
+  /**
+   * Quando saiu o pedido para o candidato confirmar os dados. O link vale catorze dias.
+   */
+  confirmSentAt?: string | null;
+  /**
+   * Quando o candidato confirmou. É esta confirmação que traz o consentimento.
+   */
+  confirmedAt?: string | null;
+  confirmTokenHash?: string | null;
+  /**
+   * Quando a candidatura entrou por reenvio: quem reenviou, quando, e o que o email dizia. Fica como estava — é o que permite perceber de onde veio isto, meses depois.
+   */
+  sourceEmail?: string | null;
+  emails?:
+    | {
+        kind?: string | null;
+        sentAt?: string | null;
+        sentBy?: (number | null) | User;
+        to?: string | null;
+        subject?: string | null;
+        body?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "jobs".
+ */
+export interface Job {
+  id: number;
+  titlePt: string;
+  titleEn?: string | null;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  /**
+   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
+   */
+  slugEn?: string | null;
+  /**
+   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
+   */
+  oldSlugs?: string[] | null;
+  /**
+   * De onde vem o departamento, e por onde as candidaturas se agrupam.
+   */
+  function: number | JobFunction;
+  status?: ('rascunho' | 'aberta' | 'fechada') | null;
+  contract?: ('contrato' | 'estagio' | 'freelancer') | null;
+  regime?: ('presencial' | 'hibrido' | 'remoto') | null;
+  location?: string | null;
+  seniority?: ('junior' | 'intermedio' | 'senior') | null;
+  /**
+   * Passada a data, a vaga sai da lista sozinha. Deixa vazio para ficar aberta sem prazo.
+   */
+  deadline?: string | null;
+  intro?: {
+    pt?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    en?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  responsibilities?:
+    | {
+        item?: {
+          pt?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          en?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  requirements?:
+    | {
+        item?: {
+          pt?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          en?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  niceToHave?:
+    | {
+        item?: {
+          pt?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          en?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  benefits?:
+    | {
+        item?: {
+          pt?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          en?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  closing?: {
+    pt?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    en?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  /**
+   * As perguntas que só fazem sentido nesta vaga — ferramentas, canais, anos na função, valor/hora. Sem nada aqui, o formulário fica só com o essencial e o CV.
+   */
+  questions?:
+    | {
+        type: 'escolha' | 'varias' | 'curto' | 'longo' | 'numero';
+        required?: boolean | null;
+        label?: {
+          pt?: string | null;
+          en?: string | null;
+        };
+        /**
+         * Uma linha por opção. Para deixar escrever à parte, acrescenta uma opção «Outra».
+         */
+        options?:
+          | {
+              value?: {
+                pt?: string | null;
+                en?: string | null;
+              };
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  legacyPath?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * A tabela de funções. A vaga escolhe uma daqui, e o título dela pode ser escrito à medida.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "job-functions".
+ */
+export interface JobFunction {
+  id: number;
+  namePt: string;
+  nameEn?: string | null;
+  department: number | Department;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "departments".
+ */
+export interface Department {
+  id: number;
+  namePt: string;
+  nameEn?: string | null;
+  /**
+   * Entra no URL. Mudar isto parte links que já existem.
+   */
+  slug: string;
+  order?: number | null;
+  /**
+   * Quanto conta cada dimensão neste departamento, em pontos. A soma não tem de dar 100 — o cálculo normaliza. Num comercial ouvir pesa mais do que numa função técnica; num developer é o contrário.
+   */
+  weights?: {
+    empathy?: number | null;
+    attitude?: number | null;
+    listening?: number | null;
+    experience?: number | null;
+    communication?: number | null;
+    fit?: number | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "documents".
+ */
+export interface Document {
+  id: number;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  /**
+   * Administração vê tudo. Recrutamento é o único perfil que vê as candidaturas.
+   */
+  roles?: ('admin' | 'editorial' | 'recrutamento')[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * Documentos para assinar. O NDA dos prestadores sai preenchido com a ficha; qualquer outro documento é um PDF que se carrega. Quem assina recebe uma ligação por email e confirma com um código.
@@ -1267,520 +1782,6 @@ export interface CarePlan {
   createdAt: string;
 }
 /**
- * As áreas de atuação da agência. É por aqui que as candidaturas se contam.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "departments".
- */
-export interface Department {
-  id: number;
-  namePt: string;
-  nameEn?: string | null;
-  /**
-   * Entra no URL. Mudar isto parte links que já existem.
-   */
-  slug: string;
-  order?: number | null;
-  /**
-   * Quanto conta cada dimensão neste departamento, em pontos. A soma não tem de dar 100 — o cálculo normaliza. Num comercial ouvir pesa mais do que numa função técnica; num developer é o contrário.
-   */
-  weights?: {
-    empathy?: number | null;
-    attitude?: number | null;
-    listening?: number | null;
-    experience?: number | null;
-    communication?: number | null;
-    fit?: number | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * A tabela de funções. A vaga escolhe uma daqui, e o título dela pode ser escrito à medida.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "job-functions".
- */
-export interface JobFunction {
-  id: number;
-  namePt: string;
-  nameEn?: string | null;
-  department: number | Department;
-  /**
-   * Entra no URL. Mudar isto parte links que já existem.
-   */
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "jobs".
- */
-export interface Job {
-  id: number;
-  titlePt: string;
-  titleEn?: string | null;
-  /**
-   * Entra no URL. Mudar isto parte links que já existem.
-   */
-  slug: string;
-  /**
-   * Entra no endereço em inglês (/en/…). Vazio, o inglês usa o slug português.
-   */
-  slugEn?: string | null;
-  /**
-   * Guardados sozinhos quando o slug muda. Quem chegar por um deles é reencaminhado para o atual.
-   */
-  oldSlugs?: string[] | null;
-  /**
-   * De onde vem o departamento, e por onde as candidaturas se agrupam.
-   */
-  function: number | JobFunction;
-  status?: ('rascunho' | 'aberta' | 'fechada') | null;
-  contract?: ('contrato' | 'estagio' | 'freelancer') | null;
-  regime?: ('presencial' | 'hibrido' | 'remoto') | null;
-  location?: string | null;
-  seniority?: ('junior' | 'intermedio' | 'senior') | null;
-  /**
-   * Passada a data, a vaga sai da lista sozinha. Deixa vazio para ficar aberta sem prazo.
-   */
-  deadline?: string | null;
-  intro?: {
-    pt?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    en?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-  };
-  responsibilities?:
-    | {
-        item?: {
-          pt?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          en?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  requirements?:
-    | {
-        item?: {
-          pt?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          en?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  niceToHave?:
-    | {
-        item?: {
-          pt?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          en?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  benefits?:
-    | {
-        item?: {
-          pt?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          en?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  closing?: {
-    pt?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    en?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-  };
-  /**
-   * As perguntas que só fazem sentido nesta vaga — ferramentas, canais, anos na função, valor/hora. Sem nada aqui, o formulário fica só com o essencial e o CV.
-   */
-  questions?:
-    | {
-        type: 'escolha' | 'varias' | 'curto' | 'longo' | 'numero';
-        required?: boolean | null;
-        label?: {
-          pt?: string | null;
-          en?: string | null;
-        };
-        /**
-         * Uma linha por opção. Para deixar escrever à parte, acrescenta uma opção «Outra».
-         */
-        options?:
-          | {
-              value?: {
-                pt?: string | null;
-                en?: string | null;
-              };
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  legacyPath?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "applications".
- */
-export interface Application {
-  id: number;
-  name: string;
-  email: string;
-  phone?: string | null;
-  city?: string | null;
-  country?: string | null;
-  portfolio?: string | null;
-  linkedin?: string | null;
-  /**
-   * Vazio quer dizer candidatura espontânea.
-   */
-  job?: (number | null) | Job;
-  function?: (number | null) | JobFunction;
-  /**
-   * Quem se candidata espontaneamente pode marcar mais do que uma área.
-   */
-  department?: (number | Department)[] | null;
-  /**
-   * Uso interno, para saudações («Caro», «Cara»). Não se pergunta no formulário de candidatura — vem de quem escreve, ou do histórico.
-   */
-  gender?: ('feminino' | 'masculino' | 'outro' | 'nao-diz') | null;
-  experienceYears?: ('nenhuma' | 'menos-de-um' | 'um-dois' | 'tres-cinco' | 'mais-de-cinco') | null;
-  contractWanted?: ('contrato' | 'estagio' | 'freelancer') | null;
-  cv?: (number | null) | Document;
-  letter?: (number | null) | Document;
-  /**
-   * Escrita por um modelo a partir do currículo, não pela pessoa: fica aqui, ao lado do ficheiro de onde saiu, e não se confunde com as notas de quem entrevista. Serve para ler a ficha de relance — o que conta é o CV.
-   */
-  cvReading?: string | null;
-  /**
-   * Consentimento separado do da candidatura, como tem de ser.
-   */
-  newsletterOptIn?: boolean | null;
-  /**
-   * As perguntas do formulário, como foram feitas, e o que a pessoa escreveu.
-   */
-  answers?:
-    | {
-        question?: string | null;
-        answer?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Mudar o estado prepara o email para o candidato. Nada sai sem alguém carregar em enviar.
-   */
-  status?: ('por_confirmar' | 'nova' | 'em_avaliacao' | 'entrevista' | 'aprovado' | 'rejeitado') | null;
-  evaluations?:
-    | {
-        interviewer?: (number | null) | User;
-        date?: string | null;
-        /**
-         * Percebeu o outro lado — do cliente, do colega. 3 reconhece que existe; 5 descreve o que o outro sentia e o que fez com isso.
-         */
-        empathy?: ('1' | '2' | '3' | '4' | '5') | null;
-        empathyNote?: string | null;
-        /**
-         * 3 fez o que lhe pediram; 5 viu o problema, avançou sem ninguém pedir, e assume o que correu mal.
-         */
-        attitude?: ('1' | '2' | '3' | '4' | '5') | null;
-        attitudeNote?: string | null;
-        /**
-         * 3 responde ao que foi perguntado; 5 devolve o que ouviu por outras palavras e pergunta o que falta.
-         */
-        listening?: ('1' | '2' | '3' | '4' | '5') | null;
-        listeningNote?: string | null;
-        /**
-         * Conta o que fez, não onde esteve. 3 dá um exemplo próprio; 5 dá exemplos com números e diz o que faria diferente.
-         */
-        experience?: ('1' | '2' | '3' | '4' | '5') | null;
-        experienceNote?: string | null;
-        /**
-         * 3 explica-se; 5 adapta ao interlocutor e torna simples o que é complexo.
-         */
-        communication?: ('1' | '2' | '3' | '4' | '5') | null;
-        communicationNote?: string | null;
-        /**
-         * A competência específica da função. 3 faz o essencial; 5 está à frente do que a vaga pede.
-         */
-        fit?: ('1' | '2' | '3' | '4' | '5') | null;
-        fitNote?: string | null;
-        /**
-         * Separada da nota de propósito: uma média de 4 pode ainda assim ser um não, e ao contrário também.
-         */
-        recommendation?: ('avancar' | 'reservas' | 'nao') | null;
-        notes?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Média ponderada, de 1 a 5.
-   */
-  rating?: number | null;
-  /**
-   * Diferença entre a ficha mais alta e a mais baixa. Acima de 1,5 vale mais conversar do que somar.
-   */
-  spread?: number | null;
-  /**
-   * Porque é que se decidiu assim. Fica no processo.
-   */
-  decisionNote?: string | null;
-  /**
-   * O registo do Gravity Forms de onde esta candidatura veio. É o que impede importar duas vezes.
-   */
-  legacyId?: string | null;
-  consentAt?: string | null;
-  source?: string | null;
-  /**
-   * Doze meses a contar da candidatura, e um trabalho diário apaga o que passou desta data. Editável de propósito: se houver razão para guardar mais tempo, quem decide é uma pessoa — e a razão escreve-se na nota da decisão.
-   */
-  retentionUntil?: string | null;
-  /**
-   * Quando saiu o pedido para o candidato confirmar os dados. O link vale catorze dias.
-   */
-  confirmSentAt?: string | null;
-  /**
-   * Quando o candidato confirmou. É esta confirmação que traz o consentimento.
-   */
-  confirmedAt?: string | null;
-  confirmTokenHash?: string | null;
-  /**
-   * Quando a candidatura entrou por reenvio: quem reenviou, quando, e o que o email dizia. Fica como estava — é o que permite perceber de onde veio isto, meses depois.
-   */
-  sourceEmail?: string | null;
-  emails?:
-    | {
-        kind?: string | null;
-        sentAt?: string | null;
-        sentBy?: (number | null) | User;
-        to?: string | null;
-        subject?: string | null;
-        body?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "documents".
- */
-export interface Document {
-  id: number;
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  /**
-   * Administração vê tudo. Recrutamento é o único perfil que vê as candidaturas.
-   */
-  roles?: ('admin' | 'editorial' | 'recrutamento')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
  * Ficheiros que o site oferece para descarregar, no Newsroom. Vão direito ao armazenamento, sem o limite de 4,5 MB. Para trocar um, carrega o novo com o mesmo «Onde aparece».
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1998,6 +1999,7 @@ export interface PrestadoresSelect<T extends boolean = true> {
   pool?: T;
   tipo?: T;
   mondayId?: T;
+  candidatura?: T;
   emailNotificacao?: T;
   rateHora?: T;
   nif?: T;

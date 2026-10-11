@@ -20,7 +20,7 @@ export function CandidateEmail() {
   const [rascunho, setRascunho] = useState<Rascunho | null>(null);
   const [ocupado, setOcupado] = useState(false);
 
-  const semEmail = ["nova"].includes(estado.value ?? "nova");
+  const semEmail = ["nova", "contratado"].includes(estado.value ?? "nova");
 
   if (!id) {
     return (
@@ -72,7 +72,9 @@ export function CandidateEmail() {
   if (semEmail) {
     return (
       <p style={{ color: "var(--theme-elevation-500)", fontSize: "0.8rem", margin: "0.4rem 0 0" }}>
-        Uma candidatura nova não gera email. Muda o estado e aparece aqui o texto a enviar.
+        {estado.value === "contratado"
+          ? "Contratado não gera email: a conversa já aconteceu. A ficha de prestador está ligada no topo da candidatura."
+          : "Uma candidatura nova não gera email. Muda o estado e aparece aqui o texto a enviar."}
       </p>
     );
   }

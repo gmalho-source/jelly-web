@@ -2,6 +2,7 @@ import type { Access, CollectionConfig } from "payload";
 import { locale, localeRico, oldSlugsField, slugEnField, slugField } from "../fields";
 import { candidateEmailDraft, sendCandidateEmail } from "../endpoints/candidate-email";
 import { draftJob } from "../endpoints/draft-job";
+import { passarAPrestador } from "../endpoints/passar-a-prestador";
 import { readCv } from "../endpoints/read-cv";
 import { requestConfirmation } from "../endpoints/request-confirmation";
 import { scoreApplication, setRetention } from "../hooks/rating";
@@ -322,6 +323,8 @@ export const Applications: CollectionConfig = {
     { path: "/ler-cv", method: "post", handler: readCv },
     // O pedido de confirmação ao candidato: a terceira via, pedida à mão.
     { path: "/:id/confirmacao", method: "post", handler: requestConfirmation },
+    // A candidatura que deu contratação passa a ficha de prestador.
+    { path: "/:id/prestador", method: "post", handler: passarAPrestador },
   ],
   access: {
     read: recruiterOnly,
@@ -355,6 +358,12 @@ export const Applications: CollectionConfig = {
               name: "pedirConfirmacao",
               type: "ui",
               admin: { components: { Field: "@/payload/components/PedirConfirmacao#PedirConfirmacao" } },
+            },
+            {
+              // «Passar a prestador», ou a ligação à ficha quando já passou.
+              name: "passarAPrestador",
+              type: "ui",
+              admin: { components: { Field: "@/payload/components/PassarAPrestador#PassarAPrestador" } },
             },
             {
               type: "row",
@@ -496,6 +505,9 @@ export const Applications: CollectionConfig = {
                 { label: "Em avaliação", value: "em_avaliacao" },
                 { label: "Entrevista", value: "entrevista" },
                 { label: "Aprovado", value: "aprovado" },
+                // Posto pelo botão «Passar a prestador», que cria a ficha em
+                // Faturação. Não tem email: quem foi contratado já sabe.
+                { label: "Contratado", value: "contratado" },
                 { label: "Rejeitado", value: "rejeitado" },
               ],
               admin: {
