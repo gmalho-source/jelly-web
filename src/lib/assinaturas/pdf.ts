@@ -1,4 +1,4 @@
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
+import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFImage, type PDFPage } from "pdf-lib";
 
 /**
  * Os PDFs das assinaturas: o documento gerado a partir de um modelo (o NDA) e a
@@ -152,9 +152,30 @@ export type Certificado = {
   referencia: string;
   emitente: string;
   documento: LinhaDeCertificado[];
-  signatarios: { cabeca: string; linhas: LinhaDeCertificado[] }[];
+  /** `imagem`: a assinatura desenhada, para quem a tem (a Jelly). */
+  signatarios: { cabeca: string; linhas: LinhaDeCertificado[]; imagem?: Uint8Array }[];
   nota: string;
+  /** A mesma imagem, aposta também na última página do documento. */
+  naUltimaPagina?: Uint8Array;
+  /** Acrescenta-se à nota quando a imagem foi mesmo aposta na última página. */
+  notaDaUltimaPagina?: string;
 };
+
+/**
+ * A assinatura da Jelly no canto inferior direito da última página, onde se
+ * assina um papel. Fica por cima do que lá estiver: num PDF carregado não se
+ * sabe se o canto está livre, e é por isso que o certificado também a leva.
+ * Numa página rodada não se põe — sairia de lado — e fica só no certificado.
+ */
+function apoeNaUltimaPagina(doc: PDFDocument, imagem: PDFImage): boolean {
+  const pagina = doc.getPage(doc.getPageCount() - 1);
+  if (pagina.getRotation().angle % 360 !== 0) return false;
+  const caixa = pagina.getCropBox();
+  const largura = Math.min(170, caixa.width * 0.3);
+  const altura = (largura * imagem.height) / imagem.width;
+  pagina.drawImage(imagem, { x: caixa.x + caixa.width - 48 - largura, y: caixa.y + 50, width: largura, height: altura });
+  return true;
+}
 
 /**
  * Junta ao fim do documento original a página (ou páginas) de certificado.
@@ -164,6 +185,9 @@ export type Certificado = {
 export async function juntaCertificado(original: Uint8Array, c: Certificado) {
   const doc = await PDFDocument.load(original, { updateMetadata: false });
   const desde = doc.getPageCount();
+  const imagens = new Map<Uint8Array, PDFImage>();
+  const embebe = async (png: Uint8Array) => imagens.get(png) ?? imagens.set(png, await doc.embedPng(png)).get(png)!;
+  const naUltima = c.naUltimaPagina ? apoeNaUltimaPagina(doc, await embebe(c.naUltimaPagina)) : false;
   const e: Escritor = {
     doc,
     pagina: undefined as unknown as PDFPage,
@@ -201,12 +225,20 @@ export async function juntaCertificado(original: Uint8Array, c: Certificado) {
     escreve(e, s.cabeca, { tamanho: 10.5, fonte: e.negrito });
     e.y -= 2;
     tabela(s.linhas);
+    if (s.imagem) {
+      const imagem = await embebe(s.imagem);
+      const altura = (150 * imagem.height) / imagem.width;
+      if (e.y - altura - 8 < MARGEM.base) novaPagina(e);
+      e.pagina.drawText("Assinatura", { x: MARGEM.x, y: e.y - 9, size: 8.5, font: e.regular, color: SUAVE });
+      e.pagina.drawImage(imagem, { x: MARGEM.x + 150, y: e.y - altura - 2, width: 150, height: altura });
+      e.y -= altura + 8;
+    }
   }
   e.y -= 12;
-  escreve(e, c.nota, { tamanho: 8, cor: SUAVE });
+  escreve(e, naUltima && c.notaDaUltimaPagina ? `${c.nota} ${c.notaDaUltimaPagina}` : c.nota, { tamanho: 8, cor: SUAVE });
 
   numera(doc, e.regular, c.referencia, desde);
-  return doc.save();
+  return { bytes: await doc.save(), naUltimaPagina: naUltima };
 }
 
 /** Quantas páginas tem um PDF; falha se não for um PDF que se consiga abrir. */

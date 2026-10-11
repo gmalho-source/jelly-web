@@ -1,6 +1,6 @@
 import type { Access, CollectionBeforeChangeHook, CollectionConfig } from "payload";
 import { temPerfil, type ComPerfis } from "./recruitment";
-import { enviarAssinatura, novoParaPrestador } from "../endpoints/assinaturas";
+import { enviarAssinatura, imagemJelly, novoParaPrestador } from "../endpoints/assinaturas";
 
 /**
  * Assinatura digital de documentos: NDA, propostas, contratos.
@@ -143,6 +143,7 @@ export const Assinaturas: CollectionConfig = {
   endpoints: [
     { path: "/:id/enviar", method: "post", handler: enviarAssinatura },
     { path: "/para-prestador/:prestador", method: "post", handler: novoParaPrestador },
+    { path: "/imagem-jelly", method: "get", handler: imagemJelly },
   ],
   fields: [
     {

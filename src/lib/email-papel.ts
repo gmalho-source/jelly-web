@@ -21,7 +21,7 @@ import { SITE_URL } from "@/lib/seo";
 export const CASA = {
   nome: "Jelly · Digital Agency",
   /** O nome que está na certidão, para a identificação legal. */
-  legal: "Jelly - Digital Agency & AI, Lda.",
+  legal: "Jelly - Digital Agency, Lda.",
   vat: "PT509686605",
   rua: "Rua Dom João V, 29C",
   local: "1250-089 Lisboa · Portugal",

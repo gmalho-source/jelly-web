@@ -72,7 +72,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: "Jelly",
     alternateName: "Jelly Digital Agency",
-    legalName: "Jelly - Digital Agency & AI, Lda.",
+    legalName: "Jelly - Digital Agency, Lda.",
     vatID: "PT509686605",
     url: SITE_URL,
     slogan: "be the change",

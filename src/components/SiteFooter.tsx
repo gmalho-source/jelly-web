@@ -133,7 +133,7 @@ export async function SiteFooter() {
             lê — quem a procura sabe onde a encontrar. */}
         <div className="col-span-2 mt-6 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 text-xs text-fg-soft lg:col-span-4">
           <span className="leading-relaxed">
-            Jelly - Digital Agency &amp; AI, Lda. · VAT PT509686605
+            Jelly - Digital Agency, Lda. · VAT PT509686605
             <br />
             Rua Dom João V, 29C · 1250-089 Lisboa · Portugal · Jelly 2010—2026
           </span>

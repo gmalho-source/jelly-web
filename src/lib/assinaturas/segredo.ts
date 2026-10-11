@@ -63,3 +63,16 @@ export function codigoCerto(codigo: string, signatario: string, guardado: string
 export function sha256(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
 }
+
+/**
+ * Onde está a imagem da assinatura da Jelly (o carimbo com a rubrica) no Blob.
+ *
+ * O repositório é público, e o armazenamento também: um ficheiro sem sessão
+ * pelo meio abre-se por quem souber o nome. Por isso o nome sai do segredo, e
+ * nem o nome nem a imagem estão no código. Quem não tem o PAYLOAD_SECRET não o
+ * adivinha; quem o tem já manda no painel. Se o segredo mudar, o nome muda e a
+ * imagem tem de voltar a ser carregada (scripts/assinatura-imagem.mjs).
+ */
+export function nomeDaImagemJelly(): string {
+  return `assinaturas-privado/jelly-${Buffer.from(chave("imagem-jelly")).toString("hex").slice(0, 40)}.png`;
+}

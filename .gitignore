@@ -35,3 +35,7 @@ content-import/payload-media.json
 
 # Os PDFs das assinaturas, quando se testa sem Blob: são documentos, não código.
 /assinaturas-ficheiros
+
+# A imagem da assinatura da Jelly, para testar sem Blob. Nunca no repositório:
+# o repositório é público, e com ela qualquer um carimbava em nome da casa.
+/privado

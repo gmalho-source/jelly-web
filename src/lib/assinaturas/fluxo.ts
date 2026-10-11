@@ -5,6 +5,7 @@ import { AVISOS, SIGNATARIO_JELLY } from "@/payload/collections/assinaturas";
 import { contaTentativa, ficaComOFecho, gravaLinha, largaOFecho, marcaVisto, porAssinar, regista } from "./base";
 import { guardarPdf, lerPdf } from "./ficheiros";
 import { blocosDoNda, faltaNaFicha } from "./nda";
+import { imagemDaJelly } from "./imagem";
 import { geraDocumento, juntaCertificado, paginasDe } from "./pdf";
 import { assinaLigacao, codigoCerto, lerLigacao, novoCodigo, resumoDoCodigo, sha256 } from "./segredo";
 
@@ -308,8 +309,12 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
   const bytes = await lerPdf(payload, original);
   const paginas = await paginasDe(bytes);
   const outraParte = quemEaOutraParte(pedido);
+  // A imagem da assinatura da Jelly só entra se a Jelly assinou mesmo — com a
+  // ligação dela e o código que lhe chegou. Nunca por defeito.
+  const jellyAssinou = (pedido.signatarios ?? []).some((l) => l.papel === "jelly" && l.estado === "assinado");
+  const imagem = jellyAssinou ? await imagemDaJelly() : null;
 
-  const final = await juntaCertificado(bytes, {
+  const { bytes: final, naUltimaPagina } = await juntaCertificado(bytes, {
     titulo: pedido.titulo,
     referencia: referencia(pedido, pedido.hashOriginal),
     emitente: CASA.legal,
@@ -323,6 +328,7 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
       { rotulo: "Assinado por todos", valor: quando(momento) },
     ],
     signatarios: (pedido.signatarios ?? []).map((l) => ({
+      ...(l.papel === "jelly" && l.estado === "assinado" && imagem ? { imagem } : {}),
       cabeca: `${l.nomeEscrito || l.nome}${l.papel === "jelly" ? ` — pela ${CASA.legal}` : outraParte && outraParte !== l.nome ? ` — por ${outraParte}` : ""}`,
       linhas: [
         { rotulo: "Email (verificado)", valor: l.email },
@@ -337,6 +343,9 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     })),
     nota:
       "Assinatura eletrónica simples, nos termos do artigo 25.º do Regulamento (UE) n.º 910/2014 (eIDAS). Cada signatário abriu o documento através de uma ligação pessoal enviada para o seu endereço de email, confirmou esse endereço com um código de uso único enviado para ele, escreveu o seu nome e declarou aceitar o documento acima identificado. A impressão digital SHA-256 identifica o documento enviado: qualquer alteração ao seu conteúdo produz uma impressão diferente. As páginas anteriores a este certificado são esse documento, sem alterações.",
+    naUltimaPagina: imagem ?? undefined,
+    notaDaUltimaPagina:
+      "Exceção: na última página do documento foi aposta a imagem da assinatura da Jelly, depois de o seu representante assinar; o resto da página e as demais páginas ficaram como foram enviados.",
   });
 
   const hashFinal = sha256(final);
@@ -349,6 +358,14 @@ async function fecha(payload: Payload, pedido: Pedido, momento: string) {
     context: { assinaturasInterno: true },
   });
   await regista(payload, pedido.id, "Concluído", `SHA-256 do assinado ${hashFinal}`);
+  if (jellyAssinou) {
+    await regista(
+      payload,
+      pedido.id,
+      imagem ? (naUltimaPagina ? "Assinatura da Jelly aposta na última página e no certificado" : "Assinatura da Jelly aposta no certificado (última página rodada)") : "Sem imagem da assinatura da Jelly",
+      null,
+    );
+  }
 
   // O NDA fica marcado na ficha do prestador, com a data da assinatura.
   const prestadorId = idDe(pedido.prestador);

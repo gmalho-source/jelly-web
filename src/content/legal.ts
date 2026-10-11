@@ -127,7 +127,7 @@ export const legalPages: LegalPage[] = [
         { type: "h2", text: "Este site" },
         {
           type: "p",
-          text: "Este site é editado pela JELLY – Digital Agency, Unip. Lda., com sede em Sintra, Portugal. Os textos, as imagens e o código são nossos ou de quem nos autorizou a usá-los; as marcas dos clientes pertencem aos clientes e aparecem aqui como referência de trabalho feito.",
+          text: "Este site é editado pela Jelly - Digital Agency, Lda., com sede em Sintra, Portugal. Os textos, as imagens e o código são nossos ou de quem nos autorizou a usá-los; as marcas dos clientes pertencem aos clientes e aparecem aqui como referência de trabalho feito.",
         },
         { type: "h2", text: "O que aqui está escrito" },
         {
@@ -154,7 +154,7 @@ export const legalPages: LegalPage[] = [
         { type: "h2", text: "This site" },
         {
           type: "p",
-          text: "This site is published by JELLY – Digital Agency, Unip. Lda., based in Sintra, Portugal. The text, images and code are ours or used with permission; client trademarks belong to the clients and appear here as a record of work done.",
+          text: "This site is published by Jelly - Digital Agency, Lda., based in Sintra, Portugal. The text, images and code are ours or used with permission; client trademarks belong to the clients and appear here as a record of work done.",
         },
         { type: "h2", text: "What is written here" },
         {

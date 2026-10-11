@@ -7,6 +7,9 @@ import { temPerfil, type ComPerfis } from "../collections/recruitment";
  * POST /api/assinaturas/:id/enviar
  *   Envia (ou reenvia a quem falta) as ligações de assinatura.
  *
+ * GET /api/assinaturas/imagem-jelly
+ *   Diz se a imagem da assinatura da Jelly está carregada. Só sim ou não.
+ *
  * POST /api/assinaturas/para-prestador/:prestador
  *   Cria um pedido em rascunho para o prestador — o NDA, com ele já como
  *   signatário — e devolve o id, para o painel abrir a ficha do pedido.
@@ -69,4 +72,11 @@ export const novoParaPrestador: PayloadHandler = async (req) => {
     } as never,
   });
   return Response.json({ id: criado.id });
+};
+
+export const imagemJelly: PayloadHandler = async (req) => {
+  const fechada = porta(req);
+  if (fechada) return fechada;
+  const { haImagemDaJelly } = await import("@/lib/assinaturas/imagem");
+  return Response.json({ existe: await haImagemDaJelly() });
 };

@@ -2,7 +2,7 @@
 
 import { toast, useDocumentInfo, useFormFields, useFormModified } from "@payloadcms/ui";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { leResposta } from "./resposta";
 
 /**
@@ -19,6 +19,17 @@ export function EnviarAssinatura() {
   const modificado = useFormModified();
   const [ocupado, setOcupado] = useState(false);
   const estado = useFormFields(([campos]) => campos?.estado?.value as string | undefined);
+  const jellyAssina = useFormFields(([campos]) => Boolean(campos?.jellyAssina?.value));
+  // Quando a Jelly assina, a imagem da assinatura entra no documento. Diz-se
+  // antes de enviar se ela lá está — depois do fecho já não se acrescenta.
+  const [imagem, setImagem] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!jellyAssina || imagem !== null) return;
+    fetch("/api/assinaturas/imagem-jelly", { credentials: "include" })
+      .then((resposta) => (resposta.ok ? resposta.json() : { existe: false }))
+      .then((corpo: { existe?: boolean }) => setImagem(Boolean(corpo.existe)))
+      .catch(() => setImagem(false));
+  }, [jellyAssina, imagem]);
 
   if (!id) {
     return <Caixa>Guarda o pedido primeiro. Depois aparece aqui o botão para o enviar.</Caixa>;
@@ -68,6 +79,13 @@ export function EnviarAssinatura() {
             ? "Já foi enviado. Reenviar manda outra vez a ligação a quem ainda não assinou."
             : "O documento congela ao enviar: depois disso já não se troca."}
       </span>
+      {jellyAssina && imagem !== null ? (
+        <span style={{ flexBasis: "100%", color: imagem ? "var(--theme-elevation-500)" : "var(--theme-error-500)" }}>
+          {imagem
+            ? "Quando a Jelly assinar, a imagem da assinatura entra na última página e no certificado."
+            : "Falta carregar a imagem da assinatura da Jelly (scripts/assinatura-imagem.mjs). Sem ela, o documento fecha só com o registo."}
+        </span>
+      ) : null}
     </Caixa>
   );
 }
