@@ -181,10 +181,6 @@ export const tecnologia = {
     eyebrow: { pt: "Trabalho", en: "Work" },
     titulo: { pt: "Plataformas que carregam negócios.", en: "Platforms that carry businesses." },
     todos: { pt: "Ver todos os projetos", en: "See all projects" },
-    /* Quando o serviço no painel não escolher casos, são estes: projetos com
-       narrativa escrita e desenvolvimento na disciplina — uma loja, um
-       personalizador, uma plataforma financeira, uma app e um leilão online. */
-    casos: ["agriloja", "decathlon", "unicambio", "take1-mobile-app", "artbid"],
     /* Os parceiros vêm da parede "parceiros-tecnologia" no painel: uma lista escrita no código
        obriga a um deploy para acrescentar um selo, e um selo de parceiro
        renova-se. O chapéu fica aqui porque é texto da página, não é conteúdo. */

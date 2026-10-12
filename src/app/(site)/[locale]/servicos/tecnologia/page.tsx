@@ -7,7 +7,7 @@ import { FaixaDeAreas } from "@/components/FaixaDeAreas";
 import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
 import { tecnologia } from "@/content/tecnologia";
 import { servicoDeTecnologia } from "@/content/tecnologia-servicos";
-import { getLogoWall, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
+import { getLogoWall, getProjects, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
 
@@ -34,6 +34,9 @@ import { slugFor } from "@/lib/slugs";
 const SLUG = "tecnologia";
 const ROTA = "/servicos/tecnologia/[sub]" as const;
 
+/** Quantos casos no fim da página, quando o painel não os escolhe. */
+const CASOS = 5;
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const service = await getService(SLUG);
@@ -54,8 +57,17 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
   setRequestLocale(locale);
   const t = await getTranslations("services");
   const m = tecnologia;
-  const [service, all, parceiros] = await Promise.all([getService(SLUG), getServices(), getLogoWall("parceiros-tecnologia")]);
-  const casos = await getProjectsBySlugs(service?.caseSlugs?.length ? service.caseSlugs : [...m.trabalho.casos]);
+  const [service, all, parceiros, escritos] = await Promise.all([getService(SLUG), getServices(), getLogoWall("parceiros-tecnologia"), getProjects()]);
+  // Os casos: os que o painel escolher no serviço, se escolher; senão, os
+  // projetos com o caso escrito e desenvolvimento na disciplina, primeiro os
+  // que têm o número validado. Só os escritos, porque é a história que se
+  // mostra aqui — como no Marketing.
+  const casos = service?.caseSlugs?.length
+    ? await getProjectsBySlugs(service.caseSlugs)
+    : escritos
+        .filter((projeto) => /desenvolvimento|website|web\b|e-?commerce|\bapps?\b/i.test(projeto.disciplines.pt))
+        .sort((a, b) => Number(Boolean(b.numbersValidated)) - Number(Boolean(a.numbersValidated)))
+        .slice(0, CASOS);
   const outros = all.filter((item) => item.slug !== SLUG);
 
   const jsonLd = {
@@ -182,7 +194,8 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
                   className="entra group grid grid-cols-[minmax(0,1fr)_76px] items-baseline gap-4 border-b border-line py-4 row-flip hover:pl-3 sm:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_96px]"
                 >
                   <span className="font-display text-xl transition-colors duration-200 group-hover:text-red lg:text-2xl">{project.client}</span>
-                  <span className="hidden text-sm text-fg-soft sm:block">{project.title[locale]}</span>
+                  {/* Sem frase própria, o título é o nome do cliente: não se repete. */}
+                  <span className="hidden text-sm text-fg-soft sm:block">{project.title[locale] !== project.client ? project.title[locale] : ""}</span>
                   {/* O número só vai para o ecrã depois de validado com o cliente. */}
                   <span className="text-right font-display tabular-nums text-red lg:text-lg">{project.numbersValidated ? project.headline.value : ""}</span>
                 </Link>
