@@ -36,7 +36,6 @@
     "applications:import": "tsx scripts/import-applications.mjs",
     "carta:exemplo": "tsx scripts/carta-exemplo.mjs",
     "autores": "tsx scripts/autores.mjs",
-    "equipa": "tsx scripts/equipa.mjs",
     "md:check": "tsx scripts/check-markdown.mjs",
     "docx:check": "tsx scripts/check-docx.mjs",
     "prestadores:import": "tsx scripts/prestadores-import.mjs",

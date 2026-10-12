@@ -155,3 +155,26 @@ export const translateAndSaveBio: PayloadHandler = async (req) => {
     return Response.json({ error: message }, { status: 502 });
   }
 };
+
+/**
+ * Quem tem apresentação em português e não a tem em inglês — o aviso por cima
+ * da lista da equipa, com o botão de traduzir todas. Não pede a chave do
+ * modelo: só conta.
+ *
+ * GET /api/team/por-traduzir
+ */
+export const biosPorTraduzir: PayloadHandler = async (req) => {
+  if (!req.user) return Response.json({ error: "Só para quem tem sessão no painel." }, { status: 401 });
+  if (!podeNoPedido(req, "paginas")) return Response.json({ error: "Sem acesso a este módulo do painel." }, { status: 403 });
+
+  const { docs } = await req.payload.find({ collection: "team", limit: 0, depth: 0 });
+  const semIngles = docs
+    .filter((doc) => {
+      const apresentacao = (doc.bio ?? {}) as { pt?: string | null; en?: string | null };
+      return String(apresentacao.pt ?? "").trim() && !String(apresentacao.en ?? "").trim();
+    })
+    .map((doc) => String(doc.name ?? ""))
+    .sort((um, outro) => um.localeCompare(outro, "pt"));
+
+  return Response.json({ semIngles });
+};

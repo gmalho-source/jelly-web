@@ -806,71 +806,23 @@ As duas faixas de parceiros estavam escritas em `src/content/marketing.ts` e
 ficou no código é o chapéu da faixa, que é texto da página. Acrescentar um
 parceiro é acrescentar um registo em Logos, e não um deploy.
 
-## Passar a equipa para o painel
+## A equipa no painel
 
 As vinte e uma pessoas entraram no CMS só com o nome, e o site ia buscar o resto
 — função, apresentação, LinkedIn e os dois retratos — a `src/content/team.ts`.
-Serve quem lê o site, mas quem abre a ficha no painel encontra um formulário
-vazio e não tem por onde corrigir nada.
+Em outubro de 2026 as fichas foram cheias a partir desse ficheiro, por um botão
+por cima da lista e por um script (`npm run equipa`). Feito isso, os dois
+saíram: o botão contava como «fichas sem conteúdo» as pessoas que se apagavam do
+painel, e carregar nele tê-las-ia criado outra vez.
 
-**Pelo painel**, que é o caminho curto: em **Casa → Equipa**, por cima da lista
-aparece o que dá para fazer de uma vez, e só enquanto houver o que fazer.
+Desde então o painel manda sozinho. O site deixou de completar campo a campo com
+o ficheiro — apagar o LinkedIn de alguém no painel tira-o do site. O ficheiro e
+as cópias em `public/media/equipa` ficam como chão de que o site vive se o CMS
+estiver em baixo, e só para isso.
 
-*«21 fichas sem conteúdo»* → **«Preencher a partir do repositório»** passa para
-o painel a função, a apresentação portuguesa, o LinkedIn e os dois retratos.
-
-*«20 apresentações sem inglês»* → **«Traduzir todas»** traduz e grava as que só
-existem em português, três de cada vez. As vinte demoram cerca de meio minuto.
-
-Carrega-se, o botão diz por onde vai, e no fim a lista refaz-se sozinha. Os
-avisos desaparecem quando não houver nada a fazer: são um andaime, não um móvel.
-
-Chama o servidor uma vez por pessoa e não uma vez por todas. Cada pessoa traz
-dois retratos para descarregar e subir, e quarenta e dois numa só chamada não
-caberiam no tempo que uma função tem para responder; é também o que faz uma falha
-a meio deixar atrás o que já ficou feito, em vez de desfazer tudo. Os retratos
-vêm do próprio site pela rede e não do disco: em produção a pasta `public/` é
-servida pelo CDN e não vai dentro da função, por isso não há lá ficheiro para
-abrir.
-
-**Pela linha de comandos**, que é o mesmo trabalho com as mesmas regras — vivem
-em `src/lib/equipa-fichas.ts`, e é o que garante que os dois caminhos chegam ao
-mesmo resultado. Corre na máquina de quem o corre, não na Vercel: fala com a base
-de dados de produção pela `DATABASE_URL`. No terminal, dentro da pasta do
-repositório:
-
-```bash
-npm install                       # a primeira vez, e só a primeira
-vercel link                       # a primeira vez: liga a pasta ao projeto
-vercel env pull .env.producao.local --environment=production
-set -a; . ./.env.producao.local; set +a   # DATABASE_URL, BLOB_READ_WRITE_TOKEN e o resto, no ambiente
-
-npm run equipa -- --seco          # só diz o que faria
-npm run equipa                    # escreve, e sobe os 42 retratos
-npm run equipa -- --sem-retratos  # só função, apresentação e LinkedIn
-```
-
-O nome tem de acabar em `.local`: é o que o `.gitignore` desta casa apanha
-(`.env*.local`), e o ficheiro tem as chaves todas de produção lá dentro. Fica na
-máquina, e apagá-lo depois de usar é boa ideia.
-
-Uma base de dados que não é a da máquina não leva alterações de esquema: o
-adaptador do Payload sincroniza o esquema por omissão fora de produção, e este
-script corre precisamente na situação em que essa sincronização apontaria à
-produção. Quando a `DATABASE_URL` não é local, o script liga-se com o mesmo
-sinal que o Payload usa nas suas migrações e diz-o na primeira linha —
-`base de dados remota: liga-se sem tocar no esquema`. Vale o mesmo para os
-outros scripts desta pasta: nenhum deve correr contra a produção sem isto.
-
-Não escreve por cima de nada: um campo que já tenha valor no painel fica como
-está, e correr o script duas vezes não tem trabalho na segunda. Os retratos
-entram na biblioteca de imagens pelo nome do ficheiro e são reaproveitados, por
-isso também não duplicam. Precisa da `BLOB_READ_WRITE_TOKEN` para os subir em
-produção; sem ela, corre com `--sem-retratos`.
-
-As cópias em `public/media/equipa` ficam onde estão: são o chão de que o site
-vive se o CMS estiver vazio ou em baixo. E a apresentação inglesa fica de fora de
-propósito — faz-se no painel, com o botão de traduzir, por quem a lê.
+Por cima da lista fica um aviso, e só enquanto houver o que fazer: *«N
+apresentações sem inglês»* → **«Traduzir todas»** traduz e grava as que só
+existem em português, três de cada vez.
 
 A ordem da grelha é do nome, de A a Z, com comparação portuguesa: «Alícia» antes
 de «Ana». Não há campo de ordem — uma ordem à mão numa lista de vinte e uma

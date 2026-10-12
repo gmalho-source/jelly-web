@@ -577,22 +577,21 @@ function deAaZ(pessoas: TeamMember[]) {
 export function fetchTeam(fallback: TeamMember[]) {
   return fromCms(async (payload) => {
     const { docs } = await payload.find({ collection: "team", ...all, depth: 1 });
-    // O painel manda no que tiver, e o ficheiro do repositório preenche o resto
-    // pessoa a pessoa: enquanto os retratos e as apresentações não passarem para
-    // o CMS, uma pessoa criada no painel não aparece sem cara nem texto.
-    const doRepositorio = new Map(fallback.map((pessoa) => [pessoa.name.trim().toLowerCase(), pessoa]));
+    // O painel manda sozinho. Enquanto as fichas estavam só com o nome, o
+    // ficheiro do repositório preenchia o que faltava pessoa a pessoa; as
+    // fichas foram cheias (outubro de 2026), e esse remendo passou a ser um
+    // engano — apagar o LinkedIn no painel não o tirava do site. O ficheiro
+    // fica só como chão, para quando o CMS não responde.
     return deAaZ((docs as unknown as Doc[]).map((raw): TeamMember => {
-      const name = text(raw.name);
-      const base = doRepositorio.get(name.trim().toLowerCase());
       const papel = localized(raw.role);
       const apresentacao = localized(raw.bio);
       return {
-        name,
-        role: papel.pt || papel.en ? papel : base?.role,
-        bio: apresentacao.pt || apresentacao.en ? apresentacao : base?.bio,
-        photo: image(raw.photo as MediaDoc) ?? base?.photo,
-        photoColor: image(raw.photoColor as MediaDoc) ?? base?.photoColor,
-        linkedin: text(raw.linkedin) || base?.linkedin,
+        name: text(raw.name),
+        role: papel.pt || papel.en ? papel : undefined,
+        bio: apresentacao.pt || apresentacao.en ? apresentacao : undefined,
+        photo: image(raw.photo as MediaDoc),
+        photoColor: image(raw.photoColor as MediaDoc),
+        linkedin: text(raw.linkedin) || undefined,
       };
     }));
   }, deAaZ(fallback));

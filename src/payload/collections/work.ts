@@ -7,10 +7,9 @@ import {
   revalidateOnChange,
   revalidateOnDelete,
 } from "../hooks/revalidate";
-import { fillTeamMember, teamPlan } from "../endpoints/fill-team";
 import { translateStory } from "../endpoints/translate-story";
 import { writeProjectSummary } from "../endpoints/write-project-summary";
-import { translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
+import { biosPorTraduzir, translateAndSaveBio, translateBio } from "../endpoints/translate-bio";
 import { kpiField, locale, oldSlugsField, slugEnField, slugField } from "../fields";
 import { BIBLIOTECA, doModulo, escondeDe } from "../acesso";
 
@@ -570,8 +569,8 @@ export const TeamMembers: CollectionConfig = {
     useAsTitle: "name",
     group: "Casa", hidden: escondeDe("paginas"),
     defaultColumns: ["name", "photo"],
-    // O aviso por cima da lista, enquanto houver fichas sem conteúdo. Desaparece
-    // sozinho quando não houver nada a fazer.
+    // O aviso por cima da lista, enquanto houver apresentações sem inglês.
+    // Desaparece sozinho quando não houver nada a fazer.
     components: { beforeListTable: ["@/payload/components/PreencherEquipa#PreencherEquipa"] },
   },
   defaultSort: "name",
@@ -591,10 +590,8 @@ export const TeamMembers: CollectionConfig = {
     // A mesma tradução, mas gravada: é o que o botão de traduzir todas usa,
     // onde não há ficha aberta para receber o texto.
     { path: "/traduzir-e-gravar", method: "post", handler: translateAndSaveBio },
-    // Encher as fichas a partir do ficheiro do repositório, do botão que está
-    // por cima da lista. Uma pessoa por chamada.
-    { path: "/preencher", method: "get", handler: teamPlan },
-    { path: "/preencher", method: "post", handler: fillTeamMember },
+    // O que falta traduzir, para o aviso por cima da lista.
+    { path: "/por-traduzir", method: "get", handler: biosPorTraduzir },
   ],
   fields: [
     { name: "name", label: "Nome", type: "text", required: true },
