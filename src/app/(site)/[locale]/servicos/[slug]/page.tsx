@@ -9,8 +9,25 @@ import { pilaresDoServico } from "@/content/pilares";
 import { getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
+import BrandingPage, { generateMetadata as metadadosDeBranding } from "../branding/page";
+import MarketingPage, { generateMetadata as metadadosDeMarketing } from "../marketing/page";
+import TecnologiaPage, { generateMetadata as metadadosDeTecnologia } from "../tecnologia/page";
 
 type Params = { locale: Locale; slug: string };
+
+/*
+ * Os serviços com página própria. Em português a pasta fixa ganha a esta rota
+ * (`/servicos/tecnologia`), mas em inglês o endereço é o slug inglês
+ * (`/services/technology`), que não tem pasta, e caía aqui — na página genérica
+ * antiga. No Marketing e no Branding o slug é o mesmo nas duas línguas e não se
+ * notava; na Tecnologia, quem lia em inglês via outra página. Pelo slug
+ * português do registo, a página própria serve as duas.
+ */
+const PROPRIAS: Record<string, { pagina: typeof TecnologiaPage; metadados: typeof metadadosDeTecnologia }> = {
+  branding: { pagina: BrandingPage, metadados: metadadosDeBranding },
+  marketing: { pagina: MarketingPage, metadados: metadadosDeMarketing },
+  tecnologia: { pagina: TecnologiaPage, metadados: metadadosDeTecnologia },
+};
 
 export async function generateStaticParams({ params }: { params: { locale: string } }) {
   const locale = params.locale as Locale;
@@ -22,6 +39,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { locale, slug } = await params;
   const service = await getService(slug);
   if (!service) return {};
+  const propria = PROPRIAS[service.slug];
+  if (propria && slugFor(service, locale) === slug) return propria.metadados({ params: Promise.resolve({ locale }) });
   return {
     title: service.name[locale],
     description: service.claim[locale],
@@ -44,6 +63,9 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   if (canonico !== slug) {
     permanentRedirect(getPathname({ href: { pathname: "/servicos/[slug]", params: { slug: canonico } }, locale }));
   }
+
+  const propria = PROPRIAS[service.slug];
+  if (propria) return propria.pagina({ params: Promise.resolve({ locale }) });
 
   const t = await getTranslations("services");
   const [cases, all] = await Promise.all([getProjectsBySlugs(service.caseSlugs), getServices()]);

@@ -3,9 +3,9 @@ import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { FaixaDeAreas } from "@/components/FaixaDeAreas";
 import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
-import { GraficoDeArea, type Grafico } from "@/components/GraficoDeArea";
-import { tecnologia, type AreaDeTecnologia } from "@/content/tecnologia";
+import { tecnologia } from "@/content/tecnologia";
 import { servicoDeTecnologia } from "@/content/tecnologia-servicos";
 import { getLogoWall, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
@@ -15,46 +15,24 @@ import { slugFor } from "@/lib/slugs";
  * A página-mãe de Tecnologia.
  *
  * Uma rota fixa que ganha à dinâmica `[slug]`, como as de Branding e de
- * Marketing, e com a fórmula desta última: o topo em vídeo, o mapa, um capítulo
- * por área com o seu gráfico, o método em vermelho, o trabalho, e uma faixa em
- * tinta para o que vem depois de publicar.
+ * Marketing, e com a fórmula desta última: o topo em vídeo, a faixa das quatro
+ * áreas em quadrados que viram, o trabalho, o método em vermelho, e uma faixa
+ * em tinta para o que vem depois de publicar.
  *
- * Cada capítulo é uma página, e as faixas dentro dele são o que cabe lá — todas
- * levam à mesma página, porque é a lista da área e não uma lista de áreas. Três
- * dessas páginas são construídas em `tecnologia-servicos.ts`; a dos sistemas de
- * IA é a do serviço de Inteligência Artificial, um nível acima.
+ * Cada área é uma página, e o verso do quadrado é o que cabe lá — tudo leva à
+ * mesma página, porque é a lista da área e não uma lista de áreas. Três dessas
+ * páginas são construídas em `tecnologia-servicos.ts`; a dos sistemas de IA é
+ * a do serviço de Inteligência Artificial, um nível acima.
+ *
+ * Houve aqui um mapa em colunas e um capítulo por área, com um gráfico e as
+ * capacidades em faixas. Saíram como no Marketing (outubro de 2026): a faixa
+ * diz o mesmo num ecrã, e o trabalho subiu para antes do método — o quadrado
+ * vermelho dos Websites ficava colado à secção vermelha.
  *
  * As fases e a frase de promessa continuam a vir do serviço no painel.
  */
 const SLUG = "tecnologia";
 const ROTA = "/servicos/tecnologia/[sub]" as const;
-
-/*
- * A cor que varre cada capítulo ao passar o rato: as quatro da homepage, pela
- * mesma ordem que no Marketing. Sobre as claras o texto fica em tinta. As
- * classes vão escritas por inteiro porque o Tailwind lê o código à procura delas.
- */
-const TONS = [
-  { fundo: "bg-red", texto: "hover:text-paper", linha: "group-hover:text-paper/80", seta: "group-hover:text-paper" },
-  { fundo: "bg-lavender", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-  { fundo: "bg-coral", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-  { fundo: "bg-chartreuse", texto: "hover:text-ink", linha: "group-hover:text-ink/70", seta: "group-hover:text-ink" },
-];
-
-/**
- * O desenho de cada área.
- *
- * Ficaram quando as unidades de medida saíram do texto: um gesto ao lado da
- * ideia lê-se sem ser um indicador, e é para isso que lá estão. A IA herdou o
- * desenho é seu: pedidos que chegam, a maior parte a sair resolvida, e os que
- * o agente não sabe responder a subir para uma pessoa.
- */
-const GRAFICOS: Record<AreaDeTecnologia, Grafico> = {
-  web: "conversao",
-  apps: "retencao",
-  dados: "integracao",
-  ia: "agentes",
-};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -164,168 +142,24 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
         </div>
       </header>
 
-      {/* ── O mapa ──────────────────────────────────────────────────────────
-          Quatro colunas, uma área em cada, com o nome e o que cabe lá dentro.
-          Tudo liga à página da área. Não se anima: pode estar no ecrã quando a
-          página abre. */}
-      <section className="surface-paper py-14 lg:py-16" aria-labelledby="mapa">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <h2 id="mapa" className="eyebrow text-red">{m.mapa.eyebrow[locale]}</h2>
-          {/* Em quatro colunas os nomes das áreas não têm todos o mesmo número
-              de linhas — um deles leva três — e sem subgrid a régua por baixo
-              do nome ficava a alturas diferentes, que é o que desmancha uma
-              grelha. As duas linhas são do contentor; cada coluna ocupa-as. */}
-          <div className="mt-5 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-[auto_1fr]">
-            {m.lista.map((s, i) => {
-              const href = destinoDe(s);
-              const cabeca = <span className="eyebrow text-red">{s.nome[locale]}</span>;
-              return (
-                <div
-                  key={s.chave}
-                  className={`flex flex-col border-b border-line py-6 lg:row-span-2 lg:grid lg:grid-rows-subgrid lg:border-b-0 lg:py-7 ${i ? "lg:border-l lg:pl-6" : ""} ${i < 3 ? "lg:pr-6" : ""} ${i % 2 ? "sm:border-l sm:pl-6 lg:border-l" : ""}`}
-                >
-                  {href ? (
-                    <Link href={href} className="group flex flex-col justify-end gap-1.5 border-b border-line pb-4 transition-colors duration-200 hover:text-red">
-                      {cabeca}
-                    </Link>
-                  ) : (
-                    <a href={`#${s.chave}`} className="flex flex-col justify-end gap-1.5 border-b border-line pb-4">
-                      {cabeca}
-                    </a>
-                  )}
-                  <div className="mt-1 flex flex-col">
-                    {s.capacidades.map((c) => {
-                      // Uma capacidade com casa própria leva-lhe; as outras levam à área.
-                      const destino = c.rota ?? href;
-                      const classe = "flex items-baseline gap-3 border-b border-line py-3 last:border-b-0 transition-colors duration-200 hover:text-red group";
-                      const corpo = <span className="font-display text-[clamp(20px,1.7vw,26px)] leading-[1.15]">{c.nome[locale]}</span>;
-                      return destino ? (
-                        <Link key={c.nome.pt} href={destino} className={classe}>
-                          {corpo}
-                          <span aria-hidden="true" className="ms-auto text-red opacity-0 transition-opacity duration-200 group-hover:opacity-100">→</span>
-                        </Link>
-                      ) : (
-                        <span key={c.nome.pt} className={classe}>
-                          {corpo}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Os serviços, um capítulo cada ─────────────────────────────────── */}
-      <section className="surface-paper bg-white py-24 lg:py-28 [--color-line:var(--color-paper-2)]">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
-            <div>
-              <span className="eyebrow text-red">{m.areas.eyebrow[locale]}</span>
-              <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.areas.titulo[locale]}</h2>
-            </div>
-            <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.areas.nota[locale]}</p>
-          </div>
-
-          <div className="mt-10">
-            {m.lista.map((s, ordem) => {
-              const href = destinoDe(s);
-              const tom = TONS[ordem % TONS.length];
-              return (
-                <article key={s.chave} id={s.chave} className="border-t border-line py-16 lg:py-20">
-                  <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-16">
-                    <div className="entra">
-                      <span className="varre block h-0.5 w-[72px] bg-red" />
-                      <span className="eyebrow mt-6 block text-red">{s.nome[locale]}</span>
-                      <h3 className="mt-5 max-w-[24ch] font-display text-[clamp(30px,3.6vw,54px)] leading-[1.02] tracking-[-0.022em]">{s.titulo[locale]}</h3>
-                      <p className="mt-5 max-w-[52ch] text-md text-fg-soft">{s.posicao[locale]}</p>
-                      {href ? (
-                        <Link href={href} className="btn-pill btn-pill-ink mt-7">
-                          {s.nome[locale]} <span aria-hidden="true">→</span>
-                        </Link>
-                      ) : null}
-                    </div>
-                    <figure className="entra-tarde m-0 rounded-[6px] bg-[#1d2126] p-4 text-paper">
-                      <GraficoDeArea tipo={GRAFICOS[s.chave]} />
-                      <figcaption className="mt-3 flex justify-between text-[11.5px] text-paper/55">
-                        <span>{s.legenda[locale]}</span>
-                        <span className="tabular-nums">{s.alcance[locale]}</span>
-                      </figcaption>
-                    </figure>
-                  </div>
-
-                  {/* O que cabe no serviço, em faixas a toda a largura, com a cor
-                      a varrer da esquerda ao passar o rato. Todas levam à página
-                      do serviço: são a lista do que ele inclui. */}
-                  <div className="entra mt-12 border-t border-line">
-                    {s.capacidades.map((c) => {
-                      const destino = c.rota ?? href;
-                      const dentro = (
-                        <span className="relative grid gap-x-8 gap-y-2 px-4 py-6 sm:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_40px] sm:items-center sm:px-6 lg:py-7">
-                          <span className="font-display text-[clamp(24px,2.6vw,38px)] leading-[1.05] tracking-[-0.02em]">{c.nome[locale]}</span>
-                          <span className={`text-[15px] text-fg-soft transition-colors duration-300 ${tom.linha}`}>{c.linha[locale]}</span>
-                          <span aria-hidden="true" className={`hidden text-right text-2xl sm:block ${destino ? `text-red transition-colors duration-300 ${tom.seta}` : "text-fg-soft/40"}`}>
-                            {destino ? "→" : "·"}
-                          </span>
-                        </span>
-                      );
-                      const varredura = (
-                        <span
-                          aria-hidden="true"
-                          className={`absolute inset-0 origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100 ${tom.fundo}`}
-                        />
-                      );
-                      const classe = `relative block overflow-hidden border-b border-line group transition-colors duration-300 ${tom.texto}`;
-                      return destino ? (
-                        <Link key={c.nome.pt} href={destino} className={classe}>
-                          {varredura}
-                          {dentro}
-                        </Link>
-                      ) : (
-                        <div key={c.nome.pt} className={classe}>
-                          {varredura}
-                          {dentro}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ── O método, em vermelho ─────────────────────────────────────────── */}
-      {service?.phases?.length ? (
-        <section className="surface-red py-24 lg:py-28">
-          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
-              <div>
-                <span className="eyebrow text-ink/70">{m.metodo.eyebrow[locale]}</span>
-                <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
-              </div>
-              <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.metodo.nota[locale]}</p>
-            </div>
-            <ol className="relative mt-14 grid gap-12 pl-7 sm:pl-10">
-              <span aria-hidden="true" className="camada-fio camada-fio-curto absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-ink to-ink/30" />
-              {service.phases.map((fase, i) => (
-                <li key={fase.name.pt} className="camada relative grid gap-4 sm:grid-cols-[minmax(0,140px)_minmax(0,1fr)] sm:gap-10">
-                  <span aria-hidden="true" className="type-outline type-outline-ink font-display text-[clamp(48px,6vw,88px)] leading-[0.8]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <h3 className="editorial text-2xl lg:text-3xl">{fase.name[locale]}</h3>
-                    <p className="mt-3 max-w-[58ch] text-md text-fg-soft">{fase.body[locale]}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      ) : null}
+      {/* ── As áreas, em quadrados que viram ──────────────────────────────── */}
+      <FaixaDeAreas
+        cartoes={m.lista.map((s) => {
+          const href = destinoDe(s);
+          return {
+            chave: s.chave,
+            nome: (s.nomeCurto ?? s.nome)[locale],
+            resumo: s.resumo[locale],
+            // Uma capacidade com casa própria leva-lhe; as outras levam à área.
+            ligacoes: s.capacidades.flatMap((c) => {
+              const destino = c.rota ?? href;
+              return destino ? [{ nome: c.nome[locale], href: destino }] : [];
+            }),
+          };
+        })}
+        titulo={m.areas.eyebrow[locale]}
+        rotulos={{ ver: m.areas.ver[locale], voltar: m.areas.voltar[locale] }}
+      />
 
       {/* ── Trabalho, parceiros e stack ───────────────────────────────────── */}
       <section className="surface-paper py-24 lg:py-28">
@@ -358,6 +192,35 @@ export default async function TecnologiaPage({ params }: { params: Promise<{ loc
           <FaixaDeParceiros eyebrow={m.trabalho.parceirosEyebrow[locale]} logos={parceiros} />
         </div>
       </section>
+
+      {/* ── O método, em vermelho ─────────────────────────────────────────── */}
+      {service?.phases?.length ? (
+        <section className="surface-red py-24 lg:py-28">
+          <div className="mx-auto max-w-[1200px] px-5 sm:px-8">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14">
+              <div>
+                <span className="eyebrow text-ink/70">{m.metodo.eyebrow[locale]}</span>
+                <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(34px,4.4vw,64px)] leading-[1.0] tracking-[-0.025em]">{m.metodo.titulo[locale]}</h2>
+              </div>
+              <p className="max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{m.metodo.nota[locale]}</p>
+            </div>
+            <ol className="relative mt-14 grid gap-12 pl-7 sm:pl-10">
+              <span aria-hidden="true" className="camada-fio camada-fio-curto absolute left-0 top-2 block h-[calc(100%-1rem)] w-px bg-gradient-to-b from-ink to-ink/30" />
+              {service.phases.map((fase, i) => (
+                <li key={fase.name.pt} className="camada relative grid gap-4 sm:grid-cols-[minmax(0,140px)_minmax(0,1fr)] sm:gap-10">
+                  <span aria-hidden="true" className="type-outline type-outline-ink font-display text-[clamp(48px,6vw,88px)] leading-[0.8]">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="editorial text-2xl lg:text-3xl">{fase.name[locale]}</h3>
+                    <p className="mt-3 max-w-[58ch] text-md text-fg-soft">{fase.body[locale]}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      ) : null}
 
       {/* ── Depois de publicar: o JellyCARE ───────────────────────────────── */}
       <section className="surface-ink py-20 lg:py-24">

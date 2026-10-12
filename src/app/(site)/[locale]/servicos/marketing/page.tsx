@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/routing";
 import { FaixaDeAreas } from "@/components/FaixaDeAreas";
 import { FaixaDeParceiros } from "@/components/FaixaDeParceiros";
 import { marketing } from "@/content/marketing";
+import { servicoDeMarketing } from "@/content/marketing-servicos";
 import { getLogoWall, getProjects, getProjectsBySlugs, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
@@ -141,7 +142,20 @@ export default async function MarketingPage({ params }: { params: Promise<{ loca
       {/* ── As áreas, numa faixa ──────────────────────────────────────────
           Quatro quadrados de ponta a ponta, um por área. Não se anima: pode
           estar no ecrã quando a página abre. */}
-      <FaixaDeAreas areas={m.lista} locale={locale} titulo={m.areas.eyebrow[locale]} rotulos={{ ver: m.areas.verServicos[locale], voltar: m.areas.voltar[locale] }} />
+      <FaixaDeAreas
+        cartoes={m.lista.map((area) => ({
+          chave: area.chave,
+          nome: area.nome[locale],
+          resumo: area.resumo[locale],
+          // No verso, as páginas dos serviços. Um serviço sem página não aparece.
+          ligacoes: area.servicos.flatMap((s) => {
+            const pagina = s.sub ? servicoDeMarketing(s.sub) : undefined;
+            return pagina ? [{ nome: s.nome[locale], href: { pathname: "/servicos/marketing/[sub]" as const, params: { sub: pagina.slug[locale] } } }] : [];
+          }),
+        }))}
+        titulo={m.areas.eyebrow[locale]}
+        rotulos={{ ver: m.areas.verServicos[locale], voltar: m.areas.voltar[locale] }}
+      />
 
       {/* ── Trabalho e parceiros ────────────────────────────────────────────── */}
       <section className="surface-paper py-24 lg:py-28">

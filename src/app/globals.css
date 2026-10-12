@@ -1756,8 +1756,9 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   transition: -webkit-text-stroke-color 0.6s;
 }
 
-/* ── A faixa das áreas de Marketing: quadrados que viram ──────────────────────
-   À frente a área, atrás as páginas dos serviços (components/CartaoDeArea).
+/* ── A faixa das áreas: quadrados que viram ─────────────────────────────────
+   No Marketing e na Tecnologia. À frente a área, atrás para onde se vai dentro
+   dela (components/CartaoDeArea).
    Vira ao passar o rato, ao tocar (a classe -virado, posta pelo componente) e
    quando o foco do teclado chega a uma ligação do verso. A face que está de
    costas não recebe cliques: escondida pela rotação, continuava a apanhá-los.
@@ -1850,5 +1851,19 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   .cartao-area:hover .cartao-area-frente,
   .cartao-area:focus-within .cartao-area-frente {
     opacity: 0;
+  }
+}
+/* Um verso com quatro ligações — o dos Websites, na Tecnologia — não cabe no
+   quadrado de um quarto de ecrã entre 1024 e 1279 px: as linhas partem-se em
+   duas e três, e a última ficava cortada. Aí, e só nesse verso, as linhas
+   apertam e a margem encolhe. A frente não muda, para os números dos quatro
+   continuarem à mesma altura. */
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .cartao-area-cheio .cartao-area-verso {
+    padding: 1.5rem;
+  }
+  .cartao-area-cheio .cartao-area-verso a {
+    padding-block: 0.5rem;
+    font-size: 17px;
   }
 }

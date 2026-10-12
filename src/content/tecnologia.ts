@@ -15,9 +15,13 @@ import type { Localized } from "./types";
  * no mapa porque um cliente de tecnologia procura-a aqui, mas a página é a de
  * lá, e duas páginas a dizer o mesmo seriam duas páginas a desatualizar-se.
  *
- * As fases do método continuam a vir do serviço no painel. As capacidades de
- * cada área ligam todas à página da área: são a lista do que cabe lá dentro,
- * não páginas próprias.
+ * Na página-mãe, as áreas são uma faixa de quadrados que viram, como no
+ * Marketing: à frente o nome e o `resumo`, atrás as capacidades. Cada área tem
+ * uma página só, e as capacidades ligam todas a ela — são a lista do que cabe
+ * lá dentro, não páginas próprias. O título, a posição e a legenda do gráfico
+ * de cada área ficam aqui para as páginas das áreas, se os quiserem.
+ *
+ * As fases do método continuam a vir do serviço no painel.
  */
 
 export type AreaDeTecnologia = "web" | "apps" | "dados" | "ia";
@@ -42,6 +46,10 @@ export type Servico = {
   /** O slug do serviço em `site.ts`, quando a área vive fora de Tecnologia. */
   servico?: string;
   nome: Localized;
+  /** O nome no quadrado da faixa, quando o inteiro não cabe nas letras grandes. */
+  nomeCurto?: Localized;
+  /** Uma linha com o que a área faz, para a frente do quadrado. */
+  resumo: Localized;
   titulo: Localized;
   posicao: Localized;
   capacidades: Capacidade[];
@@ -78,15 +86,10 @@ export const tecnologia = {
     en: "Technology by Jelly: websites and e-commerce platforms, web and mobile applications, CRM, CDP and data integrations, performance, accessibility and migrations without losing traffic. Four areas, one architecture.",
   },
 
-  mapa: { eyebrow: { pt: "O mapa", en: "The map" } },
-
   areas: {
     eyebrow: { pt: "As áreas", en: "The areas" },
-    titulo: { pt: "Quatro áreas. A mesma arquitetura por baixo.", en: "Four areas. The same architecture underneath." },
-    nota: {
-      pt: "Onde a marca se mostra, o que as pessoas usam, o que a empresa sabe sobre quem compra, e o que passa a correr sozinho. Cada área tem a sua página.",
-      en: "Where the brand shows itself, what people use, what the company knows about who buys, and what starts running on its own. Each area has its own page.",
-    },
+    ver: { pt: "Ver o que inclui", en: "See what it covers" },
+    voltar: { pt: "Voltar", en: "Back" },
   },
 
   lista: [
@@ -94,6 +97,7 @@ export const tecnologia = {
       chave: "web",
       sub: "websites-ecommerce",
       nome: { pt: "Websites e E-commerce", en: "Websites and E-commerce" },
+      resumo: { pt: "Sites institucionais, lojas online e plataformas à medida, rápidos e acessíveis.", en: "Corporate sites, online stores and bespoke platforms, fast and accessible." },
       titulo: { pt: "Um site não é um folheto. É onde a receita entra.", en: "A website is not a brochure. It is where revenue comes in." },
       posicao: {
         pt: "Sites institucionais, lojas online e plataformas à medida, desenhados a partir do conteúdo e construídos com a performance fixada antes do primeiro ecrã.",
@@ -112,6 +116,7 @@ export const tecnologia = {
       chave: "apps",
       sub: "aplicacoes-web-mobile",
       nome: { pt: "Aplicações Web e Mobile", en: "Web and Mobile Applications" },
+      resumo: { pt: "Apps iOS e Android, aplicações web e MVP, do protótipo à produção.", en: "iOS and Android apps, web applications and MVPs, from prototype to production." },
       titulo: { pt: "Uma app só vale o que as pessoas voltam a fazer nela.", en: "An app is only worth what people come back to do in it." },
       posicao: {
         pt: "iOS, Android e web, nativo ou híbrido conforme o projeto pede. Desenhadas para o gesto que se repete e medidas por quem volta.",
@@ -129,6 +134,8 @@ export const tecnologia = {
       chave: "dados",
       sub: "crm-cdp-integracoes",
       nome: { pt: "Sistemas integrados de Marketing & Vendas (CRM/CDP)", en: "Integrated Marketing & Sales Systems (CRM/CDP)" },
+      nomeCurto: { pt: "CRM, CDP e Integrações", en: "CRM, CDP and Integrations" },
+      resumo: { pt: "Pipedrive, Zoho, CDP e integrações: o dado entra uma vez e chega a todos.", en: "Pipedrive, Zoho, CDP and integrations: data goes in once and reaches everyone." },
       titulo: { pt: "Um cliente, um registo. Marketing, vendas e operações a ler o mesmo.", en: "One customer, one record. Marketing, sales and operations reading the same thing." },
       posicao: {
         pt: "Pipedrive, Zoho e os sistemas que já tem, ligados para que o dado entre uma vez e chegue a todos. Parceiros certificados Pipedrive e Iubenda.",
@@ -148,6 +155,7 @@ export const tecnologia = {
          Inteligência Artificial, onde o assunto já está escrito por inteiro. */
       servico: "inteligencia-artificial",
       nome: { pt: "Sistemas IA", en: "AI Systems" },
+      resumo: { pt: "Agentes e automação ligados aos sistemas que já tem.", en: "Agents and automation wired into the systems you already run." },
       titulo: { pt: "O trabalho que passa a fazer-se sozinho, dentro dos sistemas que já tem.", en: "The work that starts doing itself, inside the systems you already run." },
       posicao: {
         pt: "Agentes e automação ligados ao CRM, ao catálogo e ao atendimento. Não é um piloto para mostrar numa reunião: é um processo que fica a correr depois de irmos embora.",

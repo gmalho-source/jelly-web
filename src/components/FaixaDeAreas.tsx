@@ -1,48 +1,39 @@
-import type { Locale } from "@/i18n/routing";
-import type { Area } from "@/content/marketing";
-import { servicoDeMarketing } from "@/content/marketing-servicos";
+import type { LigacaoDeArea } from "./CartaoDeArea";
 import { CartaoDeArea } from "./CartaoDeArea";
 
 /**
- * As quatro áreas de Marketing numa faixa de ponta a ponta.
+ * As quatro áreas de uma disciplina numa faixa de ponta a ponta — no Marketing
+ * e na Tecnologia.
  *
  * Quatro quadrados, cada um com uma cor da casa — vermelho, lavanda, coral e
  * chartreuse, a mesma ordem das áreas em todo o site — e o texto em tinta,
- * que é o que se lê sobre as quatro. Cada quadrado vira e mostra no verso as
- * páginas dos serviços da área: quem chega escolhe para onde vai.
+ * que é o que se lê sobre as quatro. Cada quadrado vira e mostra no verso para
+ * onde se pode ir dentro da área: quem chega escolhe.
  */
-const CORES: Record<Area["chave"], string> = {
-  performance: "surface-red",
-  conteudo: "surface-accent-lavender",
-  influencia: "surface-accent-coral",
-  dados: "surface-accent-chartreuse",
-};
+const CORES = ["surface-red", "surface-accent-lavender", "surface-accent-coral", "surface-accent-chartreuse"];
+
+export type CartaoDaFaixa = { chave: string; nome: string; resumo: string; ligacoes: LigacaoDeArea[] };
 
 export function FaixaDeAreas({
-  areas,
-  locale,
+  cartoes,
   titulo,
   rotulos,
 }: {
-  areas: Area[];
-  locale: Locale;
+  cartoes: CartaoDaFaixa[];
   titulo: string;
   rotulos: { ver: string; voltar: string };
 }) {
   return (
     <section aria-label={titulo}>
       <ul className="grid sm:grid-cols-2 lg:grid-cols-4">
-        {areas.map((area, i) => (
-          <li key={area.chave}>
+        {cartoes.map((cartao, i) => (
+          <li key={cartao.chave}>
             <CartaoDeArea
               numero={String(i + 1).padStart(2, "0")}
-              nome={area.nome[locale]}
-              resumo={area.resumo[locale]}
-              servicos={area.servicos.flatMap((s) => {
-                const pagina = s.sub ? servicoDeMarketing(s.sub) : undefined;
-                return pagina ? [{ nome: s.nome[locale], sub: pagina.slug[locale] }] : [];
-              })}
-              cor={CORES[area.chave]}
+              nome={cartao.nome}
+              resumo={cartao.resumo}
+              ligacoes={cartao.ligacoes}
+              cor={CORES[i % CORES.length]}
               rotulos={rotulos}
             />
           </li>
