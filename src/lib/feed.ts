@@ -1,4 +1,5 @@
-import { getPostsDa } from "@/lib/cms";
+import { getPosts, getPostsDa } from "@/lib/cms";
+import { seccaoDe } from "@/lib/seccao";
 import type { Post } from "@/content/types";
 import { resumoPublicavel } from "@/lib/resumo";
 import { capaDe, slugFor } from "@/lib/slugs";
@@ -6,7 +7,7 @@ import { SITE_URL } from "@/lib/seo";
 import type { Locale } from "@/i18n/routing";
 
 /**
- * O feed do blog, nas duas línguas.
+ * Os feeds RSS, nas duas línguas.
  *
  * O site antigo tinha feeds e havia quem os lesse; ao migrar, esses endereços
  * passaram a mandar toda a gente para o índice do blog, o que é uma forma
@@ -65,26 +66,55 @@ function capaDoItem(post: Post, locale: Locale): string[] {
   ];
 }
 
-const TITULO = {
-  pt: "Jelly — Blog",
-  en: "Jelly — Blog",
-} as const;
+/**
+ * Os dois feeds.
+ *
+ * `/rss.xml` é o do blog, como sempre foi: há quem o leia num leitor de feeds,
+ * e as notícias da casa não são o que essa pessoa assinou.
+ *
+ * `/rss/tudo.xml` junta o blog e o newsroom, por data, cada artigo com o seu
+ * endereço. É o da newsletter: a campanha RSS do Brevo lê um feed só, e quando
+ * o blog e o newsroom se separaram (outubro de 2026) os artigos do newsroom
+ * deixaram de lhe chegar.
+ */
+type Qual = "blog" | "tudo";
 
-const DESCRICAO = {
-  pt: "O que aprendemos a trabalhar: inteligência artificial, marcas, campanhas e o que correu mal pelo caminho.",
-  en: "What we learn at work: artificial intelligence, brands, campaigns, and what went wrong along the way.",
-} as const;
+const TITULO: Record<Qual, Record<Locale, string>> = {
+  blog: { pt: "Jelly — Blog", en: "Jelly — Blog" },
+  tudo: { pt: "Jelly — Blog e Newsroom", en: "Jelly — Blog and Newsroom" },
+};
 
-export async function feedDoBlog(locale: Locale): Promise<string> {
-  // O feed é o do blog; as notícias da casa vivem no newsroom.
-  const posts = (await getPostsDa("blog")).slice(0, QUANTOS);
+const DESCRICAO: Record<Qual, Record<Locale, string>> = {
+  blog: {
+    pt: "O que aprendemos a trabalhar: inteligência artificial, marcas, campanhas e o que correu mal pelo caminho.",
+    en: "What we learn at work: artificial intelligence, brands, campaigns, and what went wrong along the way.",
+  },
+  tudo: {
+    pt: "Os artigos do blog e as notícias da casa: o que aprendemos a trabalhar e o que vai acontecendo na Jelly.",
+    en: "Blog articles and news from the house: what we learn at work and what is happening at Jelly.",
+  },
+};
+
+export function feedDoBlog(locale: Locale): Promise<string> {
+  return feed(locale, "blog");
+}
+
+export function feedDeTudo(locale: Locale): Promise<string> {
+  return feed(locale, "tudo");
+}
+
+async function feed(locale: Locale, qual: Qual): Promise<string> {
+  // getPosts já vem do mais recente para o mais antigo.
+  const posts = (qual === "blog" ? await getPostsDa("blog") : await getPosts()).slice(0, QUANTOS);
   const raiz = SITE_URL.replace(/\/$/, "");
   const base = locale === "en" ? `${raiz}/en` : raiz;
-  const endereco = locale === "en" ? `${raiz}/en/rss.xml` : `${raiz}/rss.xml`;
+  const ficheiro = qual === "blog" ? "/rss.xml" : "/rss/tudo.xml";
+  const endereco = `${base}${ficheiro}`;
 
   const itens = posts
     .map((post) => {
-      const ligacao = `${base}/blog/${slugFor(post, locale)}`;
+      // Cada artigo no endereço da sua secção: /blog/… ou /newsroom/….
+      const ligacao = `${base}/${seccaoDe(post) === "newsroom" ? "newsroom" : "blog"}/${slugFor(post, locale)}`;
       /* O mesmo resumo que serve a página e a description do Google — já limpo
          dos shortcodes que vieram do WordPress.
 
@@ -118,9 +148,9 @@ export async function feedDoBlog(locale: Locale): Promise<string> {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:media="http://search.yahoo.com/mrss/">',
     "  <channel>",
-    `    <title>${escapa(TITULO[locale])}</title>`,
-    `    <link>${escapa(`${base}/blog`)}</link>`,
-    `    <description>${escapa(DESCRICAO[locale])}</description>`,
+    `    <title>${escapa(TITULO[qual][locale])}</title>`,
+    `    <link>${escapa(qual === "blog" ? `${base}/blog` : base)}</link>`,
+    `    <description>${escapa(DESCRICAO[qual][locale])}</description>`,
     `    <language>${locale === "en" ? "en" : "pt-pt"}</language>`,
     `    <atom:link href="${escapa(endereco)}" rel="self" type="application/rss+xml" />`,
     posts[0] ? `    <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>` : "",
