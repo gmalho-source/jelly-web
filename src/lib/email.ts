@@ -63,6 +63,14 @@ export type Carta = {
 
 export type Resultado = { ok: boolean; via: "brevo" | "resend" | "log"; erro?: string; id?: string };
 
+/**
+ * Os destinatários de uma carta. O `to` pode levar vários, separados por
+ * vírgula — «gmalho@jelly.pt, mcosta@jelly.pt» — e cada um recebe a sua.
+ */
+export function destinatarios(valor: string): string[] {
+  return [...new Set(valor.split(",").map((parte) => parte.trim()).filter(Boolean))];
+}
+
 /** "Jelly <hello@jelly.pt>" → { nome, email } */
 function remetente(valor: string) {
   const combina = valor.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
@@ -76,7 +84,7 @@ async function peloBrevo(chave: string, carta: Carta): Promise<Resultado> {
     headers: { "api-key": chave, "content-type": "application/json", accept: "application/json" },
     body: JSON.stringify({
       sender: { name: de.nome, email: de.email },
-      to: [{ email: carta.to }],
+      to: destinatarios(carta.to).map((email) => ({ email })),
       ...(carta.replyTo ? { replyTo: { email: carta.replyTo } } : {}),
       subject: carta.subject,
       ...(carta.text ? { textContent: carta.text } : {}),
@@ -106,7 +114,7 @@ async function peloResend(chave: string, carta: Carta): Promise<Resultado> {
   const de = carta.from ?? remetentePara(carta.voz ?? "cliente");
   const comum = {
     from: de,
-    to: carta.to,
+    to: destinatarios(carta.to),
     replyTo: carta.replyTo,
     subject: carta.subject,
     ...(carta.anexos?.length

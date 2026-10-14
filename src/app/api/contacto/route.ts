@@ -1,7 +1,7 @@
 import { NextResponse, after, type NextRequest } from "next/server";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
-import { enviaEmail } from "@/lib/email";
+import { destinatarios, enviaEmail } from "@/lib/email";
 import { cartaDeContacto } from "@/lib/email-contacto";
 import { avisoDeContacto } from "@/lib/email-aviso";
 import { indicativoDe } from "@/lib/indicativos";
@@ -147,6 +147,12 @@ export async function POST(request: NextRequest) {
   }
 
   const paraCasa = envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt");
+  // Quem recebe o aviso: o endereço da casa (ou os da variável, separados por
+  // vírgula) e a Maria Costa, que acompanha os pedidos que chegam por aqui.
+  // Fica escrita no código para receber seja qual for a variável na Vercel.
+  const avisados = destinatarios(`${paraCasa}, mcosta@jelly.pt`).join(", ");
+  // A resposta à confirmação vai para um endereço só: o primeiro.
+  const responderA = destinatarios(paraCasa)[0];
 
   const paraCasaCarta = avisoDeContacto({
     nome: name,
@@ -161,7 +167,7 @@ export async function POST(request: NextRequest) {
 
   const aviso = await enviaEmail({
     voz: "cliente",
-    to: paraCasa,
+    to: avisados,
     replyTo: email,
     ...paraCasaCarta,
     ...(briefing?.base64 ? { anexos: [{ nome: briefing.nome, base64: briefing.base64 }] } : {}),
@@ -188,7 +194,7 @@ export async function POST(request: NextRequest) {
 
   // A confirmação a quem escreveu. Falhar aqui não invalida o pedido, que já
   // está gravado e já foi avisado — por isso não devolve erro.
-  const recibo = await enviaEmail({ voz: "cliente", to: email, replyTo: paraCasa, ...confirmacao });
+  const recibo = await enviaEmail({ voz: "cliente", to: email, replyTo: responderA, ...confirmacao });
   if (!recibo.ok) console.error(`[contacto] a confirmação não saiu (${recibo.via}): ${recibo.erro}`);
 
   // O negócio no Pipedrive abre-se depois da resposta. São três chamadas a um
