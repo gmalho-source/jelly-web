@@ -44,6 +44,19 @@ export type SheetTile = {
    * a folha em repouso e aparece à primeira letra escrita.
    */
   hidden?: boolean;
+  /**
+   * Outras palavras por que o destino se procura, além do nome.
+   *
+   * A procura lê o nome e o tipo. «Falar connosco» não tinha a palavra que
+   * quase toda a gente escreve à procura dele — «contactos» — e quem a
+   * escrevia ficava sem resposta.
+   */
+  termos?: string;
+  /**
+   * O destino para onde a folha quer levar: vai a vermelho, com letra clara,
+   * e destaca-se na lista sem precisar de outra posição. Só um o deve ser.
+   */
+  cta?: boolean;
 };
 
 export type SheetCopy = {
@@ -255,7 +268,7 @@ export function IndexSheet({
     // Em repouso, a folha mostra as bandas; a escrever, procura tudo o que há.
     if (!term) return tiles.filter((tile) => !tile.hidden);
     return todas.filter((tile) =>
-      normalize(`${tile.label} ${tile.kind}`).includes(term),
+      normalize(`${tile.label} ${tile.kind} ${tile.termos ?? ""}`).includes(term),
     );
   }, [query, tiles, todas]);
 
@@ -703,17 +716,20 @@ export function IndexSheet({
                       data-indice={index}
                       onMouseEnter={() => setCursor(index)}
                       onFocus={() => setCursor(index)}
-                      className={`flex items-baseline justify-between gap-4 border-b border-paper/10 px-5 py-2.5 transition-colors duration-150 sm:px-8 ${
-                        index === active ? "bg-paper/[0.07] text-paper" : "text-paper/70 hover:text-paper"
+                      className={`flex items-baseline justify-between gap-4 border-b px-5 py-2.5 transition-colors duration-150 sm:px-8 ${
+                        tile.cta
+                          ? `border-red text-paper ${index === active ? "bg-red-deep" : "bg-red hover:bg-red-deep"}`
+                          : `border-paper/10 ${index === active ? "bg-paper/[0.07] text-paper" : "text-paper/70 hover:text-paper"}`
                       }`}
                     >
                       <span className="font-display text-[19px] leading-[1.4]">{tile.label}</span>
                       <span
                         className={`shrink-0 text-[10px] uppercase tracking-[0.12em] ${
-                          index === active ? "text-red" : "text-paper/30"
+                          tile.cta ? "text-paper" : index === active ? "text-red" : "text-paper/30"
                         }`}
                       >
                         {tile.kind}
+                        {tile.cta ? <span aria-hidden="true"> →</span> : null}
                       </span>
                     </Link>
                   ))}

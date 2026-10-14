@@ -130,7 +130,19 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       href: url("/imunidade-algoritmica"),
       tone: "bg-lavender",
     },
-    { group: casa, label: nav("contact"), kind: pt ? "página" : "page", href: url("/contactos"), tone: "bg-red" },
+    // O destino da folha: a vermelho, com o nome que se procura — «Contactos» —
+    // e o convite no lugar do tipo.
+    {
+      group: casa,
+      label: pt ? "Contactos" : "Contact",
+      kind: nav("contact"),
+      href: url("/contactos"),
+      tone: "bg-red",
+      cta: true,
+      termos: pt
+        ? "contacto contactar falar connosco email telefone morada orçamento proposta"
+        : "contacts get in touch talk to us email phone address quote proposal contactos",
+    },
 
     // ── Fora da folha, dentro da procura ───────────────────────────────────
     // Os outros projetos e os artigos não vêm aqui: vêm de `/indice/<língua>.json`
