@@ -307,6 +307,7 @@ export function IndexSheet({
 
   /** O que a janela mostra: o item onde o cursor está. */
   const destaque = results.length ? results[active] : undefined;
+  const cta = tiles.find((tile) => tile.cta);
 
   function close() {
     setOpenedOn(null);
@@ -718,7 +719,8 @@ export function IndexSheet({
                       onFocus={() => setCursor(index)}
                       className={`flex items-baseline justify-between gap-4 border-b px-5 py-2.5 transition-colors duration-150 sm:px-8 ${
                         tile.cta
-                          ? `border-red text-paper ${index === active ? "bg-red-deep" : "bg-red hover:bg-red-deep"}`
+                          ? // No telemóvel está fixo no fundo da folha (ver abaixo), e não se repete na lista.
+                            `border-red text-paper max-lg:hidden ${index === active ? "bg-red-deep" : "bg-red hover:bg-red-deep"}`
                           : `border-paper/10 ${index === active ? "bg-paper/[0.07] text-paper" : "text-paper/70 hover:text-paper"}`
                       }`}
                     >
@@ -745,6 +747,23 @@ export function IndexSheet({
               ) : null}
             </div>
           </div>
+
+          {/* No telemóvel, o destino da folha fica fixo no fundo: na lista era o
+              último, e só se via depois de rolar tudo. Fica fora da lista que
+              rola, por isso está sempre lá — em repouso e a procurar. No
+              desktop a lista cabe no ecrã e ele está nela. */}
+          {cta ? (
+            <Link
+              href={cta.href}
+              onClick={() => setOpenedOn(null)}
+              className="flex shrink-0 items-baseline justify-between gap-4 bg-red px-5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 text-paper transition-colors duration-150 active:bg-red-deep sm:px-8 lg:hidden"
+            >
+              <span className="font-display text-[19px] leading-[1.4]">{cta.label}</span>
+              <span className="shrink-0 text-[10px] uppercase tracking-[0.12em]">
+                {cta.kind} <span aria-hidden="true">→</span>
+              </span>
+            </Link>
+          ) : null}
         </div>
       ) : null}
     </>
