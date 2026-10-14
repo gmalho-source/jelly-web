@@ -22,6 +22,7 @@ import type {
   TeamMember,
 } from "@/content/types";
 import { fromCms, getCms } from "./client";
+import { temasDoTexto, textoDoCorpo } from "@/lib/temas";
 
 type Doc = Record<string, unknown>;
 type MediaDoc =
@@ -310,6 +311,26 @@ function autor(raw: Doc): Autor {
  * base deixa de os enviar. O corpo de um artigo vai-se buscar quando é preciso —
  * um, o que se está a ler — em `fetchPostBody`.
  */
+/**
+ * Os temas de cada artigo, lidos do corpo (ver `lib/temas.ts`). Só o slug e
+ * uma linha de palavras: é o que a procura do índice precisa, e os corpos —
+ * os oito megabytes — ficam no servidor.
+ */
+export function fetchTemasDosArtigos() {
+  return fromCms(async (payload) => {
+    const { docs } = await payload.find({
+      collection: "posts",
+      limit: 0,
+      depth: 0,
+      select: { slug: true, body: true, bodyEn: true },
+    });
+    return (docs as unknown as Doc[]).map((raw) => ({
+      slug: text(raw.slug),
+      temas: temasDoTexto(`${textoDoCorpo(raw.body)} ${textoDoCorpo(raw.bodyEn)}`),
+    }));
+  }, [] as { slug: string; temas: string }[]);
+}
+
 export function fetchPosts(fallback: Post[]) {
   return fromCms(async (payload) => {
     const { docs } = await payload.find({

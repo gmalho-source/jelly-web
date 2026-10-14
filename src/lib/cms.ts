@@ -41,6 +41,7 @@ import {
   fetchPostBody,
   fetchPosts,
   fetchProjects,
+  fetchTemasDosArtigos,
   fetchServices,
   fetchTeam,
 } from "@/lib/payload/content";
@@ -157,6 +158,12 @@ const localPosts = (postsAreMigrated ? migrated.map(fromMigrated) : posts).sort(
 export const getPosts = fromStore("posts", async (): Promise<Post[]> => {
   const all = await fetchPosts(localPosts);
   return [...all].sort((a, b) => b.date.localeCompare(a.date));
+});
+
+/** Os temas de cada artigo, pelo slug — para a procura do índice. */
+export const getTemasDosArtigos = fromStore("temas-dos-artigos", async (): Promise<Record<string, string>> => {
+  const linhas = await fetchTemasDosArtigos();
+  return Object.fromEntries(linhas.map((linha) => [linha.slug, linha.temas]));
 });
 
 export async function getPost(slug: string): Promise<Post | undefined> {

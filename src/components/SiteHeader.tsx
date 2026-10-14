@@ -71,6 +71,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       label: service.name[locale],
       kind: pt ? "serviço" : "service",
       href: url({ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }),
+      // O nome em inglês também, e a sigla da IA: é o que se escreve.
+      termos: `${service.name.pt} ${service.name.en} ${service.slug === "inteligencia-artificial" ? "ia ai agentes" : ""}`,
       tone: tones[index % tones.length],
     })),
 
@@ -84,6 +86,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
       href: url({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }),
       image: project.cover!.src,
+      ordem: 1,
+      termos: project.disciplines.join(" "),
     })),
     {
       group: trabalho,

@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChangePill } from "./ChangePill";
 import { JellyWordmark } from "./JellyLogo";
+import { consulta, corresponde, prepara } from "@/lib/procura";
 
 /**
  * A largura com que a janela do índice pede a imagem. Está aqui fora, e não
@@ -57,6 +58,11 @@ export type SheetTile = {
    * e destaca-se na lista sem precisar de outra posição. Só um o deve ser.
    */
   cta?: boolean;
+  /**
+   * Onde aparece nos resultados de uma procura: 0 as páginas, 1 os projetos, 2
+   * os artigos (ver `ORDEM` em `lib/indice.ts`). Sem ordem, conta como página.
+   */
+  ordem?: number;
 };
 
 export type SheetCopy = {
@@ -103,13 +109,6 @@ const CORES_EM_CLARO = [
 function outraCor(anterior: string | null) {
   const possiveis = CORES_EM_CLARO.filter((cor) => cor !== anterior);
   return possiveis[Math.floor(Math.random() * possiveis.length)];
-}
-
-function normalize(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "");
 }
 
 /**
@@ -263,14 +262,34 @@ export function IndexSheet({
     return () => (ocioso ? window.cancelIdleCallback(id) : window.clearTimeout(id));
   }, [open, tiles, aquecer]);
 
+  // O texto de cada entrada, preparado uma vez e não a cada tecla: são
+  // duzentas e tal entradas, e cada uma leva as palavras por que se procura.
+  const preparadas = useMemo(
+    () =>
+      todas.map((tile) => ({
+        tile,
+        nome: prepara(tile.label),
+        texto: prepara(`${tile.label} ${tile.kind} ${tile.termos ?? ""}`),
+      })),
+    [todas],
+  );
+
   const results = useMemo(() => {
-    const term = normalize(query.trim());
+    const termos = consulta(query);
     // Em repouso, a folha mostra as bandas; a escrever, procura tudo o que há.
-    if (!term) return tiles.filter((tile) => !tile.hidden);
-    return todas.filter((tile) =>
-      normalize(`${tile.label} ${tile.kind} ${tile.termos ?? ""}`).includes(term),
-    );
-  }, [query, tiles, todas]);
+    if (!termos.length) return tiles.filter((tile) => !tile.hidden);
+    // Primeiro as páginas, depois os projetos, depois os artigos. Dentro de
+    // cada grupo, primeiro os que têm o que se escreveu no nome — «O papel do
+    // branding» antes de um artigo que só fala de branding lá dentro — e
+    // depois a ordem em que chegam: os artigos do mais recente para o mais
+    // antigo. O `sort` é estável.
+    const peso = (ordem: number | undefined, noNome: boolean) => (ordem ?? 0) * 2 + (noNome ? 0 : 1);
+    return preparadas
+      .filter(({ texto }) => corresponde(texto, termos))
+      .map(({ tile, nome }) => ({ tile, peso: peso(tile.ordem, corresponde(nome, termos)) }))
+      .sort((a, b) => a.peso - b.peso)
+      .map(({ tile }) => tile);
+  }, [query, tiles, preparadas]);
 
   /*
    * As bandas, com o índice de cada mosaico na lista de resultados: é esse
