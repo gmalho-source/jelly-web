@@ -4615,6 +4615,11 @@
     "permanent": true
   },
   {
+    "source": "/servicos/multimedia/audiovisuais-producao-video",
+    "destination": "/servicos/marketing/video-audiovisual",
+    "permanent": true
+  },
+  {
     "source": "/politica-de-privacidade-2",
     "destination": "/legal/politica-de-privacidade",
     "permanent": true
