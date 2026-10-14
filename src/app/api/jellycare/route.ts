@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
-import { enviaEmail } from "@/lib/email";
+import { destinatarios, enviaEmail } from "@/lib/email";
 import { avisoDeSubscricao, cartaDeSubscricaoCare } from "@/lib/email-jellycare";
 import { indicativoDe } from "@/lib/indicativos";
 import { campanhaDe, emEuros } from "@/lib/campanha";
@@ -122,10 +122,15 @@ export async function POST(request: NextRequest) {
   }
 
   const paraCasa = envOr(process.env.CONTACT_TO_EMAIL, "gmalho@jelly.pt");
+  // Como no formulário de contacto: o endereço da casa e a Maria Costa, que
+  // fica escrita no código para receber seja qual for a variável na Vercel.
+  const avisados = destinatarios(`${paraCasa}, mcosta@jelly.pt`).join(", ");
+  // A resposta à confirmação vai para um endereço só: o primeiro.
+  const responderA = destinatarios(paraCasa)[0];
 
   const aviso = await enviaEmail({
     voz: "cliente",
-    to: paraCasa,
+    to: avisados,
     replyTo: email,
     ...avisoDeSubscricao({
       nome: name,
@@ -152,7 +157,7 @@ export async function POST(request: NextRequest) {
   const recibo = await enviaEmail({
     voz: "cliente",
     to: email,
-    replyTo: paraCasa,
+    replyTo: responderA,
     ...cartaDeSubscricaoCare({
       locale,
       nome: name,
