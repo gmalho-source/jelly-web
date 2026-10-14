@@ -71,8 +71,10 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       label: service.name[locale],
       kind: pt ? "serviço" : "service",
       href: url({ pathname: "/servicos/[slug]", params: { slug: slugFor(service, locale) } }),
-      // O nome em inglês também, e a sigla da IA: é o que se escreve.
-      termos: `${service.name.pt} ${service.name.en} ${service.slug === "inteligencia-artificial" ? "ia ai agentes" : ""}`,
+      // O nome na outra língua, e a sigla da IA: é o que se escreve, e põe a
+      // página à frente dos artigos e do guia que também dizem «IA».
+      alcunhas: `${service.name.pt} ${service.name.en} ${service.slug === "inteligencia-artificial" ? "IA AI" : ""}`,
+      termos: service.slug === "inteligencia-artificial" ? "agentes" : undefined,
       tone: tones[index % tones.length],
     })),
 

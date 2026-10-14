@@ -54,6 +54,12 @@ export type SheetTile = {
    */
   termos?: string;
   /**
+   * Outros nomes do destino — uma sigla, o nome na outra língua. Procuram-se
+   * como o nome e contam como ele na ordem dos resultados: quem escreve «IA»
+   * quer a página da Inteligência artificial à frente, e não só lá pelo meio.
+   */
+  alcunhas?: string;
+  /**
    * O destino para onde a folha quer levar: vai a vermelho, com letra clara,
    * e destaca-se na lista sem precisar de outra posição. Só um o deve ser.
    */
@@ -268,8 +274,8 @@ export function IndexSheet({
     () =>
       todas.map((tile) => ({
         tile,
-        nome: prepara(tile.label),
-        texto: prepara(`${tile.label} ${tile.kind} ${tile.termos ?? ""}`),
+        nome: prepara(`${tile.label} ${tile.alcunhas ?? ""}`),
+        texto: prepara(`${tile.label} ${tile.alcunhas ?? ""} ${tile.kind} ${tile.termos ?? ""}`),
       })),
     [todas],
   );
