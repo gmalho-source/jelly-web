@@ -47,7 +47,7 @@ export const services: Service[] = [
     ],
     phases: [
       { name: { pt: "Linha de base", en: "Baseline" }, body: { pt: "Medição limpa antes de gastar um euro: eventos, atribuição e o número de partida.", en: "Clean measurement before spending a euro: events, attribution and the starting number." } },
-      { name: { pt: "Hipóteses", en: "Hypotheses" }, body: { pt: "Cinco a dez apostas ordenadas por retorno esperado, não por gosto.", en: "Five to ten bets ranked by expected return, not by taste." } },
+      { name: { pt: "Hipóteses", en: "Hypotheses" }, body: { pt: "Cinco a dez hipóteses ordenadas por retorno esperado, não por gosto.", en: "Five to ten hypotheses ranked by expected return, not by taste." } },
       { name: { pt: "Cadência", en: "Cadence" }, body: { pt: "Ciclos curtos: testar, ler, decidir. Relatório semanal com o que muda na semana seguinte.", en: "Short cycles: test, read, decide. A weekly report with what changes next week." } },
       { name: { pt: "Escala", en: "Scale" }, body: { pt: "O que funciona ganha orçamento; o que não funciona morre depressa e sem drama.", en: "What works gets budget; what doesn't dies quickly and without drama." } },
     ],

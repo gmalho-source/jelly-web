@@ -61,7 +61,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       titulo: { pt: "Como uma conta arranca", en: "How an account starts" },
       itens: [
         { nome: { pt: "Linha de base", en: "Baseline" }, corpo: { pt: "Duas semanas de medição limpa antes de gastar: eventos, atribuição, e o custo por venda de partida, mesmo que seja incómodo.", en: "Two weeks of clean measurement before spending: events, attribution, and the starting cost per sale, however uncomfortable." } },
-        { nome: { pt: "Hipóteses", en: "Hypotheses" }, corpo: { pt: "Cinco a dez apostas por canal, ordenadas pelo retorno esperado e pelo que custa testá-las. Não por gosto.", en: "Five to ten bets per channel, ranked by expected return and by the cost of testing them. Not by taste." } },
+        { nome: { pt: "Hipóteses", en: "Hypotheses" }, corpo: { pt: "Cinco a dez hipóteses por canal, ordenadas pelo retorno esperado e pelo que custa testá-las. Não por gosto.", en: "Five to ten hypotheses per channel, ranked by expected return and by the cost of testing them. Not by taste." } },
         { nome: { pt: "Cadência", en: "Cadence" }, corpo: { pt: "Ciclos semanais de testar, ler e decidir. O orçamento move-se todas as semanas para onde a venda está a acontecer.", en: "Weekly cycles of test, read, decide. Budget moves every week to where the sale is happening." } },
         { nome: { pt: "Escala", en: "Scale" }, corpo: { pt: "A partir do segundo mês, o que funciona ganha orçamento e criativo novo. O que não funciona morre depressa.", en: "From month two, what works gets budget and fresh creative. What doesn't dies quickly." } },
       ],
