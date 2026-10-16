@@ -56,6 +56,11 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
           corpo: { pt: "Campanhas no Google e Bing para chegar a pessoas com intenção de compra. Da pesquisa de um serviço à comparação de produtos, os anúncios ligam a procura à sua oferta, com atenção ao custo de aquisição e à margem do negócio.", en: "Google and Bing campaigns to reach people with purchase intent. From searching for a service to comparing products, the ads connect demand to your offer, with an eye on acquisition cost and business margin." },
         },
         {
+          nome: { pt: "ChatGPT Ads", en: "ChatGPT Ads" },
+          destaque: { pt: "Há perguntas que já não começam num motor de pesquisa.", en: "Some questions no longer start in a search engine." },
+          corpo: { pt: "Anúncios nas conversas do ChatGPT, onde as pessoas pedem recomendações e comparam opções. Um canal recente, que testamos com objetivos claros e medimos como os restantes, para perceber se contribui para o seu negócio.", en: "Ads inside ChatGPT conversations, where people ask for recommendations and compare options. A new channel, which we test with clear goals and measure like the others, to see whether it contributes to your business." },
+        },
+        {
           nome: { pt: "Social Ads", en: "Social Ads" },
           destaque: { pt: "O seu próximo cliente pode ainda não conhecer a sua marca.", en: "Your next customer may not know your brand yet." },
           corpo: { pt: "Campanhas na Meta, LinkedIn e TikTok para dar a conhecer a sua oferta e gerar interesse junto de públicos relevantes. A escolha das redes, das audiências e das mensagens parte de quem quer conquistar e do que pretende alcançar.", en: "Campaigns on Meta, LinkedIn and TikTok to make your offer known and build interest among relevant audiences. The choice of networks, audiences and messages starts from who you want to win and what you want to achieve." },
