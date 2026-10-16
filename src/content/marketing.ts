@@ -143,7 +143,7 @@ export const marketing = {
 
   trabalho: {
     eyebrow: { pt: "Trabalho", en: "Work" },
-    titulo: { pt: "Marcas que confiam o número à Jelly.", en: "Brands that trust Jelly with the number." },
+    titulo: { pt: "Marcas que nos confiam os seus resultados", en: "Brands that trust us with their results" },
     todos: { pt: "Ver todos os projetos", en: "See all projects" },
     /* Os parceiros vêm da parede "parceiros-marketing" no painel: uma lista escrita no código
        obriga a um deploy para acrescentar um selo, e um selo de parceiro
