@@ -153,7 +153,7 @@ export const marketing = {
 
   ia: {
     eyebrow: { pt: "A IA atravessa as quatro áreas", en: "AI runs through all four areas" },
-    titulo: { pt: "Não vendemos campanhas. Implementamos sistemas IA que entendem e entregam para o seu negócio.", en: "We don't sell campaigns. We implement AI systems that understand your business and deliver for it." },
+    titulo: { pt: "Não vendemos campanhas. Implementamos sistemas de IA que entendem o seu negócio e entregam resultados.", en: "We don't sell campaigns. We implement AI systems that understand your business and deliver results." },
     texto: {
       pt: "Agentes, GEO e jornadas automáticas têm casa no serviço de Inteligência Artificial, e trabalho em cada uma destas áreas.",
       en: "Agents, GEO and automated journeys live in the Artificial Intelligence service, and work in each of these areas.",
