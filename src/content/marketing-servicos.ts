@@ -25,46 +25,75 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
        do topo, e a essa luz a compressão não se vê. */
     topo: { video: "/media/marketing-paid-topo.mp4", poster: { src: "/media/marketing-paid-topo-poster.webp", width: 1440, height: 810 } },
     nome: { pt: "Paid Media", en: "Paid Media" },
-    titulo: { pt: "Cada euro em publicidade com um nome à frente: o do seu novo cliente.", en: "Every euro of advertising with a name in front of it: your new customer's." },
+    titulo: { pt: "Mais oportunidades de venda. Mais retorno da sua publicidade.", en: "More sales opportunities. More return from your advertising." },
     claim: {
-      pt: "Google, Meta, LinkedIn, TikTok e ChatGPT Ads geridos como um só orçamento, full-funnel, com a atribuição limpa antes do primeiro euro.",
-      en: "Google, Meta, LinkedIn, TikTok and ChatGPT Ads run as one budget, full-funnel, with clean attribution before the first euro.",
+      pt: "Chegue às pessoas certas, gere procura e transforme interesse em negócio. Com campanhas de pesquisa, redes sociais e remarketing alinhadas com os seus objetivos — e uma visão clara de onde o seu investimento está a produzir resultados.",
+      en: "Reach the right people, create demand and turn interest into business. With search, social and remarketing campaigns aligned with your goals — and a clear view of where your investment is producing results.",
     },
     descricao: {
-      pt: "Gestão de paid media pela Jelly: Google Ads, Meta, LinkedIn, TikTok e ChatGPT Ads geridos como um só orçamento, com medição limpa, hipóteses ordenadas por retorno e relatório semanal.",
-      en: "Paid media management by Jelly: Google Ads, Meta, LinkedIn, TikTok and ChatGPT Ads run as one budget, with clean measurement, hypotheses ranked by return and a weekly report.",
+      pt: "Paid media pela Jelly: campanhas de pesquisa e Shopping, redes sociais e remarketing, com criativos para performance, medição e otimização do investimento alinhadas com os objetivos do seu negócio.",
+      en: "Paid media by Jelly: search and Shopping, social and remarketing campaigns, with performance creative, measurement and investment optimisation aligned with your business goals.",
+    },
+    botoes: {
+      topo: { pt: "Quero melhorar os meus resultados", en: "I want better results" },
+      fecho: { pt: "Vamos falar sobre os meus resultados", en: "Let's talk about my results" },
     },
     abertura: {
-      titulo: { pt: "Onde o dinheiro de media se perde", en: "Where media money gets lost" },
+      titulo: { pt: "Onde está a perder oportunidades?", en: "Where are you missing opportunities?" },
       problema: [
-        { pt: "A maioria das contas de media otimiza para o que a plataforma mostra primeiro: o clique. O clique é barato de comprar e caro de manter, e não paga salários.", en: "Most media accounts optimise for what the platform shows first: the click. Clicks are cheap to buy, expensive to keep, and they don't pay salaries." },
-        { pt: "Cada canal vive na sua conta, com o seu gestor e o seu relatório, e ninguém responde pela pergunta que interessa: quanto custou a venda, somando tudo.", en: "Each channel lives in its own account, with its own manager and report, and nobody answers the question that matters: what did the sale cost, all in." },
+        { pt: "Potenciais clientes que não encontram a sua empresa. Anúncios que despertam pouco interesse. Visitas que acabam sem contacto ou compra. Leads que a equipa comercial não consegue converter.", en: "Potential customers who can't find your business. Ads that spark little interest. Visits that end without a contact or a purchase. Leads the sales team can't convert." },
       ],
       abordagem: [
-        { pt: "Começamos pela medição, não pela campanha. Eventos, conversões offline e um modelo de atribuição que a equipa comercial reconhece. Só depois se gasta.", en: "We start with measurement, not the campaign. Events, offline conversions and an attribution model the sales team recognises. Only then do we spend." },
-        { pt: "Depois, um só orçamento para todos os canais. O que converte ganha na semana seguinte; o que não converte perde, sem drama e sem a inércia de quem defende o seu canal.", en: "Then one budget across all channels. What converts gets more the following week; what doesn't loses, without drama and without anyone defending their channel." },
+        { pt: "Melhorar o retorno da publicidade exige perceber onde está o problema e atuar sobre ele: no público, no canal, na mensagem ou na experiência depois do clique.", en: "Improving the return on advertising means finding where the problem is and acting on it: in the audience, the channel, the message or the experience after the click." },
       ],
     },
     fazemos: {
-      titulo: { pt: "O que entra numa conta de paid media da Jelly", en: "What goes into a Jelly paid media account" },
+      titulo: { pt: "As áreas que contribuem para os seus resultados", en: "The areas that drive your results" },
       itens: [
-        { nome: { pt: "Search e Shopping", en: "Search and Shopping" }, corpo: { pt: "Google e Bing. Estrutura por intenção, feed de produto limpo, lances ligados à margem e não ao clique.", en: "Google and Bing. Intent-led structure, a clean product feed, bids tied to margin rather than clicks." } },
-        { nome: { pt: "ChatGPT Ads", en: "ChatGPT Ads" }, corpo: { pt: "Anúncios dentro das conversas do ChatGPT, onde a pergunta já vem feita. Entrar cedo, medir como tudo o resto e ficar só se pagar.", en: "Ads inside ChatGPT conversations, where the question is already asked. Get in early, measure it like everything else and stay only if it pays." } },
-        { nome: { pt: "Social pago", en: "Paid social" }, corpo: { pt: "Meta, TikTok e LinkedIn. Criativos testados em série, audiências construídas a partir dos clientes que valem mais.", en: "Meta, TikTok and LinkedIn. Creatives tested in series, audiences built from the customers worth most." } },
-        { nome: { pt: "Full-funnel", en: "Full-funnel" }, corpo: { pt: "Alcance, consideração e conversão com orçamento próprio e o mesmo painel. Sem topo de funil, o fundo seca em três meses.", en: "Reach, consideration and conversion with their own budget and one dashboard. Without the top of the funnel, the bottom dries up in three months." } },
-        { nome: { pt: "Criativo para performance", en: "Performance creative" }, corpo: { pt: "Vídeo curto, estáticos e UGC produzidos para serem testados. Um anúncio é uma hipótese com imagem.", en: "Short video, statics and UGC made to be tested. An ad is a hypothesis with a picture." } },
-        { nome: { pt: "Medição e atribuição", en: "Measurement and attribution" }, corpo: { pt: "Consent mode, conversões offline do CRM, atribuição por dados. O número que aparece no relatório é o que a direção comercial confirma.", en: "Consent mode, offline conversions from the CRM, data-driven attribution. The number in the report is the one sales leadership confirms." } },
-        { nome: { pt: "Relatório semanal", en: "Weekly report" }, corpo: { pt: "Uma página: o que aconteceu, o que aprendemos, o que muda na semana seguinte. Sem quarenta métricas.", en: "One page: what happened, what we learned, what changes next week. No forty-metric dashboards." } },
+        {
+          nome: { pt: "Search e Shopping", en: "Search and Shopping" },
+          destaque: { pt: "Se alguém procura o que vende, a sua marca deve estar presente.", en: "If someone is looking for what you sell, your brand should be there." },
+          corpo: { pt: "Campanhas no Google e Bing para chegar a pessoas com intenção de compra. Da pesquisa de um serviço à comparação de produtos, os anúncios ligam a procura à sua oferta, com atenção ao custo de aquisição e à margem do negócio.", en: "Google and Bing campaigns to reach people with purchase intent. From searching for a service to comparing products, the ads connect demand to your offer, with an eye on acquisition cost and business margin." },
+        },
+        {
+          nome: { pt: "Social Ads", en: "Social Ads" },
+          destaque: { pt: "O seu próximo cliente pode ainda não conhecer a sua marca.", en: "Your next customer may not know your brand yet." },
+          corpo: { pt: "Campanhas na Meta, LinkedIn e TikTok para dar a conhecer a sua oferta e gerar interesse junto de públicos relevantes. A escolha das redes, das audiências e das mensagens parte de quem quer conquistar e do que pretende alcançar.", en: "Campaigns on Meta, LinkedIn and TikTok to make your offer known and build interest among relevant audiences. The choice of networks, audiences and messages starts from who you want to win and what you want to achieve." },
+        },
+        {
+          nome: { pt: "Remarketing e jornada de compra", en: "Remarketing and the buying journey" },
+          destaque: { pt: "Uma primeira visita pode precisar de uma segunda oportunidade.", en: "A first visit may need a second chance." },
+          corpo: { pt: "Campanhas que voltam a chegar a quem demonstrou interesse e ajudam a avançar na decisão. Com mensagens adequadas a cada etapa: descobrir a marca, avaliar a oferta, pedir informação ou comprar.", en: "Campaigns that reach people who have shown interest again and help them move towards a decision. With messages suited to each stage: discovering the brand, weighing up the offer, asking for information or buying." },
+        },
+        {
+          nome: { pt: "Criativos para performance", en: "Performance creative" },
+          destaque: { pt: "O público certo precisa de uma razão para prestar atenção.", en: "The right audience needs a reason to pay attention." },
+          corpo: { pt: "Vídeos, imagens e conteúdos de criadores que tornam clara a relevância da sua oferta. O teste de diferentes formatos, argumentos e chamadas à ação permite identificar o que contribui para melhores resultados.", en: "Videos, images and creator content that make the relevance of your offer clear. Testing different formats, arguments and calls to action shows what contributes to better results." },
+        },
+        {
+          nome: { pt: "Medição e atribuição", en: "Measurement and attribution" },
+          destaque: { pt: "Precisa de saber que campanhas estão a contribuir para o negócio.", en: "You need to know which campaigns are contributing to the business." },
+          corpo: { pt: "Configuração da medição e, quando aplicável, ligação ao CRM para acompanhar contactos, oportunidades e vendas. Uma visão mais completa do percurso do cliente ajuda a avaliar o investimento e a reduzir decisões baseadas em informação incompleta.", en: "Measurement set-up and, where it applies, a connection to your CRM to follow contacts, opportunities and sales. A fuller view of the customer journey helps assess the investment and cut down on decisions made with incomplete information." },
+        },
+        {
+          nome: { pt: "Otimização e distribuição do investimento", en: "Optimisation and budget allocation" },
+          destaque: { pt: "O seu orçamento deve acompanhar as oportunidades.", en: "Your budget should follow the opportunities." },
+          corpo: { pt: "Ajustes a campanhas, públicos, anúncios e investimento com base no desempenho. Para reduzir desperdício, reforçar o que apresenta melhores resultados e testar novas possibilidades de crescimento.", en: "Adjustments to campaigns, audiences, ads and spend based on performance. To reduce waste, back what delivers the best results and test new ways to grow." },
+        },
       ],
     },
     passos: {
-      titulo: { pt: "Como uma conta arranca", en: "How an account starts" },
+      titulo: { pt: "Um plano que começa no seu negócio", en: "A plan that starts with your business" },
       itens: [
-        { nome: { pt: "Linha de base", en: "Baseline" }, corpo: { pt: "Duas semanas de medição limpa antes de gastar: eventos, atribuição, e o custo por venda de partida, mesmo que seja incómodo.", en: "Two weeks of clean measurement before spending: events, attribution, and the starting cost per sale, however uncomfortable." } },
-        { nome: { pt: "Hipóteses", en: "Hypotheses" }, corpo: { pt: "Cinco a dez hipóteses por canal, ordenadas pelo retorno esperado e pelo que custa testá-las. Não por gosto.", en: "Five to ten hypotheses per channel, ranked by expected return and by the cost of testing them. Not by taste." } },
-        { nome: { pt: "Cadência", en: "Cadence" }, corpo: { pt: "Ciclos semanais de testar, ler e decidir. O orçamento move-se todas as semanas para onde a venda está a acontecer.", en: "Weekly cycles of test, read, decide. Budget moves every week to where the sale is happening." } },
-        { nome: { pt: "Escala", en: "Scale" }, corpo: { pt: "A partir do segundo mês, o que funciona ganha orçamento e criativo novo. O que não funciona morre depressa.", en: "From month two, what works gets budget and fresh creative. What doesn't dies quickly." } },
+        { nome: { pt: "Objetivos e diagnóstico", en: "Goals and diagnosis" }, corpo: { pt: "Definir o resultado que procura, analisar as campanhas atuais e perceber o que precisa de ser medido. Com atenção à sua oferta, margem, ciclo de venda e capacidade comercial.", en: "Define the result you're after, review your current campaigns and work out what needs to be measured. With attention to your offer, margin, sales cycle and sales capacity." } },
+        { nome: { pt: "Estratégia e campanhas", en: "Strategy and campaigns" }, corpo: { pt: "Escolher os canais, os públicos, as mensagens e o orçamento adequados ao objetivo. Com prioridades claras e um plano de testes.", en: "Choose the channels, audiences, messages and budget that fit the goal. With clear priorities and a testing plan." } },
+        { nome: { pt: "Acompanhamento e melhoria", en: "Monitoring and improvement" }, corpo: { pt: "Analisar a resposta às campanhas e a qualidade das oportunidades geradas. Ajustar o investimento e identificar obstáculos à conversão.", en: "Analyse how people respond to the campaigns and the quality of the opportunities generated. Adjust the investment and identify obstacles to conversion." } },
+        { nome: { pt: "Crescimento", en: "Growth" }, corpo: { pt: "Reforçar as campanhas que apresentam resultados consistentes e explorar novas oportunidades. Com decisões apoiadas no retorno e na capacidade do negócio para crescer.", en: "Scale the campaigns that deliver consistent results and explore new opportunities. With decisions grounded in return and in the business's capacity to grow." } },
       ],
+    },
+    acompanhamento: {
+      titulo: { pt: "Saiba o que está a funcionar. Perceba o que precisa de mudar.", en: "Know what's working. See what needs to change." },
+      texto: { pt: "Acompanhe os indicadores relevantes para os seus objetivos num dashboard e em relatórios com a periodicidade acordada. Com uma leitura clara dos resultados, das aprendizagens e das próximas ações.", en: "Follow the indicators that matter for your goals in a dashboard and in reports at the agreed frequency. With a clear reading of the results, the lessons learned and the next steps." },
     },
     faq: [
       { pergunta: { pt: "Qual é o orçamento mínimo de media?", en: "What's the minimum media budget?" }, resposta: { pt: "Não há um número fixo: há um mínimo por hipótese. Um orçamento que não chegue para testar duas ideias por semana num canal ensina pouco. Dizemos isso na primeira conversa, com números.", en: "There's no fixed figure: there's a minimum per hypothesis. A budget that can't test two ideas a week on one channel teaches little. We say so in the first conversation, with numbers." } },
@@ -73,7 +102,7 @@ export const SERVICOS_DE_MARKETING: ServicoDeMarketing[] = [
       { pergunta: { pt: "Fazem também os criativos?", en: "Do you also produce the creatives?" }, resposta: { pt: "Sim. Vídeo curto, estáticos e conteúdo de criadores saem do nosso estúdio e das nossas parcerias, e são produzidos para ser testados, não para ganhar prémios.", en: "Yes. Short video, statics and creator content come from our studio and our partners, produced to be tested rather than to win awards." } },
       { pergunta: { pt: "Como reportam?", en: "How do you report?" }, resposta: { pt: "Em tempo real, em analytics.jelly.pt: dashboards feitos à medida de cada conta, com o custo por venda ou por lead qualificada à frente de tudo o resto. E relatórios periódicos, semanais ou mensais conforme o acordado, que dizem o que aconteceu, o que aprendemos e o que muda a seguir.", en: "In real time, at analytics.jelly.pt: dashboards built for each account, with cost per sale or per qualified lead ahead of everything else. Plus periodic reports, weekly or monthly as agreed, saying what happened, what we learned and what changes next." } },
     ],
-    fecho: { titulo: { pt: "Quer saber quanto custa hoje a sua venda?", en: "Want to know what your sale costs today?" }, texto: { pt: "Duas semanas de medição dizem-no. Depois decide-se onde entrar.", en: "Two weeks of measurement will tell you. Then we decide where to go in." } },
+    fecho: { titulo: { pt: "Vamos encontrar as oportunidades no seu investimento?", en: "Shall we find the opportunities in your investment?" }, texto: { pt: "Partilhe os seus objetivos e os desafios das campanhas atuais. A conversa começa pelo seu negócio e pelo que pretende melhorar.", en: "Share your goals and the challenges of your current campaigns. The conversation starts with your business and what you want to improve." } },
   },
 
   {

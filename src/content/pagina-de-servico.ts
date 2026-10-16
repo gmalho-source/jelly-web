@@ -23,6 +23,8 @@ import type { Localized } from "./types";
  */
 export type Passo = {
   nome: Localized;
+  /** Uma frase a negrito entre o nome e o texto, quando a célula a tem. */
+  destaque?: Localized;
   corpo: Localized;
   leva?: Exclude<keyof typeof routing.pathnames, `${string}[${string}`>;
 };
@@ -70,6 +72,16 @@ export type PaginaDeServico<Area extends string = string> = {
   passos: { titulo: Localized; itens: Passo[] };
   faq: Pergunta[];
   fecho: { titulo: Localized; texto: Localized };
+  /**
+   * O texto dos dois botões de contacto — o do topo e o do fecho — quando o
+   * serviço tem os seus. Sem eles, valem os da página-mãe.
+   */
+  botoes?: { topo?: Localized; fecho?: Localized };
+  /**
+   * Como se acompanha o trabalho: um título e um texto, entre o «como
+   * trabalhamos» e o fecho. A Paid Media é a primeira a tê-lo.
+   */
+  acompanhamento?: { titulo: Localized; texto: Localized };
   /**
    * Um remate que aponta para outra página da casa.
    *

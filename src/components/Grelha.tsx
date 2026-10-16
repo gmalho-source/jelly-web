@@ -23,6 +23,8 @@ import { Link } from "@/i18n/navigation";
  */
 type Celula = {
   titulo: ReactNode;
+  /** Uma frase a negrito entre o título e o texto. */
+  destaque?: ReactNode;
   corpo: ReactNode;
   chave: string;
   /** Quando existe, a célula inteira é um link para lá. */
@@ -54,6 +56,7 @@ export function Grelha({ colunas, celulas, className = "" }: { colunas: 2 | 3; c
                 c.titulo
               )}
             </h3>
+            {c.destaque ? <p className="mt-3 max-w-[44ch] text-[15px] font-semibold text-ink lg:text-md">{c.destaque}</p> : null}
             <p className="mt-3 max-w-[44ch] text-[15px] text-fg-soft lg:text-md">{c.corpo}</p>
           </div>
           {/* A área de clique, sobre a célula inteira.

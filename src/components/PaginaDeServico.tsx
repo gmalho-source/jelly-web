@@ -70,7 +70,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
 
   const chamada = (
     <Link href="/contactos" className="btn-pill">
-      {cta.topo} <span aria-hidden="true">→</span>
+      {servico.botoes?.topo?.[locale] ?? cta.topo} <span aria-hidden="true">→</span>
     </Link>
   );
 
@@ -196,6 +196,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
             celulas={servico.fazemos.itens.map((item) => ({
               chave: item.nome.pt,
               titulo: item.nome[locale],
+              ...(item.destaque ? { destaque: item.destaque[locale] } : {}),
               corpo: item.corpo[locale],
               ...(item.leva ? { href: item.leva } : {}),
             }))}
@@ -256,6 +257,16 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
         </div>
       </section>
 
+      {/* ── Como se acompanha, quando o serviço o diz ────────────────────────── */}
+      {servico.acompanhamento ? (
+        <section className={servico.formatos ? "surface-ink" : "surface-paper"}>
+          <div className="mx-auto grid max-w-[1200px] gap-6 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-end lg:gap-14 lg:py-24">
+            <h2 className="entra max-w-[22ch] text-chapter">{servico.acompanhamento.titulo[locale]}</h2>
+            <p className="entra-tarde max-w-[44ch] text-md text-fg-soft lg:justify-self-end">{servico.acompanhamento.texto[locale]}</p>
+          </div>
+        </section>
+      ) : null}
+
       {/* ── Fecho em vermelho ───────────────────────────────────────────────── */}
       <section className="surface-red py-16 lg:py-24">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-5 sm:px-8 lg:flex-row lg:items-end lg:justify-between">
@@ -264,7 +275,7 @@ export async function PaginaDeServico({ locale, servico, rota, area, tom, irmaos
             <p className="mt-4 max-w-[52ch] text-md">{servico.fecho.texto[locale]}</p>
           </div>
           <Link href="/contactos" className="btn-pill btn-pill-ink shrink-0">
-            {cta.fecho} <span aria-hidden="true">→</span>
+            {servico.botoes?.fecho?.[locale] ?? cta.fecho} <span aria-hidden="true">→</span>
           </Link>
         </div>
       </section>
