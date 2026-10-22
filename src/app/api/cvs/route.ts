@@ -57,6 +57,32 @@ export async function GET(request: NextRequest) {
       ...(corpo ? { body: JSON.stringify(corpo) } : {}),
     });
 
+  // `?eventos`: o que o Brevo recebeu nesta caixa nas últimas horas, e o que
+  // fez com cada email — se o entregou ao webhook, e com que resposta. É a
+  // forma de saber de que lado está a falha sem ir aos logs da Vercel. Sai só
+  // a data, o domínio de quem enviou, o destinatário e os passos: nada do
+  // candidato.
+  if (request.nextUrl.searchParams.has("eventos")) {
+    const desde = new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10);
+    const r = await brevo(`inbound/events?startDate=${desde}&limit=20&sort=desc`);
+    if (!r.ok) return NextResponse.json({ versao, erro: `o Brevo respondeu ${r.status}`, corpo: (await r.text()).slice(0, 300) }, { status: 502 });
+    const { events = [] } = (await r.json()) as { events?: { uuid: string; date?: string; sender?: string; recipient?: string }[] };
+    const detalhes = await Promise.all(
+      events.slice(0, 10).map(async (e) => {
+        const d = await brevo(`inbound/events/${e.uuid}`);
+        const corpo = d.ok ? ((await d.json()) as { logs?: { date?: string; type?: string }[]; attachments?: unknown[] }) : {};
+        return {
+          data: e.date,
+          de: String(e.sender ?? "").replace(/^.*@/, "…@"),
+          para: e.recipient,
+          anexos: Array.isArray(corpo.attachments) ? corpo.attachments.length : null,
+          passos: (corpo.logs ?? []).map((l) => `${l.date ?? ""} ${l.type ?? ""}`.trim()),
+        };
+      }),
+    );
+    return NextResponse.json({ versao, caixa, eventos: detalhes });
+  }
+
   const lista = await brevo("webhooks?type=inbound");
   const listados = lista.ok ? ((await lista.json()) as { webhooks?: { id?: number; url?: string }[] }).webhooks ?? [] : [];
   const jaLa = listados.find((w) => String(w.url ?? "").startsWith(`${base}/api/cvs`));
