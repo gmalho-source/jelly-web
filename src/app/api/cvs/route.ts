@@ -63,8 +63,9 @@ export async function GET(request: NextRequest) {
   // a data, o domínio de quem enviou, o destinatário e os passos: nada do
   // candidato.
   if (request.nextUrl.searchParams.has("eventos")) {
-    const desde = new Date(Date.now() - 24 * 3600 * 1000).toISOString().slice(0, 10);
-    const r = await brevo(`inbound/events?startDate=${desde}&limit=20&sort=desc`);
+    // O Brevo pede as duas datas juntas, ou nenhuma.
+    const dia = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+    const r = await brevo(`inbound/events?startDate=${dia(Date.now() - 24 * 3600 * 1000)}&endDate=${dia(Date.now())}&limit=20&sort=desc`);
     if (!r.ok) return NextResponse.json({ versao, erro: `o Brevo respondeu ${r.status}`, corpo: (await r.text()).slice(0, 300) }, { status: 502 });
     const { events = [] } = (await r.json()) as { events?: { uuid: string; date?: string; sender?: string; recipient?: string }[] };
     const detalhes = await Promise.all(
