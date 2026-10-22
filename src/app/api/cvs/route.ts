@@ -132,3 +132,40 @@ export async function POST(request: NextRequest) {
   // experimenta à mão. O Brevo, esse, quer o endereço sem interrogações.
   return recebe(request, request.nextUrl.searchParams.get("chave"));
 }
+
+/**
+ * Apaga um webhook de entrada que já não serve — o que ficou a apontar para
+ * um endereço antigo do site.
+ *
+ * Os webhooks desta porta são criados pela API, e a página de webhooks do
+ * Brevo não os mostra: não há onde clicar para os apagar. Fechado com o mesmo
+ * segredo que o registo, e só apaga o que é desta porta (`/api/cvs`) noutro
+ * endereço que não o que está a responder — o webhook vivo nunca.
+ *
+ *   fetch("/api/cvs?apagar=<id>", { method: "DELETE", headers: { authorization: "Bearer …" } })
+ */
+export async function DELETE(request: NextRequest) {
+  const dono = env(process.env.REVALIDATE_SECRET);
+  const dado = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  if (!dono || dado !== dono) return NextResponse.json({ ok: false }, { status: 401 });
+
+  const brevoKey = env(process.env.BREVO_API_KEY);
+  if (!brevoKey) return NextResponse.json({ erro: "falta BREVO_API_KEY" }, { status: 400 });
+  const id = Number(request.nextUrl.searchParams.get("apagar"));
+  if (!Number.isInteger(id) || id <= 0) return NextResponse.json({ erro: "falta ?apagar=<id>" }, { status: 400 });
+
+  const cabecalhos = { "api-key": brevoKey, accept: "application/json" };
+  const lido = await fetch(`${BREVO}/webhooks/${id}`, { headers: cabecalhos });
+  if (!lido.ok) return NextResponse.json({ erro: `o Brevo não encontrou o webhook ${id}` }, { status: 404 });
+  const webhook = (await lido.json()) as { type?: string; url?: string };
+
+  const base = request.nextUrl.origin.replace(/\/$/, "");
+  const url = String(webhook.url ?? "");
+  const dePorta = webhook.type === "inbound" && /\/api\/cvs(\/|$)/.test(url);
+  if (!dePorta) return NextResponse.json({ erro: "não é um webhook de entrada desta porta" }, { status: 400 });
+  if (url.startsWith(`${base}/`)) return NextResponse.json({ erro: "é o webhook que está a funcionar: não se apaga" }, { status: 400 });
+
+  const apagado = await fetch(`${BREVO}/webhooks/${id}`, { method: "DELETE", headers: cabecalhos });
+  if (!apagado.ok) return NextResponse.json({ erro: `o Brevo recusou: ${apagado.status}` }, { status: 502 });
+  return NextResponse.json({ ok: true, apagado: id, url: url.replace(/\/api\/cvs\/[^/?#]+/, "/api/cvs/•••") });
+}
