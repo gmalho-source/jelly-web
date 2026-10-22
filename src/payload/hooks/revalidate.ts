@@ -1,4 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
+import { after } from "next/server";
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from "payload";
 import { CMS_TAG } from "@/lib/cms-tag";
 
@@ -21,6 +22,57 @@ function bothTrees(paths: string[]): string[] {
 }
 
 type Doc = Record<string, unknown>;
+
+/*
+ * As páginas que se refazem logo a seguir a uma gravação, sem esperar por uma
+ * visita.
+ *
+ * A limpeza é imediata (`expire: 0`, ver `purge`), e por isso a primeira visita
+ * depois de gravar esperava que a página fosse desenhada de raiz: arrancar a
+ * função, acordar a base de dados, ir buscar os artigos todos. Vários segundos,
+ * e uma ferramenta de monitorização com o tempo limite curto contava-os como o
+ * site em baixo. Servir a versão antiga enquanto se refaz (`"max"`) não serve:
+ * a página era refeita com os dados também antigos e ficava assim.
+ *
+ * Em vez disso, o próprio site pede estas páginas depois de responder ao
+ * painel, poucas de cada vez. Quem espera é este pedido, e não quem chega a
+ * seguir. As outras páginas refazem-se na primeira visita, como antes. Só em
+ * produção: num preview, pedir www.jelly.pt aqueceria outro deploy.
+ */
+const PRINCIPAIS = [
+  "/",
+  "/en",
+  "/servicos/marketing",
+  "/servicos/tecnologia",
+  "/servicos/inteligencia-artificial",
+  "/servicos/branding",
+  "/servicos/marketing/paid-media",
+  "/servicos/marketing/video-audiovisual",
+  "/blog",
+  "/contactos",
+];
+const AO_MESMO_TEMPO = 3;
+// O mesmo de `PRODUCTION_URL` em lib/seo.ts, escrito aqui para os scripts que
+// carregam o Payload fora do Next não arrastarem a navegação do next-intl.
+const PRODUCAO = "https://www.jelly.pt";
+
+function aquece(paths: string[]) {
+  if (process.env.VERCEL_ENV !== "production") return;
+  // Os caminhos dos hooks são os portugueses, que são também os públicos.
+  const fila = [...new Set([...PRINCIPAIS, ...paths.filter((path) => path.startsWith("/") && !path.includes("["))])];
+  try {
+    after(async () => {
+      const um = async () => {
+        for (let path = fila.shift(); path; path = fila.shift()) {
+          await fetch(`${PRODUCAO}${path}`, { headers: { "x-jelly-aquecer": "1" }, signal: AbortSignal.timeout(30_000) }).catch(() => {});
+        }
+      };
+      await Promise.all(Array.from({ length: AO_MESMO_TEMPO }, um));
+    });
+  } catch {
+    // Fora de um pedido do Next (scripts) não há `after`: nada a aquecer.
+  }
+}
 
 /**
  * O Payload também corre fora do Next — nos scripts de migração, por exemplo —
@@ -45,6 +97,7 @@ function purge(paths: string[]) {
       return;
     }
   }
+  aquece(paths);
 }
 
 /**
@@ -67,6 +120,7 @@ function purgeTudo() {
   } catch {
     return;
   }
+  aquece([]);
 }
 
 export const revalidateEverythingOnChange: CollectionAfterChangeHook = ({ doc }) => {
