@@ -210,3 +210,58 @@ export async function abreNegocio(briefing: Briefing): Promise<Negocio> {
     return { ok: false, erro: erro instanceof Error ? erro.message : "erro" };
   }
 }
+
+/** Um negócio, como aparece na procura do painel. */
+export type NegocioEncontrado = { id: number; titulo: string; estado: string; organizacao: string; pessoa: string };
+
+/**
+ * Os negócios do Pipedrive para ligar a um link pessoal de inquérito: os que
+ * respondem à procura, ou, sem procura, os perdidos mais recentes — é deles
+ * que sai o inquérito da proposta rejeitada.
+ */
+export async function procuraNegocios(termo: string): Promise<{ ok: boolean; negocios: NegocioEncontrado[]; erro?: string }> {
+  const { chave } = config();
+  if (!chave) return { ok: false, negocios: [], erro: "Falta a chave do Pipedrive neste ambiente." };
+
+  if (termo.trim().length >= 2) {
+    const parametros = new URLSearchParams({ term: termo.trim(), fields: "title", limit: "20" });
+    const dados = await chama<{
+      items?: { item?: { id?: number; title?: string; status?: string; organization?: { name?: string } | null; person?: { name?: string } | null } }[];
+    }>(chave, `/deals/search?${parametros}`);
+    if (!dados) return { ok: false, negocios: [], erro: "O Pipedrive não respondeu." };
+    return {
+      ok: true,
+      negocios: (dados.items ?? [])
+        .map(({ item }) => item)
+        .filter((item): item is NonNullable<typeof item> => Boolean(item?.id))
+        .map((item) => ({
+          id: Number(item.id),
+          titulo: item.title ?? "",
+          estado: item.status ?? "",
+          organizacao: item.organization?.name ?? "",
+          pessoa: item.person?.name ?? "",
+        })),
+    };
+  }
+
+  const parametros = new URLSearchParams({ status: "lost", sort_by: "update_time", sort_direction: "desc", limit: "15" });
+  const dados = await chama<{ id?: number; title?: string; status?: string }[]>(chave, `/deals?${parametros}`);
+  if (!dados) return { ok: false, negocios: [], erro: "O Pipedrive não respondeu." };
+  return {
+    ok: true,
+    negocios: dados.filter((d) => d.id).map((d) => ({ id: Number(d.id), titulo: d.title ?? "", estado: d.status ?? "", organizacao: "", pessoa: "" })),
+  };
+}
+
+/** Uma nota num negócio. As falhas ficam no log: uma nota que não entra não desfaz nada. */
+export async function notaNoNegocio(dealId: number, html: string): Promise<boolean> {
+  const { chave } = config();
+  if (!chave) return false;
+  try {
+    const feita = await chama(chave, "/notes", { metodo: "POST", v1: true, corpo: { deal_id: dealId, content: html } });
+    return feita !== undefined;
+  } catch (erro) {
+    console.error("[pipedrive] a nota não entrou", erro);
+    return false;
+  }
+}

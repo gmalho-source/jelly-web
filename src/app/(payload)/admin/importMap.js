@@ -35,6 +35,16 @@ import { ResumoDoProjetoIA as ResumoDoProjetoIA_92ea28b49c80ea2628f50946e4ec1db6
 import { TraduzirHistoria as TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b } from '@/payload/components/TraduzirHistoria'
 import { TraduzirIA as TraduzirIA_76986ef82f82fecba03ec6985bd66336 } from '@/payload/components/TraduzirIA'
 import { PreencherEquipa as PreencherEquipa_b002362b65cf40e49fbade707cb90351 } from '@/payload/components/PreencherEquipa'
+import { LinkDoInquerito as LinkDoInquerito_eee3bb216375241808d0615c1d5ad5a5 } from '@/payload/components/inqueritos/LinkDoInquerito'
+import { CondicaoPergunta as CondicaoPergunta_67f7be3d4ecb96f25cf217f8dcb0f16e } from '@/payload/components/inqueritos/Condicao'
+import { CondicaoValor as CondicaoValor_67f7be3d4ecb96f25cf217f8dcb0f16e } from '@/payload/components/inqueritos/Condicao'
+import { RotuloDaPergunta as RotuloDaPergunta_13162ede89700ebc6a892e6729056cce } from '@/payload/components/inqueritos/RotuloDaPergunta'
+import { ImportarTypeform as ImportarTypeform_36fe18658e91a968cba868e73dfd77f5 } from '@/payload/components/inqueritos/ImportarTypeform'
+import { VistaRespostas as VistaRespostas_e04a9c6ef6922a9e89509f717f4e0467 } from '@/payload/components/inqueritos/VistaRespostas'
+import { VistaResultados as VistaResultados_ad81c7080e539f89d0b24092df4915f6 } from '@/payload/components/inqueritos/VistaResultados'
+import { LinkPessoalDoInquerito as LinkPessoalDoInquerito_eee3bb216375241808d0615c1d5ad5a5 } from '@/payload/components/inqueritos/LinkDoInquerito'
+import { NegocioPipedrive as NegocioPipedrive_8c3159cb71fdbf06e8035f3c2cac4d5a } from '@/payload/components/inqueritos/NegocioPipedrive'
+import { RespostaVista as RespostaVista_6920587fe9b2f49d9f60e07b617335bd } from '@/payload/components/inqueritos/RespostaVista'
 import { PropostaDeVaga as PropostaDeVaga_3f7989588e14a2ad1d606d7939988797 } from '@/payload/components/PropostaDeVaga'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LerCV as LerCV_37586454364dce41f3253d2b9fc6c8bf } from '@/payload/components/LerCV'
@@ -53,7 +63,6 @@ import { PainelLogo as PainelLogo_965c530af436ec2f048556b8c88302b0 } from '@/pay
 import { PainelEntrada as PainelEntrada_5172874da03eef9ac2cb5adc372a922f } from '@/payload/components/PainelEntrada'
 import { PainelCasa as PainelCasa_08e90f846953d2e7c14238564f1115f8 } from '@/payload/components/PainelCasa'
 import { PainelBarra as PainelBarra_26b5a52e79442c96441209b56420c706 } from '@/payload/components/PainelBarra'
-import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -95,6 +104,16 @@ export const importMap = {
   "@/payload/components/TraduzirHistoria#TraduzirHistoria": TraduzirHistoria_a96281ff139dde1904652b0bd301cc5b,
   "@/payload/components/TraduzirIA#TraduzirIA": TraduzirIA_76986ef82f82fecba03ec6985bd66336,
   "@/payload/components/PreencherEquipa#PreencherEquipa": PreencherEquipa_b002362b65cf40e49fbade707cb90351,
+  "@/payload/components/inqueritos/LinkDoInquerito#LinkDoInquerito": LinkDoInquerito_eee3bb216375241808d0615c1d5ad5a5,
+  "@/payload/components/inqueritos/Condicao#CondicaoPergunta": CondicaoPergunta_67f7be3d4ecb96f25cf217f8dcb0f16e,
+  "@/payload/components/inqueritos/Condicao#CondicaoValor": CondicaoValor_67f7be3d4ecb96f25cf217f8dcb0f16e,
+  "@/payload/components/inqueritos/RotuloDaPergunta#RotuloDaPergunta": RotuloDaPergunta_13162ede89700ebc6a892e6729056cce,
+  "@/payload/components/inqueritos/ImportarTypeform#ImportarTypeform": ImportarTypeform_36fe18658e91a968cba868e73dfd77f5,
+  "@/payload/components/inqueritos/VistaRespostas#VistaRespostas": VistaRespostas_e04a9c6ef6922a9e89509f717f4e0467,
+  "@/payload/components/inqueritos/VistaResultados#VistaResultados": VistaResultados_ad81c7080e539f89d0b24092df4915f6,
+  "@/payload/components/inqueritos/LinkDoInquerito#LinkPessoalDoInquerito": LinkPessoalDoInquerito_eee3bb216375241808d0615c1d5ad5a5,
+  "@/payload/components/inqueritos/NegocioPipedrive#NegocioPipedrive": NegocioPipedrive_8c3159cb71fdbf06e8035f3c2cac4d5a,
+  "@/payload/components/inqueritos/RespostaVista#RespostaVista": RespostaVista_6920587fe9b2f49d9f60e07b617335bd,
   "@/payload/components/PropostaDeVaga#PropostaDeVaga": PropostaDeVaga_3f7989588e14a2ad1d606d7939988797,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/payload/components/LerCV#LerCV": LerCV_37586454364dce41f3253d2b9fc6c8bf,
@@ -113,6 +132,5 @@ export const importMap = {
   "@/payload/components/PainelEntrada#PainelEntrada": PainelEntrada_5172874da03eef9ac2cb5adc372a922f,
   "@/payload/components/PainelCasa#PainelCasa": PainelCasa_08e90f846953d2e7c14238564f1115f8,
   "@/payload/components/PainelBarra#PainelBarra": PainelBarra_26b5a52e79442c96441209b56420c706,
-  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

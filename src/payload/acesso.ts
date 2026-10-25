@@ -21,6 +21,7 @@ export const MODULOS = [
   { label: "Prestadores", value: "prestadores" },
   { label: "Assinaturas", value: "assinaturas" },
   { label: "Débitos diretos", value: "debitos" },
+  { label: "Inquéritos", value: "inqueritos" },
 ] as const;
 
 export type Modulo = (typeof MODULOS)[number]["value"];

@@ -87,6 +87,9 @@ export interface Config {
     milestones: Milestone;
     messages: Message;
     'care-plans': CarePlan;
+    inqueritos: Inquerito;
+    'inqueritos-links': InqueritosLink;
+    'inqueritos-respostas': InqueritosResposta;
     attachments: Attachment;
     departments: Department;
     'job-functions': JobFunction;
@@ -130,6 +133,9 @@ export interface Config {
     milestones: MilestonesSelect<false> | MilestonesSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     'care-plans': CarePlansSelect<false> | CarePlansSelect<true>;
+    inqueritos: InqueritosSelect<false> | InqueritosSelect<true>;
+    'inqueritos-links': InqueritosLinksSelect<false> | InqueritosLinksSelect<true>;
+    'inqueritos-respostas': InqueritosRespostasSelect<false> | InqueritosRespostasSelect<true>;
     attachments: AttachmentsSelect<false> | AttachmentsSelect<true>;
     departments: DepartmentsSelect<false> | DepartmentsSelect<true>;
     'job-functions': JobFunctionsSelect<false> | JobFunctionsSelect<true>;
@@ -734,7 +740,17 @@ export interface User {
    * O que esta pessoa vê no painel. Administração vê tudo, incluindo os utilizadores. A Biblioteca (imagens, vídeos) vem com Blog ou com Páginas.
    */
   roles?:
-    | ('admin' | 'editorial' | 'paginas' | 'mensagens' | 'recrutamento' | 'prestadores' | 'assinaturas' | 'debitos')[]
+    | (
+        | 'admin'
+        | 'editorial'
+        | 'paginas'
+        | 'mensagens'
+        | 'recrutamento'
+        | 'prestadores'
+        | 'assinaturas'
+        | 'debitos'
+        | 'inqueritos'
+      )[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -1877,6 +1893,156 @@ export interface CarePlan {
   createdAt: string;
 }
 /**
+ * Os formulários que se mandam a clientes e à equipa. As respostas e os resultados estão nos separadores de cada inquérito.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos".
+ */
+export interface Inquerito {
+  id: number;
+  titulo: string;
+  estado: 'rascunho' | 'aberto' | 'fechado';
+  publico?: ('clientes' | 'equipa' | 'todos') | null;
+  /**
+   * Dos botões e avisos. As perguntas são as que escrever.
+   */
+  lingua: 'pt' | 'en';
+  /**
+   * Vazia, o inquérito abre logo na primeira pergunta.
+   */
+  abertura?: {
+    titulo?: string | null;
+    texto?: string | null;
+  };
+  /**
+   * O que aparece no fim. Vazio, um agradecimento curto.
+   */
+  fecho?: {
+    titulo?: string | null;
+    texto?: string | null;
+  };
+  perguntas?:
+    | {
+        tipo: 'escolha' | 'escala' | 'nps' | 'sim-nao' | 'texto-curto' | 'texto-longo' | 'grelha' | 'campos';
+        obrigatoria?: boolean | null;
+        titulo: string;
+        /**
+         * Opcional. Aparece por baixo da pergunta, em letra mais pequena.
+         */
+        descricao?: string | null;
+        varias?: boolean | null;
+        /**
+         * Vazio, sem limite.
+         */
+        maximo?: number | null;
+        outra?: boolean | null;
+        /**
+         * Numa grelha, são as colunas: as mesmas para todas as linhas.
+         */
+        opcoes?:
+          | {
+              rotulo: string;
+              /**
+               * Opcional. Com imagem, as opções aparecem em cartões.
+               */
+              imagem?: (number | null) | Media;
+              chave?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Numa grelha, cada linha é uma característica a classificar. Em campos curtos, cada linha é um campo (Nome, Cargo, Empresa).
+         */
+        linhas?:
+          | {
+              rotulo: string;
+              chave?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        escalaMin?: number | null;
+        escalaMax?: number | null;
+        rotuloMin?: string | null;
+        rotuloMeio?: string | null;
+        rotuloMax?: string | null;
+        mostrarSe?: string | null;
+        mostrarValor?: string | null;
+        /**
+         * Num link pessoal que já sabe a resposta, a pergunta não aparece e a resposta grava-se sozinha. No link geral, aparece como as outras.
+         */
+        preencher?: ('empresa' | 'nome') | null;
+        chave?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Quem recebe um email a cada resposta completa. Vários, separados por vírgula. Vazio, ninguém.
+   */
+  avisar?: string | null;
+  /**
+   * O código do formulário no Typeform (o que vem depois de /to/ no link). Serve para trazer as perguntas e as respostas de lá.
+   */
+  typeformId?: string | null;
+  chave?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Um link para uma pessoa ou para uma proposta. Já sabe a empresa, aceita uma única resposta, e a resposta fica ligada ao negócio no Pipedrive.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos-links".
+ */
+export interface InqueritosLink {
+  id: number;
+  inquerito: number | Inquerito;
+  empresa?: string | null;
+  nome?: string | null;
+  pipedriveId?: number | null;
+  pipedriveTitulo?: string | null;
+  pipedriveOrganizacao?: string | null;
+  respondidoEm?: string | null;
+  resposta?: (number | null) | InqueritosResposta;
+  titulo?: string | null;
+  chave?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Cada resposta, gravada à medida que a pessoa responde. A tabela com uma coluna por pergunta está no separador «Respostas» de cada inquérito.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos-respostas".
+ */
+export interface InqueritosResposta {
+  id: number;
+  inquerito: number | Inquerito;
+  origem?: ('geral' | 'pessoal' | 'equipa' | 'typeform') | null;
+  estado?: ('incompleta' | 'completa') | null;
+  link?: (number | null) | InqueritosLink;
+  preenchidaPor?: (number | null) | User;
+  iniciadaEm?: string | null;
+  concluidaEm?: string | null;
+  empresa?: string | null;
+  nome?: string | null;
+  pipedriveId?: number | null;
+  dados?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  titulo?: string | null;
+  sessao?: string | null;
+  typeformToken?: string | null;
+  gravacoes?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Ficheiros que o site oferece para descarregar, no Newsroom. Vão direito ao armazenamento, sem o limite de 4,5 MB. Para trocar um, carrega o novo com o mesmo «Onde aparece».
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1996,6 +2162,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'care-plans';
         value: number | CarePlan;
+      } | null)
+    | ({
+        relationTo: 'inqueritos';
+        value: number | Inquerito;
+      } | null)
+    | ({
+        relationTo: 'inqueritos-links';
+        value: number | InqueritosLink;
+      } | null)
+    | ({
+        relationTo: 'inqueritos-respostas';
+        value: number | InqueritosResposta;
       } | null)
     | ({
         relationTo: 'attachments';
@@ -2792,6 +2970,110 @@ export interface CarePlansSelect<T extends boolean = true> {
             };
         firstPrice?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos_select".
+ */
+export interface InqueritosSelect<T extends boolean = true> {
+  titulo?: T;
+  estado?: T;
+  publico?: T;
+  lingua?: T;
+  abertura?:
+    | T
+    | {
+        titulo?: T;
+        texto?: T;
+      };
+  fecho?:
+    | T
+    | {
+        titulo?: T;
+        texto?: T;
+      };
+  perguntas?:
+    | T
+    | {
+        tipo?: T;
+        obrigatoria?: T;
+        titulo?: T;
+        descricao?: T;
+        varias?: T;
+        maximo?: T;
+        outra?: T;
+        opcoes?:
+          | T
+          | {
+              rotulo?: T;
+              imagem?: T;
+              chave?: T;
+              id?: T;
+            };
+        linhas?:
+          | T
+          | {
+              rotulo?: T;
+              chave?: T;
+              id?: T;
+            };
+        escalaMin?: T;
+        escalaMax?: T;
+        rotuloMin?: T;
+        rotuloMeio?: T;
+        rotuloMax?: T;
+        mostrarSe?: T;
+        mostrarValor?: T;
+        preencher?: T;
+        chave?: T;
+        id?: T;
+      };
+  avisar?: T;
+  typeformId?: T;
+  chave?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos-links_select".
+ */
+export interface InqueritosLinksSelect<T extends boolean = true> {
+  inquerito?: T;
+  empresa?: T;
+  nome?: T;
+  pipedriveId?: T;
+  pipedriveTitulo?: T;
+  pipedriveOrganizacao?: T;
+  respondidoEm?: T;
+  resposta?: T;
+  titulo?: T;
+  chave?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inqueritos-respostas_select".
+ */
+export interface InqueritosRespostasSelect<T extends boolean = true> {
+  inquerito?: T;
+  origem?: T;
+  estado?: T;
+  link?: T;
+  preenchidaPor?: T;
+  iniciadaEm?: T;
+  concluidaEm?: T;
+  empresa?: T;
+  nome?: T;
+  pipedriveId?: T;
+  dados?: T;
+  titulo?: T;
+  sessao?: T;
+  typeformToken?: T;
+  gravacoes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

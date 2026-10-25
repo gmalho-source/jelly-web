@@ -30,6 +30,10 @@ export default function middleware(request: NextRequest) {
   // painel. A ligação vem num email e não tem versão inglesa.
   if (pathname.startsWith("/assinar")) return NextResponse.next();
 
+  // Os inquéritos, pela mesma razão: o link é de uma pessoa, e a língua é a
+  // do inquérito, não a do endereço.
+  if (pathname.startsWith("/inquerito")) return NextResponse.next();
+
   // O painel do Payload não tem árvore de línguas: passa ao lado do next-intl.
   if (pathname.startsWith("/admin")) return NextResponse.next();
 
