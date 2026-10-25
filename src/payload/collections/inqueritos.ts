@@ -70,7 +70,13 @@ const perguntas: Field = {
         { name: "obrigatoria", label: "Obrigatória", type: "checkbox", admin: { width: "22%", style: { alignSelf: "flex-end" } } },
       ],
     },
-    { name: "titulo", label: "Pergunta", type: "text", required: true },
+    {
+      name: "titulo",
+      label: "Pergunta",
+      type: "text",
+      required: true,
+      admin: { description: "Um {{field:…}} vindo do Typeform é trocado, na página, pela resposta à pergunta a que se refere (o nome, a marca)." },
+    },
     { name: "descricao", label: "Explicação", type: "textarea", admin: { description: "Opcional. Aparece por baixo da pergunta, em letra mais pequena." } },
     // ── Escolha ──
     {

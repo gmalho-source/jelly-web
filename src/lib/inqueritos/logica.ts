@@ -227,8 +227,57 @@ export function emTexto(pergunta: Pergunta, valor: Valor | undefined, dados?: Pi
   }
 }
 
-/** O texto da escolha sem a marcação de negrito que veio do Typeform («Ponto *Forte*»). */
-export const semMarcas = (texto: string) => texto.replace(/\*([^*]+)\*/g, "$1").replace(/_([^_]+)_/g, "$1");
+/**
+ * O texto sem a marcação que veio do Typeform: negrito com asteriscos
+ * («Ponto *Forte*», «**{{field:…}}**») e itálico com sublinhados
+ * («Geração de _leads_», «marca_._»).
+ */
+export const semMarcas = (texto: string) =>
+  texto
+    .replace(/\*+/g, "")
+    .replace(/_([^_\n]*)_/g, "$1")
+    .replace(/[ \t]+([.,!?;:])/g, "$1");
+
+/**
+ * As respostas anteriores dentro do texto de uma pergunta.
+ *
+ * O Typeform deixa escrever «Obrigado {{field:…}}. Qual é o seu e-mail?», e
+ * no lugar da referência entra o que a pessoa respondeu nessa pergunta. As
+ * perguntas trazidas de lá trazem as referências, e é aqui que se trocam. Uma
+ * referência ainda sem resposta desaparece, e o espaço que sobra com ela.
+ */
+const REFERENCIA = /\{\{\s*(field|hidden|var):([^}\s]+)\s*\}\}/g;
+
+export function comRespostas(texto: string, perguntas: Pergunta[], valores: Record<string, Valor>, dados?: Pick<Dados, "escalas" | "rotulos">): string {
+  if (!texto.includes("{{")) return texto;
+  return texto
+    .replace(REFERENCIA, (_, tipo: string, chave: string) => {
+      if (tipo !== "field") return "";
+      const pergunta = perguntas.find((p) => p.chave === chave);
+      return pergunta ? emTexto(pergunta, valores[chave], dados) : "";
+    })
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/[ \t]+([.,!?;:])/g, "$1")
+    .trim();
+}
+
+/** No painel, a referência diz de que pergunta vem: «Obrigado [resposta 1]». */
+export function paraPainel(texto: string, perguntas: Pergunta[]): string {
+  if (!texto.includes("{{")) return texto;
+  return texto.replace(REFERENCIA, (_, tipo: string, chave: string) => {
+    const indice = tipo === "field" ? perguntas.findIndex((p) => p.chave === chave) : -1;
+    return indice >= 0 ? `[resposta ${indice + 1}]` : "[…]";
+  });
+}
+
+/** As perguntas com as referências escritas para o painel: tabela, resultados, CSV. */
+export function legiveis(perguntas: Pergunta[]): Pergunta[] {
+  return perguntas.map((pergunta) => ({
+    ...pergunta,
+    titulo: paraPainel(pergunta.titulo, perguntas),
+    descricao: pergunta.descricao ? paraPainel(pergunta.descricao, perguntas) : pergunta.descricao,
+  }));
+}
 
 /**
  * A empresa e o nome de quem respondeu, quando as respostas os dizem: pelas

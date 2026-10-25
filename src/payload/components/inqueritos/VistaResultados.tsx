@@ -1,6 +1,7 @@
 import type { DocumentViewServerProps } from "payload";
 import { tem, type ComModulos } from "@/payload/acesso";
 import { evolucao, resultados, type Contagem, type Escala, type Nps, type Resultado, type Texto } from "@/lib/inqueritos/analise";
+import { legiveis } from "@/lib/inqueritos/logica";
 import { filtrosDe, perguntasDe, respostasDe, type DocDoInquerito } from "@/lib/inqueritos/servidor";
 import { Filtros } from "./Filtros";
 
@@ -270,7 +271,7 @@ export async function VistaResultados(props: DocumentViewServerProps) {
   if (!inquerito?.id) return <div className="inq-vista">Grave o inquérito primeiro.</div>;
 
   const filtros = filtrosDe(searchParams);
-  const perguntas = perguntasDe(inquerito);
+  const perguntas = legiveis(perguntasDe(inquerito));
   const respostas = await respostasDe(req.payload, inquerito.id, filtros);
   // A taxa de conclusão precisa das duas: as que acabaram e as que pararam a meio.
   const todas = filtros.estado === "todas" ? respostas : await respostasDe(req.payload, inquerito.id, { ...filtros, estado: "todas" });

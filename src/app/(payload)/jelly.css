@@ -637,6 +637,7 @@ html[data-theme="dark"] .painel-casa {
 
 .inq-typeform { display: grid; gap: 0.6rem; margin-bottom: 1.5rem; }
 .inq-typeform .btn { margin: 0; }
+.inq-typeform__outra-vez { justify-self: start; padding: 0; border: 0; background: none; color: var(--theme-elevation-600); font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
 .inq-typeform__relato { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--theme-elevation-600); }
 
 .inq-resposta { margin: 0 0 2rem; display: grid; gap: 0; border-top: 1px solid var(--theme-elevation-100); }

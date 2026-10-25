@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import type { PayloadHandler, PayloadRequest } from "payload";
 import { podeNoPedido } from "../acesso";
 import { env } from "@/lib/env";
-import { emTexto, identidade, limites } from "@/lib/inqueritos/logica";
+import { emTexto, identidade, legiveis, limites } from "@/lib/inqueritos/logica";
 import { dataDe, filtrosDe, perguntasDe, respostasDe, type DocDoInquerito } from "@/lib/inqueritos/servidor";
 import { ORIGENS } from "@/lib/inqueritos/tipos";
 import * as typeform from "@/lib/inqueritos/typeform";
@@ -65,7 +65,7 @@ export const exportar: PayloadHandler = async (req) => {
   const doc = await inqueritoDe(req);
   if (!doc) return Response.json({ error: "Inquérito não encontrado." }, { status: 404 });
 
-  const perguntas = perguntasDe(doc);
+  const perguntas = legiveis(perguntasDe(doc));
   const filtros = filtrosDe(new URL(req.url ?? "http://localhost").searchParams);
   const respostas = await respostasDe(req.payload, doc.id, filtros);
   const origem = Object.fromEntries(ORIGENS.map((o) => [o.value, o.label]));
@@ -119,9 +119,11 @@ export const exportar: PayloadHandler = async (req) => {
 /**
  * Traz as perguntas do Typeform para um inquérito ainda sem perguntas.
  *
- * Num inquérito que já as tem, recusa: trazer outra vez por cima apagava as
- * correções feitas no painel e podia mudar chaves de que as respostas
- * dependem. As imagens das opções vêm para a biblioteca do site.
+ * Num inquérito que já as tem, só com `?substituir=1` — o botão pergunta
+ * antes —, porque trazer outra vez apaga as correções feitas no painel. As
+ * respostas não se perdem: as perguntas voltam com as mesmas chaves (as
+ * referências do Typeform). As imagens das opções vêm para a biblioteca do
+ * site, e as que já cá estavam reaproveitam-se em vez de virem outra vez.
  */
 export const trazerPerguntas: PayloadHandler = async (req) => {
   const fechada = porta(req);
@@ -131,8 +133,9 @@ export const trazerPerguntas: PayloadHandler = async (req) => {
   const token = chaveDoTypeform();
   if (!token) return Response.json({ error: "Falta a chave do Typeform nas variáveis de ambiente (TYPEFORM_API_KEY)." }, { status: 400 });
   if (!doc.typeformId) return Response.json({ error: "Escreva primeiro o código do formulário do Typeform e grave." }, { status: 400 });
-  if (doc.perguntas?.length) {
-    return Response.json({ error: "Este inquérito já tem perguntas. Só se trazem para um inquérito vazio, para não apagar o que foi corrigido aqui." }, { status: 409 });
+  const substituir = new URL(req.url ?? "http://localhost").searchParams.get("substituir") === "1";
+  if (doc.perguntas?.length && !substituir) {
+    return Response.json({ error: "Este inquérito já tem perguntas. Trazê-las outra vez substitui as que estão aqui." }, { status: 409 });
   }
 
   let traducao: typeform.Traducao;
@@ -143,12 +146,18 @@ export const trazerPerguntas: PayloadHandler = async (req) => {
   }
 
   const notas = [...traducao.notas];
+  const imagensQueJaHa = new Map<string, number>();
+  for (const pergunta of doc.perguntas ?? []) {
+    for (const opcao of (pergunta.opcoes ?? []) as { chave?: string | null; imagem?: unknown }[]) {
+      if (opcao.chave && typeof opcao.imagem === "number") imagensQueJaHa.set(opcao.chave, opcao.imagem);
+    }
+  }
   const perguntas = [];
   for (const pergunta of traducao.perguntas) {
     const opcoes = [];
     for (const opcao of pergunta.opcoes ?? []) {
-      let imagem: number | undefined;
-      if (opcao.imagemUrl) {
+      let imagem: number | undefined = imagensQueJaHa.get(opcao.chave);
+      if (opcao.imagemUrl && !imagem) {
         try {
           const resposta = await fetch(opcao.imagemUrl);
           if (!resposta.ok) throw new Error(String(resposta.status));
@@ -176,8 +185,9 @@ export const trazerPerguntas: PayloadHandler = async (req) => {
     id: doc.id,
     data: {
       titulo: doc.titulo || traducao.titulo,
-      ...(doc.abertura?.titulo || doc.abertura?.texto || !traducao.abertura ? {} : { abertura: traducao.abertura }),
-      ...(doc.fecho?.titulo || doc.fecho?.texto || !traducao.fecho ? {} : { fecho: traducao.fecho }),
+      // A abertura e o fecho vêm se estiverem vazios, ou se se pediu para substituir.
+      ...((!substituir && (doc.abertura?.titulo || doc.abertura?.texto)) || !traducao.abertura ? {} : { abertura: traducao.abertura }),
+      ...((!substituir && (doc.fecho?.titulo || doc.fecho?.texto)) || !traducao.fecho ? {} : { fecho: traducao.fecho }),
       perguntas,
     } as never,
     overrideAccess: true,

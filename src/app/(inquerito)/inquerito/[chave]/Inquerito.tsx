@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JellyWordmark } from "@/components/JellyLogo";
-import { erroDe, limites, visiveis } from "@/lib/inqueritos/logica";
+import { comRespostas, erroDe, limites, visiveis } from "@/lib/inqueritos/logica";
 import type { Formulario, Pergunta, Valor } from "@/lib/inqueritos/tipos";
 
 export type Modo = "normal" | "equipa" | "previa";
@@ -138,6 +138,8 @@ export function Inquerito({
   const lista = useMemo(() => visiveis(formulario.perguntas, valores, fixas), [formulario.perguntas, valores, fixas]);
   const atual: Pergunta | undefined = lista[Math.min(indice, lista.length - 1)];
   const ultima = indice >= lista.length - 1;
+  // «Obrigado {{field:…}}»: as respostas anteriores dentro do texto.
+  const texto = (valor: string | null | undefined) => comRespostas(valor ?? "", formulario.perguntas, valores);
 
   // Retomar: a sessão e as respostas que ficaram neste browser.
   useEffect(() => {
@@ -355,14 +357,14 @@ export function Inquerito({
       <div ref={palco} tabIndex={-1} className="mx-auto flex w-full max-w-[760px] flex-1 flex-col justify-center px-5 pb-28 pt-10 outline-none sm:px-8">
         {!pronto ? null : estado === "feito" ? (
           <section key="fim" data-chega="chegou" aria-live="polite">
-            <h1 className="font-display text-[clamp(30px,4.6vw,52px)] leading-[1.05] tracking-[-0.02em]">{formulario.fecho?.titulo || t.obrigado}</h1>
-            <p className="mt-5 max-w-[56ch] whitespace-pre-line text-lg text-fg-soft">{formulario.fecho?.texto || t.obrigadoTexto}</p>
+            <h1 className="font-display text-[clamp(30px,4.6vw,52px)] leading-[1.05] tracking-[-0.02em]">{texto(formulario.fecho?.titulo) || t.obrigado}</h1>
+            <p className="mt-5 max-w-[56ch] whitespace-pre-line text-lg text-fg-soft">{texto(formulario.fecho?.texto) || t.obrigadoTexto}</p>
           </section>
         ) : !comecou ? (
           <section key="abertura" data-chega="chegou">
             {empresa ? <p className="eyebrow mb-4 text-red">{empresa}</p> : null}
-            <h1 className="font-display text-[clamp(30px,4.6vw,52px)] leading-[1.05] tracking-[-0.02em]">{formulario.abertura?.titulo || formulario.titulo}</h1>
-            {formulario.abertura?.texto ? <p className="mt-5 max-w-[56ch] whitespace-pre-line text-lg text-fg-soft">{formulario.abertura.texto}</p> : null}
+            <h1 className="font-display text-[clamp(30px,4.6vw,52px)] leading-[1.05] tracking-[-0.02em]">{texto(formulario.abertura?.titulo) || formulario.titulo}</h1>
+            {formulario.abertura?.texto ? <p className="mt-5 max-w-[56ch] whitespace-pre-line text-lg text-fg-soft">{texto(formulario.abertura.texto)}</p> : null}
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <button type="button" className="inq-botao" onClick={() => setComecou(true)} data-foco>
                 {t.comecar}
@@ -380,13 +382,13 @@ export function Inquerito({
               </span>
             </p>
             <h1 id={`p-${atual.chave}`} className="font-display text-[clamp(24px,3.4vw,36px)] leading-[1.15] tracking-[-0.01em]">
-              {atual.titulo}
+              {texto(atual.titulo)}
               {atual.obrigatoria ? <span className="text-red"> *</span> : null}
             </h1>
-            {atual.descricao ? <p className="mt-3 max-w-[60ch] whitespace-pre-line text-fg-soft">{atual.descricao}</p> : null}
+            {atual.descricao ? <p className="mt-3 max-w-[60ch] whitespace-pre-line text-fg-soft">{texto(atual.descricao)}</p> : null}
 
             <div className="mt-8">
-              <Campo pergunta={atual} valor={valores[atual.chave]} t={t} muda={(valor) => muda(atual, valor)} escolheEAvanca={(valor) => escolheEAvanca(atual, valor)} />
+              <Campo pergunta={{ ...atual, titulo: texto(atual.titulo) }} valor={valores[atual.chave]} t={t} muda={(valor) => muda(atual, valor)} escolheEAvanca={(valor) => escolheEAvanca(atual, valor)} />
             </div>
 
             {erro ? (

@@ -3,7 +3,7 @@
 import { useFormFields } from "@payloadcms/ui";
 import { useEffect, useState } from "react";
 import { perguntasDe, type DocDoInquerito } from "@/lib/inqueritos/forma";
-import { emTexto, limites } from "@/lib/inqueritos/logica";
+import { emTexto, legiveis, limites } from "@/lib/inqueritos/logica";
 import type { Dados, Pergunta } from "@/lib/inqueritos/tipos";
 
 /**
@@ -27,7 +27,7 @@ export function RespostaVista() {
         const resposta = await fetch(`/api/inqueritos/${id}?depth=0`, { credentials: "include" });
         if (!resposta.ok) throw new Error(String(resposta.status));
         const doc = (await resposta.json()) as DocDoInquerito;
-        if (vivo) setPerguntas(perguntasDe(doc));
+        if (vivo) setPerguntas(legiveis(perguntasDe(doc)));
       } catch {
         // Sem o inquérito, mostra-se o que a resposta guardou dos textos.
         if (vivo) setFalhou(true);

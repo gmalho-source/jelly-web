@@ -1,6 +1,6 @@
 import type { DocumentViewServerProps } from "payload";
 import { tem, type ComModulos } from "@/payload/acesso";
-import { emTexto, limites } from "@/lib/inqueritos/logica";
+import { emTexto, legiveis, limites } from "@/lib/inqueritos/logica";
 import { dataDe, filtrosDe, perguntasDe, respostasDe, type DocDoInquerito } from "@/lib/inqueritos/servidor";
 import { ORIGENS, type Pergunta } from "@/lib/inqueritos/tipos";
 import { Filtros } from "./Filtros";
@@ -31,7 +31,7 @@ export async function VistaRespostas(props: DocumentViewServerProps) {
   if (!inquerito?.id) return <div className="inq-vista">Grave o inquérito primeiro.</div>;
 
   const filtros = filtrosDe(searchParams);
-  const perguntas = perguntasDe(inquerito);
+  const perguntas = legiveis(perguntasDe(inquerito));
   const respostas = await respostasDe(req.payload, inquerito.id, filtros);
   const lista = colunas(perguntas);
   const base = `/admin/collections/inqueritos/${inquerito.id}/respostas`;

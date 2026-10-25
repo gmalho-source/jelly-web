@@ -21,23 +21,32 @@ export function ImportarTypeform() {
   const alterado = useFormModified();
   const [ocupado, setOcupado] = useState<"" | "perguntas" | "respostas">("");
   const [relato, setRelato] = useState<string[]>([]);
+  const [trazidas, setTrazidas] = useState(false);
 
   if (!id || !codigo) return null;
 
-  const trazerPerguntas = async () => {
+  const trazerPerguntas = async (substituir: boolean) => {
     if (alterado) {
       toast.error("Grave primeiro as alterações.");
       return;
     }
+    if (
+      substituir &&
+      !window.confirm(
+        "Trazer as perguntas outra vez do Typeform? As perguntas daqui são substituídas pelas de lá, e as correções feitas no painel perdem-se. As respostas ficam, ligadas às mesmas perguntas.",
+      )
+    )
+      return;
     setOcupado("perguntas");
     try {
-      const resposta = await fetch(`/api/inqueritos/${id}/typeform/perguntas`, { method: "post", credentials: "include" });
+      const resposta = await fetch(`/api/inqueritos/${id}/typeform/perguntas${substituir ? "?substituir=1" : ""}`, { method: "post", credentials: "include" });
       const corpo = await leResposta<{ perguntas?: number; notas?: string[]; error?: string }>(resposta);
       if (!resposta.ok) throw new Error(corpo.error ?? `erro ${resposta.status}`);
       toast.success(`${corpo.perguntas} perguntas trazidas do Typeform.`);
+      // As notas dizem que condições vieram e o que ficou por acertar: ficam à
+      // vista até se carregar no botão que abre o inquérito outra vez.
       setRelato(corpo.notas ?? []);
-      // O formulário do painel não sabe das perguntas novas: abre outra vez.
-      setTimeout(() => window.location.reload(), 1500);
+      setTrazidas(true);
     } catch (erro) {
       toast.error(erro instanceof Error ? erro.message : "Não foi possível trazer as perguntas.");
     } finally {
@@ -77,18 +86,29 @@ export function ImportarTypeform() {
 
   return (
     <div className="inq-typeform">
-      {!perguntas ? (
-        <button type="button" className="btn btn--style-secondary btn--size-small" disabled={Boolean(ocupado)} onClick={() => void trazerPerguntas()}>
+      {trazidas ? (
+        <button type="button" className="btn btn--style-primary btn--size-small" onClick={() => window.location.reload()}>
+          <span className="btn__content">
+            <span className="btn__label">Ver as perguntas trazidas</span>
+          </span>
+        </button>
+      ) : !perguntas ? (
+        <button type="button" className="btn btn--style-secondary btn--size-small" disabled={Boolean(ocupado)} onClick={() => void trazerPerguntas(false)}>
           <span className="btn__content">
             <span className="btn__label">{ocupado === "perguntas" ? "A trazer…" : "Trazer as perguntas do Typeform"}</span>
           </span>
         </button>
       ) : (
-        <button type="button" className="btn btn--style-secondary btn--size-small" disabled={Boolean(ocupado)} onClick={() => void trazerRespostas()}>
-          <span className="btn__content">
-            <span className="btn__label">{ocupado === "respostas" ? "A trazer…" : "Trazer as respostas do Typeform"}</span>
-          </span>
-        </button>
+        <>
+          <button type="button" className="btn btn--style-secondary btn--size-small" disabled={Boolean(ocupado)} onClick={() => void trazerRespostas()}>
+            <span className="btn__content">
+              <span className="btn__label">{ocupado === "respostas" ? "A trazer…" : "Trazer as respostas do Typeform"}</span>
+            </span>
+          </button>
+          <button type="button" className="inq-typeform__outra-vez" disabled={Boolean(ocupado)} onClick={() => void trazerPerguntas(true)}>
+            {ocupado === "perguntas" ? "A trazer…" : "Trazer as perguntas outra vez"}
+          </button>
+        </>
       )}
       {relato.length ? (
         <ul className="inq-typeform__relato">

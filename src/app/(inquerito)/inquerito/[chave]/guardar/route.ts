@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { withinRateLimit } from "@/lib/billing/store";
 import { destinatarios, enviaEmail } from "@/lib/email";
-import { dadosLimpos, emTexto, erroDe, identidade, visiveis } from "@/lib/inqueritos/logica";
+import { comRespostas, dadosLimpos, emTexto, erroDe, identidade, visiveis } from "@/lib/inqueritos/logica";
 import { formularioDe, porChave, type DocDoInquerito, type DocDoLink } from "@/lib/inqueritos/servidor";
 import type { Dados, Formulario } from "@/lib/inqueritos/tipos";
 import { notaNoNegocio } from "@/lib/pipedrive";
@@ -21,7 +21,7 @@ const escapa = (texto: string) => texto.replace(/[&<>"]/g, (c) => ({ "&": "&amp;
 function resumo(formulario: Formulario, dados: Dados): { pergunta: string; resposta: string }[] {
   return formulario.perguntas
     .filter((pergunta) => dados.valores[pergunta.chave] !== undefined)
-    .map((pergunta) => ({ pergunta: pergunta.titulo, resposta: emTexto(pergunta, dados.valores[pergunta.chave], dados) }));
+    .map((pergunta) => ({ pergunta: comRespostas(pergunta.titulo, formulario.perguntas, dados.valores, dados), resposta: emTexto(pergunta, dados.valores[pergunta.chave], dados) }));
 }
 
 /**

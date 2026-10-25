@@ -226,28 +226,7 @@ export function traduz(def: DefinicaoTF): Traducao {
     }
   }
 
-  // A regra que salta para o fim quando uma pergunta de sim ou não tem uma
-  // certa resposta: passa a condição em cada pergunta que vinha a seguir.
-  for (const regra of def.logic ?? []) {
-    for (const acao of regra.actions ?? []) {
-      const variaveis = acao.condition?.vars ?? [];
-      const campo = variaveis.find((variavel) => variavel.type === "field")?.value;
-      const constante = variaveis.find((variavel) => variavel.type === "constant")?.value;
-      const indice = perguntas.findIndex((pergunta) => pergunta.chave === campo);
-      const vaiParaOFim = acao.action === "jump" && acao.details?.to?.type === "thankyou";
-      if (vaiParaOFim && indice >= 0 && perguntas[indice].tipo === "sim-nao" && typeof constante === "boolean" && ["is", "equal"].includes(acao.condition?.op ?? "")) {
-        for (const seguinte of perguntas.slice(indice + 1)) {
-          if (!seguinte.mostrarSe) {
-            seguinte.mostrarSe = perguntas[indice].chave;
-            seguinte.mostrarValor = constante ? "nao" : "sim";
-          }
-        }
-        notas.push(`As perguntas depois de «${perguntas[indice].titulo}» só aparecem a quem responder ${constante ? "Não" : "Sim"}.`);
-      } else {
-        notas.push("Uma regra de lógica do Typeform não tem equivalente e ficou de fora: confira a ordem das perguntas.");
-      }
-    }
-  }
+  traduzLogica(def, perguntas, notas);
 
   const boasVindas = def.welcome_screens?.[0];
   // O segundo ecrã final do Typeform é o anúncio deles («crie o seu typeform»).
@@ -265,6 +244,111 @@ export function traduz(def: DefinicaoTF): Traducao {
     perguntas,
     notas,
   };
+}
+
+type Condicao = { chave: string; valor: string };
+type Acao = NonNullable<NonNullable<DefinicaoTF["logic"]>[number]["actions"]>[number];
+
+const curto = (texto: string) => (texto.length > 60 ? `${texto.slice(0, 58)}…` : texto);
+
+/**
+ * Os saltos do Typeform, passados a condições nas perguntas.
+ *
+ * O Typeform diz «depois desta pergunta, se X, salta para aquela». Aqui cada
+ * pergunta diz quando aparece. A tradução segue duas regras:
+ *
+ *   - uma pergunta que é o destino de um salto com condição aparece quando
+ *     essa condição se cumpre («Aumentar vendas» leva ao objetivo de vendas);
+ *   - uma pergunta saltada por um «se for Não» aparece quando é Sim (o URL da
+ *     loja só a quem tem e-commerce), e vice-versa.
+ *
+ * Cada pergunta leva uma só condição. Um salto que dependa de duas coisas ao
+ * mesmo tempo fica com a que a faz aparecer, e o que não tiver tradução fica
+ * dito nas notas, para se acertar à mão.
+ */
+function traduzLogica(def: DefinicaoTF, perguntas: PerguntaNova[], notas: string[]) {
+  const ordem = (def.fields ?? []).map(refDe);
+  const indiceDe = (ref: string | undefined) => perguntas.findIndex((pergunta) => pergunta.chave === ref);
+  // O destino de um salto pode ser uma pergunta que não veio (um texto de
+  // passagem): conta a seguinte que veio.
+  const destino = (acao: Acao): number => {
+    const para = acao.details?.to;
+    if (para?.type === "thankyou") return perguntas.length;
+    const valor = String((para as { value?: unknown } | undefined)?.value ?? "");
+    for (let i = Math.max(0, ordem.indexOf(valor)); i < ordem.length; i += 1) {
+      const indice = indiceDe(ordem[i]);
+      if (indice >= 0) return indice;
+    }
+    return -1;
+  };
+  const condicao = (acao: Acao): Condicao | "sempre" | null => {
+    const op = acao.condition?.op ?? "";
+    if (op === "always") return "sempre";
+    if (op !== "is" && op !== "equal") return null;
+    const variaveis = acao.condition?.vars ?? [];
+    const campo = String(variaveis.find((variavel) => variavel.type === "field")?.value ?? "");
+    const pergunta = perguntas[indiceDe(campo)];
+    if (!pergunta) return null;
+    const constante = variaveis.find((variavel) => variavel.type === "constant")?.value;
+    if (pergunta.tipo === "sim-nao" && typeof constante === "boolean") return { chave: campo, valor: constante ? "sim" : "nao" };
+    const escolha = String(variaveis.find((variavel) => variavel.type === "choice")?.value ?? "");
+    if (pergunta.tipo === "escolha" && pergunta.opcoes?.some((opcao) => opcao.chave === escolha)) return { chave: campo, valor: escolha };
+    return null;
+  };
+  const contrario = (c: Condicao): Condicao | null => {
+    const pergunta = perguntas[indiceDe(c.chave)];
+    return pergunta?.tipo === "sim-nao" ? { chave: c.chave, valor: c.valor === "sim" ? "nao" : "sim" } : null;
+  };
+
+  // Primeiro, os destinos: quem lá chega por um salto com condição.
+  const alvos = new Map<number, Condicao>();
+  for (const regra of def.logic ?? []) {
+    for (const acao of regra.actions ?? []) {
+      if (acao.action !== "jump") continue;
+      const c = condicao(acao);
+      const para = destino(acao);
+      if (c && c !== "sempre" && para >= 0 && para < perguntas.length && !alvos.has(para)) alvos.set(para, c);
+    }
+  }
+
+  // Depois, as que cada salto passa por cima.
+  const semTraducao = new Set<number>();
+  for (const regra of def.logic ?? []) {
+    const origem = indiceDe(regra.ref);
+    if (origem < 0) continue;
+    for (const acao of regra.actions ?? []) {
+      if (acao.action !== "jump") continue;
+      const c = condicao(acao);
+      const para = destino(acao);
+      if (para < 0 || !c) {
+        notas.push(`Uma regra de lógica depois de «${curto(perguntas[origem].titulo)}» não tem equivalente e ficou de fora: confira as perguntas a seguir.`);
+        continue;
+      }
+      for (let i = origem + 1; i < para; i += 1) {
+        const pergunta = perguntas[i];
+        if (pergunta.mostrarSe) continue;
+        const escolhida = alvos.get(i) ?? (c !== "sempre" ? contrario(c) : null);
+        // A condição tem de vir de uma pergunta anterior: é a única que já tem resposta.
+        if (escolhida && indiceDe(escolhida.chave) < i) {
+          pergunta.mostrarSe = escolhida.chave;
+          pergunta.mostrarValor = escolhida.valor;
+        } else {
+          semTraducao.add(i);
+        }
+      }
+    }
+  }
+
+  for (const [i, pergunta] of perguntas.entries()) {
+    if (!pergunta.mostrarSe) continue;
+    const de = perguntas[indiceDe(pergunta.mostrarSe)];
+    const resposta = de?.tipo === "sim-nao" ? (pergunta.mostrarValor === "sim" ? "Sim" : "Não") : (de?.opcoes?.find((opcao) => opcao.chave === pergunta.mostrarValor)?.rotulo ?? "");
+    notas.push(`${String(i + 1).padStart(2, "0")} «${curto(pergunta.titulo)}» só aparece a quem responder «${resposta}» em «${curto(de?.titulo ?? "")}».`);
+  }
+  for (const i of semTraducao) {
+    if (perguntas[i].mostrarSe) continue;
+    notas.push(`${String(i + 1).padStart(2, "0")} «${curto(perguntas[i].titulo)}»: no Typeform só se chegava lá por uma regra sem equivalente. Ponha-lhe uma condição à mão.`);
+  }
 }
 
 /** Os limites de cada escala tal como estavam no Typeform, pela referência. */

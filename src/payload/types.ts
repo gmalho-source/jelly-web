@@ -1925,6 +1925,9 @@ export interface Inquerito {
     | {
         tipo: 'escolha' | 'escala' | 'nps' | 'sim-nao' | 'texto-curto' | 'texto-longo' | 'grelha' | 'campos';
         obrigatoria?: boolean | null;
+        /**
+         * Um {{field:…}} vindo do Typeform é trocado, na página, pela resposta à pergunta a que se refere (o nome, a marca).
+         */
         titulo: string;
         /**
          * Opcional. Aparece por baixo da pergunta, em letra mais pequena.

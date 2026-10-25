@@ -16,7 +16,7 @@ export function RotuloDaPergunta() {
   return (
     <span className="inq-rotulo">
       <span className="inq-rotulo__numero">{numero}</span>
-      <span className="inq-rotulo__titulo">{data?.titulo || "Pergunta nova"}</span>
+      <span className="inq-rotulo__titulo">{data?.titulo?.replace(/\{\{[^}]*\}\}/g, "[…]") || "Pergunta nova"}</span>
       <span className="inq-rotulo__tipo">
         {NOMES[data?.tipo ?? ""] ?? ""}
         {data?.mostrarSe ? " · com condição" : ""}
