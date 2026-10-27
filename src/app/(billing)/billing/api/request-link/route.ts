@@ -1,7 +1,8 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, after, type NextRequest } from "next/server";
 import { isValidEmail, normalizeEmail, MAGIC_LINK_TTL_SECONDS } from "@/lib/billing/auth";
 import { sendMagicLinkEmail } from "@/lib/billing/email";
 import { isRegisteredProvider } from "@/lib/billing/providers";
+import { registaAcesso } from "@/lib/billing/registo";
 import { signMagicLink } from "@/lib/billing/auth";
 import { withinRateLimit } from "@/lib/billing/store";
 import { billingUrl } from "@/lib/billing/urls";
@@ -27,18 +28,24 @@ export async function POST(request: NextRequest) {
     !(await withinRateLimit(`email:${email}`, PER_EMAIL.limit, PER_EMAIL.windowSeconds)) ||
     !(await withinRateLimit(`ip:${ip}`, PER_IP.limit, PER_IP.windowSeconds))
   ) {
+    after(() => registaAcesso("pedido-limite", { email, request }));
     return NextResponse.json({ ok: false }, { status: 429 });
   }
 
   // A resposta é sempre a mesma: o formulário nunca confirma quem é prestador.
   if (await isRegisteredProvider(email)) {
+    const pedidoEm = new Date();
     try {
       const token = await signMagicLink(email);
-      await sendMagicLinkEmail(email, billingUrl(request, `/entrar?t=${encodeURIComponent(token)}`));
+      await sendMagicLinkEmail(email, billingUrl(request, `/entrar?t=${encodeURIComponent(token)}`), pedidoEm);
     } catch (error) {
       console.error("[billing] falha ao enviar magic link", error);
+      after(() => registaAcesso("envio-falhou", { email, pedidoEm, request, detalhe: error instanceof Error ? error.message.slice(0, 200) : undefined }));
       return NextResponse.json({ ok: false }, { status: 500 });
     }
+    after(() => registaAcesso("pedido", { email, pedidoEm, request }));
+  } else {
+    after(() => registaAcesso("pedido-nao-prestador", { email, request }));
   }
 
   return NextResponse.json({ ok: true, expiresIn: MAGIC_LINK_TTL_SECONDS });

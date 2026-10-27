@@ -24,7 +24,7 @@ import { BIBLIOTECA, tem, type ComModulos } from "./src/payload/acesso";
 import { Videos } from "./src/payload/collections/videos";
 import { Downloads } from "./src/payload/collections/downloads";
 import { Assinaturas, AssinaturasFicheiros } from "./src/payload/collections/assinaturas";
-import { BillingAttempts, BillingTokens, Prestadores } from "./src/payload/collections/prestadores";
+import { BillingAttempts, BillingTokens, Prestadores, RegistoFaturacao } from "./src/payload/collections/prestadores";
 import { Inqueritos, InqueritosLinks, InqueritosRespostas } from "./src/payload/collections/inqueritos";
 import { Clients, LogoWalls, Logos, Milestones, Projects, Sectors, Services, TeamMembers } from "./src/payload/collections/work";
 
@@ -96,6 +96,7 @@ export default buildConfig({
   globals: [NdaLink, DebitoLink],
   collections: [
     Prestadores,
+    RegistoFaturacao,
     DebitosDiretos,
     BillingTokens,
     BillingAttempts,

@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     prestadores: Prestadore;
+    'registo-faturacao': RegistoFaturacao;
     'debitos-diretos': DebitosDireto;
     'billing-tokens': BillingToken;
     'billing-attempts': BillingAttempt;
@@ -114,6 +115,7 @@ export interface Config {
   };
   collectionsSelect: {
     prestadores: PrestadoresSelect<false> | PrestadoresSelect<true>;
+    'registo-faturacao': RegistoFaturacaoSelect<false> | RegistoFaturacaoSelect<true>;
     'debitos-diretos': DebitosDiretosSelect<false> | DebitosDiretosSelect<true>;
     'billing-tokens': BillingTokensSelect<false> | BillingTokensSelect<true>;
     'billing-attempts': BillingAttemptsSelect<false> | BillingAttemptsSelect<true>;
@@ -895,6 +897,36 @@ export interface AssinaturasFicheiro {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * Cada pedido de link para billing.jelly.pt e cada entrada. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registo-faturacao".
+ */
+export interface RegistoFaturacao {
+  id: number;
+  quando: string;
+  evento:
+    | 'pedido'
+    | 'pedido-nao-prestador'
+    | 'pedido-limite'
+    | 'envio-falhou'
+    | 'aberto'
+    | 'entrada'
+    | 'expirado'
+    | 'usado'
+    | 'invalido'
+    | 'sem-ficha';
+  email?: string | null;
+  prestador?: (number | null) | Prestadore;
+  pedidoEm?: string | null;
+  minutosDesdeOPedido?: number | null;
+  ip?: string | null;
+  navegador?: string | null;
+  detalhe?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Autorizações de débito direto SEPA dos clientes. Cria-se com o contacto do cliente e envia-se: o cliente preenche a empresa, o NIF e o IBAN, e assina. Depois de assinada, carrega-se no banco e marca-se «Registada no banco».
@@ -2298,6 +2330,23 @@ export interface PrestadoresSelect<T extends boolean = true> {
   ndaData?: T;
   dadosARever?: T;
   assinaturas?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "registo-faturacao_select".
+ */
+export interface RegistoFaturacaoSelect<T extends boolean = true> {
+  quando?: T;
+  evento?: T;
+  email?: T;
+  prestador?: T;
+  pedidoEm?: T;
+  minutosDesdeOPedido?: T;
+  ip?: T;
+  navegador?: T;
+  detalhe?: T;
   updatedAt?: T;
   createdAt?: T;
 }

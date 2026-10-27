@@ -17,6 +17,14 @@ const memAttempts = new Map<string, { count: number; resetAt: number }>();
 const TOKENS = "billing-tokens" as const;
 const ATTEMPTS = "billing-attempts" as const;
 
+/** Se o token já foi gasto — para a página do link dizer «já foi usado» antes de alguém carregar no botão. */
+export async function tokenGasto(jti: string): Promise<boolean> {
+  const payload = await getCms();
+  if (!payload) return memTokens.has(jti);
+  const { totalDocs } = await payload.count({ collection: TOKENS, where: { jti: { equals: jti } }, overrideAccess: true });
+  return totalDocs > 0;
+}
+
 /** Marca o token como gasto. Devolve false se já tinha sido usado. */
 export async function consumeToken(jti: string, ttlSeconds: number): Promise<boolean> {
   const now = Date.now();

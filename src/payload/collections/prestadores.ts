@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { doModulo, escondeDe } from "../acesso";
+import { doModulo, escondeDe, so } from "../acesso";
 
 /**
  * Prestadores: quem fatura à Jelly e entra em billing.jelly.pt.
@@ -231,5 +231,74 @@ export const BillingAttempts: CollectionConfig = {
     { name: "chave", type: "text", required: true, unique: true, index: true },
     { name: "count", type: "number", required: true, defaultValue: 0 },
     { name: "resetAt", type: "date", required: true, index: true },
+  ],
+};
+
+/**
+ * O registo da área de prestadores: cada pedido de link e cada entrada.
+ *
+ * Nasceu de um caso concreto — um prestador que pedia o link e o recebia uma
+ * hora depois, já expirado. Para o perceber foi preciso cruzar capturas do
+ * Brevo com a base de dados à mão. Aqui fica tudo numa lista: quando o link
+ * foi pedido, se o email saiu, quando o link foi aberto e quanto tempo depois
+ * do pedido, e se deu entrada, expirou ou já tinha sido usado.
+ *
+ * Só o código escreve; a equipa dos prestadores lê. As linhas com mais de
+ * doze meses apagam-se sozinhas.
+ */
+export const EVENTOS_DO_REGISTO = [
+  { label: "Link pedido e enviado", value: "pedido" },
+  { label: "Pedido de um email que não é prestador", value: "pedido-nao-prestador" },
+  { label: "Pedido travado (demasiados pedidos)", value: "pedido-limite" },
+  { label: "O email com o link não saiu", value: "envio-falhou" },
+  { label: "Link aberto", value: "aberto" },
+  { label: "Entrou", value: "entrada" },
+  { label: "Link expirado", value: "expirado" },
+  { label: "Link já usado", value: "usado" },
+  { label: "Link inválido", value: "invalido" },
+  { label: "Já não é prestador qualificado", value: "sem-ficha" },
+] as const;
+
+const soLeitura = { readOnly: true };
+
+export const RegistoFaturacao: CollectionConfig = {
+  slug: "registo-faturacao",
+  labels: { singular: "Acesso à área de prestadores", plural: "Registo de acessos" },
+  admin: {
+    useAsTitle: "email",
+    group: "Faturação",
+    hidden: escondeDe("prestadores"),
+    defaultColumns: ["quando", "evento", "email", "minutosDesdeOPedido", "ip"],
+    listSearchableFields: ["email"],
+    description:
+      "Cada pedido de link para billing.jelly.pt e cada entrada. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses.",
+  },
+  lockDocuments: false,
+  access: { read: so("prestadores"), create: () => false, update: () => false, delete: () => false },
+  defaultSort: "-quando",
+  fields: [
+    // Com a hora ao segundo: a data de criação do Payload aparece na lista só
+    // com o dia, e aqui o que importa é a hora.
+    {
+      name: "quando",
+      label: "Quando",
+      type: "date",
+      required: true,
+      index: true,
+      admin: { ...soLeitura, date: { pickerAppearance: "dayAndTime", displayFormat: "dd/MM/yyyy HH:mm:ss" } },
+    },
+    { name: "evento", label: "O que aconteceu", type: "select", options: [...EVENTOS_DO_REGISTO], required: true, index: true, admin: soLeitura },
+    { name: "email", label: "Email", type: "text", index: true, admin: soLeitura },
+    { name: "prestador", label: "Prestador", type: "relationship", relationTo: "prestadores", admin: soLeitura },
+    {
+      name: "pedidoEm",
+      label: "Link pedido em",
+      type: "date",
+      admin: { ...soLeitura, date: { pickerAppearance: "dayAndTime", displayFormat: "dd/MM/yyyy HH:mm:ss" } },
+    },
+    { name: "minutosDesdeOPedido", label: "Minutos desde o pedido", type: "number", admin: soLeitura },
+    { name: "ip", label: "IP", type: "text", admin: soLeitura },
+    { name: "navegador", label: "Browser", type: "text", admin: soLeitura },
+    { name: "detalhe", label: "Detalhe", type: "text", admin: soLeitura },
   ],
 };
