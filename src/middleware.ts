@@ -34,6 +34,11 @@ export default function middleware(request: NextRequest) {
   // do inquérito, não a do endereço.
   if (pathname.startsWith("/inquerito")) return NextResponse.next();
 
+  // O press kit tem as suas duas páginas, uma por língua, fora da árvore do
+  // next-intl (ver src/app/(press)). Os ficheiros de /press/… têm ponto e nem
+  // chegam aqui.
+  if (pathname === "/press" || pathname === "/en/press") return NextResponse.next();
+
   // O painel do Payload não tem árvore de línguas: passa ao lado do next-intl.
   if (pathname.startsWith("/admin")) return NextResponse.next();
 

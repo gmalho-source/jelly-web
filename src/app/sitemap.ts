@@ -56,6 +56,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   add("/clientes", 0.7);
   add("/blog", 0.7);
   add("/newsroom", 0.6);
+  // O press kit vive fora da árvore de línguas (src/app/(press)), por isso
+  // entra à mão, com as duas línguas apontadas uma à outra.
+  for (const caminho of ["/press", "/en/press"]) {
+    entries.push({
+      url: SITE_URL + caminho,
+      priority: 0.6,
+      alternates: { languages: { "pt-PT": `${SITE_URL}/press`, en: `${SITE_URL}/en/press` } },
+    });
+  }
   add("/contactos", 0.6);
   // As páginas longas. Estavam as duas de fora: a Imunidade por esquecimento, e
   // as pilares por não existirem ainda. São as páginas desta casa feitas para

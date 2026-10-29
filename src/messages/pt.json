@@ -219,10 +219,8 @@
     },
     "all": "Tudo",
     "press": "Press kit",
-    "pressBody": "Logos, retratos da equipa, boilerplate em PT e EN e contacto direto de assessoria.",
-    "pressCta": "Descarregar press kit",
-    "pressLogos": "Só os logos",
-    "pressContact": "Peça o press kit para hello@jelly.pt.",
+    "pressBody": "Informação oficial, fotografias em alta resolução, logótipos e materiais de marca da Jelly, para jornalistas e meios de comunicação.",
+    "pressCta": "Abrir o press kit",
     "pressSubscribe": "É jornalista?",
     "pressSubscribeBody": "Receba os comunicados da Jelly no seu email, quando os houver."
   },
