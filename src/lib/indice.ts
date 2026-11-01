@@ -8,6 +8,7 @@ import { getArchivedProjects, getPosts, getProjectGrid, getTemasDosArtigos } fro
 import { semShortcodes } from "@/lib/resumo";
 import { hrefDoArtigo, seccaoDe } from "@/lib/seccao";
 import { slugFor } from "@/lib/slugs";
+import { disciplinasNaLingua } from "@/lib/projeto-na-lingua";
 
 /** Os projetos com capa que o índice mostra na folha; os outros ficam para a procura. */
 export const PROJETOS_NA_FOLHA = 3;
@@ -108,12 +109,18 @@ export async function entradasDaProcura(locale: Locale): Promise<SheetTile[]> {
     .map((project) => ({
       hidden: true,
       label: project.client,
-      kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
+      kind: disciplinasNaLingua(project, locale)[0] ?? (pt ? "projeto" : "project"),
       href: url({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }),
       image: project.cover?.src,
       tone: "bg-slate",
       ordem: ORDEM.projeto,
-      termos: [project.disciplines.join(" "), project.subtitle ?? "", project.year].join(" "),
+      termos: [
+        project.disciplines.join(" "),
+        (project.disciplinesEn ?? []).join(" "),
+        project.subtitle ?? "",
+        project.subtitleEn ?? "",
+        project.year,
+      ].join(" "),
     }));
 
   const artigos: SheetTile[] = posts.map((post) => ({

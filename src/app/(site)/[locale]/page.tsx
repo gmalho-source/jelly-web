@@ -8,6 +8,7 @@ import { Marquee } from "@/components/Marquee";
 import { Odometer } from "@/components/Odometer";
 import { LogoWall, type WallLogo } from "@/components/LogoWall";
 import { ProjectRail, type RailProject } from "@/components/ProjectRail";
+import { disciplinasNaLingua, subtituloNaLingua } from "@/lib/projeto-na-lingua";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -63,8 +64,8 @@ export default async function HomePage({
     // O carrossel corre no browser e já recebe o endereço desta língua.
     slug: slugFor(project, locale),
     client: project.client,
-    subtitle: project.subtitle,
-    disciplines: project.disciplines,
+    subtitle: subtituloNaLingua(project, locale) || undefined,
+    disciplines: disciplinasNaLingua(project, locale),
     cover: project.cover!.src,
   }));
   const covers = withCover.slice(0, 22).map((project) => project.cover!.src);

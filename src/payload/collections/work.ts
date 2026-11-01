@@ -222,6 +222,20 @@ export const Projects: CollectionConfig = {
   ],
   fields: [
     { name: "client", label: "Cliente", type: "text", required: true },
+    // O logo vem da parede «Clientes», que é onde as marcas já estão
+    // carregadas: escolhe-se, não se carrega outra vez. A lista é de imagens e
+    // não de nomes porque dois terços dos logos dessa parede não têm nome.
+    {
+      name: "clientLogo",
+      label: "Logo do cliente",
+      type: "relationship",
+      relationTo: "logos",
+      filterOptions: { "wall.slug": { equals: "clientes" } },
+      admin: {
+        description: "Opcional. Aparece na página do projeto, ao lado da ficha. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.",
+        components: { Field: "@/payload/components/LogoDoCliente#LogoDoCliente" },
+      },
+    },
     slugField,
     slugEnField,
     oldSlugsField,
@@ -239,8 +253,30 @@ export const Projects: CollectionConfig = {
       type: "checkbox",
       admin: { description: "Ligado, entra na lista de casos. Desligado, fica no arquivo." },
     },
-    { name: "subtitle", label: "Linha de apoio", type: "text" },
-    { name: "disciplines", label: "Disciplinas", type: "text", hasMany: true },
+    // A linha de apoio e as disciplinas eram só portuguesas, e o site inglês
+    // abria o caso com «Web Design, Marketing e Audiovisuais» por cima do
+    // título. Têm agora o par inglês ao lado; vazio, o site inglês usa o
+    // português, como em tudo o resto.
+    {
+      type: "row",
+      fields: [
+        { name: "subtitle", label: "Linha de apoio", type: "text" },
+        { name: "subtitleEn", label: "Linha de apoio (English)", type: "text" },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        { name: "disciplines", label: "Disciplinas", type: "text", hasMany: true },
+        {
+          name: "disciplinesEn",
+          label: "Disciplinas (English)",
+          type: "text",
+          hasMany: true,
+          admin: { description: "Pela mesma ordem das portuguesas." },
+        },
+      ],
+    },
     locale("title", "Título"),
     locale("summary", "Resumo", { long: true }),
     {
@@ -261,13 +297,6 @@ export const Projects: CollectionConfig = {
       },
     },
     { name: "story", label: "História", type: "blocks", blocks: storyBlocks },
-    // O botão que passa a história a inglês, debaixo dela. Anda pelos campos do
-    // formulário, e por isso serve também uma história ainda por gravar.
-    {
-      name: "traduzirHistoria",
-      type: "ui",
-      admin: { components: { Field: "@/payload/components/TraduzirHistoria#TraduzirHistoria" } },
-    },
     {
       name: "numbersValidated",
       label: "Números validados com o cliente",
@@ -297,6 +326,15 @@ export const Projects: CollectionConfig = {
           },
         },
       ],
+    },
+    // O botão que passa o caso inteiro a inglês: título, resumo, equipa,
+    // linha de apoio, disciplinas, números, citação e história. Fica no fim,
+    // depois de tudo o que traduz. Anda pelos campos do formulário, e por isso
+    // serve também um caso ainda por gravar.
+    {
+      name: "traduzirHistoria",
+      type: "ui",
+      admin: { components: { Field: "@/payload/components/TraduzirHistoria#TraduzirHistoria" } },
     },
     { name: "legacyPath", label: "URL antigo", type: "text", admin: { readOnly: true } },
   ],

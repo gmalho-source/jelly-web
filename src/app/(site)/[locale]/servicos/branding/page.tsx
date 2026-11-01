@@ -8,6 +8,7 @@ import { branding } from "@/content/branding";
 import { getProjectGrid, getService, getServices } from "@/lib/cms";
 import { alternates, SITE_URL } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
+import { disciplinasNaLingua, subtituloNaLingua } from "@/lib/projeto-na-lingua";
 
 /**
  * A página de Branding.
@@ -196,12 +197,12 @@ export default async function BrandingPage({ params }: { params: Promise<{ local
                   >
                     <div className={`entra ${i % 2 ? "md:order-2" : ""}`}>
                       <span aria-hidden="true" className="varre block h-0.5 w-[72px] bg-[var(--acento)]" />
-                      {projeto.subtitle ? (
-                        <span className="eyebrow mt-6 block text-[var(--acento)]">{projeto.subtitle}</span>
+                      {subtituloNaLingua(projeto, locale) ? (
+                        <span className="eyebrow mt-6 block text-[var(--acento)]">{subtituloNaLingua(projeto, locale)}</span>
                       ) : null}
                       <h3 className="editorial mt-3 text-[clamp(28px,3.6vw,50px)] leading-[1.02] tracking-[-0.02em]">{projeto.client}</h3>
                       <ul className="mt-6 flex flex-wrap gap-2">
-                        {projeto.disciplines.slice(0, 4).map((disciplina) => (
+                        {disciplinasNaLingua(projeto, locale).slice(0, 4).map((disciplina) => (
                           <li key={disciplina} className="rounded-full border border-line px-3 py-1.5 text-[11.5px] uppercase tracking-[0.06em] text-fg-soft">
                             {disciplina}
                           </li>

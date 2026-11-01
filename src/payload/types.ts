@@ -1271,6 +1271,10 @@ export interface Project {
   id: number;
   client: string;
   /**
+   * Opcional. Aparece na página do projeto, ao lado da ficha. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.
+   */
+  clientLogo?: (number | null) | Logo;
+  /**
    * Entra no URL. Mudar isto parte links que já existem.
    */
   slug: string;
@@ -1290,7 +1294,12 @@ export interface Project {
    */
   written?: boolean | null;
   subtitle?: string | null;
+  subtitleEn?: string | null;
   disciplines?: string[] | null;
+  /**
+   * Pela mesma ordem das portuguesas.
+   */
+  disciplinesEn?: string[] | null;
   title?: {
     pt?: string | null;
     en?: string | null;
@@ -1506,6 +1515,42 @@ export interface Project {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logos".
+ */
+export interface Logo {
+  id: number;
+  name?: string | null;
+  /**
+   * Em que parede esta marca aparece.
+   */
+  wall: number | LogoWall;
+  /**
+   * Sem imagem, a marca aparece escrita — é o que serve enquanto o logo não existir.
+   */
+  image?: (number | null) | Media;
+  link?: string | null;
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Os temas por onde os logos se arrumam. Cada página mostra a parede que lhe corresponde.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "logo-walls".
+ */
+export interface LogoWall {
+  id: number;
+  name: string;
+  /**
+   * É por aqui que uma página escolhe a parede que mostra. Mudar isto deixa essa página sem parede.
+   */
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Vídeos dos casos e fundos de topo. Vão do browser direito ao armazenamento, sem passar pelo servidor — por isso não há o limite de 4,5 MB que trava as imagens.
@@ -1738,42 +1783,6 @@ export interface Sector {
   /**
    * Mais baixo aparece primeiro.
    */
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Os temas por onde os logos se arrumam. Cada página mostra a parede que lhe corresponde.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "logo-walls".
- */
-export interface LogoWall {
-  id: number;
-  name: string;
-  /**
-   * É por aqui que uma página escolhe a parede que mostra. Mudar isto deixa essa página sem parede.
-   */
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "logos".
- */
-export interface Logo {
-  id: number;
-  name?: string | null;
-  /**
-   * Em que parede esta marca aparece.
-   */
-  wall: number | LogoWall;
-  /**
-   * Sem imagem, a marca aparece escrita — é o que serve enquanto o logo não existir.
-   */
-  image?: (number | null) | Media;
-  link?: string | null;
   order?: number | null;
   updatedAt: string;
   createdAt: string;
@@ -2504,6 +2513,7 @@ export interface AuthorsSelect<T extends boolean = true> {
  */
 export interface ProjectsSelect<T extends boolean = true> {
   client?: T;
+  clientLogo?: T;
   slug?: T;
   slugEn?: T;
   oldSlugs?: T;
@@ -2512,7 +2522,9 @@ export interface ProjectsSelect<T extends boolean = true> {
   order?: T;
   written?: T;
   subtitle?: T;
+  subtitleEn?: T;
   disciplines?: T;
+  disciplinesEn?: T;
   title?:
     | T
     | {

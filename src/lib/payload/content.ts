@@ -462,6 +462,7 @@ export function fetchProjects(fallback: Project[]) {
     return docs.map((raw): Project => {
       const headline = (raw.headline ?? {}) as Doc;
       const disciplines = ((raw.disciplines as string[] | null) ?? []).join(", ");
+      const disciplinesEn = ((raw.disciplinesEn as string[] | null) ?? []).filter((item) => item?.trim()).join(", ");
       return {
         slug: text(raw.slug),
         slugEn: text(raw.slugEn) || undefined,
@@ -471,7 +472,7 @@ export function fetchProjects(fallback: Project[]) {
         order: typeof raw.order === "number" ? raw.order : 100,
         title: localized(raw.title, text(raw.client)),
         summary: localized(raw.summary),
-        disciplines: { pt: disciplines, en: disciplines },
+        disciplines: { pt: disciplines, en: disciplinesEn || disciplines },
         team: localized(raw.team),
         headline: { value: text(headline.value), label: localized(headline.label) },
         kpis: ((raw.kpis ?? []) as Doc[]).map((kpi) => ({ value: text(kpi.value), label: localized(kpi.label) })),
@@ -480,6 +481,18 @@ export function fetchProjects(fallback: Project[]) {
       };
     });
   }, fallback);
+}
+
+/**
+ * O logo escolhido num projeto: um registo da coleção «Logos», com a imagem
+ * dentro. Sem imagem não há nada para mostrar, e o nome sozinho já está na
+ * ficha.
+ */
+function logoDoCliente(raw: unknown): ArchivedProject["clientLogo"] {
+  if (!raw || typeof raw !== "object") return null;
+  const media = image((raw as Doc).image as MediaDoc);
+  if (!media) return null;
+  return { src: media.src, ...(media.width && media.height ? { width: media.width, height: media.height } : {}) };
 }
 
 export function fetchArchivedProjects(fallback: ArchivedProject[]) {
@@ -494,7 +507,10 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         date: text(raw.date).slice(0, 10),
         year: text(raw.year) || text(raw.date).slice(0, 4),
         disciplines: (raw.disciplines as string[] | null) ?? [],
+        disciplinesEn: ((raw.disciplinesEn as string[] | null) ?? []).filter((item) => item?.trim()),
         subtitle: text(raw.subtitle) || undefined,
+        subtitleEn: text(raw.subtitleEn) || undefined,
+        clientLogo: logoDoCliente(raw.clientLogo),
         summary: localized(raw.summary).pt,
         // Só o inglês que foi escrito: vazio, a página cai no português.
         summaryEn: text(((raw.summary ?? {}) as Doc).en) || undefined,

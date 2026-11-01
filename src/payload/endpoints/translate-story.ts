@@ -5,7 +5,7 @@ import { podeNoPedido } from "../acesso";
 const MODEL = "claude-opus-5";
 
 /**
- * A história de um caso, passada a inglês pelo Claude.
+ * Um caso — a história e o resto da página — passado a inglês pelo Claude.
  *
  * Vai e volta uma lista numerada de textos, e não a árvore de blocos. É de
  * propósito: a estrutura da história — que bloco vem a seguir a qual, que
@@ -18,11 +18,12 @@ const MODEL = "claude-opus-5";
  */
 const REGRAS = `You translate portfolio case studies for Jelly, a Portuguese digital marketing and AI agency. The source is European Portuguese; the target is British English.
 
-You receive a numbered list of texts taken from one case study, in order. Some are section headings, some are body paragraphs, some are button labels. You return the same list, same numbers, same count, translated.
+You receive a numbered list of texts taken from one case study page. They can be the page title, the summary, a line naming the team, a short line shown above the title, discipline names (one per item, such as "Estratégia Digital" or "Web Design"), the captions under the results figures, a client testimonial, the job title of the person quoted, section headings, body paragraphs and button labels. You return the same list, same numbers, same count, translated.
 
 Rules:
 - British English. Natural English, not a word-for-word carry-over from Portuguese.
-- Keep each item's register and length in the same range. A heading stays a heading: short, no full stop unless the original has one. A button label stays two or three words.
+- Keep each item's register and length in the same range. A heading stays a heading: short, no full stop unless the original has one. A button label stays two or three words. A discipline stays a short name in title case, as an agency would list its services.
+- A testimonial is someone's own words: translate it faithfully, keeping the voice, without polishing it into marketing copy.
 - Keep the paragraph breaks inside an item exactly as they are.
 - Do not translate: client names, brand names, product names, people's names, place names, or the names of tools and platforms.
 - Numbers, percentages and units stay as they are. Portuguese decimal commas become full stops only inside numbers written in English style; when in doubt keep the original.
@@ -41,7 +42,7 @@ function porta(req: Parameters<PayloadHandler>[0]) {
 /**
  * Traduz uma lista de textos.
  *
- * POST /api/projects/traduzir-historia
+ * POST /api/projects/traduzir-historia (o nome ficou da primeira versão, que só traduzia a história)
  * { textos: string[], cliente?: string }
  */
 export const translateStory: PayloadHandler = async (req) => {
@@ -54,7 +55,7 @@ export const translateStory: PayloadHandler = async (req) => {
     .filter((item) => item.trim());
 
   if (!textos.length) return Response.json({ error: "Não há texto português para traduzir." }, { status: 422 });
-  if (textos.length > 120) return Response.json({ error: "História grande demais para uma vez." }, { status: 413 });
+  if (textos.length > 200) return Response.json({ error: "Caso grande demais para uma vez." }, { status: 413 });
 
   const numerada = textos.map((texto, indice) => `${indice + 1}. ${texto}`).join("\n\n");
   const cliente = (pedido?.cliente ?? "").trim();

@@ -9,6 +9,7 @@ import { CaseStory } from "@/components/CaseStory";
 import { getArchivedProject, getArchivedProjects, getNextProject, getProject, getProjects } from "@/lib/cms";
 import { alternates } from "@/lib/seo";
 import { slugFor } from "@/lib/slugs";
+import { disciplinasNaLingua, subtituloNaLingua } from "@/lib/projeto-na-lingua";
 
 type Params = { locale: Locale; slug: string };
 
@@ -41,9 +42,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const [project, archived] = await Promise.all([getProject(slug), getArchivedProject(slug)]);
   if (!project && !archived) return {};
 
-  const title = project ? `${project.client} — ${project.title[locale]}` : `${archived!.client} — ${archived!.subtitle || archived!.disciplines.join(", ")}`;
+  const title = project
+    ? `${project.client} — ${project.title[locale]}`
+    : `${archived!.client} — ${subtituloNaLingua(archived!, locale) || disciplinasNaLingua(archived!, locale).join(", ")}`;
   const resumoArquivo = (locale === "en" && archived?.summaryEn) || archived?.summary;
-  const description = project?.summary[locale] || resumoArquivo || `${archived?.client}: ${archived?.disciplines.join(", ")}.`;
+  const description =
+    project?.summary[locale] || resumoArquivo || `${archived?.client}: ${archived ? disciplinasNaLingua(archived, locale).join(", ") : ""}.`;
 
   const peca = project ?? archived!;
   return {
@@ -76,7 +80,11 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const client = project?.client ?? archived!.client;
   const headline = project?.title[locale] ?? client;
-  const eyebrow = archived?.subtitle || project?.disciplines[locale] || archived?.disciplines.join(" · ") || "";
+  const disciplinas = archived ? disciplinasNaLingua(archived, locale) : [];
+  const eyebrow = (archived && subtituloNaLingua(archived, locale)) || project?.disciplines[locale] || disciplinas.join(" · ") || "";
+  // O logo do cliente, quando foi escolhido no painel. Vive no mesmo registo
+  // que o resto do caso, e por isso vem com o arquivo.
+  const logo = archived?.clientLogo;
   const lead = project?.summary[locale] || (locale === "en" && archived?.summaryEn) || archived?.summary || "";
   const cover = archived?.cover?.src;
   // O topo da página: a imagem primeiro e o título por cima dela — um caso
@@ -97,7 +105,7 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
 
   const facts = [
     { term: t("client"), value: client },
-    { term: t("disciplines"), value: project?.disciplines[locale] ?? archived?.disciplines.join(", ") ?? "" },
+    { term: t("disciplines"), value: project?.disciplines[locale] ?? disciplinas.join(", ") },
     ...(project ? [{ term: t("team"), value: project.team[locale] }] : []),
   ].filter((fact) => fact.value);
 
@@ -181,15 +189,36 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
           decidiu continuar a ler. */}
       <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,60%)_minmax(0,34%)] lg:justify-between lg:gap-14">
         {lead ? <p className="subtitle max-w-[58ch] text-lg">{lead}</p> : null}
-        {facts.length ? (
-          <dl className="text-[13px] lg:mt-1">
-            {facts.map((fact) => (
-              <div key={fact.term} className="flex justify-between gap-4 border-b border-line py-2.5">
-                <dt className="text-fg-soft">{fact.term}</dt>
-                <dd className="text-right">{fact.value}</dd>
+        {facts.length || logo ? (
+          <div className="lg:mt-1">
+            {/* O logo do cliente, por cima da ficha. Os logos da parede são
+                feitos para fundo claro — é assim que a homepage os mostra — e
+                por isso este tem o seu cartão de papel sobre a página escura.
+                A cor fica: aqui é uma marca só, e é a dela. O nome continua na
+                ficha, em texto; a imagem não tem de o repetir a quem não a vê. */}
+            {logo ? (
+              <div className="mb-6 grid h-[112px] place-items-center rounded-[14px] bg-paper px-8">
+                <Image
+                  src={logo.src}
+                  alt=""
+                  width={logo.width ?? 320}
+                  height={logo.height ?? 128}
+                  sizes="240px"
+                  className="max-h-[60px] w-auto max-w-[240px] object-contain"
+                />
               </div>
-            ))}
-          </dl>
+            ) : null}
+            {facts.length ? (
+              <dl className="text-[13px]">
+                {facts.map((fact) => (
+                  <div key={fact.term} className="flex justify-between gap-4 border-b border-line py-2.5">
+                    <dt className="text-fg-soft">{fact.term}</dt>
+                    <dd className="text-right">{fact.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+          </div>
         ) : null}
       </div>
 

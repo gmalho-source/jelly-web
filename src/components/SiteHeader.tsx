@@ -6,6 +6,7 @@ import { getArchivedProjects, getNewsroom, getPosts, getServices } from "@/lib/c
 import { seccaoDe } from "@/lib/seccao";
 import { PROJETOS_NA_FOLHA } from "@/lib/indice";
 import { slugFor } from "@/lib/slugs";
+import { disciplinasNaLingua } from "@/lib/projeto-na-lingua";
 import { IndexSheet, type SheetTile } from "./IndexSheet";
 
 const tones = ["bg-red", "bg-lavender", "bg-chartreuse", "bg-coral"];
@@ -85,11 +86,11 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     ...withCover.slice(0, PROJETOS_NA_FOLHA).map((project) => ({
       group: trabalho,
       label: project.client,
-      kind: project.disciplines[0] ?? (pt ? "projeto" : "project"),
+      kind: disciplinasNaLingua(project, locale)[0] ?? (pt ? "projeto" : "project"),
       href: url({ pathname: "/projetos/[slug]", params: { slug: slugFor(project, locale) } }),
       image: project.cover!.src,
       ordem: 1,
-      termos: project.disciplines.join(" "),
+      termos: [...project.disciplines, ...(project.disciplinesEn ?? [])].join(" "),
     })),
     {
       group: trabalho,

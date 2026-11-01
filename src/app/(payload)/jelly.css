@@ -816,3 +816,36 @@ html[data-theme="dark"] .inq-empilhada__parte[data-tinta="escura"] { color: #fff
   .inq-filtros__exportar { margin-left: 0 !important; }
   .inq-nps { grid-template-columns: 1fr; }
 }
+
+/* ── O logo do cliente, num projeto ─────────────────────────────────────────
+   Os logos foram feitos para fundo claro — é assim que a parede «Clientes» os
+   mostra no site — e por isso cada um tem o seu cartão branco, também no
+   painel escuro. */
+.logo-cliente { margin-bottom: var(--spacing-field, 1.5rem); }
+.logo-cliente__escolhido { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
+.logo-cliente__escolhido .btn { margin: 0; }
+.logo-cliente__cartao {
+  display: grid; place-items: center; width: 200px; height: 80px; padding: 0.75rem 1rem;
+  background: #fff; border: 1px solid var(--theme-elevation-150); border-radius: 8px;
+}
+.logo-cliente__cartao img { max-width: 100%; max-height: 52px; object-fit: contain; }
+.logo-cliente__painel { border: 1px solid var(--theme-elevation-150); border-radius: 8px; padding: 0.75rem; }
+.logo-cliente__barra { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.75rem; }
+.logo-cliente__barra .btn { margin: 0; }
+.logo-cliente__barra input {
+  flex: 1; min-width: 0; padding: 0.5rem 0.75rem; border-radius: 4px;
+  border: 1px solid var(--theme-elevation-150); background: var(--theme-input-bg, var(--theme-elevation-0)); color: var(--theme-text);
+}
+.logo-cliente__grelha {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); max-height: 360px; overflow: auto;
+}
+.logo-cliente__grelha button {
+  display: grid; place-items: center; width: 100%; aspect-ratio: 5 / 2; padding: 0.6rem 0.8rem; cursor: pointer;
+  background: #fff; border: 2px solid transparent; border-radius: 6px; transition: border-color 0.15s;
+}
+.logo-cliente__grelha button:hover { border-color: var(--theme-elevation-400); }
+.logo-cliente__grelha button[aria-pressed="true"] { border-color: var(--theme-success-500, #2f9e44); }
+.logo-cliente__grelha img { max-width: 100%; max-height: 40px; object-fit: contain; }
+.logo-cliente__nota { color: var(--theme-elevation-500); font-size: 0.8rem; margin: 0.4rem 0; }
+.logo-cliente__nota--erro { color: var(--theme-error-500); }

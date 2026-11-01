@@ -242,6 +242,12 @@ export type ArchivedProject = {
   disciplines: string[];
   /** Linha curta que o site antigo punha debaixo do nome do cliente. */
   subtitle?: string;
+  /** A mesma linha em inglês. Vazia, o site inglês usa a portuguesa. */
+  subtitleEn?: string;
+  /** As disciplinas em inglês, pela mesma ordem. Vazias, o site inglês usa as portuguesas. */
+  disciplinesEn?: string[];
+  /** O logo do cliente, escolhido da parede «Clientes». */
+  clientLogo?: { src: string; width?: number; height?: number } | null;
   summary: string;
   /** O resumo em inglês. Vazio, o site inglês usa o português. */
   summaryEn?: string;
