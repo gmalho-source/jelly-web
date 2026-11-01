@@ -1271,9 +1271,13 @@ export interface Project {
   id: number;
   client: string;
   /**
-   * Opcional. Aparece na página do projeto, ao lado da ficha. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.
+   * Opcional. Aparece na página do projeto, por cima da ficha, a branco sobre a página escura. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.
    */
   clientLogo?: (number | null) | Logo;
+  /**
+   * No site o logo aparece a branco, sobre a página escura. Ligar só para logos com fundo próprio no ficheiro — um quadrado de cor, como o da Savills — que a branco ficariam um quadrado vazio.
+   */
+  clientLogoCores?: boolean | null;
   /**
    * Entra no URL. Mudar isto parte links que já existem.
    */
@@ -2514,6 +2518,7 @@ export interface AuthorsSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   client?: T;
   clientLogo?: T;
+  clientLogoCores?: T;
   slug?: T;
   slugEn?: T;
   oldSlugs?: T;

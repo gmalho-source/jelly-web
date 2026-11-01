@@ -30,6 +30,9 @@ const semAcentos = (texto: string) =>
 export function LogoDoCliente({ path, field }: Props) {
   const { value, setValue } = useField<number | { id: number } | null>({ path });
   const cliente = useFormFields(([campos]) => String(campos?.client?.value ?? ""));
+  // A pré-visualização mostra o logo como o site o vai mostrar: sobre a página
+  // escura, a branco, ou a cores quando essa opção está ligada.
+  const cores = useFormFields(([campos]) => Boolean(campos?.clientLogoCores?.value));
   const escolhido = value && typeof value === "object" ? value.id : value;
 
   const [logos, setLogos] = useState<Logo[] | null>(null);
@@ -96,7 +99,7 @@ export function LogoDoCliente({ path, field }: Props) {
 
       {escolhido && !aberto ? (
         <div className="logo-cliente__escolhido">
-          <span className="logo-cliente__cartao">
+          <span className={`logo-cliente__cartao logo-cliente__cartao--site${cores ? " logo-cliente__cartao--cores" : ""}`} title="Como aparece no site">
             {atual ? (
               // O painel não passa pelo otimizador de imagens: é a miniatura da Blob, tal como está.
               // eslint-disable-next-line @next/next/no-img-element

@@ -246,8 +246,11 @@ export type ArchivedProject = {
   subtitleEn?: string;
   /** As disciplinas em inglês, pela mesma ordem. Vazias, o site inglês usa as portuguesas. */
   disciplinesEn?: string[];
-  /** O logo do cliente, escolhido da parede «Clientes». */
-  clientLogo?: { src: string; width?: number; height?: number } | null;
+  /**
+   * O logo do cliente, escolhido da parede «Clientes». `cores`: vai como é, em
+   * vez de a branco — para os logos com fundo próprio no ficheiro.
+   */
+  clientLogo?: { src: string; width?: number; height?: number; cores?: boolean } | null;
   summary: string;
   /** O resumo em inglês. Vazio, o site inglês usa o português. */
   summaryEn?: string;

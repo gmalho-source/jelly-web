@@ -849,3 +849,7 @@ html[data-theme="dark"] .inq-empilhada__parte[data-tinta="escura"] { color: #fff
 .logo-cliente__grelha img { max-width: 100%; max-height: 40px; object-fit: contain; }
 .logo-cliente__nota { color: var(--theme-elevation-500); font-size: 0.8rem; margin: 0.4rem 0; }
 .logo-cliente__nota--erro { color: var(--theme-error-500); }
+/* Depois de escolhido: como o site o mostra, sobre a página escura e a branco. */
+.logo-cliente__cartao--site { background: #151719; border-color: #151719; }
+.logo-cliente__cartao--site img { filter: brightness(0) invert(1); }
+.logo-cliente__cartao--site.logo-cliente__cartao--cores img { filter: none; }

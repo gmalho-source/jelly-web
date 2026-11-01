@@ -488,11 +488,15 @@ export function fetchProjects(fallback: Project[]) {
  * dentro. Sem imagem não há nada para mostrar, e o nome sozinho já está na
  * ficha.
  */
-function logoDoCliente(raw: unknown): ArchivedProject["clientLogo"] {
+function logoDoCliente(raw: unknown, cores: unknown): ArchivedProject["clientLogo"] {
   if (!raw || typeof raw !== "object") return null;
   const media = image((raw as Doc).image as MediaDoc);
   if (!media) return null;
-  return { src: media.src, ...(media.width && media.height ? { width: media.width, height: media.height } : {}) };
+  return {
+    src: media.src,
+    ...(media.width && media.height ? { width: media.width, height: media.height } : {}),
+    ...(cores ? { cores: true } : {}),
+  };
 }
 
 export function fetchArchivedProjects(fallback: ArchivedProject[]) {
@@ -510,7 +514,7 @@ export function fetchArchivedProjects(fallback: ArchivedProject[]) {
         disciplinesEn: ((raw.disciplinesEn as string[] | null) ?? []).filter((item) => item?.trim()),
         subtitle: text(raw.subtitle) || undefined,
         subtitleEn: text(raw.subtitleEn) || undefined,
-        clientLogo: logoDoCliente(raw.clientLogo),
+        clientLogo: logoDoCliente(raw.clientLogo, raw.clientLogoCores),
         summary: localized(raw.summary).pt,
         // Só o inglês que foi escrito: vazio, a página cai no português.
         summaryEn: text(((raw.summary ?? {}) as Doc).en) || undefined,

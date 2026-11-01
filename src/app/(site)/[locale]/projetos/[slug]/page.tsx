@@ -191,22 +191,23 @@ export default async function ProjectPage({ params }: { params: Promise<Params> 
         {lead ? <p className="subtitle max-w-[58ch] text-lg">{lead}</p> : null}
         {facts.length || logo ? (
           <div className="lg:mt-1">
-            {/* O logo do cliente, por cima da ficha. Os logos da parede são
-                feitos para fundo claro — é assim que a homepage os mostra — e
-                por isso este tem o seu cartão de papel sobre a página escura.
-                A cor fica: aqui é uma marca só, e é a dela. O nome continua na
-                ficha, em texto; a imagem não tem de o repetir a quem não a vê. */}
+            {/* O logo do cliente, por cima da ficha, sem cartão: assenta na
+                página como o título. Os logos da parede foram feitos para fundo
+                claro — nenhum dos 54 é claro — e por isso aqui o desenho passa
+                todo a branco. Os que têm fundo próprio no ficheiro, como um
+                quadrado de cor, a branco ficavam um quadrado vazio: para esses
+                o painel tem «Mostrar o logo a cores», e vão como são. O nome
+                continua na ficha, em texto; a imagem não tem de o repetir a
+                quem não a vê. */}
             {logo ? (
-              <div className="mb-6 grid h-[112px] place-items-center rounded-[14px] bg-paper px-8">
-                <Image
-                  src={logo.src}
-                  alt=""
-                  width={logo.width ?? 320}
-                  height={logo.height ?? 128}
-                  sizes="240px"
-                  className="max-h-[60px] w-auto max-w-[240px] object-contain"
-                />
-              </div>
+              <Image
+                src={logo.src}
+                alt=""
+                width={logo.width ?? 320}
+                height={logo.height ?? 128}
+                sizes="240px"
+                className={`mb-7 h-auto max-h-[56px] w-auto max-w-[220px] object-contain object-left ${logo.cores ? "" : "brightness-0 invert"}`}
+              />
             ) : null}
             {facts.length ? (
               <dl className="text-[13px]">

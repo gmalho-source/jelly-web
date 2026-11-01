@@ -232,8 +232,19 @@ export const Projects: CollectionConfig = {
       relationTo: "logos",
       filterOptions: { "wall.slug": { equals: "clientes" } },
       admin: {
-        description: "Opcional. Aparece na página do projeto, ao lado da ficha. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.",
+        description: "Opcional. Aparece na página do projeto, por cima da ficha, a branco sobre a página escura. Vem da parede «Clientes»; um logo que lá não esteja acrescenta-se em Casa → Logos.",
         components: { Field: "@/payload/components/LogoDoCliente#LogoDoCliente" },
+      },
+    },
+    {
+      name: "clientLogoCores",
+      label: "Mostrar o logo a cores",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        condition: (data) => Boolean(data?.clientLogo),
+        description:
+          "No site o logo aparece a branco, sobre a página escura. Ligar só para logos com fundo próprio no ficheiro — um quadrado de cor, como o da Savills — que a branco ficariam um quadrado vazio.",
       },
     },
     slugField,
