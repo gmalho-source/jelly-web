@@ -87,7 +87,8 @@ export default async function LegalPage({ params }: { params: Promise<Params> })
           <hr className="mt-8 border-line" />
           <div className="mt-8">
             {page.iubenda ? (
-              <IubendaPolicy href={page.iubenda[locale]} label={page.title[locale]} />
+              // A chave é o endereço: cada política é um bloco novo, nunca o anterior reaproveitado.
+              <IubendaPolicy key={page.iubenda[locale]} href={page.iubenda[locale]} label={page.title[locale]} />
             ) : (
               <ArticleBody blocks={page.blocks[locale]} />
             )}
