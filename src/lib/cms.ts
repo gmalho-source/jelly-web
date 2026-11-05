@@ -349,7 +349,9 @@ export const getDepartments = fromStore("departments", async (): Promise<Departm
   return [...all].sort((a, b) => a.order - b.order);
 });
 
-const allJobs = fromStore("jobs", async (): Promise<Job[]> => fetchJobs([]));
+// «jobs-2»: as vagas também têm links escritos no painel, e passaram a trazer a
+// escolha de abrir em nova aba. O nome novo larga a cópia de antes no deploy.
+const allJobs = fromStore("jobs-2", async (): Promise<Job[]> => fetchJobs([]));
 
 export async function getJobs(): Promise<Job[]> {
   const hoje = new Date().toISOString().slice(0, 10);
@@ -372,7 +374,11 @@ export async function getPostBody(slug: string) {
   // A chave leva o endereço, e não o nome só: é o que faz uma entrada por
   // artigo. Não passa pelo `fromStore` porque aquele embrulha em `cache()` do
   // React, e um embrulho novo a cada chamada não junta nada.
-  const ler = unstable_cache(() => fetchPostBody(slug), ["cms", "post-body", slug], {
+  //
+  // «post-body-2» e não «post-body»: os links passaram a trazer a escolha de
+  // abrir em nova aba, e o cache sobrevive aos deploys. Com o nome antigo, os
+  // artigos continuavam a sair com os links de antes até alguém publicar.
+  const ler = unstable_cache(() => fetchPostBody(slug), ["cms", "post-body-2", slug], {
     revalidate: false,
     tags: [CMS_TAG],
   });

@@ -73,7 +73,7 @@ export function fromLexical(root: unknown): Block[] {
    * painel via-o publicado como texto morto: não falhava nada, só deixava de
    * ser link. Ninguém dá por isso a tempo.
    */
-  const spans = (node: Doc, href?: string): Span[] => {
+  const spans = (node: Doc, href?: string, novaAba?: boolean): Span[] => {
     const saida: Span[] = [];
     for (const child of (node.children ?? []) as Doc[]) {
       if (typeof child.text === "string") {
@@ -84,12 +84,17 @@ export function fromLexical(root: unknown): Block[] {
           ...(format & 1 ? { bold: true } : {}),
           ...(format & 2 ? { italic: true } : {}),
           ...(href ? { href } : {}),
+          ...(href && novaAba ? { novaAba: true } : {}),
         });
       } else if (child.type === "link" || child.type === "autolink") {
-        const campos = (child.fields ?? {}) as { url?: string };
-        saida.push(...spans(child, text(campos.url) || href));
+        // A caixa «Abrir em nova aba» do editor fica em `fields.newTab`. Antes
+        // só se lia o endereço, e a caixa ligada no painel não fazia nada no
+        // site.
+        const campos = (child.fields ?? {}) as { url?: string; newTab?: boolean };
+        const url = text(campos.url);
+        saida.push(...spans(child, url || href, url ? Boolean(campos.newTab) : novaAba));
       } else {
-        saida.push(...spans(child, href));
+        saida.push(...spans(child, href, novaAba));
       }
     }
     return saida;

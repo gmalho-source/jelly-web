@@ -184,7 +184,8 @@ export type NewsItem = {
 };
 
 /** Trecho de texto com marcação inline. Vem do Portable Text do CMS. */
-export type Span = { text: string; bold?: boolean; italic?: boolean; href?: string };
+/** `novaAba`: quem escreveu o link no painel ligou «Abrir em nova aba». */
+export type Span = { text: string; bold?: boolean; italic?: boolean; href?: string; novaAba?: boolean };
 
 /** Bloco de corpo de artigo, como sai da migração do WordPress ou do CMS. */
 export type Block =

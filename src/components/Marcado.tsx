@@ -21,14 +21,15 @@ export function Inline({ spans, novoSeparador }: { spans: Span[]; novoSeparador?
             <a
               key={index}
               href={span.href}
-              /* `novoSeparador` é uma escolha de quem desenha a página, e não
-                 uma regra da casa. Na apresentação de um autor os links são o
-                 LinkedIn ou o sítio da pessoa — sair do artigo para lá e não
-                 poder voltar com um clique é perder a leitura. No corpo de um
-                 artigo há links para dentro da própria casa, e abrir um
-                 separador para ir de uma página da Jelly para outra é um tique,
-                 não uma cortesia. Por isso pede-se, não se herda. */
-              {...(novoSeparador ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              /* Abre noutro separador em dois casos. Quando quem desenha a página
+                 o pede para todos — na apresentação de um autor os links são o
+                 LinkedIn ou o sítio da pessoa, e sair do artigo para lá é perder
+                 a leitura. E quando quem escreveu o link ligou «Abrir em nova
+                 aba» no painel: é a escolha de quem escreve, link a link. Fora
+                 disso não: no corpo de um artigo há links para dentro da
+                 própria casa, e abrir um separador para ir de uma página da
+                 Jelly para outra é um tique, não uma cortesia. */
+              {...(novoSeparador || span.novaAba ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="text-red underline decoration-1 underline-offset-2 hover:no-underline"
             >
               {content}
