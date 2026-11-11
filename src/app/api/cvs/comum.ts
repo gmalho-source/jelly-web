@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, after, type NextRequest } from "next/server";
 import { createHash, timingSafeEqual } from "node:crypto";
 import { getPayload } from "payload";
 import config from "@/../payload.config";
@@ -162,10 +162,15 @@ function autenticado(item: Item): { ok: boolean; razao: string } {
 }
 
 /** O email original, arrumado para ficar na ficha. */
+/** A primeira linha do registo de um email: quem o reenviou e quando. */
+function assinaturaDoEmail(item: Item) {
+  return `Reenviado por ${endereco(item.From)}${item.Date ? ` em ${item.Date}` : ""}`;
+}
+
 function comoFicaNaFicha(item: Item) {
   const corpo = (item.ExtractedMarkdownMessage ?? item.RawTextBody ?? "").trim().slice(0, 6000);
   return [
-    `Reenviado por ${endereco(item.From)}${item.Date ? ` em ${item.Date}` : ""}`,
+    assinaturaDoEmail(item),
     item.Subject ? `Assunto: ${item.Subject}` : "",
     "",
     corpo,
@@ -202,9 +207,22 @@ export async function recebe(request: NextRequest, chaveDada: string | null) {
     ? ((corpo as { items: Item[] }).items ?? [])
     : [corpo as Item];
 
-  const resultados: string[] = [];
-  for (const item of items) resultados.push(await trata(item, caixa));
-  return NextResponse.json({ ok: true, resultados });
+  // O Brevo é respondido já, e o trabalho faz-se a seguir. Ler o CV com o
+  // modelo, guardar o ficheiro e mandar os emails passa dos vinte segundos que
+  // o Brevo espera; ele dava a entrega por falhada e voltava a mandá-la — oito
+  // vezes ao longo de um dia, a 11/11, e cada vez era um aviso «já havia ficha»
+  // a quem tinha reenviado o CV e mais uma cópia do ficheiro guardada. O
+  // trabalho continua a ter o tempo todo da função (`maxDuration`).
+  after(async () => {
+    for (const item of items) {
+      try {
+        console.log(`[cvs] ${await trata(item, caixa)}`);
+      } catch (erro) {
+        console.error("[cvs] o reenvio não foi tratado:", erro);
+      }
+    }
+  });
+  return NextResponse.json({ ok: true, estado: "recebido", emails: items.length });
 }
 
 async function trata(item: Item, caixa: string): Promise<string> {
@@ -239,6 +257,23 @@ async function trata(item: Item, caixa: string): Promise<string> {
   if (!withinRateLimit("cvs:entrada", 20, 60 * 60)) {
     console.warn("[cvs] travado: mais de vinte reenvios na última hora");
     return "demasiados";
+  }
+
+  const payload = await getPayload({ config });
+
+  // O mesmo email outra vez não é um reenvio novo. O Brevo volta a entregar o
+  // que julga ter falhado, e a primeira linha do registo — quem reenviou e
+  // quando — é a mesma em todas as entregas: se uma ficha já a tem, este email
+  // já foi tratado, e não se responde nem se guarda nada.
+  if (item.Date) {
+    const { totalDocs } = await payload.count({
+      collection: "applications",
+      where: { sourceEmail: { contains: assinaturaDoEmail(item) } },
+    });
+    if (totalDocs) {
+      console.warn(`[cvs] repetido: o email de ${de} de ${item.Date} já estava tratado`);
+      return "repetido";
+    }
   }
 
   // Daqui para baixo é um colega à espera: o que correr mal, ele fica a saber.
@@ -291,7 +326,6 @@ async function trata(item: Item, caixa: string): Promise<string> {
     return "anexo não veio";
   }
 
-  const payload = await getPayload({ config });
   const nome = String(anexo.Name ?? "cv.pdf").slice(0, 120);
   const tipo = String(anexo.ContentType ?? "application/pdf");
 
