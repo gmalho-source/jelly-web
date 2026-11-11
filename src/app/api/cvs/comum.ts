@@ -66,6 +66,11 @@ type Item = {
   To?: ({ Address?: string } | string)[];
   Subject?: string;
   Date?: string;
+  /** É assim que o Brevo manda a data de envio; o `Date` nunca vem. */
+  SentAtDate?: string;
+  /** O identificador da mensagem, igual em todas as entregas do mesmo email. */
+  MessageId?: string;
+  Uuid?: string[];
   RawTextBody?: string;
   ExtractedMarkdownMessage?: string;
   Attachments?: Anexo[];
@@ -162,15 +167,29 @@ function autenticado(item: Item): { ok: boolean; razao: string } {
 }
 
 /** O email original, arrumado para ficar na ficha. */
-/** A primeira linha do registo de um email: quem o reenviou e quando. */
-function assinaturaDoEmail(item: Item) {
-  return `Reenviado por ${endereco(item.From)}${item.Date ? ` em ${item.Date}` : ""}`;
+/** Quando o email foi enviado, venha no campo que vier. */
+const enviadoEm = (item: Item) => item.SentAtDate ?? item.Date ?? "";
+
+/**
+ * O que distingue este email de todos os outros, e é igual em cada vez que o
+ * Brevo o volta a entregar: o Message-ID. Fica escrito no registo da ficha, e é
+ * por ele que uma entrega repetida se reconhece.
+ */
+function idDaMensagem(item: Item): string {
+  const id = item.MessageId || cabecalho(item.Headers, "message-id") || item.Uuid?.[0] || "";
+  return id.trim().replace(/^<|>$/g, "").toLowerCase();
+}
+
+function marcaDaMensagem(item: Item) {
+  const id = idDaMensagem(item);
+  return id ? `Mensagem: ${id}` : "";
 }
 
 function comoFicaNaFicha(item: Item) {
   const corpo = (item.ExtractedMarkdownMessage ?? item.RawTextBody ?? "").trim().slice(0, 6000);
   return [
-    assinaturaDoEmail(item),
+    `Reenviado por ${endereco(item.From)}${enviadoEm(item) ? ` em ${enviadoEm(item)}` : ""}`,
+    ...(marcaDaMensagem(item) ? [marcaDaMensagem(item)] : []),
     item.Subject ? `Assunto: ${item.Subject}` : "",
     "",
     corpo,
@@ -262,16 +281,18 @@ async function trata(item: Item, caixa: string): Promise<string> {
   const payload = await getPayload({ config });
 
   // O mesmo email outra vez não é um reenvio novo. O Brevo volta a entregar o
-  // que julga ter falhado, e a primeira linha do registo — quem reenviou e
-  // quando — é a mesma em todas as entregas: se uma ficha já a tem, este email
-  // já foi tratado, e não se responde nem se guarda nada.
-  if (item.Date) {
+  // que julga ter falhado, e o Message-ID é o mesmo em todas as entregas: se
+  // uma ficha já o tem no registo, este email já foi tratado, e não se
+  // responde nem se guarda nada. (A primeira versão disto procurava pela data,
+  // num campo que o Brevo não manda — nunca reconheceu nada.)
+  const marca = marcaDaMensagem(item);
+  if (marca) {
     const { totalDocs } = await payload.count({
       collection: "applications",
-      where: { sourceEmail: { contains: assinaturaDoEmail(item) } },
+      where: { sourceEmail: { contains: marca } },
     });
     if (totalDocs) {
-      console.warn(`[cvs] repetido: o email de ${de} de ${item.Date} já estava tratado`);
+      console.warn(`[cvs] repetido: o email ${idDaMensagem(item)} já estava tratado`);
       return "repetido";
     }
   }
