@@ -899,7 +899,7 @@ export interface AssinaturasFicheiro {
   focalY?: number | null;
 }
 /**
- * Cada pedido de link para billing.jelly.pt e cada entrada. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses.
+ * Cada pedido de link para billing.jelly.pt, cada entrada e cada envio das instruções de faturação. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses, menos os envios das instruções, que ficam.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "registo-faturacao".
@@ -917,7 +917,9 @@ export interface RegistoFaturacao {
     | 'expirado'
     | 'usado'
     | 'invalido'
-    | 'sem-ficha';
+    | 'sem-ficha'
+    | 'instrucoes'
+    | 'instrucoes-falhou';
   email?: string | null;
   prestador?: (number | null) | Prestadore;
   pedidoEm?: string | null;

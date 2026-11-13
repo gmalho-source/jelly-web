@@ -853,3 +853,22 @@ html[data-theme="dark"] .inq-empilhada__parte[data-tinta="escura"] { color: #fff
 .logo-cliente__cartao--site { background: #151719; border-color: #151719; }
 .logo-cliente__cartao--site img { filter: brightness(0) invert(1); }
 .logo-cliente__cartao--site.logo-cliente__cartao--cores img { filter: none; }
+
+/* ── Prestador: o separador «Atividade» ─────────────────────────────────── */
+.prest-atividade { padding: 1.5rem var(--gutter-h, 3.75rem) 4rem; display: grid; gap: 1.75rem; max-width: 1100px; }
+.prest-atividade__resumo { margin: 0; display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); background: var(--theme-elevation-100); border: 1px solid var(--theme-elevation-100); border-radius: 8px; overflow: hidden; }
+.prest-atividade__resumo > div { background: var(--theme-elevation-0); padding: 1rem 1.1rem; }
+.prest-atividade__resumo dt { margin: 0 0 0.35rem; font-size: 0.75rem; color: var(--theme-elevation-500); }
+.prest-atividade__resumo dd { margin: 0; font-size: 1.15rem; font-weight: 600; }
+.prest-atividade__resumo dd.prest-atividade__nota { margin-top: 0.25rem; font-size: 0.75rem; font-weight: 400; }
+.prest-atividade__nota { margin: 0; font-size: 0.75rem; color: var(--theme-elevation-500); }
+.prest-atividade__lista { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--theme-elevation-150); }
+.prest-atividade__lista li { position: relative; display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); gap: 1rem; padding: 0.7rem 0 0.7rem 1.25rem; }
+.prest-atividade__lista li::before { content: ""; position: absolute; left: -6px; top: 1.05rem; width: 10px; height: 10px; border-radius: 50%; background: var(--theme-elevation-400); }
+.prest-atividade__lista li.prest-atividade__linha--bom::before { background: var(--theme-success-500, #2f9e44); }
+.prest-atividade__lista li.prest-atividade__linha--mau::before { background: var(--theme-error-500, #dd364a); }
+.prest-atividade__lista time { font-size: 0.8rem; color: var(--theme-elevation-500); font-variant-numeric: tabular-nums; padding-top: 0.1rem; }
+.prest-atividade__lista strong { display: block; font-weight: 600; }
+.prest-atividade__lista strong a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.prest-atividade__lista span { display: block; margin-top: 0.15rem; font-size: 0.8rem; color: var(--theme-elevation-600); }
+@media (max-width: 640px) { .prest-atividade__lista li { grid-template-columns: 1fr; gap: 0.2rem; } }

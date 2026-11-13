@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { doModulo, escondeDe, so } from "../acesso";
+import { enviarInstrucoes, estadoDasInstrucoes } from "../endpoints/instrucoes-prestador";
 
 /**
  * Prestadores: quem fatura à Jelly e entra em billing.jelly.pt.
@@ -34,8 +35,26 @@ export const Prestadores: CollectionConfig = {
     hidden: escondeDe("prestadores"),
     description:
       "Quem fatura à Jelly. Só um prestador «qualificado» consegue entrar em billing.jelly.pt — o link de acesso verifica isto no momento em que é usado.",
+    // O separador «Atividade»: quando a ficha foi criada, as instruções
+    // enviadas, os links pedidos e as entradas, os documentos para assinar.
+    components: {
+      views: {
+        edit: {
+          atividade: {
+            Component: "@/payload/components/AtividadePrestador#AtividadePrestador",
+            path: "/atividade",
+            tab: { label: "Atividade", href: "/atividade", order: 100 },
+          },
+        },
+      },
+    },
   },
   access: doModulo(["prestadores"]),
+  endpoints: [
+    // O botão «Enviar instruções de faturação»: o que já saiu, e enviar.
+    { path: "/:id/instrucoes", method: "get", handler: estadoDasInstrucoes },
+    { path: "/:id/instrucoes", method: "post", handler: enviarInstrucoes },
+  ],
   fields: [
     { name: "nome", label: "Nome", type: "text", required: true },
     {
@@ -64,6 +83,13 @@ export const Prestadores: CollectionConfig = {
         { label: "Desqualificado", value: "desqualificado" },
       ],
       admin: { position: "sidebar", description: "Só «qualificado» entra em billing.jelly.pt." },
+    },
+    {
+      // Só envia quando se carrega. Criar a ficha não manda nada. Fica logo
+      // debaixo do estado, porque é dele que depende.
+      name: "instrucoes",
+      type: "ui",
+      admin: { position: "sidebar", components: { Field: "@/payload/components/InstrucoesPrestador#InstrucoesPrestador" } },
     },
     {
       name: "pool",
@@ -257,6 +283,9 @@ export const EVENTOS_DO_REGISTO = [
   { label: "Link já usado", value: "usado" },
   { label: "Link inválido", value: "invalido" },
   { label: "Já não é prestador qualificado", value: "sem-ficha" },
+  // Postos pelo botão «Enviar instruções de faturação» da ficha.
+  { label: "Instruções de faturação enviadas", value: "instrucoes" },
+  { label: "As instruções de faturação não saíram", value: "instrucoes-falhou" },
 ] as const;
 
 const soLeitura = { readOnly: true };
@@ -271,7 +300,7 @@ export const RegistoFaturacao: CollectionConfig = {
     defaultColumns: ["quando", "evento", "email", "minutosDesdeOPedido", "ip"],
     listSearchableFields: ["email"],
     description:
-      "Cada pedido de link para billing.jelly.pt e cada entrada. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses.",
+      "Cada pedido de link para billing.jelly.pt, cada entrada e cada envio das instruções de faturação. «Minutos desde o pedido» diz quanto tempo passou entre pedir o link e abri-lo: um número alto é o email que chegou tarde. Guardado durante doze meses, menos os envios das instruções, que ficam.",
   },
   lockDocuments: false,
   access: { read: so("prestadores"), create: () => false, update: () => false, delete: () => false },

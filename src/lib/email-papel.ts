@@ -73,18 +73,20 @@ export type Papel = {
    * Para quem é o rodapé. O aviso que chega à casa não precisa da morada nem da
    * política de privacidade — precisa de dizer de onde veio.
    */
-  rodape?: "cliente" | "interno";
+  rodape?: "cliente" | "interno" | "prestador";
 };
 
 const RODAPE = {
   pt: {
     porque: "Recebeu este email porque enviou uma mensagem em",
+    prestador: "Recebeu este email porque tem ficha de prestador na Jelly.",
     contactos: "/contactos",
     privacidade: "Política de privacidade",
     talento: "Candidaturas",
   },
   en: {
     porque: "You received this email because you sent us a message at",
+    prestador: "You received this email because you are registered as a Jelly supplier.",
     contactos: "/en/contact",
     privacidade: "Privacy policy",
     talento: "Careers",
@@ -172,7 +174,10 @@ export function papel({ locale, titulo, antevisao, sobretitulo, cabeca, corpo, r
           </p>
 
           <p style="margin:0 0 10px;font:400 12px/1.6 ${SANS};color:${SUAVE}">
-            ${r.porque} <a href="${SITE_URL}${r.contactos}" style="color:${SUAVE}">${dominio}${r.contactos}</a>.
+            ${
+              // O prestador não nos mandou mensagem nenhuma: recebe isto por ter ficha.
+              rodape === "prestador" ? r.prestador : `${r.porque} <a href="${SITE_URL}${r.contactos}" style="color:${SUAVE}">${dominio}${r.contactos}</a>.`
+            }
             <a href="${privacidade}" style="color:${SUAVE}">${r.privacidade}</a>.
           </p>
 

@@ -1,4 +1,6 @@
+import { InstrucoesPrestador as InstrucoesPrestador_e805b69578382263173437f4bc423ab9 } from '@/payload/components/InstrucoesPrestador'
 import { NovoDocumentoPrestador as NovoDocumentoPrestador_cee5970bbd9ee6f440469e34fd225ff0 } from '@/payload/components/NovoDocumentoPrestador'
+import { AtividadePrestador as AtividadePrestador_74d7aae093b6b4b68412cc31dc8a8cd2 } from '@/payload/components/AtividadePrestador'
 import { EnviarDebito as EnviarDebito_69704e9ea2ee79a897fee78c11ee0753 } from '@/payload/components/EnviarDebito'
 import { CampoEtiquetas as CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1 } from '@/payload/components/CampoEtiquetas'
 import { ResumoIA as ResumoIA_615993207b8485cba1987d35775acf71 } from '@/payload/components/ResumoIA'
@@ -69,7 +71,9 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/payload/components/InstrucoesPrestador#InstrucoesPrestador": InstrucoesPrestador_e805b69578382263173437f4bc423ab9,
   "@/payload/components/NovoDocumentoPrestador#NovoDocumentoPrestador": NovoDocumentoPrestador_cee5970bbd9ee6f440469e34fd225ff0,
+  "@/payload/components/AtividadePrestador#AtividadePrestador": AtividadePrestador_74d7aae093b6b4b68412cc31dc8a8cd2,
   "@/payload/components/EnviarDebito#EnviarDebito": EnviarDebito_69704e9ea2ee79a897fee78c11ee0753,
   "@/payload/components/CampoEtiquetas#CampoEtiquetas": CampoEtiquetas_4f429c7af17f379afd4e62b3d52db6f1,
   "@/payload/components/ResumoIA#ResumoIA": ResumoIA_615993207b8485cba1987d35775acf71,

@@ -19,7 +19,12 @@ export type Evento =
   | "expirado"
   | "usado"
   | "invalido"
-  | "sem-ficha";
+  | "sem-ficha"
+  | "instrucoes"
+  | "instrucoes-falhou";
+
+/** Os envios das instruções ficam para sempre: são o histórico da ficha, não um acesso. */
+const FICAM = ["instrucoes", "instrucoes-falhou"];
 
 const DOZE_MESES = 365 * 24 * 60 * 60 * 1000;
 
@@ -55,7 +60,7 @@ export async function registaAcesso(
     // Doze meses chegam para perceber um caso; o resto sai.
     await payload.delete({
       collection: "registo-faturacao",
-      where: { quando: { less_than: new Date(agora - DOZE_MESES).toISOString() } },
+      where: { and: [{ quando: { less_than: new Date(agora - DOZE_MESES).toISOString() } }, { evento: { not_in: FICAM } }] },
       overrideAccess: true,
     });
   } catch (erro) {

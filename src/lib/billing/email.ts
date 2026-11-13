@@ -3,7 +3,7 @@ import { enviaEmail } from "@/lib/email";
 import { papel, p, botao } from "@/lib/email-papel";
 
 /** «2 horas», «15 minutos»: a validade do link, em português. */
-const validade = MAGIC_LINK_TTL_SECONDS % 3600 === 0
+export const validade = MAGIC_LINK_TTL_SECONDS % 3600 === 0
   ? `${MAGIC_LINK_TTL_SECONDS / 3600} ${MAGIC_LINK_TTL_SECONDS === 3600 ? "hora" : "horas"}`
   : `${Math.round(MAGIC_LINK_TTL_SECONDS / 60)} minutos`;
 
@@ -29,6 +29,8 @@ function template(link: string, pedidoEm: Date) {
     antevisao: `Pedido a ${quando(pedidoEm)}. Válido durante ${validade}.`,
     sobretitulo: "Área de prestadores",
     cabeca: "O seu link de acesso",
+    // Quem recebe isto não nos escreveu: tem ficha de prestador.
+    rodape: "prestador",
     corpo: [
       p("Carregue no botão para entrar e submeter a sua fatura."),
       botao(link, "Entrar"),
