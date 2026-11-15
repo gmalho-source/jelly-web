@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import type React from "react";
 import { Fragment } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Chapter } from "@/components/Chapter";
 import { Marquee } from "@/components/Marquee";
 import { Odometer } from "@/components/Odometer";
 import { LogoWall, type WallLogo } from "@/components/LogoWall";
 import { ProjectRail, type RailProject } from "@/components/ProjectRail";
+import { CapasDoTopo, type CapaDoTopo } from "@/components/CapasDoTopo";
 import { disciplinasNaLingua, subtituloNaLingua } from "@/lib/projeto-na-lingua";
 import { Link, getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -60,6 +61,12 @@ export default async function HomePage({
   // Do mais recente para o mais antigo; o carrossel escolhe ao acaso deste lote.
   const recent = [...withCover].sort((a, b) => b.date.localeCompare(a.date));
   const featured = recent.slice(0, 9);
+  // O topo: as capas dos doze projetos mais recentes, com os endereços do
+  // otimizador já calculados. O browser sorteia quatro a cada visita.
+  const capasDoTopo: CapaDoTopo[] = recent.slice(0, 12).map((project) => {
+    const { props } = getImageProps({ src: project.cover!.src, alt: project.client, width: 1600, height: 1600, sizes: "(max-width: 1024px) 100vw, 44vw" });
+    return { src: props.src, srcSet: props.srcSet, sizes: props.sizes, alt: project.client };
+  });
   const rail: RailProject[] = recent.slice(0, 24).map((project) => ({
     // O carrossel corre no browser e já recebe o endereço desta língua.
     slug: slugFor(project, locale),
@@ -113,7 +120,18 @@ export default async function HomePage({
             {t("heroEnd")}
           </h1>
 
-          {heroImages.length ? (
+          {capasDoTopo.length ? (
+            <div className="relative pb-7.5">
+              <CapasDoTopo capas={capasDoTopo} />
+              <Link
+                href="/projetos"
+                aria-label={t("workAll")}
+                className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red-texto text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
+              >
+                ↗
+              </Link>
+            </div>
+          ) : heroImages.length ? (
             // O espaço por baixo da fotografia é o da legenda que lá esteve
             // («Independentes desde…»): o botão está medido a partir dele, meio
             // dentro e meio fora da foto, e sem ele a linha de baixo colava-se.
