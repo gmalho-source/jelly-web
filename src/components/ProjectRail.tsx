@@ -24,7 +24,7 @@ export type RailProject = {
  * no browser; ordenar no servidor daria a mesma ordem a todos até ao próximo
  * deploy.
  */
-export function ProjectRail({ projects, show, archiveLabel }: { projects: RailProject[]; show: number; archiveLabel: string }) {
+export function ProjectRail({ projects, show }: { projects: RailProject[]; show: number }) {
   const [order, setOrder] = useState<RailProject[] | null>(null);
 
   useEffect(() => {
@@ -50,13 +50,14 @@ export function ProjectRail({ projects, show, archiveLabel }: { projects: RailPr
         <Link
           key={project.slug}
           href={{ pathname: "/projetos/[slug]", params: { slug: project.slug } }}
-          aria-label={`${project.client} — ${archiveLabel}`}
           className="group w-[80vw] shrink-0 snap-start sm:w-[46vw] lg:w-[32vw]"
         >
           <span className="block overflow-hidden">
             <Image
               src={project.cover}
-              alt={project.client}
+              // O nome do cliente está escrito logo abaixo: aqui repeti-lo era
+              // ouvi-lo duas vezes. O nome da ligação é o texto do cartão.
+              alt=""
               width={1200}
               height={880}
               sizes="(max-width: 640px) 80vw, (max-width: 1024px) 46vw, 32vw"

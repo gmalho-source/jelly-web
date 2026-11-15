@@ -95,7 +95,7 @@ export default async function LegalPage({ params }: { params: Promise<Params> })
           </div>
           <p className="mt-12 border-t border-line pt-6 text-sm text-fg-soft">
             {t("questions")}{" "}
-            <a href="mailto:hello@jelly.pt" className="text-red underline decoration-1 underline-offset-2 hover:no-underline">
+            <a href="mailto:hello@jelly.pt" className="text-red-texto underline decoration-1 underline-offset-2 hover:no-underline">
               hello@jelly.pt
             </a>
             .

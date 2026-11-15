@@ -159,7 +159,7 @@ export default async function HomePage({
               <Link
                 href="/projetos"
                 aria-label={t("workAll")}
-                className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
+                className="absolute bottom-8 right-3 grid h-16 w-16 place-items-center rounded-full bg-red-texto text-xl text-white transition-colors duration-200 hover:bg-red-deep sm:-bottom-2 sm:right-6 sm:h-[92px] sm:w-[92px] sm:text-2xl"
               >
                 ↗
               </Link>
@@ -178,7 +178,7 @@ export default async function HomePage({
               <Link
                 href="/projetos"
                 aria-label={t("workAll")}
-                className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
+                className="absolute -bottom-6 right-6 grid h-[92px] w-[92px] place-items-center rounded-full bg-red-texto text-2xl text-white transition-colors duration-200 hover:bg-red-deep"
               >
                 ↗
               </Link>
@@ -287,7 +287,7 @@ export default async function HomePage({
           </div>
         </div>
 
-        <ProjectRail projects={rail} show={9} archiveLabel={t("workAll")} />
+        <ProjectRail projects={rail} show={9} />
 
         <div className="mt-16">
           <Marquee images={covers} />
@@ -471,7 +471,7 @@ export default async function HomePage({
           </a>
           <Link
             href="/contactos"
-            className="mt-8 inline-block rounded-full bg-red px-6 py-3.5 font-semibold text-white transition-colors duration-200 hover:bg-red-deep"
+            className="mt-8 inline-block rounded-full bg-red-texto px-6 py-3.5 font-semibold text-white transition-colors duration-200 hover:bg-red-deep"
           >
             {t("contactCta")}
           </Link>

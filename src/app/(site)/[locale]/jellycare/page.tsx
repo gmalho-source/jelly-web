@@ -177,7 +177,7 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
                   } ${destaque ? "border-red" : "border-line"}`}
                 >
                   {plano.badge?.[locale] ? (
-                    <span className="absolute -top-3 left-8 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-paper">
+                    <span className="absolute -top-3 left-8 rounded-full bg-red-texto px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-paper">
                       {plano.badge[locale]}
                     </span>
                   ) : null}
@@ -218,7 +218,7 @@ export default async function JellyCarePage({ params }: { params: Promise<{ loca
                       subscreve é melhor do que um que muda de página. */}
                   <a
                     href={`#subscrever-${plano.key}`}
-                    className={`btn-pill mt-auto self-start pt-3 ${destaque ? "bg-red text-paper hover:bg-red-deep" : ""}`}
+                    className={`btn-pill mt-auto self-start pt-3 ${destaque ? "bg-red-texto text-paper hover:bg-red-deep" : ""}`}
                   >
                     {jellycare.planos.cta[locale]} <span aria-hidden="true">→</span>
                   </a>

@@ -77,7 +77,7 @@ export function GrelhaDeProjetos({ projetos, textos }: { projetos: ProjetoDaGrel
               />
               {/* A faixa em cima, longe do véu e do nome. */}
               {projeto.caso ? (
-                <span className="absolute left-4 top-4 rounded-full bg-red px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-paper sm:left-5 sm:top-5">
+                <span className="absolute left-4 top-4 rounded-full bg-red-texto px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-paper sm:left-5 sm:top-5">
                   Case
                 </span>
               ) : null}
@@ -109,7 +109,7 @@ function Botao({ activo, onClick, children }: { activo: boolean; onClick: () => 
       onClick={onClick}
       aria-pressed={activo}
       className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm transition-colors duration-200 ${
-        activo ? "border-red bg-red text-paper" : "border-line text-fg-soft hover:border-red hover:text-red"
+        activo ? "border-red bg-red-texto text-paper" : "border-line text-fg-soft hover:border-red hover:text-red"
       }`}
     >
       {children}

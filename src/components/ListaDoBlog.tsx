@@ -163,7 +163,7 @@ function Chip({ activa, onClick, children }: { activa: boolean; onClick: () => v
       onClick={onClick}
       aria-pressed={activa}
       className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-sm transition-colors duration-200 ${
-        activa ? "border-red bg-red text-paper" : "border-line text-fg-soft hover:border-red hover:text-red"
+        activa ? "border-red bg-red-texto text-paper" : "border-line text-fg-soft hover:border-red hover:text-red"
       }`}
     >
       {children}

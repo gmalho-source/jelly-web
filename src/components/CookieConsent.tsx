@@ -43,10 +43,13 @@ export function CookieConsent({ locale }: { locale: Locale }) {
       brandBackgroundColor: "#DD364A",
       brandTextColor: "#DCDCDC",
       closeButtonDisplay: false,
-      customizeButtonColor: "#9E9E9E",
+      // Letra branca sobre #9E9E9E dava 2,67:1; o mínimo é 4,5. Este dá 6,05.
+      customizeButtonColor: "#5F6368",
       customizeButtonDisplay: true,
       explicitWithdrawal: true,
-      linksColor: "#EB726B",
+      // A ligação para a política, sobre o rosa do banner: #EB726B dava 1,44:1.
+      // É a cor do botão «Aceitar», e dá 5,89.
+      linksColor: "#29384A",
       listPurposes: true,
       logo: "https://vndty5nncbevu59o.public.blob.vercel-storage.com/Jelly-branco.webp",
       ownerName: "Jelly.pt",

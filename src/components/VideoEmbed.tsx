@@ -170,7 +170,7 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
               type="button"
               onClick={escolherCookies}
               disabled={aAbrir}
-              className="rounded-full bg-red px-5 py-2.5 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-red-deep disabled:opacity-70"
+              className="rounded-full bg-red-texto px-5 py-2.5 text-sm font-semibold text-paper transition-colors duration-200 hover:bg-red-deep disabled:opacity-70"
             >
               {aAbrir ? t.aEspera : t.escolher}
             </button>

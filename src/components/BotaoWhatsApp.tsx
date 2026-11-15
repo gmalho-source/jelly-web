@@ -39,7 +39,9 @@ export function BotaoWhatsApp({ locale }: { locale: Locale }) {
   }, []);
 
   return (
-    <div
+    // Uma zona própria (`aside`), para não ficar fora de todas as zonas da página.
+    <aside
+      aria-label="WhatsApp"
       className={`fixed bottom-5 right-5 z-40 transition-[opacity,transform] duration-300 motion-reduce:transition-none print:hidden sm:bottom-8 sm:right-8 ${
         visivel ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
@@ -56,6 +58,6 @@ export function BotaoWhatsApp({ locale }: { locale: Locale }) {
           <path d={WHATSAPP.glifo} />
         </svg>
       </LigacaoWhatsApp>
-    </div>
+    </aside>
   );
 }

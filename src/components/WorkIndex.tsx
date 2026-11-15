@@ -14,7 +14,7 @@ export type WorkRow = {
 
 const tones: Record<WorkRow["tone"], string> = {
   slate: "bg-slate text-paper",
-  red: "bg-red text-white",
+  red: "bg-red-texto text-white",
   lavender: "bg-lavender text-fg",
   chartreuse: "bg-chartreuse text-fg",
   coral: "bg-coral text-fg",

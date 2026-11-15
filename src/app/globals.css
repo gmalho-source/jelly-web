@@ -41,6 +41,14 @@
   /* Cor — Paleta Jelly 2026 */
   --color-red: #dd364a;
   --color-red-deep: #9d141c;
+  /* O vermelho da marca não chega a 4,5:1 em texto pequeno: dá 4,12 sobre
+     paper e 4,02 sobre ink, e o branco sobre ele dá 4,46. Para títulos grandes
+     serve (o mínimo aí é 3:1); para texto pequeno, ligações e botões com texto
+     branco há estes dois, quase iguais à vista: um pouco mais escuro para
+     fundo claro e para botão com letra branca, um pouco mais claro para fundo
+     escuro. Medidos pela regra do WCAG AA, a pedido do scan da Iubenda. */
+  --color-red-texto: #d23346;
+  --color-red-claro: #e04a5c;
   --color-coral: #ff9aa5;
   --color-lavender: #c3abff;
   --color-chartreuse: #dce277;
@@ -102,9 +110,10 @@
   --color-fg: var(--color-ink);
   --color-fg-soft: color-mix(in oklab, var(--color-ink) 65%, transparent);
   --color-line: var(--color-paper-3);
-  /* Acento: vermelho em todas as superfícies menos na vermelha, onde passa a
-     ink — vermelho sobre vermelho não se lê. */
-  --color-accent: var(--color-red);
+  /* Acento: vermelho em todas as superfícies menos na vermelha e nas de cor,
+     onde passa a ink — vermelho sobre vermelho não se lê. É o vermelho de texto
+     de cada superfície, com o contraste que o texto pequeno pede. */
+  --color-accent: var(--color-red-texto);
 
   /* Movimento: uma curva, três durações */
   --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -135,6 +144,7 @@
     --color-fg: var(--color-paper);
     --color-fg-soft: color-mix(in oklab, var(--color-paper) 62%, transparent);
     --color-line: color-mix(in oklab, var(--color-paper) 16%, transparent);
+    --color-accent: var(--color-red-claro);
     color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: var(--text-base);
@@ -165,6 +175,7 @@
   --color-fg: var(--color-paper);
   --color-fg-soft: color-mix(in oklab, var(--color-paper) 62%, transparent);
   --color-line: color-mix(in oklab, var(--color-paper) 16%, transparent);
+  --color-accent: var(--color-red-claro);
   color: var(--color-fg);
 }
 
@@ -172,6 +183,7 @@
    é o degradê por cima da fotografia. */
 @utility surface-cover {
   --color-fg: var(--color-paper);
+  --color-accent: var(--color-red-claro);
   --color-fg-soft: color-mix(in oklab, var(--color-paper) 72%, transparent);
   --color-line: color-mix(in oklab, var(--color-paper) 28%, transparent);
   color: var(--color-fg);
@@ -180,6 +192,8 @@
 @utility surface-slate {
   background: var(--color-slate);
   --color-fg: var(--color-paper);
+  /* Nenhum vermelho se lê sobre slate (3:1 no melhor caso); o coral dá 5,7. */
+  --color-accent: var(--color-coral);
   --color-fg-soft: color-mix(in oklab, var(--color-paper) 66%, transparent);
   --color-line: color-mix(in oklab, var(--color-paper) 20%, transparent);
   color: var(--color-fg);
@@ -188,6 +202,7 @@
 @utility surface-paper {
   background: var(--color-paper);
   --color-fg: var(--color-ink);
+  --color-accent: var(--color-red-texto);
   --color-fg-soft: color-mix(in oklab, var(--color-ink) 62%, transparent);
   --color-line: var(--color-paper-3);
   color: var(--color-fg);
@@ -195,10 +210,13 @@
 }
 
 @utility surface-red {
-  background: var(--color-red);
+  /* O vermelho claro, e não o da marca: é o que deixa a letra pequena em ink
+     chegar a 4,5:1 (4,54). Sobre o da marca ficava em 4,02, e o silenciado a
+     70% em 2,96. Por isso aqui o silenciado é ink inteiro. */
+  background: var(--color-red-claro);
   --color-accent: var(--color-ink);
   --color-fg: var(--color-ink);
-  --color-fg-soft: color-mix(in oklab, var(--color-ink) 70%, transparent);
+  --color-fg-soft: var(--color-ink);
   --color-line: color-mix(in oklab, var(--color-ink) 22%, transparent);
   color: var(--color-fg);
   --outline-color: var(--color-ink);
@@ -207,6 +225,7 @@
 @utility surface-accent-* {
   background: --value(--color- *);
   --color-fg: var(--color-ink);
+  --color-accent: var(--color-ink);
   --color-fg-soft: color-mix(in oklab, var(--color-ink) 65%, transparent);
   --color-line: color-mix(in oklab, var(--color-ink) 22%, transparent);
   color: var(--color-fg);
@@ -298,7 +317,8 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-red);
+  /* O acento da superfície: o vermelho com contraste para 12px em cada uma. */
+  color: var(--color-accent);
 }
 
 /* Botão primário: retângulo de 8px, nunca pílula. */
@@ -306,7 +326,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--color-red);
+  background: var(--color-red-texto);
   color: #fff;
   border-radius: var(--radius-sm);
   padding: 13px 24px;
@@ -339,7 +359,7 @@
   transition: background var(--duration-base) var(--ease-out), color var(--duration-base) var(--ease-out);
 
   &:hover {
-    background: var(--color-red);
+    background: var(--color-red-texto);
     color: #fff;
   }
 }
@@ -357,7 +377,7 @@
   box-shadow: inset 0 0 0 1px var(--color-line);
 
   &:hover {
-    background: var(--color-red);
+    background: var(--color-red-texto);
     color: #fff;
     box-shadow: none;
   }
@@ -589,7 +609,7 @@
   & li { margin-top: 0.4rem; }
 
   & a {
-    color: var(--color-red);
+    color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
@@ -613,7 +633,7 @@
 
   /* A ligação que fica antes de o guião deles correr. */
   & > a.iubenda-embed {
-    color: var(--color-red);
+    color: var(--color-accent);
     font-weight: 600;
     text-decoration: underline;
   }
@@ -1893,7 +1913,7 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
   min-height: 48px;
   padding: 0 1.4rem;
   border-radius: 8px;
-  background: var(--color-red);
+  background: var(--color-red-texto);
   color: var(--color-paper);
   font-weight: 600;
   font-size: 1.05rem;
@@ -1963,7 +1983,7 @@ body:has([data-pagina="contactos"]) .pilula-chegada { display: block; }
 }
 .inq-opcao[data-escolhida] .inq-letra {
   border-color: var(--color-red);
-  background: var(--color-red);
+  background: var(--color-red-texto);
   color: var(--color-paper);
 }
 

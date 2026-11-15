@@ -179,7 +179,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           </Link>
           {/* As vagas em vermelho: é o convite da página, e ao lado do cartão
               chartreuse dos projetos são as duas portas que se vêem primeiro. */}
-          <Link href="/recrutamento" className="card flex flex-col justify-between bg-red p-8 text-paper shadow-none">
+          <Link href="/recrutamento" className="card flex flex-col justify-between bg-red-texto p-8 text-paper shadow-none">
             <div>
               <h3 className="text-xl text-paper">{t("careersTitle")}</h3>
               <p className="mt-3 text-sm text-paper/85">{t("careersLead")}</p>

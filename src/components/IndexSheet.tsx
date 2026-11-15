@@ -105,7 +105,7 @@ const DISCIPLINAS = ["BRANDING", "DIGITAL", "MARKETING", "AI SYSTEMS", "TECHNOLO
  * construída por interpolação não chega à folha de estilos.
  */
 const CORES_EM_CLARO = [
-  "bg-red text-paper",
+  "bg-red-texto text-paper",
   "bg-coral text-ink",
   "bg-chartreuse text-ink",
   "bg-lavender text-ink",
@@ -472,6 +472,10 @@ export function IndexSheet({
     <>
       {/* Pastilhas em vez de texto solto: a barra atravessa secções escuras,
           claras e vermelhas, e tem de se ler em todas. */}
+      {/* O logo, o convite e o índice são o cabeçalho da página: ficam num
+          <header> para quem navega por zonas (leitores de ecrã) os encontrar.
+          São todos `fixed`, e o <header> não ocupa espaço nenhum. */}
+      <header>
       {/* O logo é uma etiqueta: quadrado, encostado ao topo, sem margem por
           cima — como a etiqueta cosida na gola de uma peça de roupa. */}
       <Link
@@ -512,7 +516,6 @@ export function IndexSheet({
         onClick={openSheet}
         onPointerEnter={prepararAbertura}
         onFocus={prepararAbertura}
-        aria-label={copy.index}
         /* Sobre tinta fica como sempre esteve: papel translúcido com desfoque.
            Sobre claro veste a cor sorteada à entrada, que traz consigo a cor do
            texto.
@@ -545,7 +548,12 @@ export function IndexSheet({
             />
           ))}
         </span>
+        {/* O nome do botão vem daqui, e não de um `aria-label`: as palavras que
+            rodam são decoração, e um `aria-label` que não contém o texto que se
+            vê falha a regra do «rótulo no nome» (WCAG 2.5.3). */}
+        <span className="sr-only">{copy.index}</span>
       </button>
+      </header>
 
       {open ? (
         <div
@@ -745,7 +753,7 @@ export function IndexSheet({
                       className={`flex items-baseline justify-between gap-4 border-b px-5 py-2.5 transition-colors duration-150 sm:px-8 ${
                         tile.cta
                           ? // No telemóvel está fixo no fundo da folha (ver abaixo), e não se repete na lista.
-                            `border-red text-paper max-lg:hidden ${index === active ? "bg-red-deep" : "bg-red hover:bg-red-deep"}`
+                            `border-red text-paper max-lg:hidden ${index === active ? "bg-red-deep" : "bg-red-texto hover:bg-red-deep"}`
                           : `border-paper/10 ${index === active ? "bg-paper/[0.07] text-paper" : "text-paper/70 hover:text-paper"}`
                       }`}
                     >
@@ -781,7 +789,7 @@ export function IndexSheet({
             <Link
               href={cta.href}
               onClick={() => setOpenedOn(null)}
-              className="flex shrink-0 items-baseline justify-between gap-4 bg-red px-5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 text-paper transition-colors duration-150 active:bg-red-deep sm:px-8 lg:hidden"
+              className="flex shrink-0 items-baseline justify-between gap-4 bg-red-texto px-5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 text-paper transition-colors duration-150 active:bg-red-deep sm:px-8 lg:hidden"
             >
               <span className="font-display text-[19px] leading-[1.4]">{cta.label}</span>
               <span className="shrink-0 text-[10px] uppercase tracking-[0.12em]">

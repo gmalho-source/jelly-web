@@ -417,7 +417,7 @@ export function Inquerito({
       </div>
 
       {pronto && comecou && estado !== "feito" ? (
-        <nav className="fixed bottom-5 right-5 z-20 flex overflow-hidden rounded-[8px] bg-red text-paper shadow-lg sm:bottom-8 sm:right-8" aria-label={`${t.anterior} / ${t.seguinte}`}>
+        <nav className="fixed bottom-5 right-5 z-20 flex overflow-hidden rounded-[8px] bg-red-texto text-paper shadow-lg sm:bottom-8 sm:right-8" aria-label={`${t.anterior} / ${t.seguinte}`}>
           <button type="button" className="grid h-11 w-11 place-items-center transition-colors hover:bg-red-deep disabled:opacity-40" disabled={indice === 0} onClick={recuar} aria-label={t.anterior}>
             <Seta para="cima" />
           </button>

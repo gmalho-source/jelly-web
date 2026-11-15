@@ -65,7 +65,7 @@ export async function SiteFooter() {
       <div className="relative mx-auto grid max-w-[1200px] grid-cols-2 gap-8 px-5 py-16 sm:px-8 lg:grid-cols-4">
         {columns.map((column) => (
           <div key={column.title}>
-            <h4 className="eyebrow mb-4 text-fg-soft">{column.title}</h4>
+            <h2 className="eyebrow mb-4 text-fg-soft">{column.title}</h2>
             <ul className="flex flex-col gap-1.5">
               {column.items.map((item) => (
                 <li key={item.label}>
@@ -78,7 +78,7 @@ export async function SiteFooter() {
           </div>
         ))}
         <div>
-          <h4 className="eyebrow mb-4 text-fg-soft">{footer("contactCol")}</h4>
+          <h2 className="eyebrow mb-4 text-fg-soft">{footer("contactCol")}</h2>
           <ul className="flex flex-col gap-1.5 text-sm text-paper/80">
             <li>
               <a href="mailto:hello@jelly.pt" className="text-paper/80 transition-colors duration-200 hover:text-red">
