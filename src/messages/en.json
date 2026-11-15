@@ -82,6 +82,7 @@
     "galleryCount": "{n} of {total}"
   },
   "footer": {
+    "cookiePreferences": "Cookie preferences",
     "providers": "Providers area",
     "providersNote": "Already working with Jelly? Invoice submission lives at",
     "rights": "Jelly — be the change",

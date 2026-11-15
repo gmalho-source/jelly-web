@@ -7,6 +7,7 @@ import { slugFor } from "@/lib/slugs";
 import { WHATSAPP, ligacaoWhatsApp } from "@/content/whatsapp";
 import { JellyWordmark } from "./JellyLogo";
 import { LigacaoWhatsApp } from "./LigacaoWhatsApp";
+import { PreferenciasDeCookies } from "./PreferenciasDeCookies";
 import { RedesSociais } from "./RedesSociais";
 
 /** Rodapé ink, alto, com a marca nominativa como motivo esbatido. */
@@ -118,6 +119,11 @@ export async function SiteFooter() {
               {page.title[lingua]}
             </Link>
           ))}
+          <PreferenciasDeCookies
+            rotulo={footer("cookiePreferences")}
+            politica={lingua === "en" ? "/en/legal/politica-de-cookies" : "/legal/politica-de-cookies"}
+            className="transition-colors duration-200 hover:text-red"
+          />
           <a
             href="https://www.livroreclamacoes.pt/inicio"
             target="_blank"
