@@ -81,7 +81,11 @@ export async function GET(request: NextRequest) {
         };
       }),
     );
-    return NextResponse.json({ versao, caixa, eventos: detalhes });
+    // Os últimos seis caracteres da chave, como o próprio Brevo os mostra nos
+    // avisos («xkeysib-*****R5IrNE»): chegam para saber qual das chaves da
+    // conta é a do site, e não servem para mais nada.
+    const chave = `xkeysib-*****${brevoKey.slice(-6)}`;
+    return NextResponse.json({ versao, chave, caixa, eventos: detalhes });
   }
 
   const lista = await brevo("webhooks?type=inbound");
