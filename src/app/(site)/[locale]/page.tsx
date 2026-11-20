@@ -105,8 +105,11 @@ export default async function HomePage({
           Por trás de tudo, o vídeo da casa a preto e branco, sem som, como
           textura: escurecido até a frase mandar. A quem pediu menos movimento
           fica o primeiro fotograma (o `.video-fundo` esconde-se e fica o fundo
-          de baixo). Acima da dobra, e por isso não se anima mais nada. */}
-      <header className="surface-ink relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden pt-24">
+          de baixo). Acima da dobra, e por isso não se anima mais nada. Sobe
+          por baixo do menu até ao topo da janela (as margens negativas anulam
+          o espaço que o `<main>` reserva para o menu), como os topos dos
+          serviços; o espaço de cima volta por dentro, no `pt`. */}
+      <header className="surface-ink relative isolate -mt-12 flex min-h-[100svh] flex-col justify-between overflow-hidden pt-36 sm:-mt-24 sm:pt-48">
         <span
           aria-hidden="true"
           className="absolute inset-0 -z-30 bg-cover bg-center"
