@@ -101,8 +101,32 @@ export default async function HomePage({
         }}
       />
 
-      {/* ── Herói: a tese em escala, a prova ao lado ── */}
-      <header className="surface-ink relative flex min-h-[100svh] flex-col justify-between pt-24">
+      {/* ── Herói: a tese em escala, a prova ao lado ──
+          Por trás de tudo, o vídeo da casa a preto e branco, sem som, como
+          textura: escurecido até a frase mandar. A quem pediu menos movimento
+          fica o primeiro fotograma (o `.video-fundo` esconde-se e fica o fundo
+          de baixo). Acima da dobra, e por isso não se anima mais nada. */}
+      <header className="surface-ink relative isolate flex min-h-[100svh] flex-col justify-between overflow-hidden pt-24">
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 -z-30 bg-cover bg-center"
+          style={{ backgroundImage: "url(/media/homepage-topo-poster.webp)" }}
+        />
+        <video
+          className="video-fundo absolute inset-0 -z-20 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/media/homepage-topo-poster.webp"
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          <source src="/media/homepage-topo.webm" type="video/webm; codecs=av01.0.05M.08" />
+          <source src="/media/homepage-topo.mp4" type="video/mp4" />
+        </video>
+        <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/80 to-ink/70" />
         <div className="mx-auto grid w-full max-w-[1600px] flex-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,52%)_minmax(0,44%)] lg:gap-12">
           <h1 className="font-display text-[clamp(50px,8.6vw,132px)] leading-[0.9] tracking-[-0.035em]">
             {/* A palavra riscada sai do branco: já não é o que somos, e a cor
