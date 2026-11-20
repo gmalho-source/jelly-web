@@ -1,6 +1,6 @@
 import type { DocumentViewServerProps } from "payload";
 import { tem, type ComModulos } from "@/payload/acesso";
-import { evolucao, resultados, type Contagem, type Escala, type Nps, type Resultado, type Texto } from "@/lib/inqueritos/analise";
+import { evolucao, mediaDeTodas, resultados, type Contagem, type Escala, type Nps, type Resultado, type Texto } from "@/lib/inqueritos/analise";
 import { legiveis } from "@/lib/inqueritos/logica";
 import { filtrosDe, perguntasDe, respostasDe, type DocDoInquerito } from "@/lib/inqueritos/servidor";
 import { Filtros } from "./Filtros";
@@ -157,11 +157,28 @@ function Pergunta({ resultado, numero }: { resultado: Resultado; numero: number 
       ) : resultado.tipo === "escala" ? (
         <>
           {resultado.nps ? <BlocoNps nps={resultado.nps} /> : null}
+          {resultado.antigas.length && !resultado.nps
+            ? (() => {
+                const todas = mediaDeTodas(resultado);
+                return todas ? (
+                  <p className="inq-cartao__media">
+                    Média de todas <strong>{media(todas.media)}</strong> de {todas.max}
+                    <span>
+                      {" "}
+                      · {todas.n} respostas, as {todas.convertidas} antigas convertidas para a escala de {todas.min} a {todas.max}
+                    </span>
+                  </p>
+                ) : null;
+              })()
+            : null}
           {resultado.atual ? (
             <>
               <p className="inq-cartao__media">
                 Média <strong>{media(resultado.atual.media)}</strong> de {resultado.atual.max}
-                <span> · {resultado.atual.n} respostas na escala de {resultado.atual.min} a {resultado.atual.max}</span>
+                <span>
+                  {" "}
+                  · {resultado.atual.n} {resultado.atual.n === 1 ? "resposta" : "respostas"} na escala de {resultado.atual.min} a {resultado.atual.max}
+                </span>
               </p>
               <Colunas escala={resultado.atual} />
               {pergunta.rotuloMin || pergunta.rotuloMax ? (
@@ -178,8 +195,8 @@ function Pergunta({ resultado, numero }: { resultado: Resultado; numero: number 
                 Média <strong>{media(antiga.media)}</strong> de {antiga.max}
                 <span>
                   {" "}
-                  · {antiga.n} respostas antigas, na escala de {antiga.min} a {antiga.max}. Ficam à parte: uma média de 0 a {antiga.max} não se soma a uma de 0 a{" "}
-                  {pergunta.escalaMax ?? 10}.
+                  · {antiga.n} respostas antigas, na escala de {antiga.min} a {antiga.max}. As colunas ficam cada uma na sua escala; a média de todas, acima,
+                  converte as antigas em proporção (um {antiga.max} de {antiga.max} conta como {pergunta.escalaMax ?? 10} de {pergunta.escalaMax ?? 10}).
                 </span>
               </p>
               <Colunas escala={antiga} />
@@ -278,7 +295,11 @@ export async function VistaResultados(props: DocumentViewServerProps) {
   const completas = todas.filter((resposta) => resposta.estado === "completa").length;
   const lista = resultados(perguntas, respostas);
   const primeiraNps = lista.find((r): r is Extract<Resultado, { tipo: "escala" }> => r.tipo === "escala" && Boolean(r.nps));
-  const primeiraEscala = lista.find((r): r is Extract<Resultado, { tipo: "escala" }> => r.tipo === "escala" && !r.nps && Boolean(r.atual));
+  const primeiraEscala = lista.find((r): r is Extract<Resultado, { tipo: "escala" }> => r.tipo === "escala" && !r.nps && Boolean(r.atual || r.antigas.length));
+  // O número de cima conta todas as respostas, as antigas convertidas para a
+  // escala de agora: com uma resposta nova e dezanove antigas, a média só da
+  // nova parecia a média do inquérito.
+  const mediaDeCima = primeiraEscala ? mediaDeTodas(primeiraEscala) : null;
   const tempo = evolucao(respostas, primeiraNps?.pergunta);
   const base = `/admin/collections/inqueritos/${inquerito.id}/resultados`;
 
@@ -308,14 +329,17 @@ export async function VistaResultados(props: DocumentViewServerProps) {
             </span>
           </div>
         ) : null}
-        {primeiraEscala?.atual ? (
+        {primeiraEscala && mediaDeCima ? (
           <div className="inq-kpi">
             <span className="inq-kpi__rotulo">{primeiraEscala.pergunta.titulo.length > 48 ? `${primeiraEscala.pergunta.titulo.slice(0, 46)}…` : primeiraEscala.pergunta.titulo}</span>
             <span className="inq-kpi__valor">
-              {media(primeiraEscala.atual.media)}
-              <small> / {primeiraEscala.atual.max}</small>
+              {media(mediaDeCima.media)}
+              <small> / {mediaDeCima.max}</small>
             </span>
-            <span className="inq-kpi__nota">média de {primeiraEscala.atual.n} respostas</span>
+            <span className="inq-kpi__nota">
+              média de {mediaDeCima.n} {mediaDeCima.n === 1 ? "resposta" : "respostas"}
+              {mediaDeCima.convertidas ? ` · ${mediaDeCima.convertidas} convertidas da escala antiga` : ""}
+            </span>
           </div>
         ) : null}
       </div>

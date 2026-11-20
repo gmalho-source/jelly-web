@@ -159,3 +159,25 @@ export function evolucao(respostas: DocDaResposta[], perguntaNps: Pergunta | und
         : null,
     }));
 }
+
+/**
+ * A média de uma escala com todas as respostas, as antigas incluídas, na
+ * escala de agora.
+ *
+ * As antigas foram dadas noutra escala (de 0 a 9, no Typeform) e convertem-se
+ * em proporção: um 9 de 9 conta como 10 de 10, um 0 continua 0. Não é a nota
+ * que a pessoa teria dado — é a mesma posição na régua. Serve para o número
+ * de cima não ser a média de uma resposta só quando há outras dezanove; as
+ * distribuições, essas, continuam cada uma na sua escala.
+ */
+export function mediaDeTodas(resultado: Extract<Resultado, { tipo: "escala" }>) {
+  const [min, max] = limites(resultado.pergunta);
+  const grupos = [...(resultado.atual ? [resultado.atual] : []), ...resultado.antigas];
+  const n = grupos.reduce((soma, grupo) => soma + grupo.n, 0);
+  if (!n || max === min) return null;
+  const soma = grupos.reduce((total, grupo) => {
+    const posicao = grupo.max === grupo.min ? 0 : (grupo.media - grupo.min) / (grupo.max - grupo.min);
+    return total + (min + posicao * (max - min)) * grupo.n;
+  }, 0);
+  return { media: soma / n, n, convertidas: n - (resultado.atual?.n ?? 0), min, max };
+}
