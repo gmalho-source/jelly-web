@@ -19,9 +19,9 @@ import type { FonteDeVideo } from "@/lib/video";
  * instante em que entra na página e troca-lhe o endereço por `about:blank`. Quem
  * carregava no vídeo sem ter aceitado os cookies ficava a olhar para um quadrado
  * preto, sem saber porquê. Agora o componente vê o bloqueio e diz o que se passa,
- * com duas saídas: escolher os cookies — e, quando a página recarrega com o
- * consentimento, o mesmo vídeo volta a abrir — ou ver no próprio YouTube, que
- * não precisa de consentimento nenhum aqui.
+ * com duas saídas: escolher os cookies — e o vídeo aparece assim que forem
+ * aceites, no mesmo sítio ou, se a página recarregar, aberto outra vez — ou ver
+ * no próprio YouTube, que não precisa de consentimento nenhum aqui.
  */
 
 /** O vídeo que se quis ver antes de a página recarregar com o consentimento. */
@@ -29,9 +29,13 @@ const A_SEGUIR = "video-a-seguir";
 
 type ApiIubenda = { cs?: { api?: { openPreferences?: () => void } } };
 
-/** O bloqueio automático da Iubenda deixa o `iframe` em branco e marcado. */
-const bloqueadoPelaIubenda = (iframe: HTMLIFrameElement) =>
-  iframe.getAttribute("src") === "about:blank" || iframe.classList.contains("_iub_cs_activate");
+/**
+ * O bloqueio automático da Iubenda deixa o `iframe` em branco (`about:blank`),
+ * com o endereço verdadeiro guardado de lado. Conta só o endereço, e não a
+ * marca que a Iubenda lhe põe: quando a pessoa aceita, a Iubenda devolve o
+ * endereço ao mesmo `iframe`, e a marca não diz se isso já aconteceu.
+ */
+const bloqueadoPelaIubenda = (iframe: HTMLIFrameElement) => !/^https?:/.test(iframe.getAttribute("src") ?? "");
 
 const TEXTOS = {
   pt: {
@@ -88,27 +92,31 @@ export function VideoEmbed({ fonte, titulo }: { fonte: FonteDeVideo; titulo: str
   }, [chave]);
 
   // O bloqueio pode ser imediato ou chegar uns instantes depois, quando o guião
-  // da Iubenda acorda: vê-se agora e durante dois segundos.
+  // da Iubenda acorda. E pode desfazer-se: quem carrega em «Escolher cookies» e
+  // aceita, a Iubenda devolve o endereço ao mesmo `iframe`, sem recarregar a
+  // página, e o vídeo começa a tocar. Vigiava-se só dois segundos e só num
+  // sentido: o vídeo tocava escondido atrás do aviso — ouvia-se e não se via.
+  // Agora vigia-se enquanto o vídeo estiver aberto, nos dois sentidos.
   useEffect(() => {
     const sitio = moldura.current;
     if (!aTocar || !sitio) return;
     const ver = () => {
       const iframe = sitio.querySelector("iframe");
-      return Boolean(iframe && bloqueadoPelaIubenda(iframe));
+      const agora = Boolean(iframe && bloqueadoPelaIubenda(iframe));
+      setBloqueado(agora);
+      // Abriu aqui mesmo: já não há vídeo à espera de uma recarga.
+      if (!agora) {
+        try {
+          sessionStorage.removeItem(A_SEGUIR);
+        } catch {
+          // Sem armazenamento não havia nada guardado.
+        }
+      }
     };
-    if (ver()) {
-      Promise.resolve().then(() => setBloqueado(true));
-      return;
-    }
-    const observador = new MutationObserver(() => {
-      if (ver()) setBloqueado(true);
-    });
+    Promise.resolve().then(ver);
+    const observador = new MutationObserver(ver);
     observador.observe(sitio, { subtree: true, childList: true, attributes: true, attributeFilter: ["src", "class"] });
-    const fim = window.setTimeout(() => observador.disconnect(), 2000);
-    return () => {
-      observador.disconnect();
-      window.clearTimeout(fim);
-    };
+    return () => observador.disconnect();
   }, [aTocar]);
 
   const escolherCookies = () => {
